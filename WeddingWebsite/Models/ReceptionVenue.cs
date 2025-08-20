@@ -4,5 +4,5 @@ public record ReceptionVenue(
     string Name,
     Location Location,
     string Address,
-    TravelDirections Directions
+    TravelDirections? Directions
 ) : IVenue;

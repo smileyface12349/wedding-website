@@ -20,5 +20,5 @@ public interface IVenue
     /// <summary>
     /// Instructions for getting to the venue.
     /// </summary>
-    public TravelDirections Directions { get; }
+    public TravelDirections? Directions { get; }
 }
