@@ -5,7 +5,7 @@ public interface IWeddingDetails
     // Information about the Wedding
     public Fiance Groom { get; }
     public Fiance Bride { get; }
-    public DateTime WeddingDate { get; }
+    public DateOnly WeddingDate { get; }
     public ReceptionVenue ReceptionVenue { get; }
     public CeremonyVenue CeremonyVenue { get; }
     public IEnumerable<Event> Events { get; }
