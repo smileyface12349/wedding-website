@@ -3,7 +3,7 @@
 ## (Planned) Features
 
 - Display static information about the wedding, including location, timings of the day, accommodation and contact details.
-- A login system for guests to RSPV and view their table number.
+- A login system for guests to RSPV and view their table number. You may add multiple guests to a single account.
 - Responsive interface for all screen sizes.
 - Total separation of data and functionality makes it easy to customise the website for a different wedding, and keep private information off git.
 
