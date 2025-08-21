@@ -18,5 +18,5 @@ public interface IWeddingDetails
     public WebsiteLink RegistryLink { get; }
     
     // Configuration
-    // (none yet)
+    public UsersCanAddGuests UsersCanAddGuests { get; }
 }

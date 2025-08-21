@@ -66,4 +66,5 @@ public class SampleWeddingDetails : IWeddingDetails
     public WebsiteLink RegistryLink { get; }
         = new WebsiteLink("https://youtu.be/dQw4w9WgXcQ");
         
+    public UsersCanAddGuests UsersCanAddGuests => UsersCanAddGuests.ContactUs;
 }
