@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Data;
 
 public enum UserPrivilege
 {

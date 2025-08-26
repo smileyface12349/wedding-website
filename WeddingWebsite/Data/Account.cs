@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models;
+﻿using WeddingWebsite.Models;
+
+namespace WeddingWebsite.Data;
 
 public record Account(
     string Id,
