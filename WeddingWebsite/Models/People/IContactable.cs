@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.People;
 
 /// <summary>
 /// A person with full name and contact details.

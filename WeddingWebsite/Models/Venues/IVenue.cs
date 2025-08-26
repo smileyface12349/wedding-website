@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.Venues;
 
 /// <summary>
 /// A venue that stuff happens in.

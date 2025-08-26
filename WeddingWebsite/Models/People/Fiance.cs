@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.People;
 
 public record Fiance(
     string FirstName,

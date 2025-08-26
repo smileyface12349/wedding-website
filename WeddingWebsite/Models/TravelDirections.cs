@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models;
+﻿using WeddingWebsite.Models.WebsiteElement;
+
+namespace WeddingWebsite.Models;
 
 public record TravelDirections(
     string Message,

@@ -1,4 +1,8 @@
-﻿namespace WeddingWebsite.Models.WeddingDetails;
+﻿using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Venues;
+using WeddingWebsite.Models.WebsiteElement;
+
+namespace WeddingWebsite.Models.WeddingDetails;
 
 public interface IWeddingDetails
 {

@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.WebsiteElement;
 
 public class WebsiteVideo(string url) : IWebsiteElement
 {

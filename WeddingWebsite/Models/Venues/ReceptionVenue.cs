@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.Venues;
 
 public record ReceptionVenue(
     string Name,

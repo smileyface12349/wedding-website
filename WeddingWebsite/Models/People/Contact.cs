@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.People;
 
 /// <summary>
 /// Someone to display in a list of contacts

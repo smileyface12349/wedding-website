@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models;
+﻿using WeddingWebsite.Models.People;
+
+namespace WeddingWebsite.Models;
 
 public record Guest(
     ContactDetails ContactDetails,
