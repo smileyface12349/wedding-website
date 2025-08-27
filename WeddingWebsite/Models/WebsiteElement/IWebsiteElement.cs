@@ -2,5 +2,5 @@
 
 public interface IWebsiteElement
 {
-    public string GetHtml();
+    public string GetHtml(string classList = "");
 }
