@@ -1,7 +1,14 @@
 ﻿@page "/"
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome! This is a test page.</h1>
 
-Welcome to your new app.
+The wedding is between @WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName on @WeddingDetails.WeddingDate.ToString().
+
+The ceremony will take place at @WeddingDetails.CeremonyVenue.Name and the reception will be at @WeddingDetails.ReceptionVenue.Name.
+
+We recommend you book accommodation at @WeddingDetails.AccommodationDetails.RecommendedHotel?.Name. Other options are available.
