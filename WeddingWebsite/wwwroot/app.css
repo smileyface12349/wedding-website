@@ -2,6 +2,10 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+body {
+    margin: 0;
+}
+
 a, .btn-link {
     color: #006bb7;
 }
@@ -14,10 +18,6 @@ a, .btn-link {
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-.content {
-    padding-top: 1.1rem;
 }
 
 h1:focus {
@@ -57,4 +57,11 @@ h1:focus {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.main-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
 }
