@@ -1,14 +1,18 @@
-﻿@page "/login"
+﻿@page "/account/login"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using WeddingWebsite.Core
 @using WeddingWebsite.Data
 
 @inject SignInManager<Account> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+
+@attribute [AllowAnonymous]
 
 <PageTitle>Log in</PageTitle>
 
