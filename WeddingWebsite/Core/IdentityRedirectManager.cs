@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 
-namespace WeddingWebsite.Components.Pages.Auth;
+namespace WeddingWebsite.Core;
 
 internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
 {
