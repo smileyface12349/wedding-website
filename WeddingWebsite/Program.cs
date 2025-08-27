@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using WeddingWebsite.Components;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
+using WeddingWebsite.Models.WeddingDetails;
 using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Here is where you choose the implementation of IWeddingDetails to use
+builder.Services.AddScoped<IWeddingDetails, SecretWeddingDetails>();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
     
