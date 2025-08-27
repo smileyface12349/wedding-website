@@ -1,10 +1,13 @@
-﻿using WeddingWebsite.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using WeddingWebsite.Models;
 
 namespace WeddingWebsite.Data;
 
-public record Account(
-    string Id,
-    string Email,
-    UserPrivilege Privilege,
+public class Account(
     IEnumerable<Guest> Guests
-);
+) : IdentityUser
+{
+    public Account(): this(new List<Guest>())
+    {
+    }
+}
