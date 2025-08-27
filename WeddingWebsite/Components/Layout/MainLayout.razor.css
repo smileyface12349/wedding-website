@@ -17,16 +17,19 @@
     height: 3.5rem;
     display: flex;
     align-items: center;
+    transition-property: background-color;
+    transition-duration: 0.2s;
 }
 
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
         text-decoration: none;
+        color: #aaaaaa;
     }
 
     .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
+        color: #ffffff;
     }
 
     .top-row ::deep a:first-child {
@@ -58,6 +61,11 @@
         text-align: right;
         width: 0;
     }
+}
+
+.top-row.scrolled {
+    background-color: rgba(50, 50, 50, 0.75);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 #blazor-error-ui {
