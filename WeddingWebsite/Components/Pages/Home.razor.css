@@ -1,6 +1,6 @@
 ﻿.bride-and-groom-names {
     position: absolute;
-    top: 20%;
+    top: 35vh;
     width: 100%;
     text-align: center;
     font-family: Brush Script MT, American Typewriter, cursive;
@@ -11,7 +11,7 @@
 
 .wedding-date {
     position: absolute;
-    top: 45%;
+    top: 60vh;
     width: 100%;
     text-align: center;
     color: white;
