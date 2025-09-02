@@ -9,7 +9,15 @@ public record Discount(
     {
         return originalPrice * (1 - PercentDiscount / 100f);
     }
-    
+
+    public override string ToString() {
+        if (PercentDiscount <= 0)
+            return "No discount available";
+        return string.IsNullOrWhiteSpace(ClaimInstructions) 
+            ? $"{PercentDiscount}% off" 
+            : $"{PercentDiscount}% off ({ClaimInstructions})";
+    }
+
     public record None : Discount
     {
         public None() : base(0, string.Empty) { }
