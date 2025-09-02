@@ -1,3 +1,7 @@
 ﻿.box {
     padding: 20px;
 }
+
+.box-inner {
+    padding: 20px;
+}
