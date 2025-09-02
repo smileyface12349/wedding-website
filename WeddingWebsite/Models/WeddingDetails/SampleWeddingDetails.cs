@@ -19,6 +19,16 @@ public class SampleWeddingDetails : IWeddingDetails
             new ("Wedding Breakfast", TimeOnly.Parse("15:30"), TimeOnly.Parse("18:00"), "A sit-down meal with speeches and toasts.", ReceptionVenue),
             new ("Evening Reception", TimeOnly.Parse("19:00"), TimeOnly.Parse("23:00"), "An evening of dancing and celebration.", ReceptionVenue)
         };
+        
+        // Cannot access bride and groom in static context
+        Contacts = new List<Contact> {
+            new("John", "Smith", "Best Man", new ContactDetails("john.smith@gmail.com", "07123456780"), "Cancellations / attendance"),
+            new("Jane", "Doe", "Maid of Honour", new ContactDetails("jane.doe@gmail.com", "07123456781"), "Issues with the website"),
+            new("Jim", "Brown", "Photographer", new ContactDetails("jim.brown@gmail.com", null), "Photography enquiries"),
+            new("Peter", "Johnson", "Venue Coordinator", new ContactDetails("peter.johnson@gmail.com", null), "Catering / dietary requirements"),
+            new(Bride, "Bride", "All other enquiries"),
+            new(Groom, "Groom", "All other enquiries"),
+        };
     }
 
     public Fiance Groom { get; } 
@@ -57,10 +67,12 @@ public class SampleWeddingDetails : IWeddingDetails
     public AccommodationDetails AccommodationDetails { get; } = new (
         "Given the even will run late into the evening, we suggest staying at a nearby hotel.",
         new List<Hotel> {
-            new ("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 20, 95, new Discount(15, "Quote 'GARDENWEDDING' for 15% off your stay.")),
-            new("Paradise Inn", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 14, 75, new Discount.None())
+            new ("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 20, 95, new Discount(15, "Quote 'GARDENWEDDING'")),
+            new("Paradise Inn", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 14, 75, Discount.None())
         }
     );
+    
+    public IEnumerable<Contact> Contacts { get; }
     
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
