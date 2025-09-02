@@ -6,5 +6,5 @@ public record Hotel (
     string Address,
     int DrivingTimeFromVenueMinutes,
     int ApproximatePrice,
-    Discount? Discount
+    Discount Discount
 );
