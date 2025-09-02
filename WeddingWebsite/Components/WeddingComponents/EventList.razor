@@ -1,0 +1,25 @@
+﻿@using WeddingWebsite.Models
+
+<table>
+    <thead>
+    <tr>
+        <th>Time</th>
+        <th>Title</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var eventInfo in Events) {
+        <tr>
+            <td>@eventInfo.Start.ToShortTimeString()</td>
+            <td>@eventInfo.Name</td>
+            <td>@eventInfo.Description</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public required IEnumerable<Event> Events { get; set; }
+}
