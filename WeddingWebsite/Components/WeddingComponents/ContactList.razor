@@ -15,7 +15,7 @@
     <tbody>
     @foreach (var contact in Contacts) {
         <tr>
-            <td>@((IContactable)contact).FullName</td>
+            <td>@(((IContactable)contact).FullName)</td>
             <td>@contact.Role</td>
             <td>@contact.ContactDetails.PhoneNumber</td>
             <td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>
