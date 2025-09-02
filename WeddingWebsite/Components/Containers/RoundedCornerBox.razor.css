@@ -1,0 +1,4 @@
+﻿.rounded-corner-box {
+    background: var(--primary);
+    color: var(--primary-dark);
+}

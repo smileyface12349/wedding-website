@@ -1,0 +1,8 @@
+﻿<div class="rounded-corner-box">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}

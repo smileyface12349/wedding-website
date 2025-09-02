@@ -1,3 +1,10 @@
+:root {
+    --primary: #10a7ec;
+    --primary-dark: #102542;
+    --secondary: #f1dc22;
+    --secondar-dark: #e68019;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
