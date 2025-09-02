@@ -1,0 +1,16 @@
+﻿@using WeddingWebsite.Models.Venues
+
+@if(VenueType != null) {
+    <p>@VenueType</p>
+}
+<h3>@Venue.Name</h3>
+<p>@Venue.Address</p>
+<a href="@Venue.Location.GetGoogleMapsLink()">Google Maps</a>
+
+@code {
+    [Parameter]
+    public required IVenue Venue { get; set; }
+    
+    [Parameter]
+    public string? VenueType { get; set; }
+}

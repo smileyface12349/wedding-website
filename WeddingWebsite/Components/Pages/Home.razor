@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
@@ -10,6 +12,15 @@
 <h1 class="bride-and-groom-names">@WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName</h1>
 
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+
+<TwoBoxes>
+    <Box1>
+        <WeddingVenue Venue="@WeddingDetails.CeremonyVenue" VenueType="Ceremony"/>
+    </Box1>
+    <Box2>
+        <WeddingVenue Venue="@WeddingDetails.ReceptionVenue" VenueType="Reception"/>
+    </Box2>
+</TwoBoxes>
 
 <h1>Welcome! This is a test page.</h1>
 
