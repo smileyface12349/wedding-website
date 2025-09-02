@@ -24,8 +24,9 @@
 
 <CenteredSection>
     <h2>Accommodation</h2>
-    @if(lastFinishTime != null) {<p>The final event is scheduled to finish at @lastFinishTime. If you would like to attend the whole event, we suggest booking nearby accommodation. However, this is not required and you are more than welcome to leave early if you have not booked accommodation.</p>}
-    @else {<p>If you would like to book accommodation, we would suggest the following options:</p>}
+    @if(lastFinishTime != null) {<p>The final event will finish at approximately @lastFinishTime. If you would like to attend the whole event, we suggest booking nearby accommodation. However, you will still be able to attend the vast majority of the event without booking accommodation</p>}
+    else {<p>If you would like to book accommodation, we would suggest the following options:</p>}
+    <AccommodationList AccommodationDetails="@WeddingDetails.AccommodationDetails"/>
 </CenteredSection>
 
 <div class="bottom-spacer"></div>

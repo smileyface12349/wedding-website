@@ -1,0 +1,27 @@
+﻿@using WeddingWebsite.Models
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Distance</th>
+        <th>Price</th>
+        <th>Exclusive Discount</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var hotel in AccommodationDetails.Hotels) {
+        <tr>
+            <td>@hotel.Name</td>
+            <td>@hotel.DrivingTimeFromVenueMinutes min</td>
+            <td>£@hotel.ApproximatePrice</td>
+            <td>@hotel.Discount.ToString()</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public required AccommodationDetails AccommodationDetails { get; set; }
+}
