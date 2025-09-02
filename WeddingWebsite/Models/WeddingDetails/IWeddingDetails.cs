@@ -15,6 +15,7 @@ public interface IWeddingDetails
     public IEnumerable<Event> Events { get; }
     public DressCode DressCode { get; }
     public AccommodationDetails AccommodationDetails { get; }
+    public IEnumerable<Contact> Contacts { get; }
     
     // Static Files and External Links
     public WebsiteImage MainImage { get; }

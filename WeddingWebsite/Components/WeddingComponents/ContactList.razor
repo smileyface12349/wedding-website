@@ -1,0 +1,31 @@
+﻿@using IdentityModel
+@using WeddingWebsite.Models
+@using WeddingWebsite.Models.People
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Responsible For</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var contact in Contacts) {
+        <tr>
+            <td>@((IContactable)contact).FullName</td>
+            <td>@contact.Role</td>
+            <td>@contact.ContactDetails.PhoneNumber</td>
+            <td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>
+            <td>@contact.ReasonForContacting</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public required IEnumerable<Contact> Contacts { get; set; }
+}
