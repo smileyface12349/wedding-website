@@ -1,0 +1,10 @@
+﻿<Section>
+    <div class="center">
+        @ChildContent
+    </div>
+</Section>
+
+@code {
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}

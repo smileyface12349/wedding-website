@@ -22,10 +22,21 @@
     </Box2>
 </TwoBoxes>
 
-<h1>Welcome! This is a test page.</h1>
-
-<p>The wedding is between @WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName on @WeddingDetails.WeddingDate.ToString().</p>
-
-<p>The ceremony will take place at @WeddingDetails.CeremonyVenue.Name and the reception will be at @WeddingDetails.ReceptionVenue.Name.</p>
+<CenteredSection>
+    <h2>Accommodation</h2>
+    @if(lastFinishTime != null) {<p>The final event is scheduled to finish at @lastFinishTime. If you would like to attend the whole event, we suggest booking nearby accommodation. However, this is not required and you are more than welcome to leave early if you have not booked accommodation.</p>}
+    @else {<p>If you would like to book accommodation, we would suggest the following options:</p>}
+</CenteredSection>
 
 <p>We recommend you book accommodation at @WeddingDetails.AccommodationDetails.RecommendedHotel?.Name. Other options are available.</p>
+
+@code {
+
+    string? lastFinishTime;
+    
+    protected override void OnInitialized()
+    {
+        lastFinishTime = WeddingDetails.Events.Last().End?.ToShortTimeString();
+    }
+
+}
