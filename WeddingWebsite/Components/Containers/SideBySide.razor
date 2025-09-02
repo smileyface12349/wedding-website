@@ -1,0 +1,16 @@
+﻿<div class="side-by-side-container">
+    <div class="side">
+        @LeftContent
+    </div>
+    <div class="side">
+        @RightContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public required RenderFragment LeftContent { get; set; }
+    
+    [Parameter]
+    public required RenderFragment RightContent { get; set; }
+}

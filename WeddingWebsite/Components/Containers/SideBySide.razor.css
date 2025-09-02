@@ -1,0 +1,7 @@
+﻿.side-by-side-container {
+    display: flex;
+}
+
+.side {
+    flex: 1;
+}
