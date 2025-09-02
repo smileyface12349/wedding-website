@@ -12,7 +12,7 @@ public record Discount(
 
     public override string ToString() {
         if (PercentDiscount <= 0)
-            return "No discount available";
+            return "None";
         return string.IsNullOrWhiteSpace(ClaimInstructions) 
             ? $"{PercentDiscount}% off" 
             : $"{PercentDiscount}% off ({ClaimInstructions})";
