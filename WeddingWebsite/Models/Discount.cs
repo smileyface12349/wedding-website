@@ -18,8 +18,7 @@ public record Discount(
             : $"{PercentDiscount}% off ({ClaimInstructions})";
     }
 
-    public record None : Discount
-    {
-        public None() : base(0, string.Empty) { }
+    public static Discount None() {
+        return new Discount(0, string.Empty);
     }
 };
