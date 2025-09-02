@@ -1,0 +1,24 @@
+﻿@using WeddingWebsite.Components.Containers
+
+<SideBySide>
+    <LeftContent>
+        <div class="box">
+            @Box1
+        </div>
+    </LeftContent>
+    <RightContent>
+        <div class="box">
+            @Box2
+        </div>
+    </RightContent>
+</SideBySide>
+    
+
+
+@code {
+    [Parameter]
+    public required RenderFragment Box1 { get; set; }
+    
+    [Parameter]
+    public required RenderFragment Box2 { get; set; }
+}
