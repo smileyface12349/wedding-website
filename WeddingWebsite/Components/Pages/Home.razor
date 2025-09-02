@@ -7,6 +7,10 @@
 
 @((MarkupString)@WeddingDetails.MainImage.GetHtml("main-image"))
 
+<h1 class="bride-and-groom-names">@WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName</h1>
+
+<h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+
 <h1>Welcome! This is a test page.</h1>
 
 <p>The wedding is between @WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName on @WeddingDetails.WeddingDate.ToString().</p>
