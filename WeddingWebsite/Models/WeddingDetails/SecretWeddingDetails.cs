@@ -57,10 +57,10 @@ public class SecretWeddingDetails : IWeddingDetails
     public DressCode DressCode { get; } 
         = new DressCode("Cocktail", "Please dress smartly for the occasion. Cocktail attire is preferred, but feel free to wear something that makes you feel comfortable and happy.");
     
-    public AccommodationDetails AccommodationDetails { get; } = new AccommodationDetails(
+    public AccommodationDetails AccommodationDetails { get; } = new (
         "Given the even will run late into the evening, we suggest staying at a nearby hotel.",
-        new Hotel("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 95, new Discount(15, "Quote 'GARDENWEDDING' for 15% off your stay.")),
         new List<Hotel> {
+            new ("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 95, new Discount(15, "Quote 'GARDENWEDDING' for 15% off your stay.")),
             new("Paradise Inn", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 75, new Discount.None())
         }
     );
