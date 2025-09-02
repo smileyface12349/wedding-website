@@ -17,8 +17,9 @@
         <tr>
             <td>@(((IContactable)contact).FullName)</td>
             <td>@contact.Role</td>
-            <td>@contact.ContactDetails.PhoneNumber</td>
-            <td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>
+            <td>@(contact.ContactDetails.PhoneNumber ?? "N/A")</td>
+            @if(contact.ContactDetails.Email == null) {<td>N/A</td>}
+            else {<td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>}
             <td>@contact.ReasonForContacting</td>
         </tr>
     }
