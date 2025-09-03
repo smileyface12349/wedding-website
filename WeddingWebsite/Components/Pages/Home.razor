@@ -13,26 +13,7 @@
 
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
 
-<TwoBoxes>
-    <Box1>
-        <WeddingVenue Venue="@WeddingDetails.CeremonyVenue" VenueType="Ceremony"/>
-    </Box1>
-    <Box2>
-        <WeddingVenue Venue="@WeddingDetails.ReceptionVenue" VenueType="Reception"/>
-    </Box2>
-</TwoBoxes>
-
-<CenteredSection>
-    <h2>Accommodation</h2>
-    @if(lastFinishTime != null) {<p>The final event will finish at approximately @lastFinishTime. If you would like to attend the whole event, we suggest booking nearby accommodation. However, you will still be able to attend the vast majority of the event without booking accommodation</p>}
-    else {<p>If you would like to book accommodation, we would suggest the following options:</p>}
-    <AccommodationList AccommodationDetails="@WeddingDetails.AccommodationDetails"/>
-</CenteredSection>
-
-<CenteredSection>
-    <h2>Order of the Day</h2>
-    <EventList Events="@WeddingDetails.Events"/>
-</CenteredSection>
+<WeddingTimeline/>
 
 <CenteredSection>
     <h2>Contact Details</h2>

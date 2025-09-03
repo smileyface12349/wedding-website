@@ -1,0 +1,24 @@
+﻿@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<MudTimeline>
+    @foreach (var eventInfo in WeddingDetails.Events)
+    {
+        <MudTimelineItem Color="Color.Primary" Elevation="25" TimelineAlign="TimelineAlign.End">
+            <ItemOpposite>
+                <MudText Color="Color.Primary" Typo="Typo.h6">@eventInfo.Start.ToShortTimeString()</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudPaper Elevation="0" Class="mt-n1">
+                    <MudText Color="Color.Primary" Typo="Typo.h6" GutterBottom="true">@eventInfo.Name</MudText>
+                    <MudText Typo="Typo.body2">@eventInfo.Description</MudText>
+                </MudPaper>
+            </ItemContent>
+        </MudTimelineItem>
+    }
+</MudTimeline>
+
+@code {
+    
+}

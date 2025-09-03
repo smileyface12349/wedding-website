@@ -1,8 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using MudBlazor.Utilities
+@inherits LayoutComponentBase
 
-<MudThemeProvider />
 <MudPopoverProvider />
-
 <MudDialogProvider />
 
 <div class="page">
@@ -27,3 +26,19 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+
+
+
+<MudThemeProvider Theme="MyCustomTheme" />
+
+@code{
+    MudTheme MyCustomTheme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = new MudColor(77, 204, 225, 255),
+        },
+    };
+}
+
