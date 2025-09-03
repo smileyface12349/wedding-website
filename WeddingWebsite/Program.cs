@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using WeddingWebsite.Components;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
@@ -19,6 +20,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<WeddingInfoService>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddMudServices();
 
 builder.Services.AddAuthentication(options =>
     {
