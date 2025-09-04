@@ -7,7 +7,7 @@
 
 <MudTimeline>
     @foreach (var item in timelineItems) {
-        <MudTimelineItem Color=Color.Primary Elevation="25" TimelineAlign="TimelineAlign.End">
+        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25" TimelineAlign="TimelineAlign.End">
             <ItemOpposite>
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
@@ -23,7 +23,9 @@
             </ItemContent>
             <ItemDot>
                 @if (item.Type == TimelineItemType.VenueChange) {
-                    <MudIcon Icon="@Icons.Material.Filled.DirectionsCar"/>
+                    <MudIcon Icon="@Icons.Material.Filled.DirectionsCar" Style="width: 100%" />
+                } else if (item.Type == TimelineItemType.Accommodation) {
+                    <MudIcon Icon="@Icons.Material.Filled.Hotel" Style="width: 100%" />
                 }
             </ItemDot>
         </MudTimelineItem>
@@ -67,6 +69,18 @@
                 ev.Modals
             ));
         }
+        
+        // Finally, add an accommodation item if appropriate
+        if (WeddingDetails.AccommodationDetails.Hotels.Any()) {
+            timelineItems = timelineItems.Append(new TimelineItem(
+                TimelineItemType.Accommodation,
+                previousEndTime?.ToShortTimeString() ?? "??:??",
+                "Accommodation",
+                WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
+                WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
+                [new WeddingModal("Suggested Hotels", "TODO: Info about all the hotels")]
+            ));
+        }
     }
     
     private class TimelineItem (
@@ -85,21 +99,14 @@
         public string VenueName { get; } = VenueName;
         public IEnumerable<WeddingModal> Modals { get; } = Modals;
         
-        public Color GetColour()
-        {
-            return Type switch
-            {
-                TimelineItemType.VenueChange => Color.Secondary,
-                TimelineItemType.Event => Color.Primary,
-                _ => Color.Default
-            };
-        }
+        public Size GetDotSize() => Type == TimelineItemType.Event ? Size.Small : Size.Medium;
     };
     
     private enum TimelineItemType
     {
         VenueChange,
-        Event
+        Event,
+        Accommodation
     }
 
 }
