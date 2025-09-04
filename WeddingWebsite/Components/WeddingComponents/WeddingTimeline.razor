@@ -14,11 +14,14 @@
             <ItemContent>
                 <OutlinedBox>
                     <h2>@item.Title</h2>
-                    <p>@item.Description</p>
-                    <p>@item.VenueName</p>
+                    <p class="event-description">@item.Description</p>
                     @foreach (var modal in item.Modals) {
                         <Button>@modal.Label</Button>
                     }
+                    <div class="event-location">
+                        <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+                        <span>@item.VenueName</span>
+                    </div>
                 </OutlinedBox>
             </ItemContent>
             <ItemDot>
@@ -46,10 +49,10 @@
             if (previousVenueName != ev.Venue.Name) {
                 timelineItems = timelineItems.Append(new TimelineItem (
                     Type : TimelineItemType.VenueChange,
-                    Time : previousEndTime?.ToShortTimeString() ?? "??:??",
+                    Time : previousEndTime?.ToShortTimeString() ?? "Start",
                     Title : "Transport",
-                    Description : ev.Venue.Directions?.DrivingTimeInMinutes?.ToString() + " min drive" ?? "Venue change",
-                    VenueName : previousVenueName != null ? previousVenueName + " ➡️ " + ev.Venue.Name : " ➡️ " + ev.Venue.Name,
+                    Description : ev.Venue.Directions?.DrivingTimeInMinutes != null ? ev.Venue.Directions?.DrivingTimeInMinutes + " min drive." : "Travel to the venue.",
+                    VenueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
                     Modals : [new WeddingModal("Travel Directions", "TODO")]
                 ));
             }

@@ -1,1 +1,10 @@
-﻿
+﻿.event-location {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.event-description {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
