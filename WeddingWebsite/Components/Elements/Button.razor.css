@@ -1,0 +1,17 @@
+﻿button {   
+    background: none;
+    transition-duration: 0.2s;
+    border-style: solid;
+    border-color: var(--primary);
+    border-width: 2px;
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: var(--primary);
+    color: white;
+}

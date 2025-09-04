@@ -1,31 +1,31 @@
-﻿@using MudBlazor.Utilities
-@using WeddingWebsite.Models.WebsiteElement
+﻿@using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
 
 @inject IWeddingDetails WeddingDetails
 
 <MudTimeline>
     @foreach (var item in timelineItems) {
-        <MudTimelineItem Color=@item.GetColour() Elevation="25" TimelineAlign="TimelineAlign.End">
+        <MudTimelineItem Color=Color.Primary Elevation="25" TimelineAlign="TimelineAlign.End">
             <ItemOpposite>
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <MudCard>
-                    <MudCardHeader>
-                        <MudText Color="Color.Primary" Typo="Typo.h6" GutterBottom="true">@item.Title</MudText>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudText Typo="Typo.body2">@item.Description</MudText>
-                        <MudText Style="font-size: 12px; margin-top: 10px;">@item.VenueName</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        @foreach (var modal in item.Modals) {
-                            <MudButton Color="Color.Primary">@modal.Label</MudButton>
-                        }
-                    </MudCardActions>
-                </MudCard>
+                <OutlinedBox>
+                    <h2>@item.Title</h2>
+                    <p>@item.Description</p>
+                    <p>@item.VenueName</p>
+                    @foreach (var modal in item.Modals) {
+                        <Button>@modal.Label</Button>
+                    }
+                </OutlinedBox>
             </ItemContent>
+            <ItemDot>
+                @if (item.Type == TimelineItemType.VenueChange) {
+                    <MudIcon Icon="@Icons.Material.Filled.DirectionsCar"/>
+                }
+            </ItemDot>
         </MudTimelineItem>
     }
 </MudTimeline>
@@ -45,7 +45,7 @@
                 timelineItems = timelineItems.Append(new TimelineItem (
                     Type : TimelineItemType.VenueChange,
                     Time : previousEndTime?.ToShortTimeString() ?? "??:??",
-                    Title : "Travel Time",
+                    Title : "Transport",
                     Description : ev.Venue.Directions?.DrivingTimeInMinutes?.ToString() + " min drive" ?? "Venue change",
                     VenueName : previousVenueName != null ? previousVenueName + " ➡️ " + ev.Venue.Name : " ➡️ " + ev.Venue.Name,
                     Modals : [new WeddingModal("Travel Directions", "TODO")]

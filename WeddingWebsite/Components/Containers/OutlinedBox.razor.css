@@ -1,0 +1,8 @@
+﻿.outlined-box {
+    border-color: var(--primary-dark);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 0;
+    background: white;
+    padding: 10px;
+}
