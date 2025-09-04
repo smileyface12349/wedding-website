@@ -1,4 +1,5 @@
 ﻿using WeddingWebsite.Models.Venues;
+using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models;
 
@@ -11,5 +12,10 @@ public record Event(
     TimeOnly Start,
     TimeOnly? End,
     string Description,
-    IVenue Venue
-);
+    IVenue Venue,
+    IEnumerable<WeddingModal> Modals
+)
+{
+    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue) 
+        : this(name, start, end, description, venue, new List<WeddingModal>()) {}
+}

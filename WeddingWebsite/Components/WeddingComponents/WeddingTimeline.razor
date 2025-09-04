@@ -10,10 +10,15 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@eventInfo.Start.ToShortTimeString()</MudText>
             </ItemOpposite>
             <ItemContent>
-                <MudPaper Elevation="0" Class="mt-n1">
+                <MudCard>
                     <MudText Color="Color.Primary" Typo="Typo.h6" GutterBottom="true">@eventInfo.Name</MudText>
                     <MudText Typo="Typo.body2">@eventInfo.Description</MudText>
-                </MudPaper>
+                    <MudCardActions>
+                        @foreach (var modal in eventInfo.Modals) {
+                            <MudButton>@modal.Label</MudButton>
+                        }
+                    </MudCardActions>
+                </MudCard>
             </ItemContent>
         </MudTimelineItem>
     }
