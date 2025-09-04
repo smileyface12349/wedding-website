@@ -13,9 +13,10 @@ public record Event(
     TimeOnly? End,
     string Description,
     IVenue Venue,
+    WebsiteImage? Image,
     IEnumerable<WeddingModal> Modals
 )
 {
     public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue) 
-        : this(name, start, end, description, venue, new List<WeddingModal>()) {}
+        : this(name, start, end, description, venue, null, new List<WeddingModal>()) {}
 }
