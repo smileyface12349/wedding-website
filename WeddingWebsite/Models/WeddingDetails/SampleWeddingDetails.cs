@@ -70,7 +70,8 @@ public class SampleWeddingDetails : IWeddingDetails
         new List<Hotel> {
             new ("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 20, 95, new Discount(15, "Quote 'GARDENWEDDING'")),
             new("Paradise Inn", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 14, 75, Discount.None())
-        }
+        },
+        new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );
     
     public IEnumerable<Contact> Contacts { get; }
