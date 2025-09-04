@@ -45,7 +45,8 @@ public class SampleWeddingDetails : IWeddingDetails
         "123 Paradise Lane, Eden, ED1 2AB",
         new TravelDirections(
             "We suggest arriving by foot.",
-            "There is no parking available at the venue."
+            "There is no parking available at the venue.",
+            20
         )
     );
     
