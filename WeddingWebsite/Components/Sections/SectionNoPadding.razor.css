@@ -1,0 +1,5 @@
+﻿section {
+    width: calc(100% - 2rem);
+    margin: auto;
+    max-width: 1000px;
+}
