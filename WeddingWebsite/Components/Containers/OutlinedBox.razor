@@ -1,8 +1,17 @@
-﻿<div class="outlined-box">
-    @ChildContent
+﻿@using WeddingWebsite.Models.WebsiteElement
+<div class="outlined-box">
+    @if(Image != null) {
+        <img src="@Image.Url" alt="@Image.AltText">
+    }
+    <div class="outlined-box-inner">
+        @ChildContent
+    </div>
 </div>
 
 @code {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public WebsiteImage? Image { get; set; }
 }
