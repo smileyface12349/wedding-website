@@ -1,21 +1,27 @@
-﻿@using WeddingWebsite.Models.WeddingDetails
+﻿@using MudBlazor.Utilities
+@using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
 
 <MudTimeline>
-    @foreach (var eventInfo in WeddingDetails.Events)
-    {
-        <MudTimelineItem Color="Color.Primary" Elevation="25" TimelineAlign="TimelineAlign.End">
+    @foreach (var item in timelineItems) {
+        <MudTimelineItem Color=@item.GetColour() Elevation="25" TimelineAlign="TimelineAlign.End">
             <ItemOpposite>
-                <MudText Color="Color.Primary" Typo="Typo.h6">@eventInfo.Start.ToShortTimeString()</MudText>
+                <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
                 <MudCard>
-                    <MudText Color="Color.Primary" Typo="Typo.h6" GutterBottom="true">@eventInfo.Name</MudText>
-                    <MudText Typo="Typo.body2">@eventInfo.Description</MudText>
+                    <MudCardHeader>
+                        <MudText Color="Color.Primary" Typo="Typo.h6" GutterBottom="true">@item.Title</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText Typo="Typo.body2">@item.Description</MudText>
+                        <MudText Style="font-size: 12px; margin-top: 10px;">@item.VenueName</MudText>
+                    </MudCardContent>
                     <MudCardActions>
-                        @foreach (var modal in eventInfo.Modals) {
-                            <MudButton>@modal.Label</MudButton>
+                        @foreach (var modal in item.Modals) {
+                            <MudButton Color="Color.Primary">@modal.Label</MudButton>
                         }
                     </MudCardActions>
                 </MudCard>
@@ -25,5 +31,75 @@
 </MudTimeline>
 
 @code {
+
+    private IEnumerable<TimelineItem> timelineItems = [];
     
+    protected override void OnInitialized()
+    {
+        string? previousVenueName = null;
+        TimeOnly? previousEndTime = null;
+        foreach (var ev in WeddingDetails.Events)
+        {
+            // Generate a timeline item for the venue change
+            if (previousVenueName != ev.Venue.Name) {
+                timelineItems = timelineItems.Append(new TimelineItem (
+                    Type : TimelineItemType.VenueChange,
+                    Time : previousEndTime?.ToShortTimeString() ?? "??:??",
+                    Title : "Travel Time",
+                    Description : ev.Venue.Directions?.DrivingTimeInMinutes?.ToString() + " min drive" ?? "Venue change",
+                    VenueName : previousVenueName != null ? previousVenueName + " ➡️ " + ev.Venue.Name : " ➡️ " + ev.Venue.Name,
+                    Modals : [new WeddingModal("Travel Directions", "TODO")]
+                ));
+            }
+            
+            // Update previous venue
+            previousVenueName = ev.Venue.Name;
+            previousEndTime = ev.End;
+            
+            // Generate a timeline item for the event itself
+            timelineItems = timelineItems.Append(new TimelineItem
+            (
+                TimelineItemType.Event,
+                ev.Start.ToShortTimeString(),
+                ev.Name,
+                ev.Description,
+                ev.Venue.Name,
+                ev.Modals
+            ));
+        }
+    }
+    
+    private class TimelineItem (
+        TimelineItemType Type,
+        string Time,
+        string Title,
+        string Description,
+        string VenueName,
+        IEnumerable<WeddingModal> Modals
+    )
+    {
+        public TimelineItemType Type { get; } = Type;
+        public string Time { get; } = Time;
+        public string Title { get; } = Title;
+        public string Description { get; } = Description;
+        public string VenueName { get; } = VenueName;
+        public IEnumerable<WeddingModal> Modals { get; } = Modals;
+        
+        public Color GetColour()
+        {
+            return Type switch
+            {
+                TimelineItemType.VenueChange => Color.Secondary,
+                TimelineItemType.Event => Color.Primary,
+                _ => Color.Default
+            };
+        }
+    };
+    
+    private enum TimelineItemType
+    {
+        VenueChange,
+        Event
+    }
+
 }
