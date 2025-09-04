@@ -5,14 +5,14 @@
 
 @inject IWeddingDetails WeddingDetails
 
-<MudTimeline>
+<MudTimeline TimelinePosition="TimelinePosition.Alternate">
     @foreach (var item in timelineItems) {
-        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25" TimelineAlign="TimelineAlign.End">
+        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
             <ItemOpposite>
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <OutlinedBox>
+                <OutlinedBox Image=@item.Image>
                     <h2>@item.Title</h2>
                     <p class="event-description">@item.Description</p>
                     @foreach (var modal in item.Modals) {
@@ -53,7 +53,8 @@
                     Title : "Transport",
                     Description : ev.Venue.Directions?.DrivingTimeInMinutes != null ? ev.Venue.Directions?.DrivingTimeInMinutes + " min drive." : "Travel to the venue.",
                     VenueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
-                    Modals : [new WeddingModal("Travel Directions", "TODO")]
+                    Modals : [new WeddingModal("Travel Directions", "TODO")],
+                    Image : null
                 ));
             }
             
@@ -69,7 +70,8 @@
                 ev.Name,
                 ev.Description,
                 ev.Venue.Name,
-                ev.Modals
+                ev.Modals,
+                ev.Image
             ));
         }
         
@@ -81,7 +83,8 @@
                 "Accommodation",
                 WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
                 WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
-                [new WeddingModal("Suggested Hotels", "TODO: Info about all the hotels")]
+                [new WeddingModal("Suggested Hotels", "TODO: Info about all the hotels")],
+                WeddingDetails.AccommodationDetails.Image
             ));
         }
     }
@@ -92,7 +95,8 @@
         string Title,
         string Description,
         string VenueName,
-        IEnumerable<WeddingModal> Modals
+        IEnumerable<WeddingModal> Modals,
+        WebsiteImage? Image
     )
     {
         public TimelineItemType Type { get; } = Type;
@@ -101,6 +105,7 @@
         public string Description { get; } = Description;
         public string VenueName { get; } = VenueName;
         public IEnumerable<WeddingModal> Modals { get; } = Modals;
+        public WebsiteImage? Image { get; } = Image;
         
         public Size GetDotSize() => Type == TimelineItemType.Event ? Size.Small : Size.Medium;
     };
