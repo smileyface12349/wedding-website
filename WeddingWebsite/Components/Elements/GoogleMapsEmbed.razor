@@ -1,0 +1,18 @@
+﻿@using WeddingWebsite.Models
+@using WeddingWebsite.Models.Credentials
+@inject IGoogleMapsApiKey Credentials
+<iframe
+    width="600"
+    height="450"
+    style="border:0"
+    loading="lazy"
+    allowfullscreen
+    referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps/embed/v1/place?key=@Credentials.GoogleMaps
+    &q=@Location.Latitude,@Location.Longitude">
+</iframe>
+
+@code {
+    [Parameter]
+    public required Location Location { get; set; }
+}
