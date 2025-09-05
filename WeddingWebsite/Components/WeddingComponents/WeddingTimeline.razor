@@ -26,10 +26,8 @@
                 </OutlinedBox>
             </ItemContent>
             <ItemDot>
-                @if (item.Type == TimelineItemType.VenueChange) {
-                    <MudIcon Icon="@Icons.Material.Filled.DirectionsCar" Style="width: 100%" />
-                } else if (item.Type == TimelineItemType.Accommodation) {
-                    <MudIcon Icon="@Icons.Material.Filled.Hotel" Style="width: 100%" />
+                @if (item.Icon != null) {
+                    <MudIcon Icon=@item.Icon Style="width: 100%" />
                 }
             </ItemDot>
         </MudTimelineItem>
@@ -55,6 +53,7 @@
                     description : ev.Venue.Directions?.DrivingTimeInMinutes != null ? ev.Venue.Directions?.DrivingTimeInMinutes + " min drive." : "Travel to the venue.",
                     venueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
                     modals : [new WeddingModal("Travel Directions", "TODO")],
+                    icon: Icons.Material.Filled.DirectionsCar,
                     image : null,
                     mapsLocation: ev.Venue.Location
                 ));
@@ -73,6 +72,7 @@
                 ev.Description,
                 ev.Venue.Name,
                 ev.Modals,
+                null,
                 ev.Image
             ));
         }
@@ -86,6 +86,7 @@
                 WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
                 WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
                 [new WeddingModal("Suggested Hotels", "TODO: Info about all the hotels")],
+                @Icons.Material.Filled.Hotel,
                 WeddingDetails.AccommodationDetails.Image
             ));
         }
@@ -98,7 +99,8 @@
         string description,
         string venueName,
         IEnumerable<WeddingModal> modals,
-        WebsiteImage? image,
+        string? icon = null,
+        WebsiteImage? image = null,
         Location? mapsLocation = null
     )
     {
@@ -108,10 +110,11 @@
         public string Description { get; } = description;
         public string VenueName { get; } = venueName;
         public IEnumerable<WeddingModal> Modals { get; } = modals;
+        public string? Icon { get; } = icon;
         public WebsiteImage? Image { get; } = image;
         public Location? MapsLocation { get; } = mapsLocation;
         
-        public Size GetDotSize() => Type == TimelineItemType.Event ? Size.Small : Size.Medium;
+        public Size GetDotSize() => Icon == null ? Size.Small : Size.Medium;
     };
     
     private enum TimelineItemType
@@ -120,5 +123,4 @@
         Event,
         Accommodation
     }
-
 }
