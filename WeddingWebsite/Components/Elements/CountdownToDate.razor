@@ -1,0 +1,33 @@
+﻿<p>@Duration.Days days to go!</p>
+
+@code {
+    [Parameter]
+    public required DateTime CountdownTo { get; set; }
+    
+    private TimeSpan Duration {get; set;} = TimeSpan.Zero;
+    
+    // Logic to update the timer each second:
+    
+    PeriodicTimer periodicTimer = new (TimeSpan.FromSeconds(1));
+
+    protected override void OnInitialized()
+    {
+        Duration = CountdownTo.Subtract(DateTime.UtcNow);
+        RunTimer(); 
+    }
+
+    async Task RunTimer()
+    {
+        while (await periodicTimer.WaitForNextTickAsync()) 
+        { 
+            Duration = CountdownTo.Subtract(DateTime.UtcNow);
+            Console.WriteLine(Duration.TotalSeconds);
+            await InvokeAsync(StateHasChanged);
+        }    
+    }
+
+    public void Dispose()
+    {
+        periodicTimer?.Dispose();
+    }
+}

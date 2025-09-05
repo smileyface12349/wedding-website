@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WeddingDetails
@@ -12,6 +13,10 @@
 <h1 class="bride-and-groom-names">@WeddingDetails.Groom.FirstName and @WeddingDetails.Bride.FirstName</h1>
 
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+
+<CenteredSection>
+    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"></CountdownToDate>
+</CenteredSection>
 
 <div style="background-color: var(--secondary-background);">
 <SectionNoPadding>
