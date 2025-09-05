@@ -17,7 +17,7 @@
                     <h2>@item.Title</h2>
                     <p class="event-description">@item.Description</p>
                     @foreach (var modal in item.Modals) {
-                        <Button>@modal.Label</Button>
+                        <ModalButton Modal="@modal"/>
                     }
                     <div class="event-location">
                         <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
