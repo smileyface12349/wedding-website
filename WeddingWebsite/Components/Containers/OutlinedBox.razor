@@ -1,7 +1,13 @@
-﻿@using WeddingWebsite.Models.WebsiteElement
+﻿@using WeddingWebsite.Models
+@using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Components.Elements
+
 <div class="outlined-box">
     @if(Image != null) {
         <img src="@Image.Url" alt="@Image.AltText">
+    }
+    @if(MapsLocation != null) {
+        <GoogleMapsEmbed Location="@MapsLocation"/>
     }
     <div class="outlined-box-inner">
         @ChildContent
@@ -14,4 +20,7 @@
     
     [Parameter]
     public WebsiteImage? Image { get; set; }
+    
+    [Parameter]
+    public Location? MapsLocation { get; set; }
 }
