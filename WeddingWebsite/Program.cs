@@ -13,7 +13,7 @@ using WeddingWebsite.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Here is where you choose the implementation of IWeddingDetails to use
-builder.Services.AddScoped<IWeddingDetails, SecretWeddingDetails>();
+builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
 
 // Credentials from credentials.json
 builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
