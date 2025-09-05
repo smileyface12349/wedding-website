@@ -2,6 +2,7 @@
 @using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models
 
 @inject IWeddingDetails WeddingDetails
 
@@ -12,7 +13,7 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <OutlinedBox Image=@item.Image>
+                <OutlinedBox Image=@item.Image MapsLocation=@item.MapsLocation>
                     <h2>@item.Title</h2>
                     <p class="event-description">@item.Description</p>
                     @foreach (var modal in item.Modals) {
@@ -54,7 +55,8 @@
                     Description : ev.Venue.Directions?.DrivingTimeInMinutes != null ? ev.Venue.Directions?.DrivingTimeInMinutes + " min drive." : "Travel to the venue.",
                     VenueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
                     Modals : [new WeddingModal("Travel Directions", "TODO")],
-                    Image : null
+                    Image : null,
+                    MapsLocation: ev.Venue.Location
                 ));
             }
             
@@ -96,7 +98,8 @@
         string Description,
         string VenueName,
         IEnumerable<WeddingModal> Modals,
-        WebsiteImage? Image
+        WebsiteImage? Image,
+        Location? MapsLocation = null
     )
     {
         public TimelineItemType Type { get; } = Type;
@@ -106,6 +109,7 @@
         public string VenueName { get; } = VenueName;
         public IEnumerable<WeddingModal> Modals { get; } = Modals;
         public WebsiteImage? Image { get; } = Image;
+        public Location? MapsLocation { get; } = MapsLocation;
         
         public Size GetDotSize() => Type == TimelineItemType.Event ? Size.Small : Size.Medium;
     };
