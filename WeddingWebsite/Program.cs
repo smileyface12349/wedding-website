@@ -6,6 +6,7 @@ using MudBlazor.Services;
 using WeddingWebsite.Components;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
+using WeddingWebsite.Models.Credentials;
 using WeddingWebsite.Models.WeddingDetails;
 using WeddingWebsite.Services;
 
@@ -13,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Here is where you choose the implementation of IWeddingDetails to use
 builder.Services.AddScoped<IWeddingDetails, SecretWeddingDetails>();
+
+// Credentials from credentials.json
+builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
