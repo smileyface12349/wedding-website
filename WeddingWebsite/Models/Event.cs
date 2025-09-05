@@ -14,9 +14,13 @@ public record Event(
     string Description,
     IVenue Venue,
     WebsiteImage? Image,
+    string? Icon,
     IEnumerable<WeddingModal> Modals
 )
 {
-    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue) 
-        : this(name, start, end, description, venue, null, new List<WeddingModal>()) {}
+    /// <summary>
+    /// Secondary constructor to make modals optional
+    /// </summary>
+    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue, WebsiteImage? image = null, string? icon = null) 
+        : this(name, start, end, description, venue, image, icon, new List<WeddingModal>()) {}
 }
