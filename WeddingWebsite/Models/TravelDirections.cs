@@ -3,8 +3,7 @@
 namespace WeddingWebsite.Models;
 
 public record TravelDirections(
-    string Message,
-    string Parking,
+    string HtmlContent,
     int? DrivingTimeInMinutes = null,
-    IWebsiteElement? Media = null
+    WebsiteImage? CoverImage = null
 );

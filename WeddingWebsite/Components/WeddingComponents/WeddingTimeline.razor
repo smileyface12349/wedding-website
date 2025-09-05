@@ -54,8 +54,8 @@
                     venueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
                     modals : [new WeddingModal("Travel Directions", "TODO")],
                     icon: Icons.Material.Filled.DirectionsCar,
-                    image : null,
-                    mapsLocation: ev.Venue.Location
+                    image : ev.Venue.Directions?.CoverImage,
+                    mapsLocation: ev.Venue.Directions?.CoverImage == null ? ev.Venue.Location : null
                 ));
             }
             
