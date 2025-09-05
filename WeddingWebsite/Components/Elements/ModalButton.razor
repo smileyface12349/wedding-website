@@ -1,0 +1,21 @@
+﻿@inject IDialogService DialogService
+
+@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Models.WebsiteElement
+
+@rendermode InteractiveServer
+
+<button @onclick="OpenDialogAsync">@Modal.Label</button>
+
+@code {
+    [Parameter]
+    public required WeddingModal Modal { get; set; }
+    
+    private Task OpenDialogAsync() {
+        var parameters = new DialogParameters<EventDialog> {
+            { x => x.HtmlContent,  Modal.HtmlContent }
+        };
+    
+        return DialogService.ShowAsync<EventDialog>(Modal.Title, parameters);
+    }
+}
