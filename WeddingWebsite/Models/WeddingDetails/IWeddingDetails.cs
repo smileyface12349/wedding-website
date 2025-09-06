@@ -21,7 +21,4 @@ public interface IWeddingDetails
     public WebsiteImage MainImage { get; }
     public IEnumerable<WebsiteImage> GalleryImages { get; }
     public WebsiteLink RegistryLink { get; }
-    
-    // Configuration
-    public UsersCanAddGuests UsersCanAddGuests { get; }
 }

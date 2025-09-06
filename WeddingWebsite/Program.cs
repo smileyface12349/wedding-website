@@ -7,16 +7,16 @@ using WeddingWebsite.Components;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
 using WeddingWebsite.Models.Credentials;
+using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WeddingDetails;
 using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Here is where you choose the implementation of IWeddingDetails to use
-builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
-
-// Credentials from credentials.json
-builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
+// This is the stuff that needs to be configured
+builder.Services.AddScoped<IWeddingDetails, RealWeddingDetails>();
+builder.Services.AddScoped<IWebsiteConfig, WebsiteConfig>(); // TODO: I don't think this is the best practice for config
+builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>(); // TODO: Switch to credentials.json?
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
