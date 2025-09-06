@@ -1,5 +1,8 @@
 ﻿@using MudBlazor.Utilities
+@using WeddingWebsite.Models.WebsiteConfig
 @inherits LayoutComponentBase
+
+@inject IWebsiteConfig Config
 
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -30,16 +33,20 @@
 
 
 
-<MudThemeProvider Theme="MyCustomTheme" />
+<MudThemeProvider Theme="Theme" />
 
 @code{
-    MudTheme MyCustomTheme = new MudTheme()
-    {
-        PaletteLight = new PaletteLight()
+    MudTheme? Theme {get; set;}
+    
+    protected override void OnInitialized() {
+        Theme = new MudTheme()
         {
-            Primary = new MudColor(77, 204, 225, 255),
-            Secondary = new MudColor(255, 182, 193, 255),
-        },
-    };
+            PaletteLight = new PaletteLight()
+            {
+                Primary = Config.Colours.Primary.MudColor,
+                PrimaryLighten = Config.Colours.PrimaryLight.MudColor.Value,
+            },
+        };
+    } 
 }
 
