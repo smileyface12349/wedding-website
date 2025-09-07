@@ -10,6 +10,7 @@
       <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.20" />
       <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.8" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
@@ -21,6 +22,23 @@
 
     <ItemGroup>
       <Content Include="WeddingWebsite.sln.DotSettings.user" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Client\obj\Client.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="Client\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="Client\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="Client\Properties\launchSettings.json" />
+      <_ContentIncludedByDefault Remove="Client\_Imports.razor" />
+      <_ContentIncludedByDefault Remove="Client\App.razor" />
+      <_ContentIncludedByDefault Remove="Client\Layout\LoginDisplay.razor" />
+      <_ContentIncludedByDefault Remove="Client\Layout\MainLayout.razor" />
+      <_ContentIncludedByDefault Remove="Client\Layout\NavMenu.razor" />
+      <_ContentIncludedByDefault Remove="Client\Layout\RedirectToLogin.razor" />
+      <_ContentIncludedByDefault Remove="Client\Pages\Authentication.razor" />
+      <_ContentIncludedByDefault Remove="Client\Pages\Counter.razor" />
+      <_ContentIncludedByDefault Remove="Client\Pages\Home.razor" />
+      <_ContentIncludedByDefault Remove="Client\Pages\Weather.razor" />
     </ItemGroup>
 
 </Project>
