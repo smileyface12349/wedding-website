@@ -5,4 +5,6 @@ public record WeddingModal(string Label, IEnumerable<WebsiteSection> Content, st
     public WeddingModal(string label, IEnumerable<WebsiteSection> content) :  this(label, content, label) {}
     
     public WeddingModal(string label, string content) : this (label, [new WebsiteSection(null, content)], label) {}
+    
+    public WeddingModal(string label, string content, string title) : this (label, [new WebsiteSection(null, content)], title) {}
 }
