@@ -1,10 +1,41 @@
-﻿<p>@Duration.Days days to go!</p>
+﻿<div class="container">
+    <DatePart Label="Month" Value="@Months"/><BigColon/>
+    <DatePart Label="Week" Value="@Weeks"/><BigColon/>
+    <DatePart Label="Day" Value="@Days"/><BigColon/>
+    <DatePart Label="Hour" Value="@Hours"/><BigColon/>
+    <DatePart Label="Minute" Value="@Minutes"/><BigColon/>
+    <DatePart Label="Second" Value="@Seconds"/>
+</div>
 
 @code {
     [Parameter]
     public required DateTime CountdownTo { get; set; }
     
-    private TimeSpan Duration {get; set;} = TimeSpan.Zero;
+    private int Months { get; set; }
+    private int Weeks { get; set; }
+    private int Days { get; set; }
+    private int Hours { get; set; }
+    private int Minutes { get; set; }
+    private int Seconds { get ; set; }
+    
+    private void OnTimeChange() {
+        var months = 0;
+        var currentDate = DateTime.UtcNow;
+        
+        while (currentDate.AddMonths(1) < CountdownTo) {
+            currentDate = currentDate.AddMonths(1);
+            months++;
+        }
+        Months = months;
+        
+        var timeSpan = CountdownTo - currentDate;
+        
+        Weeks = (int) Math.Floor((double) timeSpan.Days / 7);
+        Days = timeSpan.Days % 7;
+        Hours = timeSpan.Hours;
+        Minutes = timeSpan.Minutes;
+        Seconds = timeSpan.Seconds; 
+    }
     
     // Logic to update the timer each second:
     
@@ -12,7 +43,7 @@
 
     protected override void OnInitialized()
     {
-        Duration = CountdownTo.Subtract(DateTime.UtcNow);
+        OnTimeChange();
         RunTimer(); 
     }
 
@@ -20,8 +51,7 @@
     {
         while (await periodicTimer.WaitForNextTickAsync()) 
         { 
-            Duration = CountdownTo.Subtract(DateTime.UtcNow);
-            Console.WriteLine(Duration.TotalSeconds);
+            OnTimeChange();
             await InvokeAsync(StateHasChanged);
         }    
     }

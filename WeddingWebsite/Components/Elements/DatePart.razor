@@ -1,0 +1,22 @@
+﻿<span class="container">
+    <span class="value">@Value</span>
+    <span class="label">@(Value == 1 ? Label : Plural)</span>
+</span>
+
+@code {
+    [Parameter]
+    public required string Label { get; set; }
+    
+    [Parameter]
+    public string Plural { get; set; } = "";
+    
+    [Parameter]
+    public required int Value { get; set; }
+
+    protected override void OnInitialized() {
+        if (Plural == "") {
+            Plural = Label + "s";
+        }
+    }
+
+}
