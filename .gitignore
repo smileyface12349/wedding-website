@@ -54,4 +54,5 @@ TestResult.xml
 nunit-*.xml
 
 *credentials.json
-*Credentials.cs
+Credentials.cs
+RealWeddingDetails.cs
