@@ -13,7 +13,7 @@
     
     private Task OpenDialogAsync() {
         var parameters = new DialogParameters<EventDialog> {
-            { x => x.HtmlContent,  Modal.HtmlContent }
+            { x => x.Content,  Modal.Content }
         };
     
         return DialogService.ShowAsync<EventDialog>(Modal.Title, parameters);
