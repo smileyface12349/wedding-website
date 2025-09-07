@@ -2,10 +2,10 @@
 <MudDialog>
     <DialogContent>
         @if (Content != null)
-        @foreach (var section in Content) {
-            <h2>@section.Heading</h2>
-            @((MarkupString) (section.Media?.GetHtml() ?? ""))
-            @foreach (var paragraph in section.Content) {
+        @foreach (var sect in Content) {
+            <h2>@sect.Heading</h2>
+            @((MarkupString) (sect.Media?.GetHtml() ?? ""))
+            @foreach (var paragraph in sect.Content) {
                 <p>@paragraph</p>
             }
         }
