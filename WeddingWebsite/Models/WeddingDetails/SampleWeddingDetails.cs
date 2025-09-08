@@ -48,6 +48,7 @@ public class SampleWeddingDetails : IWeddingDetails
         "123 Paradise Lane, Eden, ED1 2AB",
         new TravelDirections(
             "<p>We suggest arriving by foot.</p><p><b>Parking: </b>There is no parking available, except for blue badge holders.</p>",
+            null,
             20,
             new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDaBHvigmC_MQkDbMzRE4RXDeaqbJgwxTqIA&s", "A wedding car")
         )
@@ -60,6 +61,7 @@ public class SampleWeddingDetails : IWeddingDetails
         new TravelDirections(
             @"<p>We suggest arriving by car. If you do not have a car, please let us know when you RSVP and we can arrange a lift for you.</p>
                         <p><b>Parking: </b>Please follow the signs to car parking. Please do not park in the spaces directly outside the entrance unless you are a blue badge holder, or have been informed directly that you may park there.</p>",
+            null,
             null,
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
         )
