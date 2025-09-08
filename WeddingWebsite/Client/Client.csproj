@@ -19,4 +19,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\index.html" />
     </ItemGroup>
 
+    <ItemGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </ItemGroup>
+
 </Project>
