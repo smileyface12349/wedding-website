@@ -3,6 +3,7 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models
+@using WeddingWebsite.Models.Venues
 
 @inject IWeddingDetails WeddingDetails
 
@@ -81,11 +82,15 @@
             title : "Transport",
             description : ev.Venue.Directions!.Description,
             venueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
-            modals : [new WeddingModal("Travel Directions", ev.Venue.Directions!.Content)],
+            modals : [new WeddingModal("Travel Directions", ev.Venue.Directions!.Content.Prepend(GenerateTransportTopSection(ev.Venue)))],
             icon: Icons.Material.Filled.DirectionsCar,
             image : ev.Venue.Directions?.CoverImage,
             mapsLocation: ev.Venue.Directions?.CoverImage == null ? ev.Venue.Location : null
         );
+    }
+    
+    private WebsiteSection GenerateTransportTopSection(IVenue venue) {
+        return new WebsiteSection("Address", venue.Address, new WebsiteGoogleMapsEmbed(venue.Location));
     }
     
     private TimelineItem GenerateAccommodationTimelineItem() {
