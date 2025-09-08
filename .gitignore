@@ -58,3 +58,4 @@ nunit-*.xml
 Credentials.cs
 RealWeddingDetails.cs
 WeddingWebsite/wwwroot/img/*
+favicon.*
