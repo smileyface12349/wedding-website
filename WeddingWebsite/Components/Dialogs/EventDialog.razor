@@ -1,10 +1,11 @@
-﻿@using WeddingWebsite.Models.WebsiteElement
+﻿@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.WebsiteElement
 <MudDialog>
     <DialogContent>
         @if (Content != null)
         @foreach (var sect in Content) {
             <h2>@sect.Heading</h2>
-            @((MarkupString) (sect.Media?.GetHtml() ?? ""))
+            <WebsiteElement Element=@sect.Media />
             @foreach (var paragraph in sect.Content) {
                 <p>@paragraph</p>
             }
