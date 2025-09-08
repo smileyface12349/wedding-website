@@ -46,7 +46,7 @@
         foreach (var ev in WeddingDetails.Events)
         {
             // Generate a timeline item for the venue change
-            if (previousVenueName != ev.Venue.Name) {
+            if (previousVenueName != ev.Venue.Name && ev.Venue.Directions != null) {
                 timelineItems = timelineItems.Append(GenerateTransportTimelineItem(ev, previousEndTime, previousVenueName));
             }
             
@@ -79,9 +79,9 @@
             type : TimelineItemType.VenueChange,
             time : previousEndTime?.ToShortTimeString() ?? "Start",
             title : "Transport",
-            description : ev.Venue.Directions?.DrivingTimeInMinutes != null ? ev.Venue.Directions?.DrivingTimeInMinutes + " min drive." : "Travel to the venue.",
+            description : ev.Venue.Directions!.Description,
             venueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
-            modals : [new WeddingModal("Travel Directions", "TODO")],
+            modals : [new WeddingModal("Travel Directions", ev.Venue.Directions!.Content)],
             icon: Icons.Material.Filled.DirectionsCar,
             image : ev.Venue.Directions?.CoverImage,
             mapsLocation: ev.Venue.Directions?.CoverImage == null ? ev.Venue.Location : null
