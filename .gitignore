@@ -53,6 +53,8 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
+# Custom
 *credentials.json
 Credentials.cs
 RealWeddingDetails.cs
+WeddingWebsite/wwwroot/img/*
