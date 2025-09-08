@@ -91,7 +91,7 @@
     private TimelineItem GenerateAccommodationTimelineItem() {
         return new TimelineItem(
             TimelineItemType.Accommodation,
-            WeddingDetails.Events.LastOrDefault()?.ToString() ?? "End",
+            WeddingDetails.Events.LastOrDefault()?.End.ToString() ?? "End",
             "Accommodation",
             WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
