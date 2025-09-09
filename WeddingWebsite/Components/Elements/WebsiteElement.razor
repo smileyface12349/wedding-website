@@ -1,9 +1,9 @@
 ﻿@using WeddingWebsite.Models.WebsiteElement
 
 @if (Element is WebsiteImage) {
-    <img class="website-element" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
+    <img class="website-element" style="max-height: @MaxHeight" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
 } else if (Element is WebsiteGoogleMapsEmbed) {
-    <GoogleMapsEmbed Location=@(((WebsiteGoogleMapsEmbed)Element).Location) />
+    <GoogleMapsEmbed Location=@(((WebsiteGoogleMapsEmbed)Element).Location) Height="@MaxHeight" />
 } else if (Element is not null) {
     <p>Website element type not recognised: @Element?.GetType()</p>
 }
@@ -11,4 +11,7 @@
 @code {
     [Parameter]
     public IWebsiteElement? Element { get; set; }
+    
+    [Parameter]
+    public string MaxHeight { get; set; } = "10000px";
 }

@@ -3,8 +3,8 @@
 @inject IGoogleMapsApiKey Credentials
 <iframe
     width="600"
-    height="450"
-    style="border:0"
+    height="@Height"
+    style="border:0; height:@Height"
     loading="lazy"
     allowfullscreen
     referrerpolicy="no-referrer-when-downgrade"
@@ -15,4 +15,7 @@
 @code {
     [Parameter]
     public required Location Location { get; set; }
+    
+    [Parameter]
+    public string Height { get; set; } = "450px";
 }

@@ -6,7 +6,7 @@
         @foreach (var sect in Content) {
             <h2>@sect.Heading</h2>
             @* TODO: Limit max height of website elements *@
-            <WebsiteElement Element=@sect.Media />
+            <WebsiteElement Element=@sect.Media MaxHeight="250px" />
             @foreach (var paragraph in sect.Content) {
                 <p>@paragraph</p>
             }
