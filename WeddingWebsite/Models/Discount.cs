@@ -5,7 +5,7 @@ public record Discount(
     string ClaimInstructions
 )
 {
-    float CalculateDiscountedPrice(float originalPrice)
+    public float CalculateDiscountedPrice(float originalPrice)
     {
         return originalPrice * (1 - PercentDiscount / 100f);
     }
