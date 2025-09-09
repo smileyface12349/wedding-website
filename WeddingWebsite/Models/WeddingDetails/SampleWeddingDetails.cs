@@ -75,8 +75,8 @@ public class SampleWeddingDetails : IWeddingDetails
     public AccommodationDetails AccommodationDetails { get; } = new (
         "If you would like to stay until the end, we suggest staying at a nearby hotel.",
         new List<Hotel> {
-            new ("Eden Hotel",  new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, 95, new Discount(15, "Quote 'Garden of Eden'")),
-            new("Paradise Inn", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, 75, Discount.None())
+            new ("Eden Hotel",  "A beautiful hotel in the city centre, where the bride and groom will be staying", new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, 95, new Discount(15, "Quote 'Garden of Eden'"), "https://youtube.com/watch?v=dQw4w9WgXcQ", true),
+            new("Paradise Inn", "A cheaper option if you're on a budget", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, 75, Discount.None(), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
         },
         new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );
