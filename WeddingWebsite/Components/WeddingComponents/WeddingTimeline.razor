@@ -107,7 +107,7 @@
             WeddingDetails.Events.LastOrDefault()?.End.ToString() ?? "End",
             "Accommodation",
             WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
-            WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
+            GenerateAccommodationShortString(),
             [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(WeddingDetails.AccommodationDetails))],
             @Icons.Material.Filled.Hotel,
             WeddingDetails.AccommodationDetails.Image
@@ -130,6 +130,14 @@
             ));
         }
         return sections;
+    }
+    
+    private string GenerateAccommodationShortString() {
+        if (!WeddingDetails.AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)) {
+            return string.Join(", ", WeddingDetails.AccommodationDetails.Hotels.Select(hotel => hotel.Name));
+        } else {
+            return string.Join(", ", WeddingDetails.AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(hotel => hotel.Name)) + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count(hotel => !hotel.Emphasise)) + " others)";
+        }
     }
     
     private class TimelineItem (
