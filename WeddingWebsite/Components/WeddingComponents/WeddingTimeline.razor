@@ -18,9 +18,9 @@
                     <h2>@item.Title</h2>
                     @foreach (var sect in item.Description) {
                         if (sect.Heading != null) {
-                            <p class="event-description"><b>@sect.Heading: </b>@sect.Content</p>
+                            <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
                         } else {
-                            <p class="event-description">@sect.Content</p>
+                            <p class="event-description">@sect.CollapseContent()</p>
                         }
                     }
                     @foreach (var modal in item.Modals) {

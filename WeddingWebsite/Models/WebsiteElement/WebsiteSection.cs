@@ -15,4 +15,11 @@ public record WebsiteSection (string? Heading, IEnumerable<string> Content, IWeb
     
     public WebsiteSection(string? heading, string? content, IWebsiteElement? media = null) 
         : this (heading, content == null ? [] : [content], media) {}
+        
+    /// <summary>
+    /// Retrieves all the content on a single line by separating it with a single space character
+    /// </summary>
+    public string CollapseContent(string separator = " ") {
+        return string.Join(separator, Content);
+    }
 }
