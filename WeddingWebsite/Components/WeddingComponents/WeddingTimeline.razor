@@ -108,10 +108,28 @@
             "Accommodation",
             WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             WeddingDetails.AccommodationDetails.Hotels.First().Name + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count-1) + " others)",
-            [new WeddingModal("Suggested Hotels", "TODO: Info about all the hotels")],
+            [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(WeddingDetails.AccommodationDetails))],
             @Icons.Material.Filled.Hotel,
             WeddingDetails.AccommodationDetails.Image
         );
+    }
+    
+    private IEnumerable<WebsiteSection> GenerateAccommodationDetails(AccommodationDetails details) {
+        IEnumerable<WebsiteSection> sections = [];
+        foreach (var hotel in details.Hotels) {
+            sections = sections.Append(new WebsiteSection(
+                (hotel.Emphasise ? "[Recommended] " : "") + hotel.Name,
+                [
+                    hotel.Description,
+                    $"Address: {hotel.Address}",
+                    $"Price: {hotel.PriceString}",
+                    $"Distance: {hotel.DrivingTimeFromVenueMinutes} minutes",
+                    $"Link: {hotel.Link}"
+                ],
+                new WebsiteGoogleMapsEmbed(hotel.Location)
+            ));
+        }
+        return sections;
     }
     
     private class TimelineItem (
