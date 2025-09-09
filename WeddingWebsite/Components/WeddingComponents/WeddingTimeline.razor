@@ -16,7 +16,13 @@
             <ItemContent>
                 <OutlinedBox Image=@item.Image MapsLocation=@item.MapsLocation>
                     <h2>@item.Title</h2>
-                    <p class="event-description">@((MarkupString)item.Description)</p>
+                    @foreach (var sect in item.Description) {
+                        if (sect.Heading != null) {
+                            <p class="event-description"><b>@sect.Heading: </b>@sect.Content</p>
+                        } else {
+                            <p class="event-description">@sect.Content</p>
+                        }
+                    }
                     @foreach (var modal in item.Modals) {
                         <ModalButton Modal="@modal"/>
                     }
@@ -61,12 +67,14 @@
                 TimelineItemType.Event,
                 ev.Start.ToShortTimeString(),
                 ev.Name,
-                ev.Description,
+                "",
                 ev.Venue.Name,
                 ev.Modals,
                 ev.Icon,
                 ev.Image
-            ));
+            ) {
+                Description = ev.Description
+            });
         }
         
         // Finally, add an accommodation item if appropriate
@@ -121,7 +129,7 @@
         public TimelineItemType Type { get; } = type;
         public string Time { get; } = time;
         public string Title { get; } = title;
-        public string Description { get; } = description;
+        public IEnumerable<WebsiteSection> Description { get; init; } = [new (null, description)];
         public string VenueName { get; } = venueName;
         public IEnumerable<WeddingModal> Modals { get; } = modals;
         public string? Icon { get; } = icon;

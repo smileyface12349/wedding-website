@@ -11,7 +11,7 @@ public record Event(
     string Name,
     TimeOnly Start,
     TimeOnly? End,
-    string Description,
+    IEnumerable<WebsiteSection> Description,
     IVenue Venue,
     WebsiteImage? Image,
     string? Icon,
@@ -19,8 +19,14 @@ public record Event(
 )
 {
     /// <summary>
-    /// Secondary constructor to make modals optional
+    /// Simple description, no modals
     /// </summary>
     public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue, WebsiteImage? image = null, string? icon = null) 
-        : this(name, start, end, description, venue, image, icon, new List<WeddingModal>()) {}
+        : this(name, start, end, [new WebsiteSection(null, description)], venue, image, icon, new List<WeddingModal>()) {}
+        
+    /// <summary>
+    /// Simple description, modals
+    /// </summary>
+    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue, WebsiteImage? image, string? icon, IEnumerable<WeddingModal> modals) 
+        : this(name, start, end, [new WebsiteSection(null, description)], venue, image, icon, modals) {}
 }
