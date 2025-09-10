@@ -7,7 +7,7 @@ namespace WeddingWebsite.Models.WeddingDetails;
 public interface IWeddingDetails
 {
     // Information about the Wedding
-    public IEnumerable<IPerson> NotablePeople { get; }
+    public IEnumerable<NotablePerson> NotablePeople { get; }
     public DateOnly WeddingDate { get; }
     public ReceptionVenue ReceptionVenue { get; }
     public CeremonyVenue CeremonyVenue { get; }

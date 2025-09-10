@@ -34,13 +34,29 @@ public class SampleWeddingDetails : IWeddingDetails
         };
     }
 
-    public IEnumerable<IPerson> NotablePeople { get; } = [
-        new NotablePerson(new Name("Spongebob", "Squarepants"), Role.Groom),
-        new NotablePerson(new Name("Scooby", "Doo"), Role.Bride),
-        new NotablePerson(new Name("John", "Smith"), Role.BestMan),
-        new NotablePerson(new Name("Sally", "Williams"), Role.MaidOfHonour),
-        new NotablePerson(new Name("Jim", "Brown"), Role.Photographer),
-        new NotablePerson(new Name("Peter", "Johnson"), Role.VenueCoordinator),
+    public IEnumerable<NotablePerson> NotablePeople { get; } = [
+        new (new Name("Spongebob", "Squarepants"), Role.Groom, [
+            new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
+            new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
+            new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
+        ]),
+        new (new Name("Scooby", "Doo"), Role.Bride, [
+            new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
+            new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
+            new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
+        ]),
+        new (new Name("John", "Smith"), Role.BestMan, [
+            new WebsiteSection(null, "John is the groom's childhood best friend. They met in primary school and have been inseparable ever since. John is known for his quick wit and sense of humor."),
+            new WebsiteSection("Hobbies", "Playing football, video games, and hiking."),
+            new WebsiteSection("Fun Fact", "John once won a local stand-up comedy competition.")
+        ]),
+        new (new Name("Sally", "Williams"), Role.MaidOfHonour, [
+            new WebsiteSection(null, "Sally is the bride's sister and best friend. They share a love for fashion and shopping. Sally is always there to lend a helping hand and offer support."),
+            new WebsiteSection("Hobbies", "Shopping, yoga, and baking."),
+            new WebsiteSection("Fun Fact", "This stuff is being completely AI written!")
+        ]),
+        new ("Jim", "Brown", Role.Photographer),
+        new ("Peter", "Johnson", Role.VenueCoordinator),
     ];
     
     private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
