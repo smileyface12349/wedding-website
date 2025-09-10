@@ -14,7 +14,10 @@
 }
 
 .name-and-role {
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .name {
@@ -26,6 +29,7 @@
 
 .role {
     display: inline;
+    margin-bottom: 0;
 }
 
 p {
