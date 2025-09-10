@@ -1,12 +1,9 @@
-﻿@using IdentityModel
-@using WeddingWebsite.Models
-@using WeddingWebsite.Models.People
+﻿@using WeddingWebsite.Models.People
 
 <table>
     <thead>
     <tr>
-        <th>Name</th>
-        <th>Role</th>
+        <th>Person</th>
         <th>Phone</th>
         <th>Email</th>
         <th>Responsible For</th>
@@ -15,8 +12,7 @@
     <tbody>
     @foreach (var contact in Contacts) {
         <tr>
-            <td>@(((IContactable)contact).FullName)</td>
-            <td>@contact.Role</td>
+            <td>@contact.NameAndRole</td>
             <td>@(contact.ContactDetails.PhoneNumber ?? "N/A")</td>
             @if(contact.ContactDetails.Email == null) {<td>N/A</td>}
             else {<td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>}
@@ -28,5 +24,5 @@
 
 @code {
     [Parameter]
-    public required IEnumerable<Contact> Contacts { get; set; }
+    public required IEnumerable<IContact> Contacts { get; set; }
 }
