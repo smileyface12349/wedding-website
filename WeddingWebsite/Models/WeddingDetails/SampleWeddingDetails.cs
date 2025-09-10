@@ -55,6 +55,26 @@ public class SampleWeddingDetails : IWeddingDetails
             new WebsiteSection("Hobbies", "Shopping, yoga, and baking."),
             new WebsiteSection("Fun Fact", "This stuff is being completely AI written!")
         ]),
+        new (new Name("Mike", "Davis"), Role.Groomsman, [
+            new WebsiteSection(null, "Mike is the groom's cousin and a loyal friend. He has a great sense of adventure and loves trying new things. Mike is always up for a challenge."),
+            new WebsiteSection("Hobbies", "Rock climbing, traveling, and photography."),
+            new WebsiteSection("Fun Fact", "Mike has traveled to over 20 countries.")
+        ]),
+        new (new Name("Emily", "Johnson"), Role.Bridesmaid, [
+            new WebsiteSection(null, "Emily is the bride's childhood friend. They met in primary school and have been inseparable ever since. Emily is known for her kindness and generosity."),
+            new WebsiteSection("Hobbies", "Reading, painting, and gardening."),
+            new WebsiteSection("Fun Fact", "Emily once participated in a flash mob dance performance.")
+        ]),
+        new (new Name("Jane", "Butters"), Role.Bridesmaid, [
+            new WebsiteSection(null, "Jane is the bride's college roommate and a close friend. They bonded over their love for music and art. Jane is always up for a good time and loves to make people laugh."),
+            new WebsiteSection("Hobbies", "Playing guitar, attending concerts, and hiking."),
+            new WebsiteSection("Fun Fact", "Jane can play three different musical instruments.")
+        ]),
+        new (new Name("Bob", "Marley"), Role.Groomsman, [
+            new WebsiteSection(null, "Bob is the groom's work colleague and a great friend. They met at a company event and hit it off immediately. Bob is known for his positive attitude and infectious laughter."),
+            new WebsiteSection("Hobbies", "Playing basketball, cooking, and fishing."),
+            new WebsiteSection("Fun Fact", "Bob once cooked a meal for a celebrity chef.")
+        ]),
         new ("Jim", "Brown", Role.Photographer),
         new ("Peter", "Johnson", Role.VenueCoordinator),
     ];
