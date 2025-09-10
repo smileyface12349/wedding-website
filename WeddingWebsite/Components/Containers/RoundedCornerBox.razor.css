@@ -1,5 +1,5 @@
 ﻿.rounded-corner-box {
-    background: var(--primary);
+    background: var(--bg-primary);
     color: var(--primary-dark);
     border-radius: 25px;
 }
