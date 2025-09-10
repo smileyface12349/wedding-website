@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using WeddingWebsite.Client.Components
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Layout
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WebsiteConfig
@@ -25,7 +26,9 @@
     <h2>Meet the Wedding Party</h2>
     <SideBySide>
         <LeftContent>
-            <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"/>
+            <FlexRight>
+                <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"/>
+            </FlexRight>
         </LeftContent>
         <RightContent>
             <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"/>

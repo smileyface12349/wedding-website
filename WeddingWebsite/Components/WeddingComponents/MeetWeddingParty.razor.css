@@ -1,12 +1,6 @@
-﻿.outer-container {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.container {
+﻿.container {
     text-align: left;
-    max-width: 400px;
-    margin: auto;
+    margin: 20px 15px;
 }
 
 .inner-container {
