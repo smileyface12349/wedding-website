@@ -10,6 +10,6 @@ public class WebsiteConfig : IWebsiteConfig
         new WeddingColour(255, 182, 193),
         new WeddingColour(254, 249, 231)
     );
-    public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.Groomsman];
-    public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.Bridesmaid];
+    public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.BestMan, Role.Groomsman];
+    public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid];
 }
