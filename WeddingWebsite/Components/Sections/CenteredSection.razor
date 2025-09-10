@@ -1,5 +1,5 @@
 ﻿<Section>
-    <div class="center" style="background-color: @Colour">
+    <div class="center">
         @ChildContent
     </div>
 </Section>
@@ -7,7 +7,4 @@
 @code {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
-    
-    [Parameter]
-    public string Colour { get; set; } = "white";
 }
