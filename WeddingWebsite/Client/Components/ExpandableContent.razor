@@ -1,0 +1,19 @@
+﻿@if (IsExpanded) {
+    @ChildContent
+} else {
+    <button @onclick="Expand">@ButtonText</button>
+}
+
+@code {
+    [Parameter]
+    public required RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ButtonText { get; set; } = "Expand";
+    
+    private bool IsExpanded { get; set; } = false;
+    
+    public void Expand() {
+        IsExpanded = true;
+    }
+}
