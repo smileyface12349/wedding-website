@@ -1,10 +1,13 @@
 ﻿@page "/"
 @using WeddingWebsite.Client.Components
+@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
+@inject IWebsiteConfig Config
 
 <PageTitle>Home</PageTitle>
 
@@ -15,7 +18,19 @@
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
 
 <CenteredSection>
-    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"></CountdownToDate>
+    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
+</CenteredSection>
+
+<CenteredSection>
+    <h2>Meet the Wedding Party</h2>
+    <SideBySide>
+        <LeftContent>
+            <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"/>
+        </LeftContent>
+        <RightContent>
+            <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"/>
+        </RightContent>
+    </SideBySide>
 </CenteredSection>
 
 <div style="background-color: var(--secondary-background);">

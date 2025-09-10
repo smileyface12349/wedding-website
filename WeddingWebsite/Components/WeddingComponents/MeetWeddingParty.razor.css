@@ -1,0 +1,19 @@
+﻿.container {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+}
+
+.name {
+    display: inline;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.role {
+    display: inline;
+}
+
+p {
+    margin-bottom: 5px;
+}
