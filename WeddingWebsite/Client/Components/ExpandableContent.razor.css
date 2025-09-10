@@ -1,13 +1,10 @@
 ﻿button {
-    font-size: 24px;
+    font-size: 20px;
     background: var(--primary);
-    color: var(--primary-dark);
-    border: var(--primary-dark);
+    color: white;
     border-radius: 15px;
-    border-style: solid;
-    border-width: 2px;
     transition-duration: 0.2s;
-    padding: 5px;
+    padding: 5px 10px;
 }
 
 button:hover {
