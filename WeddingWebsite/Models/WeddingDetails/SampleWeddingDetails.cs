@@ -23,23 +23,28 @@ public class SampleWeddingDetails : IWeddingDetails
             new ("Evening Reception", TimeOnly.Parse("19:00"), TimeOnly.Parse("23:00"), "An evening of dancing and celebration.", ReceptionVenue, new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding"))
         };
         
-        // Cannot access bride and groom in static context
+        // Allows us to re-use data from the people that are already defined
         Contacts = new List<Contact> {
-            new("John", "Smith", "Best Man", new ContactDetails("john.smith@gmail.com", "07123456780"), "Cancellations / attendance"),
-            new("Jane", "Doe", "Maid of Honour", new ContactDetails("jane.doe@gmail.com", "07123456781"), "Issues with the website"),
-            new("Jim", "Brown", "Photographer", new ContactDetails("jim.brown@gmail.com", null), "Photography enquiries"),
-            new("Peter", "Johnson", "Venue Coordinator", new ContactDetails("peter.johnson@gmail.com", null), "Catering / dietary requirements"),
-            new(Bride, "Bride", "All other enquiries"),
-            new(Groom, "Groom", "All other enquiries"),
+            new(GetPersonByRole(Role.BestMan), new ContactDetails("john.smith@gmail.com", "07123456780"), "Cancellations / attendance"),
+            new(GetPersonByRole(Role.MaidOfHonour), new ContactDetails("jane.doe@gmail.com", "07123456781"), "Issues with the website"),
+            new(GetPersonByRole(Role.Photographer), new ContactDetails("jim.brown@gmail.com", null), "Photography enquiries"),
+            new(GetPersonByRole(Role.VenueCoordinator), new ContactDetails("peter.johnson@gmail.com", null), "Catering / dietary requirements"),
+            new(GetPersonByRole(Role.Bride), new ContactDetails("spongebob@squarepants.com", null), "All other enquiries"),
+            new(GetPersonByRole(Role.Groom), new ContactDetails("scooby@doo.net", "07599274826"), "All other enquiries"),
         };
     }
 
-    public Fiance Groom { get; } 
-        = new("Spongebob", "Squarepants", new ContactDetails("adam@garden.eden", "07123456789"));
-        
-    public Fiance Bride { get; }
-        = new("Scooby", "Doo", new ContactDetails("eve@garden.eden", "07123456788"));
-        
+    public IEnumerable<IPerson> NotablePeople { get; } = [
+        new NotablePerson(new Name("Spongebob", "Squarepants"), Role.Groom),
+        new NotablePerson(new Name("Scooby", "Doo"), Role.Bride),
+        new NotablePerson(new Name("John", "Smith"), Role.BestMan),
+        new NotablePerson(new Name("Sally", "Williams"), Role.MaidOfHonour),
+        new NotablePerson(new Name("Jim", "Brown"), Role.Photographer),
+        new NotablePerson(new Name("Peter", "Johnson"), Role.VenueCoordinator),
+    ];
+    
+    private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
+
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2028-8-14");
         
     public ReceptionVenue ReceptionVenue { get; } = new(
@@ -81,7 +86,7 @@ public class SampleWeddingDetails : IWeddingDetails
         new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );
     
-    public IEnumerable<Contact> Contacts { get; }
+    public IEnumerable<IContact> Contacts { get; }
     
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
