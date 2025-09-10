@@ -4,7 +4,9 @@ namespace WeddingWebsite.Models;
 
 public record Guest(
     ContactDetails ContactDetails,
-    string FirstName,
-    string LastName,
-    RSPVStatus? Rspv
-) : IContactable;
+    Name Name,
+    RSPVStatus? Rspv = null
+) : IPerson
+{
+    public Role Role => Role.Unknown;
+}

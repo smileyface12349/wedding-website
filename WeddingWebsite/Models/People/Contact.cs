@@ -1,17 +1,17 @@
-﻿namespace WeddingWebsite.Models.People;
+﻿using WeddingWebsite.Core;
 
-/// <summary>
-/// Someone to display in a list of contacts
-/// </summary>
-/// <param name="Role">E.g. "Best Man" or "Father of the Bride"</param>
-/// <param name="ReasonForContacting">E.g. "if you're no longer able to come" or "for enquiries about logistics" </param>
+namespace WeddingWebsite.Models.People;
+
 public record Contact(
-    string FirstName,
-    string LastName,
-    string Role,
+    Name Name,
+    Role Role,
     ContactDetails ContactDetails,
-    string? ReasonForContacting
-) : IContactable
+    string ReasonForContacting = "",
+    bool Emphasise = false
+) : IContact
 {
-    public Contact(IContactable contactable, string role, string? reason) : this(contactable.FirstName, contactable.LastName, role, contactable.ContactDetails, reason) {}
+    public Contact(IPerson person, ContactDetails contactDetails, string reasonForContacting = "", bool emphasise = false)
+        : this(person.Name, person.Role, contactDetails, reasonForContacting, emphasise) { }
+
+    public string NameAndRole => $"{Name.Full} ({Role.GetEnumDescription()})";
 }
