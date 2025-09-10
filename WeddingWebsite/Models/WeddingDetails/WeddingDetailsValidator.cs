@@ -51,6 +51,7 @@ public static class WeddingDetailsValidator
                 throw new ValidationException($"The venue {ev.Venue.Name} is visited in two different events from different locations. This is not currently supported.");
             }
             visited.Add(ev.Venue.Name);
+            currentVenue = ev.Venue.Name;
         }
     }
     
