@@ -2,6 +2,7 @@
 @using WeddingWebsite.Models.Credentials
 @inject IGoogleMapsApiKey Credentials
 <iframe
+    class="@ClassName"
     width="600"
     height="@Height"
     style="border:0; height:@Height"
@@ -18,4 +19,7 @@
     
     [Parameter]
     public string Height { get; set; } = "450px";
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
 }
