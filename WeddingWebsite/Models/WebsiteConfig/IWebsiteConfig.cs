@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.WebsiteConfig;
+﻿using WeddingWebsite.Models.People;
+
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 /// <summary>
 /// Configuration options. None of this information should be sensitive, and it should be stuff that's personal
@@ -9,5 +11,7 @@ public interface IWebsiteConfig
 {
     public UsersCanAddGuests UsersCanAddGuests { get; }
     public WeddingColours Colours { get; }
+    public IEnumerable<Role> IntroductionRolesGroom { get; }
+    public IEnumerable<Role> IntroductionRolesBride { get; }
     
 }

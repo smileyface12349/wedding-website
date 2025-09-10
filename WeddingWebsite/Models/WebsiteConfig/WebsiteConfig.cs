@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.WebsiteConfig;
+﻿using WeddingWebsite.Models.People;
+
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 public class WebsiteConfig : IWebsiteConfig
 {
@@ -8,4 +10,6 @@ public class WebsiteConfig : IWebsiteConfig
         new WeddingColour(255, 182, 193),
         new WeddingColour(254, 249, 231)
     );
+    public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.Groomsman];
+    public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.Bridesmaid];
 }
