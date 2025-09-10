@@ -1,13 +1,27 @@
-﻿.container {
-    border: 1px solid black;
-    padding: 10px;
+﻿.outer-container {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.container {
     text-align: left;
+    max-width: 400px;
+    margin: auto;
+}
+
+.inner-container {
+    padding: 10px;
+}
+
+.name-and-role {
+    text-align: center;
 }
 
 .name {
     display: inline;
     font-weight: bold;
     font-size: 24px;
+    margin-right: 10px;
 }
 
 .role {

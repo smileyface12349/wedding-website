@@ -1,22 +1,30 @@
-﻿@using WeddingWebsite.Components.Elements
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
 @using WeddingWebsite.Models.People
 
 <div>
     @foreach (var person in People) {
-        <div class="container">
-            <WebsiteElement Element="@person.Media" MaxHeight="200px" />
-            <div class="name-and-role">
-                <h3 class="name">@person.Name</h3>
-                <p class="role">@person.Role.GetEnumDescription()</p>
+        <div class="outer-container">
+            <div class="container">
+                <RoundedCornerBox>
+                    <div class="inner-container">
+                        <WebsiteElement Element="@person.Media" MaxHeight="200px"/>
+                        <div class="name-and-role">
+                            <h3 class="name">@person.Name</h3>
+                            <p class="role">@person.Role.GetEnumDescription()</p>
+                        </div>
+                        @foreach (var sect in person.Content) {
+                            @if (sect.Heading == null) {
+                                <p>@sect.CollapseContent()</p>
+                            }
+                            else {
+                                <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+                            }
+                        }
+                    </div>
+                </RoundedCornerBox>
             </div>
-            @foreach (var sect in person.Content) {
-                @if (sect.Heading == null) {
-                    <p>@sect.CollapseContent()</p>
-                } else {
-                    <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                }
-            }
         </div>
     }
 </div>
