@@ -1,10 +1,19 @@
 ﻿.container {
     text-align: left;
-    margin: 20px 15px;
+    margin: 20px 10px;
 }
 
 .inner-container {
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
+.media {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
 }
 
 .name-and-role {

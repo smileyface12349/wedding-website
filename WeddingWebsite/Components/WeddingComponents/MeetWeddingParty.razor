@@ -8,7 +8,9 @@
         <div class="container">
             <RoundedCornerBox>
                 <div class="inner-container">
-                    <WebsiteElement Element="@person.Media" MaxHeight="200px"/>
+                    <div class="media">
+                        <WebsiteElement Element="@person.Media" MaxHeight="100%"/>
+                    </div>
                     <div class="name-and-role">
                         <h3 class="name">@person.Name</h3>
                         <p class="role">@person.Role.GetEnumDescription()</p>
