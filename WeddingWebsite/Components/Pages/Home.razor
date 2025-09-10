@@ -22,6 +22,12 @@
     <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
 </CenteredSection>
 
+<div style="background-color: var(--secondary-background);">
+<SectionNoPadding>
+    <WeddingTimeline/>
+</SectionNoPadding>
+</div>
+
 <CenteredSection>
     <h2>Meet the Wedding Party</h2>
     <ExpandableContent ButtonText="Show Content">
@@ -37,12 +43,6 @@
         </SideBySide>
     </ExpandableContent>
 </CenteredSection>
-
-<div style="background-color: var(--secondary-background);">
-<SectionNoPadding>
-    <WeddingTimeline/>
-</SectionNoPadding>
-</div>
 
 <CenteredSection>
     <h2>Contact Details</h2>
