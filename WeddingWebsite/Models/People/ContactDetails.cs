@@ -10,6 +10,10 @@ public record ContactDetails
             { ContactUrgency.NotUrgent, notUrgentOptions }
         };
     }
+    
+    public ContactDetails() {
+        OptionsByUrgency = new Dictionary<ContactUrgency, ContactOptions>();
+    }
 
     public ContactOptions GetOptions(ContactUrgency urgency) {
         return OptionsByUrgency[urgency];
@@ -19,6 +23,6 @@ public record ContactDetails
         return OptionsByUrgency.Values.SelectMany(o => o.Methods).Distinct();
     }
     
-    public ContactOptions Urgent => OptionsByUrgency[ContactUrgency.Urgent];
-    public ContactOptions NotUrgent => OptionsByUrgency[ContactUrgency.NotUrgent];
+    public ContactOptions Urgent => OptionsByUrgency.TryGetValue(ContactUrgency.Urgent, out var option) ? option : new ([], []);
+    public ContactOptions NotUrgent => OptionsByUrgency.TryGetValue(ContactUrgency.NotUrgent, out var option) ? option : new ([], []);
 }
