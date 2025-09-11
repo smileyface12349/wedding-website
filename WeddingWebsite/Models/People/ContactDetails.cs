@@ -4,10 +4,17 @@ public record ContactDetails
 {
     private IDictionary<ContactUrgency, ContactOptions> OptionsByUrgency { get; }
     
-    public ContactDetails(ContactOptions urgentOptions, ContactOptions notUrgentOptions) {
+    public ContactDetails(ContactOptions notUrgentOptions, ContactOptions urgentOptions) {
         OptionsByUrgency = new Dictionary<ContactUrgency, ContactOptions> {
             { ContactUrgency.Urgent, urgentOptions },
             { ContactUrgency.NotUrgent, notUrgentOptions }
+        };
+    }
+    
+    public ContactDetails(ContactOptions urgentAndNonUrgentOptions) {
+        OptionsByUrgency = new Dictionary<ContactUrgency, ContactOptions> {
+            { ContactUrgency.Urgent, urgentAndNonUrgentOptions },
+            { ContactUrgency.NotUrgent, urgentAndNonUrgentOptions }
         };
     }
     
