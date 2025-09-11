@@ -11,9 +11,21 @@
     }
 </MudSelect>
 
+<h2>Is it urgent?</h2>
+<MudToggleGroup @bind-Value="IsUrgent">
+    <MudToggleItem Value="true">Yes</MudToggleItem>
+    <MudToggleItem Value="false">No</MudToggleItem>
+</MudToggleGroup>
+<p>@ResponseTimelineString</p>
+
+
 @code {
     [Parameter]
     public required IEnumerable<IContact> Contacts { get; set; }
     
     private ContactReason ContactReason { get; set; }
+
+    private bool IsUrgent { get; set; }
+    
+    private string ResponseTimelineString => IsUrgent ? "We'll get back to you as soon as possible." : "We'll get back to you within 48 hours.";
 }
