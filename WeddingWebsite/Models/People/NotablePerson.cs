@@ -22,7 +22,7 @@ public record NotablePerson(
     public NotablePerson (Name name, Role role, ContactDetails contactDetails) : this (name, role, contactDetails, []) {}
     
     /// <summary>
-    /// Contact details and blurb
+    /// No contact details but has blurb for "meet the wedding party"
     /// </summary>
     public NotablePerson (Name name, Role role, IEnumerable<WebsiteSection> content, IWebsiteElement? media = null)
         : this (name, role, new(), content, media) {}
