@@ -12,7 +12,7 @@ public record Event(
     TimeOnly Start,
     TimeOnly? End,
     IEnumerable<WebsiteSection> Description,
-    IVenue Venue,
+    Venue Venue,
     WebsiteImage? Image,
     string? Icon,
     IEnumerable<WeddingModal> Modals
@@ -21,12 +21,12 @@ public record Event(
     /// <summary>
     /// Simple description, no modals
     /// </summary>
-    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue, WebsiteImage? image = null, string? icon = null) 
+    public Event(string name, TimeOnly start, TimeOnly? end, string description, Venue venue, WebsiteImage? image = null, string? icon = null) 
         : this(name, start, end, [new WebsiteSection(null, description)], venue, image, icon, new List<WeddingModal>()) {}
         
     /// <summary>
     /// Simple description, modals
     /// </summary>
-    public Event(string name, TimeOnly start, TimeOnly? end, string description, IVenue venue, WebsiteImage? image, string? icon, IEnumerable<WeddingModal> modals) 
+    public Event(string name, TimeOnly start, TimeOnly? end, string description, Venue venue, WebsiteImage? image, string? icon, IEnumerable<WeddingModal> modals) 
         : this(name, start, end, [new WebsiteSection(null, description)], venue, image, icon, modals) {}
 }

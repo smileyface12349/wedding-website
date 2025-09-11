@@ -97,7 +97,7 @@
         );
     }
     
-    private WebsiteSection GenerateTransportTopSection(IVenue venue) {
+    private WebsiteSection GenerateTransportTopSection(Venue venue) {
         return new WebsiteSection("Address", venue.Address, new WebsiteGoogleMapsEmbed(venue.Location));
     }
     
