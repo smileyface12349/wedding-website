@@ -1,28 +1,9 @@
-﻿@using WeddingWebsite.Core
-@using WeddingWebsite.Models.People
-@using WeddingWebsite.Models.WebsiteElement
+﻿@using WeddingWebsite.Models.People
 
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <MudChat ChatPosition="@ChatPosition">
-                <MudAvatar>
-                    @if (person.Media is WebsiteImage) {
-                        <MudImage Src="@(((WebsiteImage)person.Media).Url)" />
-                    }
-                </MudAvatar>
-                <MudChatHeader Name="@person.Name.Full" Time="@person.Role.GetEnumDescription()"/>
-                @foreach (var sect in person.Content) {
-                    <MudChatBubble>
-                        @if (sect.Heading == null) {
-                            <p>@sect.CollapseContent()</p>
-                        }
-                        else {
-                            <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                        }
-                    </MudChatBubble>
-                }
-            </MudChat>
+            <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
         </div>
     }
 </div>
@@ -32,5 +13,5 @@
     public required IEnumerable<NotablePerson> People { get; set; }
     
     [Parameter]
-    public ChatBubblePosition ChatPosition { get; set; } = ChatBubblePosition.Start;
+    public required bool IsOnLeftSide { get; set; }
 }

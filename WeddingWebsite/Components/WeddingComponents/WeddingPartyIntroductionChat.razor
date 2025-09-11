@@ -1,0 +1,33 @@
+﻿@using WeddingWebsite.Core
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WebsiteElement
+
+
+<MudChat ChatPosition="IsOnLeftSide ? ChatBubblePosition.Start : ChatBubblePosition.End">
+    <MudAvatar>
+        @if (Person.Media is WebsiteImage) {
+            <MudImage Src="@(((WebsiteImage)Person.Media).Url)" />
+        }
+    </MudAvatar>
+    <MudChatHeader Name="@Person.Name.Full" Time="@Person.Role.GetEnumDescription()"/>
+    @foreach (var sect in Person.Content) {
+        <MudChatBubble>
+            @if (sect.Heading == null) {
+                <p>@sect.CollapseContent()</p>
+            }
+            else {
+                <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+            }
+        </MudChatBubble>
+    }
+</MudChat>
+
+@code {
+
+    [Parameter]
+    public required NotablePerson Person { get; set; }
+    
+    [Parameter]
+    public required bool IsOnLeftSide { get; set; }
+
+}
