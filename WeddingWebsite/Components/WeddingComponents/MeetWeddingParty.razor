@@ -1,9 +1,16 @@
 ﻿@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WebsiteConfig
+
+@inject IWebsiteConfig Config
 
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+            @if (Config.MeetWeddingPartyDisplay == MeetWeddingPartyDisplay.Default) {
+                <WeddingPartyIntroduction Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+            } else {
+                <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+            }
         </div>
     }
 </div>
