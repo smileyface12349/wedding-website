@@ -15,6 +15,17 @@ public record NotablePerson(
     /// No contact details, no blurb for "meet the wedding party"
     /// </summary>
     public NotablePerson (Name name, Role role) : this (name, role, new(), []) {}
+    
+    /// <summary>
+    /// Contact details but no blurb
+    /// </summary>
+    public NotablePerson (Name name, Role role, ContactDetails contactDetails) : this (name, role, contactDetails, []) {}
+    
+    /// <summary>
+    /// Contact details and blurb
+    /// </summary>
+    public NotablePerson (Name name, Role role, IEnumerable<WebsiteSection> content, IWebsiteElement? media = null)
+        : this (name, role, new(), content, media) {}
 
     public string NameAndRole => $"{Name} ({Role.GetEnumDescription()}";
 }
