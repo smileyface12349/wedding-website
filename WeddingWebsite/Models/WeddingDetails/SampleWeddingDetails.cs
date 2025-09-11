@@ -29,7 +29,8 @@ public class SampleWeddingDetails : IWeddingDetails
             new Name("Spongebob", "Squarepants"),
             Role.Groom,
             new ContactDetails(
-                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("spongebob@squarepants.com")])
+                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("spongebob@squarepants.com")]),
+                new ContactOptions(null, [new PhoneNumber("+441234567890")])
             ),
             [
                 new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
@@ -42,7 +43,8 @@ public class SampleWeddingDetails : IWeddingDetails
             new Name("Scooby", "Doo"),
             Role.Bride,
             new ContactDetails(
-                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("scooby@doo.net")])
+                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("scooby@doo.net")]),
+                new ContactOptions(null, [new PhoneNumber("+51395833759")])
             ),
             [
                 new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
@@ -144,7 +146,6 @@ public class SampleWeddingDetails : IWeddingDetails
             )
         ),
     ];
-
     
     private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
 
