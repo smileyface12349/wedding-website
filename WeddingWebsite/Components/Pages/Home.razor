@@ -29,22 +29,20 @@
 
 <CenteredSection>
     <h2>Meet the Wedding Party</h2>
-    <ExpandableContent ButtonText="Show Content">
-        <SideBySide>
-            <LeftContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
-                    ChatPosition="ChatBubblePosition.Start"
-                />
-            </LeftContent>
-            <RightContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
-                    ChatPosition="ChatBubblePosition.End"
-                />
-            </RightContent>
-        </SideBySide>
-    </ExpandableContent>
+    <SideBySide>
+        <LeftContent>
+            <MeetWeddingParty 
+                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                ChatPosition="ChatBubblePosition.Start"
+            />
+        </LeftContent>
+        <RightContent>
+            <MeetWeddingParty 
+                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                ChatPosition="ChatBubblePosition.End"
+            />
+        </RightContent>
+    </SideBySide>
 </CenteredSection>
 
 <div style="background-color: var(--tertiary); color: white;">
