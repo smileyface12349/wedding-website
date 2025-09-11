@@ -6,7 +6,7 @@
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <RoundedCornerBox>
+            <OutlinedBox>
                 <div class="inner-container">
                     <div class="media">
                         <WebsiteElement Element="@person.Media" MaxHeight="100%"/>
@@ -24,7 +24,7 @@
                         }
                     }
                 </div>
-            </RoundedCornerBox>
+            </OutlinedBox>
         </div>
     }
 </div>
