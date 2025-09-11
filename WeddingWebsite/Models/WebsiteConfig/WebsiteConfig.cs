@@ -13,4 +13,5 @@ public class WebsiteConfig : IWebsiteConfig
     public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.BestMan, Role.Groomsman];
     public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid];
     public MeetWeddingPartyDisplay MeetWeddingPartyDisplay => MeetWeddingPartyDisplay.Default;
+    public IEnumerable<ContactReason> ContactReasonsToShow => Enum.GetValues<ContactReason>();
 }
