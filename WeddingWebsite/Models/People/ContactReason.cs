@@ -10,6 +10,9 @@ public enum ContactReason
     [Description("Dietary Requirements & Special Arrangements")]
     DietaryRequirements,
     
+    [Description("Dress Code")]
+    DressCode,
+    
     [Description("Accommodation")]
     Accommodation,
     
