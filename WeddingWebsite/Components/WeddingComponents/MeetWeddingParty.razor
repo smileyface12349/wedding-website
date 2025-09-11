@@ -1,13 +1,11 @@
-﻿@using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Components.Elements
-@using WeddingWebsite.Core
+﻿@using WeddingWebsite.Core
 @using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.WebsiteElement
 
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <MudChat>
+            <MudChat ChatPosition="@ChatPosition">
                 <MudAvatar>
                     @if (person.Media is WebsiteImage) {
                         <MudImage Src="@(((WebsiteImage)person.Media).Url)" />
@@ -32,4 +30,7 @@
 @code {
     [Parameter]
     public required IEnumerable<NotablePerson> People { get; set; }
+    
+    [Parameter]
+    public ChatBubblePosition ChatPosition { get; set; } = ChatBubblePosition.Start;
 }
