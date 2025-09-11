@@ -4,22 +4,25 @@
 @using WeddingWebsite.Components.Containers
 
 <OutlinedBox>
+    <div class="name-and-role">
+        <h3 class="name">@Person.Name</h3>
+        <p class="role">@Person.Role.GetEnumDescription()</p>
+    </div>
     <div class="inner-container">
         <div class="media">
             <WebsiteElement Element="@Person.Media" MaxHeight="100%"/>
         </div>
-        <div class="name-and-role">
-            <h3 class="name">@Person.Name</h3>
-            <p class="role">@Person.Role.GetEnumDescription()</p>
+        <div class="right-content">
+
+            @foreach (var sect in Person.Content) {
+                @if (sect.Heading == null) {
+                    <p>@sect.CollapseContent()</p>
+                }
+                else {
+                    <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+                }
+            }
         </div>
-        @foreach (var sect in Person.Content) {
-            @if (sect.Heading == null) {
-                <p>@sect.CollapseContent()</p>
-            }
-            else {
-                <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-            }
-        }
     </div>
 </OutlinedBox>
 

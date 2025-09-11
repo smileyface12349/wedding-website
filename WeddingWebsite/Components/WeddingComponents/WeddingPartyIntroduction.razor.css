@@ -1,15 +1,18 @@
 ﻿.inner-container {
     padding: 10px;
     display: flex;
-    flex-direction: column;
-    height: 400px;
+    flex-direction: row;
 }
 
 .media {
-    flex: 1;
-    min-height: 0;
-    min-width: 0;
+    max-height: 200px;
+    width: 150px;
+    object-fit: contain;
     margin-bottom: 10px;
+}
+
+.right-content {
+    flex: 1;
 }
 
 .name-and-role {
