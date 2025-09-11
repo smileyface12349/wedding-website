@@ -27,23 +27,25 @@
 </SectionNoPadding>
 </div>
 
-<CenteredSection>
-    <h2>Meet the Wedding Party</h2>
-    <SideBySide>
-        <LeftContent>
-            <MeetWeddingParty 
-                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
-                IsOnLeftSide="true"
-            />
-        </LeftContent>
-        <RightContent>
-            <MeetWeddingParty 
-                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
-                IsOnLeftSide="false"
-            />
-        </RightContent>
-    </SideBySide>
-</CenteredSection>
+@if (Config.MeetWeddingPartyDisplay != MeetWeddingPartyDisplay.None) {
+    <CenteredSection>
+        <h2>Meet the Wedding Party</h2>
+        <SideBySide>
+            <LeftContent>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                    IsOnLeftSide="true"
+                />
+            </LeftContent>
+            <RightContent>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                    IsOnLeftSide="false"
+                />
+            </RightContent>
+        </SideBySide>
+    </CenteredSection>
+}
 
 <div style="background-color: var(--tertiary); color: white;">
 <CenteredSection>
