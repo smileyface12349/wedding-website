@@ -2,29 +2,29 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WebsiteElement
 
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <OutlinedBox>
-                <div class="inner-container">
-                    <div class="media">
-                        <WebsiteElement Element="@person.Media" MaxHeight="100%"/>
-                    </div>
-                    <div class="name-and-role">
-                        <h3 class="name">@person.Name</h3>
-                        <p class="role">@person.Role.GetEnumDescription()</p>
-                    </div>
-                    @foreach (var sect in person.Content) {
+            <MudChat>
+                <MudAvatar>
+                    @if (person.Media is WebsiteImage) {
+                        <MudImage Src="@(((WebsiteImage)person.Media).Url)" />
+                    }
+                </MudAvatar>
+                <MudChatHeader Name="@person.Name.Full" Time="@person.Role.GetEnumDescription()"/>
+                @foreach (var sect in person.Content) {
+                    <MudChatBubble>
                         @if (sect.Heading == null) {
                             <p>@sect.CollapseContent()</p>
                         }
                         else {
                             <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
                         }
-                    }
-                </div>
-            </OutlinedBox>
+                    </MudChatBubble>
+                }
+            </MudChat>
         </div>
     }
 </div>
