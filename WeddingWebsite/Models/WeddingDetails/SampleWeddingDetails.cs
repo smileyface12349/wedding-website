@@ -22,62 +22,129 @@ public class SampleWeddingDetails : IWeddingDetails
             new ("Wedding Breakfast", TimeOnly.Parse("15:30"), TimeOnly.Parse("18:00"), "A sit-down meal with speeches and toasts.", ReceptionVenue, new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), null, [new WeddingModal("View Menu", [new ("Main Course", "Roast chicken, potatoes and vegetables")])]),
             new ("Evening Reception", TimeOnly.Parse("19:00"), TimeOnly.Parse("23:00"), "An evening of dancing and celebration.", ReceptionVenue, new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding"))
         };
-        
-        // Allows us to re-use data from the people that are already defined
-        Contacts = new List<Contact> {
-            new(GetPersonByRole(Role.BestMan), new ContactDetails("john.smith@gmail.com", "07123456780"), "Cancellations / attendance"),
-            new(GetPersonByRole(Role.MaidOfHonour), new ContactDetails("jane.doe@gmail.com", "07123456781"), "Issues with the website"),
-            new(GetPersonByRole(Role.Photographer), new ContactDetails("jim.brown@gmail.com", null), "Photography enquiries"),
-            new(GetPersonByRole(Role.VenueCoordinator), new ContactDetails("peter.johnson@gmail.com", null), "Catering / dietary requirements"),
-            new(GetPersonByRole(Role.Bride), new ContactDetails("spongebob@squarepants.com", null), "All other enquiries"),
-            new(GetPersonByRole(Role.Groom), new ContactDetails("scooby@doo.net", "07599274826"), "All other enquiries"),
-        };
     }
 
     public IEnumerable<NotablePerson> NotablePeople { get; } = [
-        new (new Name("Spongebob", "Squarepants"), Role.Groom, [
-            new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
-            new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
-            new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
-        ], new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null)),
-        new (new Name("Scooby", "Doo"), Role.Bride, [
-            new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
-            new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
-            new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
-        ], new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null)),
-        new (new Name("John", "Smith"), Role.BestMan, [
-            new WebsiteSection(null, "John is the groom's childhood best friend. They met in primary school and have been inseparable ever since. John is known for his quick wit and sense of humor."),
-            new WebsiteSection("Hobbies", "Playing football, video games, and hiking."),
-            new WebsiteSection("Fun Fact", "John once won a local stand-up comedy competition.")
-        ], new WebsiteImage("https://static.vecteezy.com/system/resources/previews/041/642/170/non_2x/ai-generated-portrait-of-handsome-smiling-young-man-with-folded-arms-isolated-free-png.png", null)),
-        new (new Name("Sally", "Williams"), Role.MaidOfHonour, [
-            new WebsiteSection(null, "Sally is the bride's sister and best friend. They share a love for fashion and shopping. Sally is always there to lend a helping hand and offer support."),
-            new WebsiteSection("Hobbies", "Shopping, yoga, and baking."),
-            new WebsiteSection("Fun Fact", "This stuff is being completely AI written!")
-        ], new WebsiteImage("https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-front-view-of-a-smiling-business-woman-png-image_12509704.png", null)),
-        new (new Name("Mike", "Davis"), Role.Groomsman, [
-            new WebsiteSection(null, "Mike is the groom's cousin and a loyal friend. He has a great sense of adventure and loves trying new things. Mike is always up for a challenge."),
-            new WebsiteSection("Hobbies", "Rock climbing, traveling, and photography."),
-            new WebsiteSection("Fun Fact", "Mike has traveled to over 20 countries.")
-        ], new WebsiteImage("https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-in-shirt-smiles-and-gives-thumbs-up-to-show-approval-png-image_13146336.png", null)),
-        new (new Name("Emily", "Johnson"), Role.Bridesmaid, [
-            new WebsiteSection(null, "Emily is the bride's childhood friend. They met in primary school and have been inseparable ever since. Emily is known for her kindness and generosity."),
-            new WebsiteSection("Hobbies", "Reading, painting, and gardening."),
-            new WebsiteSection("Fun Fact", "Emily once participated in a flash mob dance performance.")
-        ], new WebsiteImage("https://static.vecteezy.com/system/resources/thumbnails/050/817/792/small_2x/happy-smiling-business-woman-in-suit-with-hand-pointing-at-empty-space-standing-isolate-on-transparent-background-png.png", null)),
-        new (new Name("Jane", "Butters"), Role.Bridesmaid, [
-            new WebsiteSection(null, "Jane is the bride's college roommate and a close friend. They bonded over their love for music and art. Jane is always up for a good time and loves to make people laugh."),
-            new WebsiteSection("Hobbies", "Playing guitar, attending concerts, and hiking."),
-            new WebsiteSection("Fun Fact", "Jane can play three different musical instruments.")
-        ], new WebsiteImage("https://static.vecteezy.com/system/resources/previews/009/257/276/non_2x/portrait-of-beautiful-young-asian-woman-file-png.png", null)),
-        new (new Name("Bob", "Marley"), Role.Groomsman, [
-            new WebsiteSection(null, "Bob is the groom's work colleague and a great friend. They met at a company event and hit it off immediately. Bob is known for his positive attitude and infectious laughter."),
-            new WebsiteSection("Hobbies", "Playing basketball, cooking, and fishing."),
-            new WebsiteSection("Fun Fact", "Bob once cooked a meal for a celebrity chef.")
-        ], new WebsiteImage("https://americanmigrainefoundation.org/wp-content/uploads/2022/12/GettyImages-1345864068.png", null)),
-        new (new Name("Jim", "Brown"), Role.Photographer),
-        new (new Name("Peter", "Johnson"), Role.VenueCoordinator),
+        new (
+            new Name("Spongebob", "Squarepants"),
+            Role.Groom,
+            new ContactDetails(
+                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("spongebob@squarepants.com")])
+            ),
+            [
+                new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
+                new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
+                new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
+            ],
+            new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null)
+        ),
+        new (
+            new Name("Scooby", "Doo"),
+            Role.Bride,
+            new ContactDetails(
+                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("scooby@doo.net")])
+            ),
+            [
+                new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
+                new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
+                new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
+            ],
+            new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null)
+        ),
+        new (
+            new Name("John", "Smith"),
+            Role.BestMan,
+            new ContactDetails(
+                new ContactOptions([ContactReason.Attendance, ContactReason.SpecificPerson], [new EmailAddress("john.smith@gmail.com"), new EmailAddress("john.alt@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "John is the groom's childhood best friend. They met in primary school and have been inseparable ever since. John is known for his quick wit and sense of humor."),
+                new WebsiteSection("Hobbies", "Playing football, video games, and hiking."),
+                new WebsiteSection("Fun Fact", "John once won a local stand-up comedy competition.")
+            ],
+            new WebsiteImage("https://static.vecteezy.com/system/resources/previews/041/642/170/non_2x/ai-generated-portrait-of-handsome-smiling-young-man-with-folded-arms-isolated-free-png.png", null)
+        ),
+        new (
+            new Name("Sally", "Williams"),
+            Role.MaidOfHonour,
+            new ContactDetails(
+                new ContactOptions([ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("jane.doe@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "Sally is the bride's sister and best friend. They share a love for fashion and shopping. Sally is always there to lend a helping hand and offer support."),
+                new WebsiteSection("Hobbies", "Shopping, yoga, and baking."),
+                new WebsiteSection("Fun Fact", "This stuff is being completely AI written!")
+            ],
+            new WebsiteImage("https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-front-view-of-a-smiling-business-woman-png-image_12509704.png", null)
+        ),
+        new (
+            new Name("Mike", "Davis"),
+            Role.Groomsman,
+            new ContactDetails(
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("mike.davis@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "Mike is the groom's cousin and a loyal friend. He has a great sense of adventure and loves trying new things. Mike is always up for a challenge."),
+                new WebsiteSection("Hobbies", "Rock climbing, traveling, and photography."),
+                new WebsiteSection("Fun Fact", "Mike has traveled to over 20 countries.")
+            ],
+            new WebsiteImage("https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-in-shirt-smiles-and-gives-thumbs-up-to-show-approval-png-image_13146336.png", null)
+        ),
+        new (
+            new Name("Emily", "Johnson"),
+            Role.Bridesmaid,
+            new ContactDetails(
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("emily.johnson@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "Emily is the bride's childhood friend. They met in primary school and have been inseparable ever since. Emily is known for her kindness and generosity."),
+                new WebsiteSection("Hobbies", "Reading, painting, and gardening."),
+                new WebsiteSection("Fun Fact", "Emily once participated in a flash mob dance performance.")
+            ],
+            new WebsiteImage("https://static.vecteezy.com/system/resources/thumbnails/050/817/792/small_2x/happy-smiling-business-woman-in-suit-with-hand-pointing-at-empty-space-standing-isolate-on-transparent-background-png.png", null)
+        ),
+        new (
+            new Name("Jane", "Butters"),
+            Role.Bridesmaid,
+            new ContactDetails(
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jane.butters@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "Jane is the bride's college roommate and a close friend. They bonded over their love for music and art. Jane is always up for a good time and loves to make people laugh."),
+                new WebsiteSection("Hobbies", "Playing guitar, attending concerts, and hiking."),
+                new WebsiteSection("Fun Fact", "Jane can play three different musical instruments.")
+            ],
+            new WebsiteImage("https://static.vecteezy.com/system/resources/previews/009/257/276/non_2x/portrait-of-beautiful-young-asian-woman-file-png.png", null)
+        ),
+        new (
+            new Name("Bob", "Marley"),
+            Role.Groomsman,
+            new ContactDetails(
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("bob.marley@gmail.com")])
+            ),
+            [
+                new WebsiteSection(null, "Bob is the groom's work colleague and a great friend. They met at a company event and hit it off immediately. Bob is known for his positive attitude and infectious laughter."),
+                new WebsiteSection("Hobbies", "Playing basketball, cooking, and fishing."),
+                new WebsiteSection("Fun Fact", "Bob once cooked a meal for a celebrity chef.")
+            ],
+            new WebsiteImage("https://americanmigrainefoundation.org/wp-content/uploads/2022/12/GettyImages-1345864068.png", null)
+        ),
+        new (
+            new Name("Jim", "Brown"),
+            Role.Photographer,
+            new ContactDetails(
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jim.brown@gmail.com")])
+            )
+        ),
+        new (
+            new Name("Peter", "Johnson"),
+            Role.VenueCoordinator,
+            new ContactDetails(
+                new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@gmail.com")])
+            )
+        ),
     ];
+
     
     private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
 
@@ -122,7 +189,11 @@ public class SampleWeddingDetails : IWeddingDetails
         new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );
     
-    public IEnumerable<IContact> Contacts { get; }
+    public IEnumerable<IContact> ExtraContacts { get; } = [
+        new SharedInboxContact("Shared Inbox", [Role.Bride, Role.Groom], new ContactDetails(
+            new ContactOptions(null, [new EmailAddress("shared@wedding.com")])
+        ))
+    ];
     
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
