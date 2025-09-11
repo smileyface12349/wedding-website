@@ -75,8 +75,8 @@ public class SampleWeddingDetails : IWeddingDetails
             new WebsiteSection("Hobbies", "Playing basketball, cooking, and fishing."),
             new WebsiteSection("Fun Fact", "Bob once cooked a meal for a celebrity chef.")
         ], new WebsiteImage("https://americanmigrainefoundation.org/wp-content/uploads/2022/12/GettyImages-1345864068.png", null)),
-        new ("Jim", "Brown", Role.Photographer),
-        new ("Peter", "Johnson", Role.VenueCoordinator),
+        new (new Name("Jim", "Brown"), Role.Photographer),
+        new (new Name("Peter", "Johnson"), Role.VenueCoordinator),
     ];
     
     private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
