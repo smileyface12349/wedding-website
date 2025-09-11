@@ -32,12 +32,16 @@
     <ExpandableContent ButtonText="Show Content">
         <SideBySide>
             <LeftContent>
-                <FlexRight>
-                    <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"/>
-                </FlexRight>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                    ChatPosition="ChatBubblePosition.Start"
+                />
             </LeftContent>
             <RightContent>
-                <MeetWeddingParty People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"/>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                    ChatPosition="ChatBubblePosition.End"
+                />
             </RightContent>
         </SideBySide>
     </ExpandableContent>
