@@ -1,0 +1,36 @@
+﻿.inner-container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
+.media {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    margin-bottom: 10px;
+}
+
+.name-and-role {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.name {
+    display: inline;
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.role {
+    display: inline;
+    margin-bottom: 0;
+}
+
+p {
+    margin-bottom: 5px;
+}
