@@ -1,0 +1,34 @@
+﻿@using WeddingWebsite.Core
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Containers
+
+<OutlinedBox>
+    <div class="inner-container">
+        <div class="media">
+            <WebsiteElement Element="@Person.Media" MaxHeight="100%"/>
+        </div>
+        <div class="name-and-role">
+            <h3 class="name">@Person.Name</h3>
+            <p class="role">@Person.Role.GetEnumDescription()</p>
+        </div>
+        @foreach (var sect in Person.Content) {
+            @if (sect.Heading == null) {
+                <p>@sect.CollapseContent()</p>
+            }
+            else {
+                <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+            }
+        }
+    </div>
+</OutlinedBox>
+
+@code {
+    
+    [Parameter]
+    public required NotablePerson Person { get; set; }
+    
+    [Parameter]
+    public required bool IsOnLeftSide { get; set; }
+    
+}

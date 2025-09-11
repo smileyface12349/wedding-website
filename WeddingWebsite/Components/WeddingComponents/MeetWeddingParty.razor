@@ -1,30 +1,16 @@
-﻿@using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Components.Elements
-@using WeddingWebsite.Core
-@using WeddingWebsite.Models.People
+﻿@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WebsiteConfig
+
+@inject IWebsiteConfig Config
 
 <div>
     @foreach (var person in People) {
         <div class="container">
-            <OutlinedBox>
-                <div class="inner-container">
-                    <div class="media">
-                        <WebsiteElement Element="@person.Media" MaxHeight="100%"/>
-                    </div>
-                    <div class="name-and-role">
-                        <h3 class="name">@person.Name</h3>
-                        <p class="role">@person.Role.GetEnumDescription()</p>
-                    </div>
-                    @foreach (var sect in person.Content) {
-                        @if (sect.Heading == null) {
-                            <p>@sect.CollapseContent()</p>
-                        }
-                        else {
-                            <p><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                        }
-                    }
-                </div>
-            </OutlinedBox>
+            @if (Config.MeetWeddingPartyDisplay == MeetWeddingPartyDisplay.Default) {
+                <WeddingPartyIntroduction Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+            } else {
+                <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+            }
         </div>
     }
 </div>
@@ -32,4 +18,7 @@
 @code {
     [Parameter]
     public required IEnumerable<NotablePerson> People { get; set; }
+    
+    [Parameter]
+    public required bool IsOnLeftSide { get; set; }
 }
