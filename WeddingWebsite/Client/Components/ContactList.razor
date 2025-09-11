@@ -1,28 +1,19 @@
-﻿@using WeddingWebsite.Models.People
+﻿@using MudBlazor
+@using WeddingWebsite.Core
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WebsiteConfig
 
-<table>
-    <thead>
-    <tr>
-        <th>Person</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Responsible For</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var contact in Contacts) {
-        <tr>
-            <td>@contact.NameAndRole</td>
-            <td>@(contact.ContactDetails.PhoneNumber ?? "N/A")</td>
-            @if(contact.ContactDetails.Email == null) {<td>N/A</td>}
-            else {<td><a href="mailto:@contact.ContactDetails.Email">@contact.ContactDetails.Email</a></td>}
-            <td>@contact.ReasonForContacting</td>
-        </tr>
+@inject IWebsiteConfig Config
+
+<MudSelect @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
+    @foreach (var reason in Config.ContactReasonsToShow) {
+        <MudSelectItem Value="reason">@reason.GetEnumDescription()</MudSelectItem>
     }
-    </tbody>
-</table>
+</MudSelect>
 
 @code {
     [Parameter]
     public required IEnumerable<IContact> Contacts { get; set; }
+    
+    private ContactReason ContactReason { get; set; }
 }
