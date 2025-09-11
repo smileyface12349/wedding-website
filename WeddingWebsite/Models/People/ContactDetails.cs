@@ -11,10 +11,10 @@ public record ContactDetails
         };
     }
     
-    public ContactDetails(ContactOptions urgentAndNonUrgentOptions) {
+    public ContactDetails(ContactOptions notUrgentOptions) {
         OptionsByUrgency = new Dictionary<ContactUrgency, ContactOptions> {
-            { ContactUrgency.Urgent, urgentAndNonUrgentOptions },
-            { ContactUrgency.NotUrgent, urgentAndNonUrgentOptions }
+            { ContactUrgency.Urgent, notUrgentOptions },
+            { ContactUrgency.NotUrgent, new ContactOptions([], []) }
         };
     }
     
