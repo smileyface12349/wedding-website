@@ -6,3 +6,8 @@
 th, td {
     padding: 10px;
 }
+
+.container {
+    margin: auto;
+    max-width: 500px;
+}
