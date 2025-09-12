@@ -17,6 +17,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Events_EarliestStartTimeIsFirstEvent(details);
         Events_LatestFinishTimeIsLastEvent(details);
         Events_IsNotEmpty(details);
+        
+        Contacts_HaveAtLeastOneContactForEachOption(details, config);
 
         return validationIssues;
     }
@@ -109,6 +111,22 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         }
         if (details.Events.Any(e => e.End != null && e.End > lastFinishTime)) {
             Error("The latest finish time must be the last element in the list. This is used for the accommodation details.");
+        }
+    }
+    
+    /// <summary>
+    /// For every time of enquiry, there should be someone to contact.
+    /// </summary>
+    private void Contacts_HaveAtLeastOneContactForEachOption(IWeddingDetails details, IWebsiteConfig config) {
+        foreach (var enquiryType in config.ContactReasonsToShow) {
+            foreach (var urgency in new[] { ContactUrgency.NotUrgent, ContactUrgency.Urgent }) {
+                var matchingContacts = details.NotablePeople.Concat(details.ExtraContacts)
+                    .Where(p => p.ContactDetails.GetOptions(urgency).MatchesReason(enquiryType))
+                    .ToList();
+                if (!matchingContacts.Any()) {
+                    Warning($"There are no contacts for reason {enquiryType} with urgency {urgency}. Consider adding a catch-all contact, or removing this enquiry type from display.");
+                }
+            }
         }
     }
 }
