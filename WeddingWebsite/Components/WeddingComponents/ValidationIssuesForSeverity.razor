@@ -1,0 +1,13 @@
+﻿@using WeddingWebsite.Models.Validation
+
+@if (!Issues.Any()) {
+    <p>No issues</p>
+}
+@foreach (var issue in Issues) {
+    <p>@issue</p>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<ValidationIssue> Issues { get; set; }
+}
