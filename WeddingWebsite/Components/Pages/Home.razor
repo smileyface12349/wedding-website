@@ -21,9 +21,9 @@
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
 
 @if (Environment.IsDevelopment()) {
-    <CenteredSection>
+    <Section Center="true" Padding="false" Background="red">
         <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
-    </CenteredSection>
+    </Section>
 }
 
 <CenteredSection>
