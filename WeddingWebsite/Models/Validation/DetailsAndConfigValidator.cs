@@ -19,6 +19,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Events_IsNotEmpty(details);
         
         Contacts_HaveAtLeastOneContactForEachOption(details, config);
+        Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
 
         return validationIssues;
     }
@@ -125,6 +126,17 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                     .ToList();
                 if (!matchingContacts.Any()) {
                     Warning($"There are no contacts for reason {enquiryType} with urgency {urgency}. Consider adding a catch-all contact, or removing this enquiry type from display.");
+                }
+            }
+        }
+    }
+    
+    private void Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(IWeddingDetails details, IWebsiteConfig config) {
+        if (!config.ShowContactUrgencyOption) {
+            foreach (var contact in details.NotablePeople.Concat(details.ExtraContacts))
+            {
+                if (contact.ContactDetails.Urgent.Methods.Any()) {
+                    Warning($"The contact '{contact.NameAndRole}' has urgent options, but you have disabled the urgency toggle in settings. Either re-enable this toggle, or remove all urgent contact options, as the urgent contact options will be ignored.");
                 }
             }
         }
