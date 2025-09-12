@@ -13,8 +13,8 @@ public record ContactDetails
     
     public ContactDetails(ContactOptions notUrgentOptions) {
         OptionsByUrgency = new Dictionary<ContactUrgency, ContactOptions> {
-            { ContactUrgency.Urgent, notUrgentOptions },
-            { ContactUrgency.NotUrgent, new ContactOptions([], []) }
+            { ContactUrgency.NotUrgent, notUrgentOptions },
+            { ContactUrgency.Urgent, new ContactOptions([], []) }
         };
     }
     
