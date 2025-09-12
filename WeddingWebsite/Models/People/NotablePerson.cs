@@ -27,5 +27,5 @@ public record NotablePerson(
     public NotablePerson (Name name, Role role, IEnumerable<WebsiteSection> content, IWebsiteElement? media = null)
         : this (name, role, new(), content, media) {}
 
-    public string NameAndRole => $"{Name} ({Role.GetEnumDescription()}";
+    public string NameAndRole => $"{Name} ({Role.GetEnumDescription()})";
 }
