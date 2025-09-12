@@ -1,0 +1,19 @@
+﻿@using WeddingWebsite.Models.Validation
+
+@if (Issues.Any()) {
+    <div class="container">
+        <h2>Validation Issues</h2>
+        <p>This window is not visible in production.</p>
+        <h3>Errors</h3>
+        <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Error)" />
+        <h3>Warnings</h3>
+        <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Warning)" />
+        <h3>Info</h3>
+        <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Info)" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required IEnumerable<ValidationIssue> Issues { get; set; }
+}

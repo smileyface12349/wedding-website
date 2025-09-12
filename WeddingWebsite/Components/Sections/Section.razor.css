@@ -1,7 +1,14 @@
 ﻿section {
-    padding-top: 25px;
-    padding-bottom: 25px;
     width: calc(100% - 2rem);
     margin: auto;
     max-width: 1000px;
+}
+
+.centered {
+    text-align: center;
+}
+
+.with-padding {
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
