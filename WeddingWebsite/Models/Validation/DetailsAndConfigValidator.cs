@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.WebsiteConfig;
+﻿using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WeddingDetails;
 
 namespace WeddingWebsite.Models.Validation;
@@ -10,6 +11,12 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
         validationIssues = [];
         
+        People_ThereIsABrideAndGroom(details);
+        
+        Events_DoNotReturnToSameVenueTwice(details);
+        Events_EarliestStartTimeIsFirstEvent(details);
+        Events_LatestFinishTimeIsLastEvent(details);
+        Events_IsNotEmpty(details);
 
         return validationIssues;
     }
@@ -34,5 +41,74 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// </summary>
     private void Info(string message) {
         validationIssues.Add(new ValidationIssue(ValidationIssueSeverity.Info, message));
+    }
+    
+    
+    
+    /// <summary>
+    /// A bride and groom are required for the homepage where it displays their names
+    /// </summary>
+    private void People_ThereIsABrideAndGroom(IWeddingDetails details) {
+        if (details.NotablePeople.All(p => p.Role != Role.Bride)) {
+            Error("There is no bride in the notable people list. This is required for the homepage.");
+        }
+        if (details.NotablePeople.All(p => p.Role != Role.Groom)) {
+            Error("There is no groom in the notable people list. This is required for the homepage.");
+        }
+    }
+    
+    /// <summary>
+    /// If there are no events, the timeline will not work properly.
+    /// The countdown relies on the start time of the first event
+    /// </summary>
+    private void Events_IsNotEmpty(IWeddingDetails details) {
+        if (!details.Events.Any()) {
+            Warning("There are no events in the wedding details. This is required for the countdown timer and timeline.");
+        }
+    }
+    
+    /// <summary>
+    /// Returning to the same venue will show the same travel directions.
+    /// This constraint can be relaxed with a little extra coding to handle different travel directions based on origin.
+    /// </summary>
+    private void Events_DoNotReturnToSameVenueTwice(IWeddingDetails details) {
+        var visited = new HashSet<string>();
+        string? currentVenue = null;
+        foreach (var ev in details.Events)
+        {
+            if (ev.Venue.Name == currentVenue) {
+                continue;
+            }
+            if (visited.Contains(ev.Venue.Name)) {
+                Error($"The venue {ev.Venue.Name} is visited in two different events from different locations. This will lead to the same travel directions for both, despite having a different origin. This is not currently supported.");
+            }
+            visited.Add(ev.Venue.Name);
+            currentVenue = ev.Venue.Name;
+        }
+    }
+    
+    /// <summary>
+    /// This assumption is made when determining the start time in the countdown timer.
+    /// </summary>
+    private void Events_EarliestStartTimeIsFirstEvent(IWeddingDetails details) {
+        var firstStartTime = details.Events.First().Start;
+        if (details.Events.Any(e => e.Start < firstStartTime)) {
+            Error("The earliest start time must be the first element in the list. This is used for the countdown timer.");
+        }
+    }
+    
+    /// <summary>
+    /// This assumption is made when determining the time to show alongside the accommodation details.
+    /// </summary>
+    private void Events_LatestFinishTimeIsLastEvent(IWeddingDetails details) {
+        var lastFinishTime = details.Events.Last().End;
+        if (lastFinishTime == null) {
+            // An unspecified end time is a valid state
+            Info("You haven't specified an end time for the final event. Giving a finish time may be useful for guests, and it will show up in the accommodation section.");
+            return;
+        }
+        if (details.Events.Any(e => e.End != null && e.End > lastFinishTime)) {
+            Error("The latest finish time must be the last element in the list. This is used for the accommodation details.");
+        }
     }
 }
