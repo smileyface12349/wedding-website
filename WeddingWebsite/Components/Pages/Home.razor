@@ -3,11 +3,14 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
+@inject IWebHostEnvironment Environment
+@inject IDetailsAndConfigValidator Validator
 
 <PageTitle>Home</PageTitle>
 
@@ -16,6 +19,12 @@
 <h1 class="bride-and-groom-names">@WeddingDetails.Groom.Name.First and @WeddingDetails.Bride.Name.First</h1>
 
 <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+
+@if (Environment.IsDevelopment()) {
+    <CenteredSection>
+        <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
+    </CenteredSection>
+}
 
 <CenteredSection>
     <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
@@ -58,7 +67,5 @@
 </div>
 
 @code {
-    protected override void OnInitialized() {
-        WeddingDetails.Validate();
-    }
+
 }
