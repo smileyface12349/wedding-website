@@ -23,13 +23,13 @@ public record ContactDetails
     }
 
     public ContactOptions GetOptions(ContactUrgency urgency) {
-        return OptionsByUrgency[urgency];
+        return OptionsByUrgency.TryGetValue(urgency, out var option) ? option : new ([], []);
     }
     
     public IEnumerable<IContactOption> GetAllOptions() {
         return OptionsByUrgency.Values.SelectMany(o => o.Methods).Distinct();
     }
     
-    public ContactOptions Urgent => OptionsByUrgency.TryGetValue(ContactUrgency.Urgent, out var option) ? option : new ([], []);
-    public ContactOptions NotUrgent => OptionsByUrgency.TryGetValue(ContactUrgency.NotUrgent, out var option) ? option : new ([], []);
+    public ContactOptions Urgent => GetOptions(ContactUrgency.Urgent);
+    public ContactOptions NotUrgent => GetOptions(ContactUrgency.NotUrgent);
 }
