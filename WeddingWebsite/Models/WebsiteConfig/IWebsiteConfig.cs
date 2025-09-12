@@ -15,5 +15,5 @@ public interface IWebsiteConfig
     public IEnumerable<Role> IntroductionRolesBride { get; }
     public MeetWeddingPartyDisplay MeetWeddingPartyDisplay { get; }
     public IEnumerable<ContactReason> ContactReasonsToShow { get; }
-    
+    public bool ShowContactUrgencyOption { get; }
 }
