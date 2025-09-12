@@ -1,4 +1,4 @@
-﻿<section class="@(Padding ? "with-padding" : "")">
+﻿<section class="@(Padding ? "with-padding" : "")" style="background: @Background">
     @if (Center) {
         <div class="centered">
             @ChildContent
@@ -17,4 +17,7 @@
     
     [Parameter]
     public bool Padding { get; set; } = true;
+    
+    [Parameter]
+    public string Background { get; set; } = "white";
 }
