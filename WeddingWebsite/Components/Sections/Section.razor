@@ -1,8 +1,20 @@
-﻿<section>
-    @ChildContent
+﻿<section class="@(Padding ? "with-padding" : "")">
+    @if (Center) {
+        <div class="centered">
+            @ChildContent
+        </div>
+    } else {
+        @ChildContent
+    }
 </section>
 
 @code {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public bool Center { get; set; } = false;
+    
+    [Parameter]
+    public bool Padding { get; set; } = true;
 }
