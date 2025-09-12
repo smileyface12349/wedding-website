@@ -6,35 +6,37 @@
 
 @inject IWebsiteConfig Config
 
-<h2>What is your enquiry about?</h2>
-<p>This will affect who you should contact.</p>
-<MudSelect @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
-    @foreach (var reason in Config.ContactReasonsToShow) {
-        <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
-    }
-</MudSelect>
-
-<h2>Is it urgent?</h2>
-<MudToggleGroup @bind-Value="Urgency">
-    <MudToggleItem Value="@ContactUrgency.Urgent">Yes</MudToggleItem>
-    <MudToggleItem Value="@ContactUrgency.NotUrgent">No</MudToggleItem>
-</MudToggleGroup>
-<p>@ResponseTimelineString</p>
-
-<h2>Suggested contacts</h2>
-@foreach (var contact in MatchingContacts) {
-    <RoundedCornerBox>
-        <h3>@contact.NameAndRole</h3>
-        @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
-            @if (method.Link != null) {
-                <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
-            } else {
-                <p>@method.Type: @method.Text</p>
-            }
+<div class="container">
+    <h2>What is your enquiry about?</h2>
+    <p>This will affect who you should contact.</p>
+    <MudSelect @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
+        @foreach (var reason in Config.ContactReasonsToShow) {
+            <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
         }
-    </RoundedCornerBox>
-    <div style="height: 10px;"></div>
-}
+    </MudSelect>
+
+    <h2>Is it urgent?</h2>
+    <MudToggleGroup @bind-Value="Urgency">
+        <MudToggleItem Value="@ContactUrgency.Urgent">Yes</MudToggleItem>
+        <MudToggleItem Value="@ContactUrgency.NotUrgent">No</MudToggleItem>
+    </MudToggleGroup>
+    <p>@ResponseTimelineString</p>
+
+    <h2>Suggested contacts</h2>
+    @foreach (var contact in MatchingContacts) {
+        <RoundedCornerBox>
+            <h3>@contact.NameAndRole</h3>
+            @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
+                @if (method.Link != null) {
+                    <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
+                } else {
+                    <p>@method.Type: @method.Text</p>
+                }
+            }
+        </RoundedCornerBox>
+        <div style="height: 10px;"></div>
+    }
+</div>
 
 @code {
     [Parameter]
