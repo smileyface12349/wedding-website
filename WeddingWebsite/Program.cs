@@ -7,6 +7,7 @@ using WeddingWebsite.Components;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
 using WeddingWebsite.Models.Credentials;
+using WeddingWebsite.Models.Validation;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WeddingDetails;
 using WeddingWebsite.Services;
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IWeddingDetails, RealWeddingDetails>();
 builder.Services.AddScoped<IWebsiteConfig, WebsiteConfig>(); // TODO: I don't think this is the best practice for config
 builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>(); // TODO: Switch to credentials.json?
+builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
