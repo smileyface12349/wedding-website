@@ -10,7 +10,7 @@
 <p>This will affect who you should contact.</p>
 <MudSelect @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
     @foreach (var reason in Config.ContactReasonsToShow) {
-        <MudSelectItem Value="reason">@reason.GetEnumDescription()</MudSelectItem>
+        <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
     }
 </MudSelect>
 
@@ -39,13 +39,13 @@
     [Parameter]
     public required IEnumerable<IContact> Contacts { get; set; }
     
-    private ContactReason ContactReason { get; set; }
+    private ContactReason? ContactReason { get; set; }
 
     private ContactUrgency Urgency { get; set; }
     
     private string ResponseTimelineString => Urgency == ContactUrgency.Urgent ? "We'll get back to you as soon as possible." : "We'll get back to you within 48 hours.";
     
-    private IEnumerable<IContact> MatchingContacts => Contacts
-        .Where(c => c.ContactDetails.GetOptions(Urgency).MatchesReason(ContactReason));
+    private IEnumerable<IContact> MatchingContacts => ContactReason == null ? [] : Contacts
+        .Where(c => c.ContactDetails.GetOptions(Urgency).MatchesReason(ContactReason.Value));
 
 }
