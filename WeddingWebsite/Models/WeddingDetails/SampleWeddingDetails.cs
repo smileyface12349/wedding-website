@@ -83,7 +83,7 @@ public class SampleWeddingDetails : IWeddingDetails
 
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2028-8-14");
         
-    public ReceptionVenue ReceptionVenue { get; } = new(
+    public Venue ReceptionVenue { get; } = new(
         "Garden of Eden", 
         new Location(12345, 67890), 
         "123 Paradise Lane, Eden, ED1 2AB",
@@ -95,7 +95,7 @@ public class SampleWeddingDetails : IWeddingDetails
         )
     );
     
-    public CeremonyVenue CeremonyVenue { get; } = new(
+    public Venue CeremonyVenue { get; } = new(
         "St Mary's Church", 
         new Location(12345, 67890), 
         "456 Holy Road, Eden, ED3 4GH",
