@@ -20,6 +20,6 @@ public interface IWeddingDetails
     public WebsiteLink RegistryLink { get; }
     
     // Helper methods
-    public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson("Blank", "Groom", Role.Groom);
-    public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson("Blank", "Bride", Role.Bride);
+    public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);
+    public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson(new Name("Blank", "Bride"), Role.Bride);
 }
