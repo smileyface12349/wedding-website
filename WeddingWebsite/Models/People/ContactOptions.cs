@@ -6,9 +6,9 @@ public record ContactOptions
     /// Null is a special state that matches any reason.
     /// </summary>
     private IEnumerable<ContactReason>? Reasons;
-    public IEnumerable<IContactOption> Methods { get; }
+    public IEnumerable<IContactMethod> Methods { get; }
     
-    public ContactOptions(IEnumerable<ContactReason>? reasons, IEnumerable<IContactOption> methods) {
+    public ContactOptions(IEnumerable<ContactReason>? reasons, IEnumerable<IContactMethod> methods) {
         Reasons = reasons;
         Methods = methods;
     }

@@ -26,7 +26,7 @@ public record ContactDetails
         return OptionsByUrgency.TryGetValue(urgency, out var option) ? option : new ([], []);
     }
     
-    public IEnumerable<IContactOption> GetAllOptions() {
+    public IEnumerable<IContactMethod> GetAllOptions() {
         return OptionsByUrgency.Values.SelectMany(o => o.Methods).Distinct();
     }
     
