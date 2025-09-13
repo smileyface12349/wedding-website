@@ -16,10 +16,7 @@
 
     @if (Config.ShowContactUrgencyOption) {
         <h2>Is it urgent?</h2>
-        <MudToggleGroup @bind-Value="Urgency">
-            <MudToggleItem Value="@ContactUrgency.Urgent">Yes</MudToggleItem>
-            <MudToggleItem Value="@ContactUrgency.NotUrgent">No</MudToggleItem>
-        </MudToggleGroup>
+        <YesOrNoToggleGroup @bind-Value="IsUrgent"/>
         <p class="text-below">@ResponseTimelineString</p>
     }
     
@@ -45,7 +42,8 @@
     
     private ContactReason? ContactReason { get; set; }
 
-    private ContactUrgency Urgency { get; set; } = ContactUrgency.NotUrgent;
+    private bool IsUrgent { get; set; } = false;
+    private ContactUrgency Urgency => IsUrgent ? ContactUrgency.Urgent : ContactUrgency.NotUrgent;
     
     private string ResponseTimelineString => Urgency == ContactUrgency.Urgent ? "We'll get back to you as soon as possible." : "We'll get back to you within 48 hours.";
     
