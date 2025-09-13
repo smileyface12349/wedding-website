@@ -11,3 +11,8 @@ th, td {
     margin: auto;
     max-width: 500px;
 }
+
+h2 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
