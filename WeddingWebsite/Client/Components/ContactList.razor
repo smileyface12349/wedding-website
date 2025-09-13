@@ -8,7 +8,6 @@
 
 <div class="container">
     <h2>What is your enquiry about?</h2>
-    <p>This will affect who you should contact.</p>
     <MudSelect Style="text-align: left;" Class="mud-component-on-dark-background" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
         @foreach (var reason in Config.ContactReasonsToShow) {
             <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
