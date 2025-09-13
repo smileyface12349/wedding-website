@@ -21,6 +21,13 @@
     }
     
     <h2>Suggested contacts</h2>
+    @if (!MatchingContacts.Any()) {
+        @if (ContactReason == null) {
+            <p>Choose a category of enquiry to see contacts.</p>
+        } else {
+            <p>No contacts found. Try a different search.</p>
+        }
+    }
     @foreach (var contact in MatchingContacts) {
         <RoundedCornerBox>
             <h3>@contact.NameAndRole</h3>
