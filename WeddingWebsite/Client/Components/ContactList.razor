@@ -30,14 +30,17 @@
     }
     @foreach (var contact in MatchingContacts) {
         <RoundedCornerBox>
-            <h3>@contact.NameAndRole</h3>
-            @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
-                @if (method.Link != null) {
-                    <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
-                } else {
-                    <p>@method.Type: @method.Text</p>
+            <div class="contact-inner">
+                <h3>@contact.NameAndRole</h3>
+                @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
+                    @if (method.Link != null) {
+                        <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
+                    }
+                    else {
+                        <p>@method.Type: @method.Text</p>
+                    }
                 }
-            }
+            </div>
         </RoundedCornerBox>
         <div style="height: 10px;"></div>
     }
