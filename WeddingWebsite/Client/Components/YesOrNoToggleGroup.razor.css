@@ -1,0 +1,33 @@
+﻿.group {
+    display: flex;
+    flex-direction: row;
+}
+
+button {
+    padding: 5px 10px;
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 4px;
+}
+
+.yes-button {
+    border-color: var(--mud-palette-success);
+    margin-right: 10px;
+}
+
+.yes-button.selected {
+    background-color: var(--mud-palette-success);
+}
+
+button:hover {
+    opacity: 0.7;
+}
+
+.no-button {
+    border-color: var(--mud-palette-error);
+}
+
+.no-button.selected {
+    background-color: var(--mud-palette-error);
+}

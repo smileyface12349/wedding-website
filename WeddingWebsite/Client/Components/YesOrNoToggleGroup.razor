@@ -1,0 +1,22 @@
+﻿<div class="group">
+    <button @onclick="ChangeToYes" class="yes-button @(Value ? "selected" : "")">Yes</button>
+    <button @onclick="ChangeToNo" class="no-button @(!Value ? "selected" : "")">No</button>
+</div>
+
+@code {
+    [Parameter]
+    public bool Value { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+    
+    private void ChangeToYes() {
+        Value = true;
+        ValueChanged.InvokeAsync(Value);
+    }
+    
+    private void ChangeToNo() {
+        Value = false;
+        ValueChanged.InvokeAsync(Value);
+    }
+}
