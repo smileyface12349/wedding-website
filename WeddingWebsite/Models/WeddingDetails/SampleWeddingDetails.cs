@@ -6,8 +6,17 @@ using WeddingWebsite.Models.WebsiteElement;
 namespace WeddingWebsite.Models.WeddingDetails;
 
 /// <summary>
-/// Used to test authorization - should not be accessible to unauthenticated users.
-/// This data is still fake, and is safe to go on git.
+/// This file provides a git-tracked up-to-date selection of data suitable for development.
+/// 
+/// This is useful for:
+///  - Trying out the website without needing to enter all your own information first.
+///  - Seeing an example as this can be helpful when constructing your own implementation.
+///  - Sharing screenshots of layout without revealing anything about your wedding.
+///  - A standardized test environment to diagnose problems.
+///  - Updates automatically with new releases so you can test out new releases before filling in details.
+///  - Will facilitate any future unit testing that may be added.
+///
+/// In practice, you won't actually be using this implementation but I'd recommend keeping it around in case you need it.
 /// </summary>
 
 [Authorize]
