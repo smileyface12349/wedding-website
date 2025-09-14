@@ -75,3 +75,17 @@ h1:focus {
     object-fit: cover;
     object-position: center;
 }
+
+.mud-component-on-dark-background {
+    div.mud-input-slot.mud-input-root {
+        color: #cccccc !important;
+    }
+    
+    label.mud-input-label.mud-input-label-inputcontrol {
+        color: #cccccc !important;
+    }
+    
+    svg.mud-icon-root.mud-svg-icon {
+        fill: #cccccc !important;
+    }
+}

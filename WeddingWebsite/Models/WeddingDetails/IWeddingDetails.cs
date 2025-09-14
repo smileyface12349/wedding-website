@@ -8,11 +8,11 @@ public interface IWeddingDetails
 {
     // Information about the Wedding
     public IEnumerable<NotablePerson> NotablePeople { get; }
+    public IEnumerable<IContact> ExtraContacts { get; }
     public DateOnly WeddingDate { get; }
     public IEnumerable<Event> Events { get; }
     public DressCode DressCode { get; }
     public AccommodationDetails AccommodationDetails { get; }
-    public IEnumerable<IContact> Contacts { get; }
     
     // Static Files and External Links
     public WebsiteImage MainImage { get; }
@@ -20,6 +20,6 @@ public interface IWeddingDetails
     public WebsiteLink RegistryLink { get; }
     
     // Helper methods
-    public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson("Blank", "Groom", Role.Groom);
-    public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson("Blank", "Bride", Role.Bride);
+    public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);
+    public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson(new Name("Blank", "Bride"), Role.Bride);
 }

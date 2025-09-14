@@ -1,0 +1,27 @@
+﻿table {
+    margin: auto;
+    text-align: left;
+}
+
+th, td {
+    padding: 10px;
+}
+
+.container {
+    margin: auto;
+    max-width: 500px;
+    text-align: left;
+}
+
+h2 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.text-below {
+    margin-top: 10px;
+}
+
+.contact-inner {
+    padding: 5px 10px;
+}

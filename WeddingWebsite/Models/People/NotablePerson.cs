@@ -1,17 +1,31 @@
-﻿using WeddingWebsite.Models.WebsiteElement;
+﻿using WeddingWebsite.Core;
+using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.People;
 
 public record NotablePerson(
     Name Name,
     Role Role,
+    ContactDetails ContactDetails,
     IEnumerable<WebsiteSection> Content,
     IWebsiteElement? Media = null
-) : IPerson
+) : IPerson, IContact
 {
     /// <summary>
-    /// Shorthand constructor if you don't want any extra info on the "meet the wedding party" section, or if this
-    /// person is not on that section.
+    /// No contact details, no blurb for "meet the wedding party"
     /// </summary>
-    public NotablePerson (string firstName, string lastName, Role role) : this (new Name(firstName, lastName), role, []) {}
+    public NotablePerson (Name name, Role role) : this (name, role, new(), []) {}
+    
+    /// <summary>
+    /// Contact details but no blurb
+    /// </summary>
+    public NotablePerson (Name name, Role role, ContactDetails contactDetails) : this (name, role, contactDetails, []) {}
+    
+    /// <summary>
+    /// No contact details but has blurb for "meet the wedding party"
+    /// </summary>
+    public NotablePerson (Name name, Role role, IEnumerable<WebsiteSection> content, IWebsiteElement? media = null)
+        : this (name, role, new(), content, media) {}
+
+    public string NameAndRole => $"{Name} ({Role.GetEnumDescription()})";
 }

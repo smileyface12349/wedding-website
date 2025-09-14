@@ -59,7 +59,7 @@
 <div style="background-color: var(--tertiary); color: white;">
 <CenteredSection>
     <h2>Contact Details</h2>
-    <ContactList Contacts="@WeddingDetails.Contacts"/>
+    <ContactList Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"/>
 </CenteredSection>
 
 <div class="bottom-spacer"></div>
