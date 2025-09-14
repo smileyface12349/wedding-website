@@ -8,6 +8,11 @@
     --tertiary: #275c34;
 }
 
+@font-face {
+    font-family: Amsterdam;
+    src: url(font/Amsterdam.ttf);
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
