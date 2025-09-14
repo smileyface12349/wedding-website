@@ -17,4 +17,5 @@ public class WebsiteConfig : IWebsiteConfig
     public MeetWeddingPartyDisplay MeetWeddingPartyDisplay => MeetWeddingPartyDisplay.Default;
     public IEnumerable<ContactReason> ContactReasonsToShow => Enum.GetValues<ContactReason>();
     public bool ShowContactUrgencyOption => true;
+    public WeddingCountdownDisplay WeddingCountdownDisplay => WeddingCountdownDisplay.Standard;
 }
