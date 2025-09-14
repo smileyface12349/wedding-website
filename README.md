@@ -27,3 +27,5 @@ Customising all the details is already possible, but what if you want to change 
 ## License
 
 A license will be added once more of the code is completed. For now, you do not have permission to use, modify or distribute any of this code.
+
+Please note that commercial use is prohibited, as this project makes use of assets which do not permit commercial use.
