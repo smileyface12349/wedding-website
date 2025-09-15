@@ -5,7 +5,6 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 
 public class WebsiteConfig : IWebsiteConfig
 {
-    public UsersCanAddGuests UsersCanAddGuests => UsersCanAddGuests.No;
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
         new Colour(162, 234, 246),

@@ -9,7 +9,6 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 
 public interface IWebsiteConfig
 {
-    public UsersCanAddGuests UsersCanAddGuests { get; }
     public WeddingColours Colours { get; }
     public IEnumerable<Role> IntroductionRolesGroom { get; }
     public IEnumerable<Role> IntroductionRolesBride { get; }
