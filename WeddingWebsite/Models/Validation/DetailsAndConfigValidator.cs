@@ -131,7 +131,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// For every time of enquiry, there should be someone to contact.
     /// </summary>
     private void Contacts_HaveAtLeastOneContactForEachOption(IWeddingDetails details, IWebsiteConfig config) {
-        foreach (var enquiryType in config.ContactReasonsToShow) {
+        var section = GetSection<Section.Contact>(config);
+        if (section == null) return;
+        foreach (var enquiryType in section.ReasonsToShow) {
             foreach (var urgency in new[] { ContactUrgency.NotUrgent, ContactUrgency.Urgent }) {
                 var matchingContacts = details.NotablePeople.Concat(details.ExtraContacts)
                     .Where(p => p.ContactDetails.GetOptions(urgency).MatchesReason(enquiryType))
@@ -143,8 +145,13 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         }
     }
     
+    /// <summary>
+    /// This is supplying data which won't be used. Flagging this early will prevent confusion later on.
+    /// </summary>
     private void Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(IWeddingDetails details, IWebsiteConfig config) {
-        if (!config.ShowContactUrgencyOption) {
+        var section = GetSection<Section.Contact>(config);
+        if (section == null) return;
+        if (!section.ShowUrgencyOption) {
             foreach (var contact in details.NotablePeople.Concat(details.ExtraContacts))
             {
                 if (contact.ContactDetails.Urgent.Methods.Any()) {
