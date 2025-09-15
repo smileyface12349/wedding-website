@@ -5,17 +5,15 @@
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
-@inject IWebsiteConfig Config
-
 <div class="container">
     <h2>What is your enquiry about?</h2>
     <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
-        @foreach (var reason in Config.ContactReasonsToShow) {
+        @foreach (var reason in ReasonsToShow) {
             <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
         }
     </MudSelect>
 
-    @if (Config.ShowContactUrgencyOption) {
+    @if (ShowUrgencyOption) {
         <h2>Is it urgent?</h2>
         <YesOrNoToggleGroup @bind-Value="IsUrgent"/>
         <p class="text-below">@ResponseTimelineString</p>
@@ -48,6 +46,12 @@
 @code {
     [Parameter]
     public required IEnumerable<IContact> Contacts { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<ContactReason> ReasonsToShow { get; set; }
+    
+    [Parameter]
+    public required bool ShowUrgencyOption { get; set; }
     
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }

@@ -30,7 +30,7 @@
         @if (sect is Section.Countdown) { <CountdownSection/> }
         @if (sect is Section.Timeline) { <TimelineSection/> }
         @if (sect is Section.MeetWeddingParty party) { <MeetWeddingPartySection DisplayMode="party.DisplayMode" RolesLeft="party.RolesLeft" RolesRight="party.RolesRight"/> }
-        @if (sect is Section.Contact) { <ContactSection/> }
+        @if (sect is Section.Contact contact) { <ContactSection ReasonsToShow="contact.ReasonsToShow" ShowUrgencyOption="contact.ShowUrgencyOption"/> }
     </CascadingValue>
 }
 
