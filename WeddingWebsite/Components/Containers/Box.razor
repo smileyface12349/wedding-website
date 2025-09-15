@@ -1,0 +1,17 @@
+﻿@using WeddingWebsite.Models.Theme
+
+@if(Theme == null || Theme.BoxStyle.Type == BoxType.Outlined) {
+    <OutlinedBox>@ChildContent</OutlinedBox>
+} else if (Theme.BoxStyle.Type == BoxType.Filled) {
+    <RoundedCornerBox>@ChildContent</RoundedCornerBox>
+} else {
+    @ChildContent
+}
+
+@code {
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}
