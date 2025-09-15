@@ -20,7 +20,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private Colour Background => Theme == null ? Config.Colours.PrimaryLight : Theme.BoxStyle.Background;
+    private Colour Background => Theme == null ? Config.Colours.PrimaryLight : Theme.Background;
     
-    private string CssShadow => Theme is { Background.IsDark: false, BoxStyle.Background.IsDark: false } ? "shadow" : "";
+    private string CssShadow => Theme is { Background.IsDark: false } ? "shadow" : "";
 }
