@@ -9,7 +9,7 @@ public class WebsiteConfig : IWebsiteConfig
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
         new Colour(255, 182, 193),
-        new Colour(254, 249, 231),
+        new Colour(254, 252, 231),
         new Colour(39, 92, 52),
         new Colour(255, 255, 255)
     );
@@ -40,7 +40,7 @@ public class WebsiteConfig : IWebsiteConfig
         );
     
         Sections = [
-            new Section.Countdown(theme1),
+            new Section.Countdown(theme2),
             new Section.Timeline(theme2),
             new Section.MeetWeddingParty(theme1),
             new Section.Contact(theme3)
