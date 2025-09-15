@@ -7,3 +7,7 @@
 .rounded-corner-box-inner {
     padding: 10px 15px;
 }
+
+.shadow {
+    box-shadow: 1px 1px 1px 1px #aaa;
+}   

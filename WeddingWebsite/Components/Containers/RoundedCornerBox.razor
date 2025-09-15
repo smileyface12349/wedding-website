@@ -3,7 +3,7 @@
 
 @inject IWebsiteConfig Config
 
-<div class="rounded-corner-box" style="background: @Background">
+<div class="rounded-corner-box @CssShadow" style="background: @Background">
     @TopContent
     <div class="rounded-corner-box-inner">
         @ChildContent
@@ -21,4 +21,6 @@
     public SectionTheme? Theme { get; set; }
     
     private Colour Background => Theme == null ? Config.Colours.PrimaryLight : Theme.BoxStyle.Background;
+    
+    private string CssShadow => Theme is { Background.IsDark: false, BoxStyle.Background.IsDark: false } ? "shadow" : "";
 }
