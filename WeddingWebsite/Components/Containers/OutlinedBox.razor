@@ -1,16 +1,8 @@
-﻿@using WeddingWebsite.Models
-@using WeddingWebsite.Models.WebsiteElement
-@using WeddingWebsite.Components.Elements
-@using WeddingWebsite.Models.Theme
+﻿@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
 <div class="outlined-box" style="background: @Background">
-    @if(Image != null) {
-        <img src="@Image.Url" alt="@Image.AltText">
-    }
-    @if(MapsLocation != null) {
-        <GoogleMapsEmbed Location="@MapsLocation" Height="180px"/>
-    }
+    @TopContent
     <div class="outlined-box-inner">
         @ChildContent
     </div>
@@ -20,11 +12,11 @@
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
     
+    /// <summary>
+    /// Right at the top, before any padding kicks in
+    /// </summary>
     [Parameter]
-    public WebsiteImage? Image { get; set; }
-    
-    [Parameter]
-    public Location? MapsLocation { get; set; }
+    public RenderFragment? TopContent { get; set; }
     
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }

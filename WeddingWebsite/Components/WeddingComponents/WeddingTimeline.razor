@@ -15,11 +15,20 @@
             </ItemOpposite>
             <ItemContent>
                 <OutlinedBox Image=@item.Image MapsLocation=@item.MapsLocation>
+                    <TopContent>
+                        @if(item.Image != null) {
+                            <img src="@item.Image.Url" alt="@item.Image.AltText">
+                        }
+                        @if(item.MapsLocation != null) {
+                            <GoogleMapsEmbed Location="@item.MapsLocation" Height="180px"/>
+                        }
+                    </TopContent>
                     <h2>@item.Title</h2>
                     @foreach (var sect in item.Description) {
                         if (sect.Heading != null) {
                             <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                        } else {
+                        }
+                        else {
                             <p class="event-description">@sect.CollapseContent()</p>
                         }
                     }
