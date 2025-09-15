@@ -11,6 +11,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
         validationIssues = [];
         
+        Sections_ShouldNotBeEmpty(config);
+        Sections_ShouldNotHaveDuplicates(config);
+        
         People_ThereIsABrideAndGroom(details);
         
         Events_DoNotReturnToSameVenueTwice(details);
@@ -158,6 +161,29 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                     Warning($"The contact '{contact.NameAndRole}' has urgent options, but you have disabled the urgency toggle in settings. Either re-enable this toggle, or remove all urgent contact options, as the urgent contact options will be ignored.");
                 }
             }
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't cause any errors but seems a bit silly!
+    /// </summary>
+    private void Sections_ShouldNotBeEmpty(IWebsiteConfig config) {
+        if (!config.Sections.Any()) {
+            Warning("You haven't added any sections to your website! It'll be a bit boring... Go to the config file and add some sections into your website.");
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't cause any errors but seems a bit silly!
+    /// </summary>
+    private void Sections_ShouldNotHaveDuplicates(IWebsiteConfig config) {
+        var sectionTypes = new HashSet<Type>();
+        foreach (var section in config.Sections) {
+            var type = section.GetType();
+            if (sectionTypes.Contains(type)) {
+                Warning($"You have two sections of type {type}. Are you sure you want two the same?");
+            }
+            sectionTypes.Add(type);
         }
     }
 }
