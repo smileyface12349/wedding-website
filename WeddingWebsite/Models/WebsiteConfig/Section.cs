@@ -33,7 +33,10 @@ public abstract record Section
     /// <summary>
     /// Introductions from the wedding party
     /// </summary>
-    public sealed record MeetWeddingParty(SectionTheme Theme) : Section(Theme)
+    public sealed record MeetWeddingParty(
+        SectionTheme Theme,
+        MeetWeddingPartyDisplay DisplayMode = MeetWeddingPartyDisplay.Default
+    ) : Section(Theme)
     {
         public override SectionType Type => SectionType.MeetWeddingParty;
     }
