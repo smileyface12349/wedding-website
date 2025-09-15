@@ -4,6 +4,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Components.WeddingSections
+@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
@@ -27,10 +28,12 @@
     </Section>
 }
 
-<CountdownSection/>
-<TimelineSection/>
-<MeetWeddingPartySection/>
-<ContactSection/>
+@foreach (var sect in Config.Sections) {
+    @if (sect.Type == SectionType.Countdown) { <CountdownSection/> }
+    @if (sect.Type == SectionType.Timeline) { <TimelineSection/> }
+    @if (sect.Type == SectionType.MeetWeddingParty) { <MeetWeddingPartySection/> }
+    @if (sect.Type == SectionType.Contact) { <ContactSection/> }
+}
 
 <div class="bottom-spacer"></div>
 
