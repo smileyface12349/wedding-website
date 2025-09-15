@@ -24,7 +24,7 @@ public class WebsiteConfig : IWebsiteConfig
         var theme1 = new SectionTheme(
             Colour.White,
             Colours.Primary,
-            new BoxStyle(BoxType.Outlined, Colours.SurfaceVariant)
+            new BoxStyle(BoxType.Outlined, Colour.White)
         );
         
         var theme2 = new SectionTheme(
@@ -36,7 +36,7 @@ public class WebsiteConfig : IWebsiteConfig
         var theme3 = new SectionTheme(
             Colours.Tertiary,
             Colours.Primary,
-            new BoxStyle(BoxType.Outlined, Colours.PrimaryLight)
+            new BoxStyle(BoxType.Filled, Colours.PrimaryLight)
         );
     
         Sections = [
