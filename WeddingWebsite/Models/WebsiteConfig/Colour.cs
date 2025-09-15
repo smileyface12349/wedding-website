@@ -20,4 +20,6 @@ public class Colour
     public Colour(MudColor mudColor) {
         MudColor = mudColor;
     }
+    
+    public static Colour White => new Colour(255, 255, 255, false);
 }
