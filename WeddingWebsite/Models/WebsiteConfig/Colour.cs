@@ -25,6 +25,10 @@ public class Colour
         return MudColor.ToString();
     }
     
+    public string GetHex() {
+        return MudColor.Value;
+    }
+    
     /// <summary>
     /// Obtain a suitable text colour to use against this background. Other text colours are fine too.
     /// </summary>
