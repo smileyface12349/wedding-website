@@ -9,9 +9,7 @@ public class WebsiteConfig : IWebsiteConfig
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
         new Colour(162, 234, 246),
-        new Colour(254, 252, 231),
-        new Colour(39, 92, 52, true),
-        new Colour(255, 255, 255)
+        new Colour(39, 92, 52, true)
     );
     public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.BestMan, Role.Groomsman];
     public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid];
@@ -21,6 +19,8 @@ public class WebsiteConfig : IWebsiteConfig
     public IEnumerable<Section> Sections { get; }
     
     public WebsiteConfig() {
+        var surfaceVariant = new Colour(254, 252, 231);
+    
         var theme1 = new SectionTheme(
             Colour.White,
             Colours.Primary,
@@ -28,19 +28,19 @@ public class WebsiteConfig : IWebsiteConfig
         );
         
         var theme2 = new SectionTheme(
-            Colours.SurfaceVariant,
+            surfaceVariant,
             Colours.Primary,
             new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null))
         );
         
         var theme3 = new SectionTheme(
-            Colours.Tertiary,
+            Colours.Secondary,
             Colours.Primary,
-            new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryLight, Colours.Primary, null))
+            new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null))
         );
     
         Sections = [
-            new Section.Countdown(theme1 with { BoxStyle = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryLight, Colours.Primary, null))}),
+            new Section.Countdown(theme1 with { BoxStyle = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null))}),
             new Section.Timeline(theme2),
             new Section.MeetWeddingParty(theme1),
             new Section.Contact(theme3)

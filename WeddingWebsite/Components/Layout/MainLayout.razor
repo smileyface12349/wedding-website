@@ -43,11 +43,10 @@
         {
             PaletteLight = new PaletteLight()
             {
-                Primary = Config.Colours.Primary.MudColor,
-                PrimaryLighten = Config.Colours.PrimaryLight.MudColor.Value,
-                Secondary = Config.Colours.SurfaceVariant.MudColor,
-                Tertiary = Config.Colours.Tertiary.MudColor,
-                TertiaryContrastText = Config.Colours.TextOnTertiary.MudColor
+                Primary = Config.Colours.Primary.ToString(),
+                PrimaryLighten = Config.Colours.PrimaryBackground.ToString(),
+                Secondary = Config.Colours.Secondary.ToString(),
+                Surface = Config.Colours.Surface.ToString()
             },
         };
     } 
