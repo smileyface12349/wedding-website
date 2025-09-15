@@ -15,7 +15,7 @@ using WeddingWebsite.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // This is the stuff that needs to be configured
-builder.Services.AddScoped<IWeddingDetails, RealWeddingDetails>();
+builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
 builder.Services.AddScoped<IWebsiteConfig, WebsiteConfig>(); // TODO: I don't think this is the best practice for config
 builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>(); // TODO: Switch to credentials.json?
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
