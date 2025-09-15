@@ -24,23 +24,23 @@ public class WebsiteConfig : IWebsiteConfig
         var theme1 = new SectionTheme(
             Colour.White,
             Colours.Primary,
-            new BoxStyle(BoxType.Outlined, Colour.White)
+            new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null))
         );
         
         var theme2 = new SectionTheme(
             Colours.SurfaceVariant,
             Colours.Primary,
-            new BoxStyle(BoxType.Outlined, Colour.White)
+            new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null))
         );
         
         var theme3 = new SectionTheme(
             Colours.Tertiary,
             Colours.Primary,
-            new BoxStyle(BoxType.Filled, Colours.PrimaryLight)
+            new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryLight, Colours.Primary, null))
         );
     
         Sections = [
-            new Section.Countdown(theme1 with { BoxStyle = new BoxStyle(BoxType.Filled, Colours.PrimaryLight)}),
+            new Section.Countdown(theme1 with { BoxStyle = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryLight, Colours.Primary, null))}),
             new Section.Timeline(theme2),
             new Section.MeetWeddingParty(theme1),
             new Section.Contact(theme3)
