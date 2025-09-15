@@ -162,13 +162,12 @@ public class SampleWeddingDetails : IWeddingDetails
         
     public Venue ReceptionVenue { get; } = new(
         "Garden of Eden", 
-        new Location(12345, 67890), 
+        new Location(48.8584196, 2.2943747), 
         "123 Paradise Lane, Eden, ED1 2AB",
         new TravelDirections(
             "<p>We suggest arriving by foot.</p><p><b>Parking: </b>There is no parking available, except for blue badge holders.</p>",
             null,
-            20,
-            new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDaBHvigmC_MQkDbMzRE4RXDeaqbJgwxTqIA&s", "A wedding car")
+            20
         )
     );
     
