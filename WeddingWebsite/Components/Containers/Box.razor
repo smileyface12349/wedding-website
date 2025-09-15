@@ -1,11 +1,17 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-@if(Theme == null || Theme.BoxStyle.Type == BoxType.Outlined) {
-    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
-} else if (Theme.BoxStyle.Type == BoxType.Filled) {
-    <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+@if (Theme != null && Theme.BoxStyle != null) {
+    <CascadingValue Value="Theme.BoxStyle.InnerTheme">
+        @if (Theme.BoxStyle.Type == BoxType.Outlined) {
+            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+        } else if (Theme.BoxStyle.Type == BoxType.Filled) {
+            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+        } else {
+            <p>Unsupported box type: @Theme.BoxStyle.Type</p>
+        }
+    </CascadingValue>
 } else {
-    @ChildContent
+    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
 }
 
 @code {
