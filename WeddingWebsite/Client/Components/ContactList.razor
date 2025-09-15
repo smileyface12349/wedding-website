@@ -2,13 +2,14 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Core
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWebsiteConfig Config
 
 <div class="container">
     <h2>What is your enquiry about?</h2>
-    <MudSelect Style="text-align: left;" Class="mud-component-on-dark-background" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
+    <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
         @foreach (var reason in Config.ContactReasonsToShow) {
             <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
         }
@@ -49,6 +50,11 @@
 @code {
     [Parameter]
     public required IEnumerable<IContact> Contacts { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private string MudSelectClass => Theme is {Background.IsDark: true} ? "mud-component-on-dark-background": "";
     
     private ContactReason? ContactReason { get; set; }
 
