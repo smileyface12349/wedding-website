@@ -41,5 +41,13 @@ public abstract record Section
     /// <summary>
     /// Shows suggested contacts based on what the enquiry is about.
     /// </summary>
-    public sealed record Contact(SectionTheme Theme) : Section(Theme);
+    public sealed record Contact(
+        SectionTheme Theme,
+        IEnumerable<ContactReason> ReasonsToShow,
+        bool ShowUrgencyOption = true
+    ) : Section(Theme)
+    {
+        public Contact(SectionTheme theme, bool urgencyOption = true)
+            : this(theme, Enum.GetValues<ContactReason>(), urgencyOption) {}
+    }
 }
