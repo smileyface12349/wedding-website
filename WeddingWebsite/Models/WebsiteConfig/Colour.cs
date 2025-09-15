@@ -21,5 +21,17 @@ public class Colour
         MudColor = mudColor;
     }
     
+    /// <summary>
+    /// Obtain a suitable text colour to use against this background. Other text colours are fine too.
+    /// </summary>
+    public Colour GetTextColour() {
+        if (IsDark) {
+            return White;
+        } else {
+            return DarkGrey;
+        }
+    }
+    
     public static Colour White => new Colour(255, 255, 255, false);
+    public static Colour DarkGrey => new Colour(66, 66, 66, true);
 }
