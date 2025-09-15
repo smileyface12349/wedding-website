@@ -25,6 +25,18 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     }
     
     /// <summary>
+    /// A helper method to quickly obtain the first section of a particular type, or null if there isn't one.
+    /// </summary>
+    private static T? GetSection<T>(IWebsiteConfig config) where T:Section {
+        foreach (var sect in config.Sections) {
+            if (sect is T castedSection) {
+                return castedSection;
+            }
+        }
+        return default;
+    }
+    
+    /// <summary>
     /// An error that leads to incorrect / misleading information, or severe and definitely undesired behaviour.
     /// These errors must still be recoverable i.e. the site should render without throwing.
     /// </summary>
