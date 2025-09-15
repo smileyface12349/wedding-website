@@ -21,6 +21,10 @@ public class Colour
         MudColor = mudColor;
     }
     
+    public override string ToString() {
+        return MudColor.ToString();
+    }
+    
     /// <summary>
     /// Obtain a suitable text colour to use against this background. Other text colours are fine too.
     /// </summary>
