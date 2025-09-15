@@ -10,8 +10,6 @@ public class WebsiteConfig : IWebsiteConfig
         new Colour(162, 234, 246),
         new Colour(39, 92, 52, true)
     );
-    public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.BestMan, Role.Groomsman];
-    public IEnumerable<Role> IntroductionRolesBride => [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid];
     public IEnumerable<ContactReason> ContactReasonsToShow => Enum.GetValues<ContactReason>();
     public bool ShowContactUrgencyOption => true;
     public IEnumerable<Section> Sections { get; }
