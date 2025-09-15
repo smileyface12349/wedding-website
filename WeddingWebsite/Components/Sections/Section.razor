@@ -1,14 +1,12 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<section class="@(Padding ? "with-padding" : "")" style="background: @(Theme?.Background.MudColor.Value ?? Background)">
+<section class="@(Padding ? "with-padding" : "")" style="background: @CssBackground">
     <div class="section-content @(Center ? "centered" : "")">
         @ChildContent
     </div>
 </section>
 
 @code {
-    [CascadingParameter]
-    public SectionTheme? Theme { get; set; }
 
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
@@ -18,6 +16,11 @@
     
     [Parameter]
     public bool Padding { get; set; } = true;
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private string CssBackground => Theme?.Background.MudColor.Value ?? Background;
     
     /// <summary>
     /// Default background - overridden by theme
