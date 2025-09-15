@@ -7,25 +7,24 @@
 @inject IWebsiteConfig Config
 @inject IWeddingDetails WeddingDetails
 
-@if (DisplayMode != MeetWeddingPartyDisplay.None) {
-    <CenteredSection>
-        <SectionHeading>Meet the Wedding Party</SectionHeading>
-        <SideBySide>
-            <LeftContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
-                    IsOnLeftSide="true"
-                />
-            </LeftContent>
-            <RightContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
-                    IsOnLeftSide="false"
-                />
-            </RightContent>
-        </SideBySide>
-    </CenteredSection>
-}
+<CenteredSection>
+    <SectionHeading>Meet the Wedding Party</SectionHeading>
+    <SideBySide>
+        <LeftContent>
+            <MeetWeddingParty 
+                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                IsOnLeftSide="true"
+            />
+        </LeftContent>
+        <RightContent>
+            <MeetWeddingParty 
+                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                IsOnLeftSide="false"
+            />
+        </RightContent>
+    </SideBySide>
+</CenteredSection>
+
 
 @code {
 

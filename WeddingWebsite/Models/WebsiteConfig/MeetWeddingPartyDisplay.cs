@@ -10,10 +10,5 @@ public enum MeetWeddingPartyDisplay
     /// <summary>
     /// A more compact view that puts the introductions into text messages.
     /// </summary>
-    Chat,
-    
-    /// <summary>
-    /// Do not show this section at all.
-    /// </summary>
-    None
+    Chat
 }
