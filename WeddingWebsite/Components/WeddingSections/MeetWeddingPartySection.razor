@@ -7,7 +7,7 @@
 @inject IWebsiteConfig Config
 @inject IWeddingDetails WeddingDetails
 
-@if (Config.MeetWeddingPartyDisplay != MeetWeddingPartyDisplay.None) {
+@if (DisplayMode != MeetWeddingPartyDisplay.None) {
     <CenteredSection>
         <SectionHeading>Meet the Wedding Party</SectionHeading>
         <SideBySide>
@@ -28,5 +28,8 @@
 }
 
 @code {
+
+    [Parameter]
+    public required MeetWeddingPartyDisplay DisplayMode { get; set; }
     
 }
