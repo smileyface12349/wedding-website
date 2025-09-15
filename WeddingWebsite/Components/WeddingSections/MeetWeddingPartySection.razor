@@ -3,8 +3,8 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.People
 
-@inject IWebsiteConfig Config
 @inject IWeddingDetails WeddingDetails
 
 <CenteredSection>
@@ -13,14 +13,14 @@
         <LeftContent>
             <MeetWeddingParty 
                 DisplayMode="DisplayMode"
-                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
                 IsOnLeftSide="true"
             />
         </LeftContent>
         <RightContent>
             <MeetWeddingParty 
                 DisplayMode="DisplayMode"
-                People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
                 IsOnLeftSide="false"
             />
         </RightContent>
@@ -32,5 +32,11 @@
 
     [Parameter]
     public required MeetWeddingPartyDisplay DisplayMode { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<Role> RolesLeft { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<Role> RolesRight { get; set; }
     
 }
