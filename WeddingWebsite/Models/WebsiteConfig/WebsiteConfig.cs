@@ -10,7 +10,7 @@ public class WebsiteConfig : IWebsiteConfig
         new Colour(77, 204, 225),
         new Colour(255, 182, 193),
         new Colour(254, 252, 231),
-        new Colour(39, 92, 52),
+        new Colour(39, 92, 52, true),
         new Colour(255, 255, 255)
     );
     public IEnumerable<Role> IntroductionRolesGroom => [Role.Groom, Role.BestMan, Role.Groomsman];
@@ -40,7 +40,7 @@ public class WebsiteConfig : IWebsiteConfig
         );
     
         Sections = [
-            new Section.Countdown(theme2),
+            new Section.Countdown(theme3),
             new Section.Timeline(theme2),
             new Section.MeetWeddingParty(theme1),
             new Section.Contact(theme3)
