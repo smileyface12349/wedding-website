@@ -17,7 +17,7 @@
                 <OutlinedBox>
                     <TopContent>
                         @if(item.Image != null) {
-                            <img src="@item.Image.Url" alt="@item.Image.AltText">
+                            <img class="timeline-item-image" src="@item.Image.Url" alt="@item.Image.AltText">
                         }
                         @if(item.MapsLocation != null) {
                             <GoogleMapsEmbed Location="@item.MapsLocation" Height="180px"/>
