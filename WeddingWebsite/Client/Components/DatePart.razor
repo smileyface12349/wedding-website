@@ -18,7 +18,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string Background => Theme != null ? Theme.BoxStyle.Background.ToString() : "var(--primary)";
+    private string Background => Theme is { BoxStyle: not null } ? Theme.BoxStyle.InnerTheme.Background.ToString() : "var(--primary)";
 
     protected override void OnInitialized() {
         if (Plural == "") {
