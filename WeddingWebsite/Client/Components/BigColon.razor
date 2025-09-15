@@ -1,1 +1,13 @@
-﻿<span>:</span>
+﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+
+<span style="color: @TextColour">:</span>
+
+@code {
+
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour TextColour => Theme == null ? Colour.DarkGrey : Theme.Background.GetTextColour();
+
+}
