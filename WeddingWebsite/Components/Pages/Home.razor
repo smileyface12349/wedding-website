@@ -29,10 +29,12 @@
 }
 
 @foreach (var sect in Config.Sections) {
-    @if (sect.Type == SectionType.Countdown) { <CountdownSection/> }
-    @if (sect.Type == SectionType.Timeline) { <TimelineSection/> }
-    @if (sect.Type == SectionType.MeetWeddingParty) { <MeetWeddingPartySection/> }
-    @if (sect.Type == SectionType.Contact) { <ContactSection/> }
+    <CascadingValue Value="sect.Theme">
+        @if (sect.Type == SectionType.Countdown) { <CountdownSection/> }
+        @if (sect.Type == SectionType.Timeline) { <TimelineSection/> }
+        @if (sect.Type == SectionType.MeetWeddingParty) { <MeetWeddingPartySection/> }
+        @if (sect.Type == SectionType.Contact) { <ContactSection/> }
+    </CascadingValue>
 }
 
 <div class="bottom-spacer"></div>
