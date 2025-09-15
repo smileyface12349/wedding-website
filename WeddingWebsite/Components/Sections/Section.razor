@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<section class="@(Padding ? "with-padding" : "")" style="background: @CssBackground">
+<section class="@(Padding ? "with-padding" : "")" style="background: @CssBackground;@CssColorAttribute">
     <div class="section-content @(Center ? "centered" : "")">
         @ChildContent
     </div>
@@ -21,6 +21,7 @@
     public SectionTheme? Theme { get; set; }
     
     private string CssBackground => Theme?.Background.MudColor.Value ?? Background;
+    private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
     
     /// <summary>
     /// Default background - overridden by theme
