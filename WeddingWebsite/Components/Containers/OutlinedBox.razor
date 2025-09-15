@@ -1,7 +1,7 @@
 ﻿@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
-<div class="outlined-box" style="background: @Background">
+<div class="outlined-box" style="background: @Background; color: @Background.GetTextColour()">
     @TopContent
     <div class="outlined-box-inner">
         @ChildContent
