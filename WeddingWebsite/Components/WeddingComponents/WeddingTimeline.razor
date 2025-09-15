@@ -14,7 +14,7 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <OutlinedBox Image=@item.Image MapsLocation=@item.MapsLocation>
+                <OutlinedBox>
                     <TopContent>
                         @if(item.Image != null) {
                             <img src="@item.Image.Url" alt="@item.Image.AltText">
