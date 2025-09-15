@@ -3,32 +3,32 @@
 namespace WeddingWebsite.Models.WebsiteConfig;
 
 public record WeddingColours(
-    WeddingColour Primary,
-    WeddingColour PrimaryLight,
-    WeddingColour SurfaceVariant,
-    WeddingColour Tertiary,
-    WeddingColour TextOnTertiary
+    Colour Primary,
+    Colour PrimaryLight,
+    Colour SurfaceVariant,
+    Colour Tertiary,
+    Colour TextOnTertiary
 ) {
     /// <summary>
     /// This is the main theme colour of the wedding, the first point of call when any colour is needed.
     /// This should be dark enough to stand out against a white background.
     /// </summary>
-    public WeddingColour Primary { get; } = Primary;
+    public Colour Primary { get; } = Primary;
 
     /// <summary>
     /// A lighter version of the primary colour. This should look good against dark backgrounds.
     /// </summary>
-    public WeddingColour PrimaryLight { get; } = PrimaryLight;
+    public Colour PrimaryLight { get; } = PrimaryLight;
 
     /// <summary>
     /// The default background is white. This colour is used for some colourful backgrounds.
     /// </summary>
-    public WeddingColour SurfaceVariant { get; } = SurfaceVariant;
+    public Colour SurfaceVariant { get; } = SurfaceVariant;
     
     /// <summary>
     /// Used occasionally for accents and high-emphasis backgrounds.
     /// </summary>
-    public WeddingColour Tertiary { get; } = Tertiary;
+    public Colour Tertiary { get; } = Tertiary;
     
-    public WeddingColour TextOnTertiary { get; } = TextOnTertiary;
+    public Colour TextOnTertiary { get; } = TextOnTertiary;
 }
