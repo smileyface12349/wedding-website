@@ -16,5 +16,6 @@ public interface IWebsiteConfig
     public MeetWeddingPartyDisplay MeetWeddingPartyDisplay { get; }
     public IEnumerable<ContactReason> ContactReasonsToShow { get; }
     public bool ShowContactUrgencyOption { get; }
+    public IEnumerable<Section> Sections { get; }
     
 }

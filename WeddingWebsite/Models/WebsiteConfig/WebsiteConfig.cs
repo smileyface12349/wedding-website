@@ -1,4 +1,5 @@
 ﻿using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Theme;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -17,4 +18,32 @@ public class WebsiteConfig : IWebsiteConfig
     public MeetWeddingPartyDisplay MeetWeddingPartyDisplay => MeetWeddingPartyDisplay.Default;
     public IEnumerable<ContactReason> ContactReasonsToShow => Enum.GetValues<ContactReason>();
     public bool ShowContactUrgencyOption => true;
+    public IEnumerable<Section> Sections { get; }
+    
+    public WebsiteConfig() {
+        var theme1 = new SectionTheme(
+            Colour.White,
+            Colours.Primary,
+            new BoxStyle(BoxType.Outlined, Colours.SurfaceVariant)
+        );
+        
+        var theme2 = new SectionTheme(
+            Colours.SurfaceVariant,
+            Colours.Primary,
+            new BoxStyle(BoxType.Outlined, Colour.White)
+        );
+        
+        var theme3 = new SectionTheme(
+            Colours.Tertiary,
+            Colours.Primary,
+            new BoxStyle(BoxType.Outlined, Colour.White)
+        );
+    
+        Sections = [
+            new Section.Countdown(theme1),
+            new Section.Timeline(theme2),
+            new Section.MeetWeddingParty(theme1),
+            new Section.Contact(theme3)
+        ];
+    }
 }
