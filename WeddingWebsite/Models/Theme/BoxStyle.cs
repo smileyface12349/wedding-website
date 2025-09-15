@@ -4,5 +4,5 @@ namespace WeddingWebsite.Models.Theme;
 
 public sealed record BoxStyle(
     BoxType Type,
-    Colour Background
+    SectionTheme InnerTheme
 );
