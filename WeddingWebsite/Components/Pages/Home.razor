@@ -37,7 +37,9 @@
     </CascadingValue>
 }
 
-<div class="bottom-spacer"></div>
+@if (Config.Sections.Any()) {
+    <div class="bottom-spacer" style="background: @Config.Sections.Last().Theme.Background"></div>
+}
 
 
 @code {
