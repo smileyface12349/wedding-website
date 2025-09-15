@@ -20,7 +20,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string CssBackground => Theme?.Background.MudColor.Value ?? Background;
+    private string CssBackground => Theme?.Background.ToString() ?? Background;
     private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
     
     /// <summary>
