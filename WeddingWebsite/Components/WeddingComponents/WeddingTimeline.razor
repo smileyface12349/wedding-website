@@ -14,7 +14,7 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <OutlinedBox>
+                <Box>
                     <TopContent>
                         @if(item.Image != null) {
                             <img class="timeline-item-image" src="@item.Image.Url" alt="@item.Image.AltText">
@@ -41,7 +41,7 @@
                             <span>@item.VenueName</span>
                         </div>
                     </ChildContent>
-                </OutlinedBox>
+                </Box>
             </ItemContent>
             <ItemDot>
                 @if (item.Icon != null) {
