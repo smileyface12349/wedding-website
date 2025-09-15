@@ -12,12 +12,14 @@
     <SideBySide>
         <LeftContent>
             <MeetWeddingParty 
+                DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
                 IsOnLeftSide="true"
             />
         </LeftContent>
         <RightContent>
             <MeetWeddingParty 
+                DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
                 IsOnLeftSide="false"
             />
