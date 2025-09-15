@@ -4,12 +4,10 @@
 
 @inject IWeddingDetails WeddingDetails
 
-<div style="background-color: var(--tertiary); color: white;">
-    <Section Center="true">
-        <h2>Contact Details</h2>
-        <ContactList Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"/>
-    </Section>
-</div>
+<Section Center="true">
+    <h2>Contact Details</h2>
+    <ContactList Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"/>
+</Section>
 
 @code {
     
