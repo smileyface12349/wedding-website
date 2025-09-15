@@ -1,0 +1,32 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.WeddingComponents
+
+@inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
+
+@if (Config.MeetWeddingPartyDisplay != MeetWeddingPartyDisplay.None) {
+    <CenteredSection>
+        <h2>Meet the Wedding Party</h2>
+        <SideBySide>
+            <LeftContent>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
+                    IsOnLeftSide="true"
+                />
+            </LeftContent>
+            <RightContent>
+                <MeetWeddingParty 
+                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
+                    IsOnLeftSide="false"
+                />
+            </RightContent>
+        </SideBySide>
+    </CenteredSection>
+}
+
+@code {
+    
+}
