@@ -83,14 +83,14 @@ h1:focus {
 
 .mud-component-on-dark-background {
     div.mud-input-slot.mud-input-root {
-        color: #cccccc !important;
+        color: white !important;
     }
     
     label.mud-input-label.mud-input-label-inputcontrol {
-        color: #cccccc !important;
+        color: white !important;
     }
     
     svg.mud-icon-root.mud-svg-icon {
-        fill: #cccccc !important;
+        fill: white !important;
     }
 }

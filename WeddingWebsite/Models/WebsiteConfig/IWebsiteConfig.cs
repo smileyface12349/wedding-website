@@ -3,19 +3,15 @@
 namespace WeddingWebsite.Models.WebsiteConfig;
 
 /// <summary>
-/// Configuration options. None of this information should be sensitive, and it should be stuff that's personal
-/// preference rather than details about a particular wedding.
+/// Configuration options. None of this information should be sensitive, and it should be stuff that relates to
+/// configuring the website rather than anything related to a particular wedding.
+///
+/// Configuration options that relate to one section only can be found within that particular section's constructor.
 /// </summary>
 
 public interface IWebsiteConfig
 {
-    public UsersCanAddGuests UsersCanAddGuests { get; }
     public WeddingColours Colours { get; }
-    public IEnumerable<Role> IntroductionRolesGroom { get; }
-    public IEnumerable<Role> IntroductionRolesBride { get; }
-    public MeetWeddingPartyDisplay MeetWeddingPartyDisplay { get; }
-    public IEnumerable<ContactReason> ContactReasonsToShow { get; }
-    public bool ShowContactUrgencyOption { get; }
-    public WeddingCountdownDisplay WeddingCountdownDisplay { get; }
+    public IEnumerable<Section> Sections { get; }
     
 }

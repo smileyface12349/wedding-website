@@ -1,13 +1,27 @@
 ﻿@inject IDialogService DialogService
+@inject IWebsiteConfig Config
 
 @using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
 
-<button @onclick="OpenDialogAsync">@Modal.Label</button>
+<button class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>
+
+<style>
+    .modal-background-@Colour.GetHex().Substring(1):hover {
+        background-color: @Colour;
+    }
+</style>
 
 @code {
     [Parameter]
     public required WeddingModal Modal { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour Colour => Theme != null ? Theme.Primary : Config.Colours.Primary;
     
     private Task OpenDialogAsync() {
         var parameters = new DialogParameters<EventDialog> {

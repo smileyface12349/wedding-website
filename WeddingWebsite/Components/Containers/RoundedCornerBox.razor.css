@@ -1,5 +1,13 @@
 ﻿.rounded-corner-box {
-    background: var(--bg-primary);
     color: var(--primary-dark);
     border-radius: 25px;
+    overflow: hidden;
 }
+
+.rounded-corner-box-inner {
+    padding: 10px 15px;
+}
+
+.shadow {
+    box-shadow: 1px 1px 1px 1px #aaa;
+}   

@@ -1,4 +1,6 @@
-﻿<span class="container">
+﻿@using WeddingWebsite.Models.Theme
+
+<span class="container" style="background-color: @Background">
     <span class="value">@Value</span>
     <span class="label">@(Value == 1 ? Label : Plural)</span>
 </span>
@@ -12,6 +14,11 @@
     
     [Parameter]
     public required int Value { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private string Background => Theme is { BoxStyle: not null } ? Theme.BoxStyle.InnerTheme.Background.ToString() : "var(--primary)";
 
     protected override void OnInitialized() {
         if (Plural == "") {

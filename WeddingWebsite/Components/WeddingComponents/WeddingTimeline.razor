@@ -14,23 +14,34 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <OutlinedBox Image=@item.Image MapsLocation=@item.MapsLocation>
-                    <h2>@item.Title</h2>
-                    @foreach (var sect in item.Description) {
-                        if (sect.Heading != null) {
-                            <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                        } else {
-                            <p class="event-description">@sect.CollapseContent()</p>
+                <Box>
+                    <TopContent>
+                        @if(item.Image != null) {
+                            <img class="timeline-item-image" src="@item.Image.Url" alt="@item.Image.AltText">
                         }
-                    }
-                    @foreach (var modal in item.Modals) {
-                        <ModalButton Modal="@modal"/>
-                    }
-                    <div class="event-location">
-                        <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
-                        <span>@item.VenueName</span>
-                    </div>
-                </OutlinedBox>
+                        @if(item.MapsLocation != null) {
+                            <GoogleMapsEmbed Location="@item.MapsLocation" Height="180px"/>
+                        }
+                    </TopContent>
+                    <ChildContent>
+                        <h2>@item.Title</h2>
+                        @foreach (var sect in item.Description) {
+                            if (sect.Heading != null) {
+                                <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+                            }
+                            else {
+                                <p class="event-description">@sect.CollapseContent()</p>
+                            }
+                        }
+                        @foreach (var modal in item.Modals) {
+                            <ModalButton Modal="@modal"/>
+                        }
+                        <div class="event-location">
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+                            <span>@item.VenueName</span>
+                        </div>
+                    </ChildContent>
+                </Box>
             </ItemContent>
             <ItemDot>
                 @if (item.Icon != null) {

@@ -1,0 +1,42 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.People
+
+@inject IWeddingDetails WeddingDetails
+
+<CenteredSection>
+    <SectionHeading>Meet the Wedding Party</SectionHeading>
+    <SideBySide>
+        <LeftContent>
+            <MeetWeddingParty 
+                DisplayMode="DisplayMode"
+                People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
+                IsOnLeftSide="true"
+            />
+        </LeftContent>
+        <RightContent>
+            <MeetWeddingParty 
+                DisplayMode="DisplayMode"
+                People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
+                IsOnLeftSide="false"
+            />
+        </RightContent>
+    </SideBySide>
+</CenteredSection>
+
+
+@code {
+
+    [Parameter]
+    public required MeetWeddingPartyDisplay DisplayMode { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<Role> RolesLeft { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<Role> RolesRight { get; set; }
+    
+}

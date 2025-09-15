@@ -1,0 +1,15 @@
+﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+
+<h2 style="color: @TextColour">@ChildContent</h2>
+
+@code {
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private bool IsDark => Theme is { Background.IsDark: true };
+    private Colour TextColour => IsDark ? Colour.White : Colour.DarkGrey;
+}

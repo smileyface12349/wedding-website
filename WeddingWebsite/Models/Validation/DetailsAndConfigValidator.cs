@@ -11,6 +11,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
         validationIssues = [];
         
+        Sections_ShouldNotBeEmpty(config);
+        Sections_ShouldNotHaveDuplicates(config);
+        
         People_ThereIsABrideAndGroom(details);
         
         Events_DoNotReturnToSameVenueTwice(details);
@@ -22,6 +25,18 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
 
         return validationIssues;
+    }
+    
+    /// <summary>
+    /// A helper method to quickly obtain the first section of a particular type, or null if there isn't one.
+    /// </summary>
+    private static T? GetSection<T>(IWebsiteConfig config) where T:Section {
+        foreach (var sect in config.Sections) {
+            if (sect is T castedSection) {
+                return castedSection;
+            }
+        }
+        return default;
     }
     
     /// <summary>
@@ -119,7 +134,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// For every time of enquiry, there should be someone to contact.
     /// </summary>
     private void Contacts_HaveAtLeastOneContactForEachOption(IWeddingDetails details, IWebsiteConfig config) {
-        foreach (var enquiryType in config.ContactReasonsToShow) {
+        var section = GetSection<Section.Contact>(config);
+        if (section == null) return;
+        foreach (var enquiryType in section.ReasonsToShow) {
             foreach (var urgency in new[] { ContactUrgency.NotUrgent, ContactUrgency.Urgent }) {
                 var matchingContacts = details.NotablePeople.Concat(details.ExtraContacts)
                     .Where(p => p.ContactDetails.GetOptions(urgency).MatchesReason(enquiryType))
@@ -131,14 +148,42 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         }
     }
     
+    /// <summary>
+    /// This is supplying data which won't be used. Flagging this early will prevent confusion later on.
+    /// </summary>
     private void Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(IWeddingDetails details, IWebsiteConfig config) {
-        if (!config.ShowContactUrgencyOption) {
+        var section = GetSection<Section.Contact>(config);
+        if (section == null) return;
+        if (!section.ShowUrgencyOption) {
             foreach (var contact in details.NotablePeople.Concat(details.ExtraContacts))
             {
                 if (contact.ContactDetails.Urgent.Methods.Any()) {
                     Warning($"The contact '{contact.NameAndRole}' has urgent options, but you have disabled the urgency toggle in settings. Either re-enable this toggle, or remove all urgent contact options, as the urgent contact options will be ignored.");
                 }
             }
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't cause any errors but seems a bit silly!
+    /// </summary>
+    private void Sections_ShouldNotBeEmpty(IWebsiteConfig config) {
+        if (!config.Sections.Any()) {
+            Warning("You haven't added any sections to your website! It'll be a bit boring... Go to the config file and add some sections into your website.");
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't cause any errors but seems a bit silly!
+    /// </summary>
+    private void Sections_ShouldNotHaveDuplicates(IWebsiteConfig config) {
+        var sectionTypes = new HashSet<Type>();
+        foreach (var section in config.Sections) {
+            var type = section.GetType();
+            if (sectionTypes.Contains(type)) {
+                Warning($"You have two sections of type {type}. Are you sure you want two the same?");
+            }
+            sectionTypes.Add(type);
         }
     }
 }

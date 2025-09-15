@@ -3,15 +3,8 @@
     border-width: 2px;
     border-style: solid;
     border-radius: 0;
-    background: white;
 }
 
 .outlined-box-inner {
-    padding: 10px;
-}
-
-img {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
+    padding: 10px 15px;
 }

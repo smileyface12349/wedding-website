@@ -1,34 +1,36 @@
-﻿using MudBlazor.Utilities;
+﻿namespace WeddingWebsite.Models.WebsiteConfig;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
-
+/// <summary>
+/// Global theme colours. These are sometimes useful, but are generally overridden by the colours for a particular section.
+/// </summary>
+/// <see cref="WeddingWebsite.Models.Theme.SectionTheme"/>
 public record WeddingColours(
     Colour Primary,
-    Colour PrimaryLight,
-    Colour SurfaceVariant,
-    Colour Tertiary,
-    Colour TextOnTertiary
+    Colour PrimaryBackground,
+    Colour Secondary,
+    Colour Surface
 ) {
+    public WeddingColours(Colour primary, Colour primaryBackground, Colour secondary) 
+        : this (primary,  primaryBackground, secondary, Colour.White) { }
+
     /// <summary>
     /// This is the main theme colour of the wedding, the first point of call when any colour is needed.
-    /// This should be dark enough to stand out against a white background.
+    /// You might find this in the odd component even if you've overridden it in the section theme.
     /// </summary>
     public Colour Primary { get; } = Primary;
 
     /// <summary>
-    /// A lighter version of the primary colour. This should look good against dark backgrounds.
+    /// A lighter version of the primary colour, designed to be used when a colourful background is needed.
     /// </summary>
-    public Colour PrimaryLight { get; } = PrimaryLight;
-
-    /// <summary>
-    /// The default background is white. This colour is used for some colourful backgrounds.
-    /// </summary>
-    public Colour SurfaceVariant { get; } = SurfaceVariant;
+    public Colour PrimaryBackground { get; } = PrimaryBackground;
     
     /// <summary>
     /// Used occasionally for accents and high-emphasis backgrounds.
     /// </summary>
-    public Colour Tertiary { get; } = Tertiary;
+    public Colour Secondary { get; } = Secondary;
     
-    public Colour TextOnTertiary { get; } = TextOnTertiary;
+    /// <summary>
+    /// Default background colour
+    /// </summary>
+    public Colour Surface { get; } = Surface;
 }

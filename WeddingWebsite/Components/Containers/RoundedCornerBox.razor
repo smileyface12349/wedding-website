@@ -1,8 +1,26 @@
-﻿<div class="rounded-corner-box">
-    @ChildContent
+﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+
+@inject IWebsiteConfig Config
+
+<div class="rounded-corner-box @CssShadow" style="background: @Background; color: @Background.GetTextColour()">
+    @TopContent
+    <div class="rounded-corner-box-inner">
+        @ChildContent
+    </div>
 </div>
 
 @code {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public RenderFragment? TopContent { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
+    
+    private string CssShadow => Theme is { Background.IsDark: false } ? "shadow" : "";
 }

@@ -1,0 +1,13 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Client.Components
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section Center="true">
+    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
+</Section>
+
+@code {
+    
+}

@@ -6,7 +6,7 @@
 <div>
     @foreach (var person in People) {
         <div class="container">
-            @if (Config.MeetWeddingPartyDisplay == MeetWeddingPartyDisplay.Default) {
+            @if (DisplayMode == MeetWeddingPartyDisplay.Default) {
                 <WeddingPartyIntroduction Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
             } else {
                 <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
@@ -21,4 +21,7 @@
     
     [Parameter]
     public required bool IsOnLeftSide { get; set; }
+    
+    [Parameter]
+    public required MeetWeddingPartyDisplay DisplayMode { get; set; }
 }

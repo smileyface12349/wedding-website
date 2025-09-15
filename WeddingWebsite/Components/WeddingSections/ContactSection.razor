@@ -1,0 +1,23 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Client.Components
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section Center="true">
+    <SectionHeading>Contact Us</SectionHeading>
+    <ContactList
+        Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"
+        ReasonsToShow="ReasonsToShow"
+        ShowUrgencyOption="ShowUrgencyOption"
+    />
+</Section>
+
+@code {
+    [Parameter]
+    public required IEnumerable<ContactReason> ReasonsToShow { get; set; }
+    
+    [Parameter]
+    public required bool ShowUrgencyOption { get; set; }
+}

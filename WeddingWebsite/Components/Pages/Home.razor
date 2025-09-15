@@ -1,11 +1,10 @@
 ﻿@page "/"
-@using WeddingWebsite.Client.Components
-@using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Components.WeddingSections
 @using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
+@using Section = WeddingWebsite.Models.WebsiteConfig.Section
 
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
@@ -26,45 +25,19 @@
     </Section>
 }
 
-<CenteredSection>
-    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
-</CenteredSection>
-
-<div style="background-color: var(--secondary-background);">
-<SectionNoPadding>
-    <WeddingTimeline/>
-</SectionNoPadding>
-</div>
-
-@if (Config.MeetWeddingPartyDisplay != MeetWeddingPartyDisplay.None) {
-    <CenteredSection>
-        <h2>Meet the Wedding Party</h2>
-        <SideBySide>
-            <LeftContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesGroom.Contains(p.Role))"
-                    IsOnLeftSide="true"
-                />
-            </LeftContent>
-            <RightContent>
-                <MeetWeddingParty 
-                    People="@WeddingDetails.NotablePeople.Where(p => Config.IntroductionRolesBride.Contains(p.Role))"
-                    IsOnLeftSide="false"
-                />
-            </RightContent>
-        </SideBySide>
-    </CenteredSection>
+@foreach (var sect in Config.Sections) {
+    <CascadingValue Value="sect.Theme">
+        @if (sect is Section.Countdown) { <CountdownSection/> }
+        @if (sect is Section.Timeline) { <TimelineSection/> }
+        @if (sect is Section.MeetWeddingParty party) { <MeetWeddingPartySection DisplayMode="party.DisplayMode" RolesLeft="party.RolesLeft" RolesRight="party.RolesRight"/> }
+        @if (sect is Section.Contact contact) { <ContactSection ReasonsToShow="contact.ReasonsToShow" ShowUrgencyOption="contact.ShowUrgencyOption"/> }
+    </CascadingValue>
 }
 
-<div style="background-color: var(--tertiary); color: white;">
-<CenteredSection>
-    <h2>Contact Details</h2>
-    <ContactList Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"/>
-</CenteredSection>
+@if (Config.Sections.Any()) {
+    <div class="bottom-spacer" style="background: @Config.Sections.Last().Theme.Background"></div>
+}
 
-<div class="bottom-spacer"></div>
-
-</div>
 
 @code {
 
