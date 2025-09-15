@@ -1,8 +1,10 @@
 ﻿@using WeddingWebsite.Models
 @using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 
-<div class="outlined-box">
+<div class="outlined-box" style="background: @Background">
     @if(Image != null) {
         <img src="@Image.Url" alt="@Image.AltText">
     }
@@ -23,4 +25,9 @@
     
     [Parameter]
     public Location? MapsLocation { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour Background => Theme != null ? Theme.BoxStyle.Background : Colour.White;
 }
