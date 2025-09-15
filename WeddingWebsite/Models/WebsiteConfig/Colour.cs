@@ -5,9 +5,11 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 public class Colour
 {
     public MudColor MudColor { get; }
+    public bool IsDark { get; }
     
-    public Colour(byte red, byte green, byte blue, byte alpha = 255) {
-        MudColor = new (red, green, blue, alpha);
+    public Colour(byte red, byte green, byte blue, bool isDark = false) {
+        MudColor = new (red, green, blue, (byte) 255);
+        IsDark = isDark;
     }
     
     public Colour(string hex)
