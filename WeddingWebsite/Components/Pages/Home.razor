@@ -3,6 +3,7 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Components.WeddingSections
 @using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
@@ -26,9 +27,7 @@
     </Section>
 }
 
-<CenteredSection>
-    <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
-</CenteredSection>
+<CountdownSection/>
 
 <div style="background-color: var(--secondary-background);">
 <SectionNoPadding>
