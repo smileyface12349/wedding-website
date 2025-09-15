@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.Theme;
+﻿using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Theme;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -28,8 +29,14 @@ public abstract record Section
     /// </summary>
     public sealed record MeetWeddingParty(
         SectionTheme Theme,
+        IEnumerable<Role> RolesLeft,
+        IEnumerable<Role> RolesRight,
         MeetWeddingPartyDisplay DisplayMode = MeetWeddingPartyDisplay.Default
-    ) : Section(Theme);
+    ) : Section(Theme)
+    {
+        public MeetWeddingParty(SectionTheme theme, MeetWeddingPartyDisplay displayMode = MeetWeddingPartyDisplay.Default) 
+            : this(theme, [Role.Groom, Role.BestMan, Role.Groomsman], [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid], displayMode) {}
+    }
     
     /// <summary>
     /// Shows suggested contacts based on what the enquiry is about.
