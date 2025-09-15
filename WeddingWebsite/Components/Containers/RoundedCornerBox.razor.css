@@ -2,5 +2,8 @@
     background: var(--bg-primary);
     color: var(--primary-dark);
     border-radius: 25px;
+}
+
+.rounded-corner-box-inner {
     padding: 10px 15px;
 }

@@ -1,8 +1,14 @@
 ﻿<div class="rounded-corner-box">
-    @ChildContent
+    @TopContent
+    <div class="rounded-corner-box-inner">
+        @ChildContent
+    </div>
 </div>
 
 @code {
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public RenderFragment? TopContent { get; set; }
 }
