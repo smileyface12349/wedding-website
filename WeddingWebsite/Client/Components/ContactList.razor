@@ -30,7 +30,7 @@
         }
     }
     @foreach (var contact in MatchingContacts) {
-        <RoundedCornerBox>
+        <Box>
             <div class="contact-inner">
                 <h3>@contact.NameAndRole</h3>
                 @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
@@ -42,7 +42,7 @@
                     }
                 }
             </div>
-        </RoundedCornerBox>
+        </Box>
         <div style="height: 10px;"></div>
     }
 </div>
