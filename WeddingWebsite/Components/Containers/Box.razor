@@ -1,9 +1,9 @@
 ﻿@using WeddingWebsite.Models.Theme
 
 @if(Theme == null || Theme.BoxStyle.Type == BoxType.Outlined) {
-    <OutlinedBox>@ChildContent</OutlinedBox>
+    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
 } else if (Theme.BoxStyle.Type == BoxType.Filled) {
-    <RoundedCornerBox>@ChildContent</RoundedCornerBox>
+    <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
 } else {
     @ChildContent
 }
@@ -14,4 +14,7 @@
     
     [Parameter]
     public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public RenderFragment? TopContent { get; set; }
 }
