@@ -23,22 +23,24 @@
                             <GoogleMapsEmbed Location="@item.MapsLocation" Height="180px"/>
                         }
                     </TopContent>
-                    <h2>@item.Title</h2>
-                    @foreach (var sect in item.Description) {
-                        if (sect.Heading != null) {
-                            <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+                    <ChildContent>
+                        <h2>@item.Title</h2>
+                        @foreach (var sect in item.Description) {
+                            if (sect.Heading != null) {
+                                <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+                            }
+                            else {
+                                <p class="event-description">@sect.CollapseContent()</p>
+                            }
                         }
-                        else {
-                            <p class="event-description">@sect.CollapseContent()</p>
+                        @foreach (var modal in item.Modals) {
+                            <ModalButton Modal="@modal"/>
                         }
-                    }
-                    @foreach (var modal in item.Modals) {
-                        <ModalButton Modal="@modal"/>
-                    }
-                    <div class="event-location">
-                        <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
-                        <span>@item.VenueName</span>
-                    </div>
+                        <div class="event-location">
+                            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+                            <span>@item.VenueName</span>
+                        </div>
+                    </ChildContent>
                 </OutlinedBox>
             </ItemContent>
             <ItemDot>
