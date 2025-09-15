@@ -4,29 +4,25 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 
 public class Colour
 {
-    public MudColor MudColor { get; }
+    private readonly MudColor mudColor;
     public bool IsDark { get; }
     
     public Colour(byte red, byte green, byte blue, bool isDark = false) {
-        MudColor = new (red, green, blue, (byte) 255);
+        mudColor = new (red, green, blue, (byte) 255);
         IsDark = isDark;
     }
     
     public Colour(string hex)
     {
-        MudColor = (MudColor) hex;
-    }
-    
-    public Colour(MudColor mudColor) {
-        MudColor = mudColor;
+        mudColor = (MudColor) hex;
     }
     
     public override string ToString() {
-        return MudColor.ToString();
+        return mudColor.ToString();
     }
     
     public string GetHex() {
-        return MudColor.Value;
+        return mudColor.Value;
     }
     
     /// <summary>
