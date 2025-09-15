@@ -8,7 +8,7 @@ public class WebsiteConfig : IWebsiteConfig
     public UsersCanAddGuests UsersCanAddGuests => UsersCanAddGuests.No;
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
-        new Colour(255, 182, 193),
+        new Colour(162, 234, 246),
         new Colour(254, 252, 231),
         new Colour(39, 92, 52, true),
         new Colour(255, 255, 255)
@@ -36,7 +36,7 @@ public class WebsiteConfig : IWebsiteConfig
         var theme3 = new SectionTheme(
             Colours.Tertiary,
             Colours.Primary,
-            new BoxStyle(BoxType.Outlined, Colour.White)
+            new BoxStyle(BoxType.Outlined, Colours.PrimaryLight)
         );
     
         Sections = [
