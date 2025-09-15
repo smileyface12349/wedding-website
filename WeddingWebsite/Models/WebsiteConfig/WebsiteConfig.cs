@@ -10,8 +10,6 @@ public class WebsiteConfig : IWebsiteConfig
         new Colour(162, 234, 246),
         new Colour(39, 92, 52, true)
     );
-    public IEnumerable<ContactReason> ContactReasonsToShow => Enum.GetValues<ContactReason>();
-    public bool ShowContactUrgencyOption => true;
     public IEnumerable<Section> Sections { get; }
     
     public WebsiteConfig() {
