@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<section class="@(Padding ? "with-padding" : "")" style="background: @CssBackground;@CssColorAttribute">
+<section id="@Id" class="@(Padding ? "with-padding" : "")" style="background: @CssBackground;@CssColorAttribute">
     <div class="section-content @(Center ? "centered" : "")">
         @ChildContent
     </div>
@@ -16,6 +16,9 @@
     
     [Parameter]
     public bool Padding { get; set; } = true;
+    
+    [Parameter]
+    public string Id { get; set; } = "";
     
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
