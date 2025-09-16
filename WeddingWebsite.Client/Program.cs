@@ -10,6 +10,8 @@ public class Program
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
         builder.RootComponents.Add<HeadOutlet>("head::after");
         
+        builder.Services.AddAuthorizationCore();
+        
         builder.Services.AddScoped<IWebsiteConfig, WebsiteConfig>();
 
         await builder.Build().RunAsync();
