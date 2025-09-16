@@ -9,5 +9,9 @@
 }
 
 .value {
-    font-size: 24px;
+    font-size: clamp(20px, 5vw, 24px);
+}
+
+.label {
+    font-size: clamp(12px, 3vw, 16px);
 }
