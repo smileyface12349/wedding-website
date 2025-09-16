@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,8 +20,6 @@
       <_ContentIncludedByDefault Remove="wwwroot\index.html" />
     </ItemGroup>
 
-    <ItemGroup>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </ItemGroup>
+
 
 </Project>
