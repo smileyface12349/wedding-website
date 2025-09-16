@@ -10,7 +10,7 @@
       <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.20" />
       <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.8" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.9"/>
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.8" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
