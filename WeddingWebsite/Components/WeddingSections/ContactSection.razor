@@ -1,6 +1,7 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Client.Components
 @using WeddingWebsite.Client.Models.Contacts
+@using WeddingWebsite.Client.Models.Theme
 @using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
@@ -11,6 +12,7 @@
         Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"
         ReasonsToShow="ReasonsToShow"
         ShowUrgencyOption="ShowUrgencyOption"
+        Theme="Theme"
     />
 </Section>
 
@@ -20,4 +22,7 @@
     
     [Parameter]
     public required bool ShowUrgencyOption { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
 }
