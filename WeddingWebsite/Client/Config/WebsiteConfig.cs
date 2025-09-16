@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Client.Models.Theme;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Client.Config;
 
 public class WebsiteConfig : IWebsiteConfig
 {

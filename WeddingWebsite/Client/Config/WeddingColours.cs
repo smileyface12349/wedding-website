@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Client.Models.Theme;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Client.Config;
 
 /// <summary>
 /// Global theme colours. These are sometimes useful, but are generally overridden by the colours for a particular section.

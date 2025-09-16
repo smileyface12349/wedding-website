@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.People;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Client.Config;
 
 /// <summary>
 /// Configuration options. None of this information should be sensitive, and it should be stuff that relates to
