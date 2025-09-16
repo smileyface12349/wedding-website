@@ -11,8 +11,21 @@
     text-align: center;
     font-family: Amsterdam, cursive;
     color: var(--bg-primary);
-    font-size: clamp(24px, 8vw, 64px);
+    font-size: clamp(48px, 8vw, 64px);
+    line-height: 1.5;
     text-shadow: 2px 2px 4px #000000;
+}
+
+@media only screen and (max-width: 500px) {
+    .bride-and-groom-names {
+        margin-top: 20vh;
+    }
+    .bride-and-groom-names span {
+        display: block;
+    }
+    .bride-name {
+        line-height: 3;
+    }
 }
 
 .wedding-date {
