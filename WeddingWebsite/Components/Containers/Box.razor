@@ -4,15 +4,15 @@
 @if (Theme != null && Theme.BoxStyle != null) {
     <CascadingValue Value="Theme.BoxStyle.InnerTheme">
         @if (Theme.BoxStyle.Type == BoxType.Outlined) {
-            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme"/>
         } else if (Theme.BoxStyle.Type == BoxType.Filled) {
-            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme"/>
         } else {
             <p>Unsupported box type: @Theme.BoxStyle.Type</p>
         }
     </CascadingValue>
 } else {
-    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme"/>
 }
 
 @code {
