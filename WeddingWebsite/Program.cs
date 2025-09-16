@@ -22,7 +22,9 @@ builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>(); // TODO: Switch to
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents()
+    .AddAuthenticationStateSerialization();
     
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<WeddingInfoService>();
@@ -74,7 +76,9 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(WeddingWebsite.Client._Imports).Assembly);
 app.MapAuthEndpoints();
 
 app.Run();
