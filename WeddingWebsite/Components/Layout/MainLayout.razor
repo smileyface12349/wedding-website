@@ -9,16 +9,20 @@
 
 <div class="page">
     <main>
-        <div class="top-row">
-            <a href="">Home</a>
-            <a href="">Timeline & Logistics</a>
-            <a href="">Accommodation</a>
-            <a href="">Registry</a>
-            <a href="">Gallery</a>
-            <a href="">Contact</a>
-            <MudSpacer/>
-            <a href="/Account/Logout">Logout</a>
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="top-row">
+                    <a href="">Home</a>
+                    <a href="">Timeline & Logistics</a>
+                    <a href="">Accommodation</a>
+                    <a href="">Registry</a>
+                    <a href="">Gallery</a>
+                    <a href="">Contact</a>
+                    <MudSpacer/>
+                    <a href="/Account/Logout">Logout</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
 
         <article class="content">
             @Body
