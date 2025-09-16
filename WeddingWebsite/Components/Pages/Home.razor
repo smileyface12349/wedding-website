@@ -1,6 +1,8 @@
 ﻿@page "/"
+@using WeddingWebsite.Client.Components
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Components.WeddingSections
+@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
@@ -18,6 +20,11 @@
 <div class="main-image-content">
     <h1 class="bride-and-groom-names">@WeddingDetails.Groom.Name.First & @WeddingDetails.Bride.Name.First</h1>
     <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+    @if (!Config.Sections.Any(sect => sect is Section.Countdown)) {
+        <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.Filled, new SectionTheme(Config.Colours.PrimaryBackground, Config.Colours.Primary, null))))">
+            <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
+        </CascadingValue>
+    }
 </div>
 
 
