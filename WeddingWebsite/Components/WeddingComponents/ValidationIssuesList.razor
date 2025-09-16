@@ -5,11 +5,16 @@
         <h2>Validation Issues</h2>
         <p>The validator has noticed some issues in your wedding details and/or website config. Fixing these issues is highly recommended to avoid unexpected behaviour on the website. This window is not visible in production.</p>
         <h3>Errors</h3>
+        <p>Errors are highly likely to cause incorrect information to be displayed or cause sections to not work properly.</p>
         <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Error)" />
         <h3>Warnings</h3>
+        <p>Warnings are flagged when the configuration is unusual, but won't necessarily cause any problems in the rendered website.</p>
         <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Warning)" />
-        <h3>Info</h3>
-        <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Info)" />
+        @if (Issues.Any(issue => issue.Severity == ValidationIssueSeverity.Info)) {
+            <h3>Info</h3>
+            <p>Info messages may be useful to understand more about how the configuration works. This section isn't shown if all messages are info.</p>
+            <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Info)" />
+        }
     </div>
 }
 

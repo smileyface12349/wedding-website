@@ -4,6 +4,10 @@
     padding: 20px;
 }
 
+p {
+    margin-bottom: 5px;
+}
+
 h2 {
     text-align: center;
     margin-bottom: 10px;
