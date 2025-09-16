@@ -5,6 +5,7 @@
 
 @inject IWeddingDetails WeddingDetails
 
+<div class="desktop">
 <MudTimeline TimelinePosition="TimelinePosition.Alternate">
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
@@ -22,6 +23,25 @@
         </MudTimelineItem>
     }
 </MudTimeline>
+</div>
+
+<div class="mobile">
+<MudTimeline TimelinePosition="TimelinePosition.Start">
+    @foreach (var item in timelineItems) {
+        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
+            <ItemContent>
+                <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
+                <TimelineItemBox Item="@item"/>
+            </ItemContent>
+            <ItemDot>
+                @if (item.Icon != null) {
+                    <MudIcon Icon=@item.Icon Style="width: 100%" />
+                }
+            </ItemDot>
+        </MudTimelineItem>
+    }
+</MudTimeline>
+</div>
 
 @code {
 
