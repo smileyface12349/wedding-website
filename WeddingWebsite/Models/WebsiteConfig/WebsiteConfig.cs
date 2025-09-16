@@ -34,7 +34,6 @@ public class WebsiteConfig : IWebsiteConfig
         );
     
         Sections = [
-            new Section.Countdown(theme1 with { BoxStyle = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null))}),
             new Section.Timeline(theme2),
             new Section.MeetWeddingParty(theme1),
             new Section.Contact(theme3)
