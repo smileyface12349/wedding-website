@@ -79,6 +79,7 @@ h1:focus {
     height: 100vh;
     object-fit: cover;
     object-position: center;
+    display: block;
 }
 
 .mud-component-on-dark-background {
