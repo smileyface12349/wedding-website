@@ -28,7 +28,7 @@
         }
     }
     @foreach (var contact in MatchingContacts) {
-        <Box>
+        <BoxClient Theme="Theme">
             <h3>@contact.NameAndRole</h3>
             @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
                 @if (method.Link != null) {
@@ -38,7 +38,7 @@
                     <p>@method.Type: @method.Text</p>
                 }
             }
-        </Box>
+        </BoxClient>
         <div style="height: 10px;"></div>
     }
 </div>
