@@ -1,10 +1,14 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 
-<Section Padding="false" Id="timeline">
+<Section Padding="@ShowHeading" Id="timeline">
+    @if (ShowHeading) {
+        <SectionHeading>Order of the Day</SectionHeading>
+    }
     <WeddingTimeline/>
 </Section>
 
 @code {
-    
+    [Parameter]
+    public bool ShowHeading { get; set; } = false;
 }

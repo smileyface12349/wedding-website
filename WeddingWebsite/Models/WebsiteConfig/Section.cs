@@ -22,8 +22,10 @@ public abstract record Section
     
     /// <summary>
     /// A timeline of all the events happening in the day, including travel directions and accommodation.
+    /// Unlike most sections, the heading is disabled by default. This is because it looks nice with the timeline
+    /// running right to the edge of the section, and the purpose of the section is clear already.
     /// </summary>
-    public sealed record Timeline(SectionTheme Theme) : Section(Theme);
+    public sealed record Timeline(SectionTheme Theme, bool ShowHeading = false) : Section(Theme);
     
     /// <summary>
     /// Introductions from the wedding party
