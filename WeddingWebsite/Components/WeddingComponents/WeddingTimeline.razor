@@ -11,7 +11,7 @@
 <div class="desktop">
 <MudTimeline TimelinePosition="TimelinePosition.Alternate">
     @foreach (var item in timelineItems) {
-        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
+        <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25" UserAttributes="@(new Dictionary<string, object?> {{"id", item.GetId()}})">
             <ItemOpposite>
                 <h3 style="color: @PrimaryColour">@item.Time</h3>
             </ItemOpposite>
@@ -173,6 +173,7 @@
         public Location? MapsLocation { get; } = mapsLocation;
         
         public Size GetDotSize() => Icon == null ? Size.Small : Size.Medium;
+        public string GetId() => Type == TimelineItemType.Accommodation ? "accommodation" : "";
     };
     
     public enum TimelineItemType
