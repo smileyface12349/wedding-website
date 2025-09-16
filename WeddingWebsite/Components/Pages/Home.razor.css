@@ -1,17 +1,22 @@
-﻿.bride-and-groom-names {
+﻿.main-image-content {
     position: absolute;
-    top: 35vh;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
+.bride-and-groom-names {
+    margin-top: 35vh;
     width: 100%;
     text-align: center;
-    font-family: Amsterdam, Brush Script MT, American Typewriter, cursive;
+    font-family: Amsterdam, cursive;
     color: var(--bg-primary);
     font-size: 64px;
     text-shadow: 2px 2px 4px #000000;
 }
 
 .wedding-date {
-    position: absolute;
-    top: 60vh;
+    margin-top: 10vh;
     width: 100%;
     text-align: center;
     color: white;

@@ -15,9 +15,11 @@
 
 @((MarkupString)@WeddingDetails.MainImage.GetHtml("main-image"))
 
-<h1 class="bride-and-groom-names">@WeddingDetails.Groom.Name.First & @WeddingDetails.Bride.Name.First</h1>
+<div class="main-image-content">
+    <h1 class="bride-and-groom-names">@WeddingDetails.Groom.Name.First & @WeddingDetails.Bride.Name.First</h1>
+    <h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
+</div>
 
-<h2 class="wedding-date">@WeddingDetails.WeddingDate.DayOfWeek.ToString() @WeddingDetails.WeddingDate.ToLongDateString()</h2>
 
 @if (Environment.IsDevelopment()) {
     <Section Center="true" Padding="false" Background="red">
