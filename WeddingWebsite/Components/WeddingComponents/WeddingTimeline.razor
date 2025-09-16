@@ -1,16 +1,19 @@
 ﻿@using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Models
+@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.Venues
+@using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWeddingDetails WeddingDetails
+@inject IWebsiteConfig Config
 
 <div class="desktop">
 <MudTimeline TimelinePosition="TimelinePosition.Alternate">
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
             <ItemOpposite>
-                <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
+                <h3 style="color: @PrimaryColour">@item.Time</h3>
             </ItemOpposite>
             <ItemContent>
                 <TimelineItemBox Item="@item"/>
@@ -30,7 +33,7 @@
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
             <ItemContent>
-                <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
+                <h3 style="color: @PrimaryColour">@item.Time</h3>
                 <TimelineItemBox Item="@item"/>
             </ItemContent>
             <ItemDot>
@@ -44,6 +47,11 @@
 </div>
 
 @code {
+
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour PrimaryColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
 
     private IEnumerable<TimelineItem> timelineItems = [];
     
