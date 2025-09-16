@@ -1,9 +1,11 @@
-﻿namespace WeddingWebsite.Models.WebsiteConfig;
+﻿using WeddingWebsite.Client.Models.Theme;
+
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 /// <summary>
 /// Global theme colours. These are sometimes useful, but are generally overridden by the colours for a particular section.
 /// </summary>
-/// <see cref="WeddingWebsite.Models.Theme.SectionTheme"/>
+/// <see cref="SectionTheme"/>
 public record WeddingColours(
     Colour Primary,
     Colour PrimaryBackground,

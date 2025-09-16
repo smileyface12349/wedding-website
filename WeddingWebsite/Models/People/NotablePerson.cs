@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Core;
+﻿using WeddingWebsite.Client.Models.Contacts;
+using WeddingWebsite.Core;
 using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.People;

@@ -1,5 +1,4 @@
-﻿using WeddingWebsite.Models.People;
-using WeddingWebsite.Models.Theme;
+﻿using WeddingWebsite.Client.Models.Theme;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
