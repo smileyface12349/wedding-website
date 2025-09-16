@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<span class="container" style="background-color: @Background">
+<span class="container @CssShadow" style="background-color: @Background">
     <span class="value">@Value</span>
     <span class="label">@(Value == 1 ? Label : Plural)</span>
 </span>
@@ -19,6 +19,7 @@
     public SectionTheme? Theme { get; set; }
     
     private string Background => Theme is { BoxStyle: not null } ? Theme.BoxStyle.InnerTheme.Background.ToString() : "var(--primary)";
+    private string CssShadow => Theme is { BoxStyle.InnerTheme.Background.IsDark: false } ? "box-shadow" : "";
 
     protected override void OnInitialized() {
         if (Plural == "") {

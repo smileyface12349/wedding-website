@@ -95,3 +95,7 @@ h1:focus {
         fill: white !important;
     }
 }
+
+.box-shadow {
+    box-shadow: 1px 1px 4px #000;
+}
