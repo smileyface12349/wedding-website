@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models.Theme;
+﻿namespace WeddingWebsite.Client.Models.Theme;
 
 public enum BoxType
 {

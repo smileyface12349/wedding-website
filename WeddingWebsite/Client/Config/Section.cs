@@ -1,7 +1,8 @@
-﻿using WeddingWebsite.Models.People;
-using WeddingWebsite.Models.Theme;
+﻿using WeddingWebsite.Client.Models.Contacts;
+using WeddingWebsite.Client.Models.Theme;
+using WeddingWebsite.Client.Models.People;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Client.Config;
 
 /// <summary>
 /// Contains data about a section of the website, used in configuration.

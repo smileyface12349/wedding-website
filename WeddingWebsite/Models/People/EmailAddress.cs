@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.People;
+﻿using WeddingWebsite.Client.Models.Contacts;
+
+namespace WeddingWebsite.Models.People;
 
 public record EmailAddress(string Email) : IContactMethod
 {
