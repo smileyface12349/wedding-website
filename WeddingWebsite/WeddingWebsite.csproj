@@ -18,10 +18,7 @@
       <PackageReference Include="MudBlazor" Version="8.12.0" />
       <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.1" />
       <PackageReference Include="System.Data.SQLite" Version="2.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="WeddingWebsite.sln.DotSettings.user" />
+      <ProjectReference Include="..\WeddingWebsite.Client\WeddingWebsite.Client.csproj" />
     </ItemGroup>
 
     <ItemGroup>
