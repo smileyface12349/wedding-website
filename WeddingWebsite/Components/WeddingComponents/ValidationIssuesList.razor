@@ -3,7 +3,7 @@
 @if (Issues.Any()) {
     <div class="container">
         <h2>Validation Issues</h2>
-        <p>This window is not visible in production.</p>
+        <p>The validator has noticed some issues in your wedding details and/or website config. Fixing these issues is highly recommended to avoid unexpected behaviour on the website. This window is not visible in production.</p>
         <h3>Errors</h3>
         <ValidationIssuesForSeverity Issues="@Issues.Where(issue => issue.Severity == ValidationIssueSeverity.Error)" />
         <h3>Warnings</h3>
