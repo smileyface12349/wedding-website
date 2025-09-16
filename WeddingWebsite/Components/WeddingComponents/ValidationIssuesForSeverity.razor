@@ -2,7 +2,7 @@
 @using WeddingWebsite.Components.Containers
 
 @if (Issues == null || !Issues.Any()) {
-    <p>No issues</p>
+    <p>There are no validation issues in this section.</p>
 } else {
     @foreach (var issue in Issues) {
         <Box>@issue.Message</Box>
