@@ -10,6 +10,7 @@ using WeddingWebsite.Models.Credentials;
 using WeddingWebsite.Models.Validation;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WeddingDetails;
+using WeddingWebsite.Routing;
 using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,5 +75,6 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+app.MapAuthEndpoints();
 
 app.Run();
