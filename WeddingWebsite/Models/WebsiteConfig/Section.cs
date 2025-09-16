@@ -16,6 +16,7 @@ public abstract record Section
     
     /// <summary>
     /// A countdown timer to the start of the first event.
+    /// Note: If this is not given, it will automatically display in the top section instead.
     /// </summary>
     public sealed record Countdown(SectionTheme Theme) : Section(Theme);
     
