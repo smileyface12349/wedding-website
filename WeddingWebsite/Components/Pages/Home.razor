@@ -1,17 +1,14 @@
 ﻿@page "/"
+
 @using WeddingWebsite.Client.Components
-@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Components.WeddingSections
 @using WeddingWebsite.Models.Theme
-@using WeddingWebsite.Models.Validation
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
 @using Section = WeddingWebsite.Models.WebsiteConfig.Section
 
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
-@inject IWebHostEnvironment Environment
-@inject IDetailsAndConfigValidator Validator
 
 <PageTitle>Home</PageTitle>
 
@@ -28,11 +25,7 @@
 </div>
 
 
-@if (Environment.IsDevelopment()) {
-    <Section Center="true" Padding="false" Background="red">
-        <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
-    </Section>
-}
+<ValidationSection/>
 
 @foreach (var sect in Config.Sections) {
     <CascadingValue Value="sect.Theme">

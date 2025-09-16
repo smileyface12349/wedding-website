@@ -1,0 +1,23 @@
+﻿@using WeddingWebsite.Models.Validation
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@inject IWebHostEnvironment Environment
+@inject IDetailsAndConfigValidator Validator
+@inject IWeddingDetails WeddingDetails
+@inject IWebsiteConfig Config
+
+@if (Environment.IsDevelopment()) {
+    <CascadingValue Value="Theme">
+        <Section Center="true" Padding="false" Background="red">
+            <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
+        </Section>
+    </CascadingValue>
+}
+
+@code {
+    private SectionTheme Theme => new (new Colour(255, 0, 0, true), Config.Colours.Primary, new BoxStyle(BoxType.Filled, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+}
