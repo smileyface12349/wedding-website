@@ -1,13 +1,15 @@
 ﻿@using WeddingWebsite.Models.Validation
+@using WeddingWebsite.Components.Containers
 
-@if (!Issues.Any()) {
+@if (Issues == null || !Issues.Any()) {
     <p>No issues</p>
-}
-@foreach (var issue in Issues) {
-    <p>@issue.Message</p>
+} else {
+    @foreach (var issue in Issues) {
+        <Box>@issue.Message</Box>
+    }
 }
 
 @code {
     [Parameter]
-    public IEnumerable<ValidationIssue> Issues { get; set; }
+    public IEnumerable<ValidationIssue>? Issues { get; set; }
 }
