@@ -1,0 +1,36 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+
+<Box>
+    <TopContent>
+        @if(Item.Image != null) {
+            <img class="timeline-item-image" src="@Item.Image.Url" alt="@Item.Image.AltText">
+        }
+        @if(Item.MapsLocation != null) {
+            <GoogleMapsEmbed Location="@Item.MapsLocation" Height="180px"/>
+        }
+    </TopContent>
+    <ChildContent>
+        <h2>@Item.Title</h2>
+        @foreach (var sect in Item.Description) {
+            if (sect.Heading != null) {
+                <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
+            }
+            else {
+                <p class="event-description">@sect.CollapseContent()</p>
+            }
+        }
+        @foreach (var modal in Item.Modals) {
+            <ModalButton Modal="@modal"/>
+        }
+        <div class="event-location">
+            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+            <span>@Item.VenueName</span>
+        </div>
+    </ChildContent>
+</Box>
+
+@code {
+    [Parameter]
+    public required WeddingTimeline.TimelineItem Item { get; set; }
+}

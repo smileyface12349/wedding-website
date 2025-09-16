@@ -1,7 +1,5 @@
 ﻿@using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Models.WeddingDetails
-@using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models
 @using WeddingWebsite.Models.Venues
 
@@ -14,34 +12,7 @@
                 <MudText Color="Color.Primary" Typo="Typo.h6">@item.Time</MudText>
             </ItemOpposite>
             <ItemContent>
-                <Box>
-                    <TopContent>
-                        @if(item.Image != null) {
-                            <img class="timeline-item-image" src="@item.Image.Url" alt="@item.Image.AltText">
-                        }
-                        @if(item.MapsLocation != null) {
-                            <GoogleMapsEmbed Location="@item.MapsLocation" Height="180px"/>
-                        }
-                    </TopContent>
-                    <ChildContent>
-                        <h2>@item.Title</h2>
-                        @foreach (var sect in item.Description) {
-                            if (sect.Heading != null) {
-                                <p class="event-description"><b>@sect.Heading: </b>@sect.CollapseContent()</p>
-                            }
-                            else {
-                                <p class="event-description">@sect.CollapseContent()</p>
-                            }
-                        }
-                        @foreach (var modal in item.Modals) {
-                            <ModalButton Modal="@modal"/>
-                        }
-                        <div class="event-location">
-                            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
-                            <span>@item.VenueName</span>
-                        </div>
-                    </ChildContent>
-                </Box>
+                <TimelineItemBox Item="@item"/>
             </ItemContent>
             <ItemDot>
                 @if (item.Icon != null) {
@@ -151,7 +122,7 @@
         }
     }
     
-    private class TimelineItem (
+    public class TimelineItem (
         TimelineItemType type,
         string time,
         string title,
@@ -176,7 +147,7 @@
         public Size GetDotSize() => Icon == null ? Size.Small : Size.Medium;
     };
     
-    private enum TimelineItemType
+    public enum TimelineItemType
     {
         VenueChange,
         Event,
