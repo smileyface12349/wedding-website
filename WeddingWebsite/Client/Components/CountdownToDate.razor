@@ -21,7 +21,7 @@
     
     private void OnTimeChange() {
         var months = 0;
-        var currentDate = DateTime.UtcNow;
+        var currentDate = DateTime.Now;
         
         while (currentDate.AddMonths(1) < CountdownTo) {
             currentDate = currentDate.AddMonths(1);
