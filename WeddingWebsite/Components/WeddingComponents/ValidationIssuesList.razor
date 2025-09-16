@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Validation
 
-@if (Issues.Any()) {
+@if (Issues.Any(issue => issue.Severity != ValidationIssueSeverity.Info)) {
     <div class="container">
         <h2>Validation Issues</h2>
         <p>The validator has noticed some issues in your wedding details and/or website config. Fixing these issues is highly recommended to avoid unexpected behaviour on the website. This window is not visible in production.</p>
