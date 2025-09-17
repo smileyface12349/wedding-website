@@ -38,8 +38,4 @@
       <_ContentIncludedByDefault Remove="Client\Pages\Weather.razor" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Client\Components\" />
-    </ItemGroup>
-
 </Project>
