@@ -22,7 +22,40 @@ This repository does not contain a real implementation so that the details are k
 4. Install .NET 9, then run the website with `dotnet run Program.cs`. This will host your website locally. You may also want to set up a service to keep this running and/or a reverse proxy. Note you should use `dotnet publish` instead for production use.
 
 ## Customising the Layout
-Customising all the details is already possible, but what if you want to change the layout of the website? First, check if there's any configuration options in `IWeddingDetails` that suit your needs. If not, you'll need to make some changes to the code. You should be able to do this easily in your local repository. If you're feeling generous, hide your changes behind a configuration option in `IWeddingDetails` and then make a PR here with your changes so that other people can benefit from it! I will try and review PRs quickly and improve the product for everyone, however I will not merge any PRs that change the default behaviour in a way that is just 'personal preference'.
+Customising all the details is already possible, but what if you want to change the layout of the website? First, check if there's any configuration options in `IWeddingDetails` that suit your needs. If not, you'll need to make some changes to the code. You should be able to do this easily in your local repository. If you're feeling generous, hide your changes behind a configuration option in `IWebsiteConfig` and then make a PR here with your changes so that other people can benefit from it! I will try and review PRs quickly and improve the product for everyone, however I will not merge any PRs that change the default behaviour in a way that is just 'personal preference'.
+
+## Interactivity
+
+Interactivity is disabled by default, so if you're adding any new pages it will be rendered on the server only and none of the buttons will work. To use interactivity, choose one of the following three render modes.
+
+While you may interchange render modes on the same page, I'd recommend setting the render mode for each page and having all components on the page use the same render mode. Otherwise, you will often end up with the worst of both worlds.
+
+### Static Server-Side Rendering
+
+Code in C#, with everything rendered on the server. Every button press triggers an HTTP request to re-render the component server-side.
+
+Advantages: Fast, Secure, Easy.
+Disadvantages: Requires connection, connection can be unstable.
+Best for: Usages where a stable internet connection is likely or buttons that trigger privileged requests that would need to go to the server anyway.
+How to enable: Write `@rendermode InteractiveServer` at the top of the file.
+
+### WebAssembly
+
+Code in C#, rendering on the client. It is automatically pre-rendered on the server first.
+
+Advantages: Fast (except for first load), Easy.
+Disadvantages: Nontrivial first page load time. Okay-ish support for older browsers.
+Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry, admin page).
+How to enable: Move the component to `WeddingWebsite.Client` project, then write `@rendermode InteractiveWebAssembly` at the top of the file.
+
+### JavaScript
+
+Code in JavaScript directly.
+
+Advantages: Fast, Reliable.
+Disadvantages: Very poor code maintainability. No server-side pre-rendering.
+Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery).
+How to enable: Create a scoped `.js` file with exported functions `onLoad`, `onUpdate` and `onDispose`. See `CountdownToDate` for an example. 
 
 ## License
 
