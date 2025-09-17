@@ -1,6 +1,4 @@
-﻿using WeddingWebsite.Client.Models.People;
-
-namespace WeddingWebsite.Models.People;
+﻿namespace WeddingWebsite.Models.People;
 
 public interface IPerson
 {

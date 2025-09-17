@@ -1,6 +1,4 @@
-﻿using WeddingWebsite.Client.Models.Contacts;
-using WeddingWebsite.Client.Models.People;
-using WeddingWebsite.Models.People;
+﻿using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteElement;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WeddingWebsite.Client.Models.People;
+namespace WeddingWebsite.Models.People;
 
 /// <summary>
 /// A big enum representing the primary role of anyone involved with the wedding. This is super safe to add more stuff

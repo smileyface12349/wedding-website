@@ -1,48 +1,47 @@
 ﻿@using MudBlazor
-@using WeddingWebsite.Client.Models.Contacts
-@using WeddingWebsite.Client.Models.Theme
+@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Core
-@using WeddingWebsite.Client.Components.Containers
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 
-<CascadingValue Value="Theme">
-    <div class="container">
-        <h2>What is your enquiry about?</h2>
-        <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
-            @foreach (var reason in ReasonsToShow) {
-                <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
-            }
-        </MudSelect>
+<div class="container">
+    <h2>What is your enquiry about?</h2>
+    <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
+        @foreach (var reason in ReasonsToShow) {
+            <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
+        }
+    </MudSelect>
 
-        @if (ShowUrgencyOption) {
-            <h2>Is it urgent?</h2>
-            <YesOrNoToggleGroup @bind-Value="IsUrgent"/>
-            <p class="text-below">@ResponseTimelineString</p>
+    @if (ShowUrgencyOption) {
+        <h2>Is it urgent?</h2>
+        <YesOrNoToggleGroup @bind-Value="IsUrgent"/>
+        <p class="text-below">@ResponseTimelineString</p>
+    }
+    
+    <h2>Suggested contacts</h2>
+    @if (!MatchingContacts.Any()) {
+        @if (ContactReason == null) {
+            <p>Choose a category of enquiry to see contacts.</p>
+        } else {
+            <p>No contacts found. Try a different search.</p>
         }
-        
-        <h2>Suggested contacts</h2>
-        @if (!MatchingContacts.Any()) {
-            @if (ContactReason == null) {
-                <p>Choose a category of enquiry to see contacts.</p>
-            } else {
-                <p>No contacts found. Try a different search.</p>
-            }
-        }
-        @foreach (var contact in MatchingContacts) {
-            <BoxClient>
-                <h3>@contact.NameAndRole</h3>
-                @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
-                    @if (method.Link != null) {
-                        <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
-                    }
-                    else {
-                        <p>@method.Type: @method.Text</p>
-                    }
+    }
+    @foreach (var contact in MatchingContacts) {
+        <Box>
+            <h3>@contact.NameAndRole</h3>
+            @foreach (var method in contact.ContactDetails.GetOptions(Urgency).Methods) {
+                @if (method.Link != null) {
+                    <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
                 }
-            </BoxClient>
-            <div style="height: 10px;"></div>
-        }
-    </div>
-</CascadingValue>
+                else {
+                    <p>@method.Type: @method.Text</p>
+                }
+            }
+        </Box>
+        <div style="height: 10px;"></div>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -54,7 +53,7 @@
     [Parameter]
     public required bool ShowUrgencyOption { get; set; }
     
-    [Parameter]
+    [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
     private string MudSelectClass => Theme is {Background.IsDark: true} ? "mud-component-on-dark-background": "";

@@ -1,16 +1,17 @@
-﻿@using WeddingWebsite.Client.Models.Theme
-@using WeddingWebsite.Client.Components.Containers
+﻿@using WeddingWebsite.Models.Theme
 
 @if (Theme != null && Theme.BoxStyle != null) {
-    @if (Theme.BoxStyle.Type == BoxType.Outlined) {
-        <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme.BoxStyle.InnerTheme"/>
-    } else if (Theme.BoxStyle.Type == BoxType.Filled) {
-        <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme.BoxStyle.InnerTheme"/>
-    } else {
-        <p>Unsupported box type: @Theme.BoxStyle.Type</p>
-    }
+    <CascadingValue Value="Theme.BoxStyle.InnerTheme">
+        @if (Theme.BoxStyle.Type == BoxType.Outlined) {
+            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+        } else if (Theme.BoxStyle.Type == BoxType.Filled) {
+            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+        } else {
+            <p>Unsupported box type: @Theme.BoxStyle.Type</p>
+        }
+    </CascadingValue>
 } else {
-    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Theme="Theme"/>
+    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
 }
 
 @code {

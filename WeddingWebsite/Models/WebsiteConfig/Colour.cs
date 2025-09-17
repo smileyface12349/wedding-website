@@ -1,6 +1,6 @@
 ﻿using MudBlazor.Utilities;
 
-namespace WeddingWebsite.Client.Models.Theme;
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 public class Colour
 {

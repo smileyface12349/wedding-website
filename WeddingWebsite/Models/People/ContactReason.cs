@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WeddingWebsite.Client.Models.Contacts;
+namespace WeddingWebsite.Models.People;
 
 public enum ContactReason
 {

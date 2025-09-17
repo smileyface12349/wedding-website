@@ -1,6 +1,4 @@
-﻿using WeddingWebsite.Client.Models.Contacts;
-
-namespace WeddingWebsite.Models.People;
+﻿namespace WeddingWebsite.Models.People;
 
 public record PhoneNumber(string Number) : IContactMethod
 {

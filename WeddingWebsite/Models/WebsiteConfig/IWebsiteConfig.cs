@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Client.Config;
+﻿using WeddingWebsite.Models.People;
+
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 /// <summary>
 /// Configuration options. None of this information should be sensitive, and it should be stuff that relates to

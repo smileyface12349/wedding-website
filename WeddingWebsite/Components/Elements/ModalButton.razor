@@ -1,9 +1,9 @@
 ﻿@inject IDialogService DialogService
 @inject IWebsiteConfig Config
 
-@using WeddingWebsite.Client.Config
 @using WeddingWebsite.Components.Dialogs
-@using WeddingWebsite.Client.Models.Theme
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
 
 <button class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>

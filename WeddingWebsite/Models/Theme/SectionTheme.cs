@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Client.Models.Theme;
+﻿using WeddingWebsite.Models.WebsiteConfig;
+
+namespace WeddingWebsite.Models.Theme;
 
 /// <summary>
 /// The theming of a particular section. This can be the same across all sections, or it may vary depending on the section.

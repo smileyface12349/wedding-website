@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Client.Models.Contacts;
+﻿namespace WeddingWebsite.Models.People;
 
 public record ContactOptions
 {

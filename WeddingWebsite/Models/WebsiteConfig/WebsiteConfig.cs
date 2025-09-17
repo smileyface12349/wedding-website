@@ -1,6 +1,7 @@
-﻿using WeddingWebsite.Client.Models.Theme;
+﻿using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Theme;
 
-namespace WeddingWebsite.Client.Config;
+namespace WeddingWebsite.Models.WebsiteConfig;
 
 public class WebsiteConfig : IWebsiteConfig
 {
