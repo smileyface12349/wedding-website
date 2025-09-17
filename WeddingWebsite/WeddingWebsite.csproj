@@ -10,7 +10,6 @@
       <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.20" />
       <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.8" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
@@ -18,10 +17,8 @@
       <PackageReference Include="MudBlazor" Version="8.12.0" />
       <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.1" />
       <PackageReference Include="System.Data.SQLite" Version="2.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="WeddingWebsite.sln.DotSettings.user" />
+      <!-- Uncomment this to use WebAssembly -->
+      <!-- <ProjectReference Include="..\WeddingWebsite.Client\WeddingWebsite.Client.csproj" />-->
     </ItemGroup>
 
     <ItemGroup>
@@ -39,10 +36,6 @@
       <_ContentIncludedByDefault Remove="Client\Pages\Counter.razor" />
       <_ContentIncludedByDefault Remove="Client\Pages\Home.razor" />
       <_ContentIncludedByDefault Remove="Client\Pages\Weather.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Client\Components\" />
     </ItemGroup>
 
 </Project>
