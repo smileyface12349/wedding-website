@@ -34,28 +34,28 @@ While you may interchange render modes on the same page, I'd recommend setting t
 
 Code in C#, with everything rendered on the server. Every button press triggers an HTTP request to re-render the component server-side.
 
-Advantages: Fast, Secure, Easy.
-Disadvantages: Requires connection, connection can be unstable.
-Best for: Usages where a stable internet connection is likely or buttons that trigger privileged requests that would need to go to the server anyway.
-How to enable: Write `@rendermode InteractiveServer` at the top of the file.
+- Advantages: Fast, Secure, Easy.
+- Disadvantages: Requires connection, connection can be unstable.
+- Best for: Usages where a stable internet connection is likely or buttons that trigger privileged requests that would need to go to the server anyway.
+- How to enable: Write `@rendermode InteractiveServer` at the top of the file.
 
 ### WebAssembly
 
 Code in C#, rendering on the client. It is automatically pre-rendered on the server first.
 
-Advantages: Fast (except for first load), Easy.
-Disadvantages: Nontrivial first page load time. Okay-ish support for older browsers.
-Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry, admin page).
-How to enable: Move the component to `WeddingWebsite.Client` project, then write `@rendermode InteractiveWebAssembly` at the top of the file.
+- Advantages: Fast (except for first load), Easy.
+- Disadvantages: Nontrivial first page load time. Okay-ish support for older browsers.
+- Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry, admin page).
+- How to enable: Move the component to `WeddingWebsite.Client` project, then write `@rendermode InteractiveWebAssembly` at the top of the file.
 
 ### JavaScript
 
 Code in JavaScript directly.
 
-Advantages: Fast, Reliable.
-Disadvantages: Very poor code maintainability. No server-side pre-rendering.
-Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery).
-How to enable: Create a scoped `.js` file with exported functions `onLoad`, `onUpdate` and `onDispose`. See `CountdownToDate` for an example. 
+- Advantages: Fast, Reliable.
+- Disadvantages: Very poor code maintainability. No server-side pre-rendering.
+- Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery).
+- How to enable: Create a scoped `.js` file with exported functions `onLoad`, `onUpdate` and `onDispose`. See `CountdownToDate` for an example. 
 
 ## License
 
