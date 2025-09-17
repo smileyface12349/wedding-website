@@ -22,10 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="WeddingWebsite.sln.DotSettings.user" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="Client\obj\Client.csproj.nuget.dgspec.json" />
       <_ContentIncludedByDefault Remove="Client\obj\project.assets.json" />
       <_ContentIncludedByDefault Remove="Client\obj\project.packagespec.json" />
