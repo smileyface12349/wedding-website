@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Client.Config;
+﻿namespace WeddingWebsite.Models.WebsiteConfig;
 
 public enum MeetWeddingPartyDisplay
 {

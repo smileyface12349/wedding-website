@@ -39,12 +39,6 @@
       <_ContentIncludedByDefault Remove="Client\Pages\Counter.razor" />
       <_ContentIncludedByDefault Remove="Client\Pages\Home.razor" />
       <_ContentIncludedByDefault Remove="Client\Pages\Weather.razor" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\publish\web.config" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\Client.staticwebassets.endpoints.json" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\Client.staticwebassets.runtime.json" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\publish\Client.staticwebassets.endpoints.json" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\publish\wwwroot\_framework\blazor.boot.json" />
-      <_ContentIncludedByDefault Remove="Client\bin\Release\net9.0\wwwroot\_framework\blazor.boot.json" />
     </ItemGroup>
 
 </Project>

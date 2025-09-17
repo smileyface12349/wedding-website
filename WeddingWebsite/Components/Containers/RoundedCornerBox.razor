@@ -1,5 +1,5 @@
-﻿@using WeddingWebsite.Client.Config
-@using WeddingWebsite.Client.Models.Theme
+﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWebsiteConfig Config
 
@@ -17,7 +17,7 @@
     [Parameter]
     public RenderFragment? TopContent { get; set; }
     
-    [Parameter]
+    [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
     private Colour Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
