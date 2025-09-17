@@ -43,19 +43,18 @@ function addMonth(date) {
     }
 }
 
+let intervalId = 0;
+
 export function onLoad() {
-    console.log('Loaded');
-    
-    // start running every second
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    intervalId = setInterval(updateCountdown, 1000);
 }
 
 export function onUpdate() {
-    console.log('Updated');
     updateCountdown();
 }
 
 export function onDispose() {
-    console.log('Disposed');
+    console.log("Countdown disposed");
+    clearInterval(intervalId);
 }
