@@ -52,6 +52,8 @@ export function onLoad() {
 
 export function onUpdate() {
     updateCountdown();
+    // Undo anything Blazor has just done!
+    setTimeout(updateCountdown, 10);
 }
 
 export function onDispose() {
