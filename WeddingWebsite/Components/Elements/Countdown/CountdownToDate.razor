@@ -4,13 +4,24 @@
     <DatePart Label="Week" Value="@Weeks"/><BigColon/>
     <DatePart Label="Day" Value="@Days"/><BigColon/>
     <DatePart Label="Hour" Value="@Hours"/><BigColon/>
-    <DatePart Label="Minute" Value="@Minutes"/><BigColon/>
-    <DatePart Label="Second" Value="@Seconds"/>
+    <DatePart Label="Minute" Value="@Minutes"/>
+    @if (ShowSeconds) {
+        <BigColon/>
+        <DatePart Label="Second" Value="@Seconds"/>
+    }
 </div>
 
 @code {
     [Parameter]
     public required DateTime CountdownTo { get; set; }
+    
+    /// <summary>
+    /// Warning: This component renders server-side. Enabling seconds will generate 2 HTTP requests every second.
+    /// On imperfect connections, the timer is visibly laggy.
+    /// </summary>
+    /// <see cref="WeddingWebsite.Components.Elements.Countdown.CountdownToDate"/>
+    [Parameter]
+    public bool ShowSeconds { get; set; } = false;
     
     private int Months { get; set; }
     private int Weeks { get; set; }
@@ -40,16 +51,18 @@
     
     // Logic to update the timer each second:
     
-    PeriodicTimer periodicTimer = new (TimeSpan.FromSeconds(1));
+    PeriodicTimer? periodicTimer;
 
     protected override void OnInitialized()
     {
+        periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(ShowSeconds ? 1 : 60));
         OnTimeChange();
         RunTimer(); 
     }
 
     async Task RunTimer()
     {
+        if (periodicTimer == null) return;
         while (await periodicTimer.WaitForNextTickAsync()) 
         { 
             OnTimeChange();
