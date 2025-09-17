@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingWebsite", "WeddingWebsite.csproj", "{993D611D-9062-4C64-8436-663C4D9A129D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingWebsite", "WeddingWebsite\WeddingWebsite.csproj", "{993D611D-9062-4C64-8436-663C4D9A129D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{BB17054B-624D-4E8E-9367-1E01ACE2BB16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingWebsite.Client", "WeddingWebsite.Client\WeddingWebsite.Client.csproj", "{BB17054B-624D-4E8E-9367-1E01ACE2BB16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
