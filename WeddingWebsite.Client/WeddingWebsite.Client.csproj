@@ -4,11 +4,18 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+<!--        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
+<!--        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>-->
+        <RootNamespace>WeddingWebsite.Client</RootNamespace>
+        <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+        <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.8" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="9.0.8" />
+        <PackageReference Include="MudBlazor" Version="8.12.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,10 +24,6 @@
       <_ContentIncludedByDefault Remove="wwwroot\css\app.css" />
       <_ContentIncludedByDefault Remove="wwwroot\icon-192.png" />
       <_ContentIncludedByDefault Remove="wwwroot\index.html" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </ItemGroup>
 
 </Project>
