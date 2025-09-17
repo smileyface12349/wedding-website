@@ -34,8 +34,8 @@ While you may interchange render modes on the same page, I'd recommend setting t
 
 Code in C#, with everything rendered on the server. Every button press triggers an HTTP request to re-render the component server-side.
 
-- Advantages: Fast, Secure, Code maintainability, Easy to enable.
-- Disadvantages: Requires connection, connection can be unstable.
+- Advantages: Fast page load, Secure, Code maintainability, Blazor libraries, Easy to enable.
+- Disadvantages: Slow interactivity, Connection required, Unstable.
 - Best for: Usages where a stable internet connection is likely or buttons that trigger privileged requests that would need to go to the server anyway.
 - How to enable: Write `@rendermode InteractiveServer` at the top of the file.
 
@@ -43,7 +43,7 @@ Code in C#, with everything rendered on the server. Every button press triggers 
 
 Code in C#, rendering on the client. It is automatically pre-rendered on the server first.
 
-- Advantages: Fast (except for first load), Code maintainability.
+- Advantages: Fast (except for first load), Code maintainability, Blazor libraries.
 - Disadvantages: Nontrivial first page load time. Okay-ish support for older browsers.
 - Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry, admin page).
 - How to enable: Move the component to `WeddingWebsite.Client` project, then write `@rendermode InteractiveWebAssembly` at the top of the file.
@@ -54,7 +54,7 @@ Code in JavaScript directly.
 
 - Advantages: Fast, Reliable.
 - Disadvantages: Very poor code maintainability. No server-side pre-rendering.
-- Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery).
+- Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery), when it feels silly to load WebAssembly for something that can be achieved with a few lines of JavaScript.
 - How to enable: Create a scoped `.js` file with exported functions `onLoad`, `onUpdate` and `onDispose`. See `CountdownToDate` for an example. 
 
 ## License
