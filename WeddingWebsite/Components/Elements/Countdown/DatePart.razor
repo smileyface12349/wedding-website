@@ -1,7 +1,7 @@
 ﻿@using WeddingWebsite.Models.Theme
 
 <span class="container @CssShadow" style="background-color: @Background">
-    <span class="value">@Value</span>
+    <span class="value" id="value-@Label">@Value</span>
     <span class="label">@(Value == 1 ? Label : Plural)</span>
 </span>
 
