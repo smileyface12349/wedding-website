@@ -59,3 +59,4 @@ Credentials.cs
 RealWeddingDetails.cs
 WeddingWebsite/wwwroot/img/*
 favicon.*
+app.db
