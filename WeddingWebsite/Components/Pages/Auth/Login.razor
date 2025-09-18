@@ -32,17 +32,17 @@
                 <DataAnnotationsValidator/>
                 <hr/>
                 <ValidationSummary class="text-danger" role="alert"/>
-                <div>
+                <div class="form-input">
                     <label for="email" class="form-label">Email</label>
                     <InputText @bind-Value="Input.Email" class="input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
                     <ValidationMessage For="() => Input.Email" class="text-danger"/>
                 </div>
-                <div>
+                <div class="form-input">
                     <label for="password" class="form-label">Password</label>
                     <InputText type="password" @bind-Value="Input.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="password" id="password"/>
                     <ValidationMessage For="() => Input.Password" class="text-danger"/>
                 </div>
-                <div>
+                <div class="form-input">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
                         Remember me
