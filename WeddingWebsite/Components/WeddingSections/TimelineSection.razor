@@ -1,11 +1,14 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
 
 <Section Padding="@ShowHeading" Id="timeline">
     @if (ShowHeading) {
         <SectionHeading>Order of the Day</SectionHeading>
     }
-    <WeddingTimeline/>
+    <WeddingTimeline Events="WeddingDetails.Events" AccommodationDetails="WeddingDetails.AccommodationDetails"/>
 </Section>
 
 @code {

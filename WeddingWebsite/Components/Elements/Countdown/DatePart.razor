@@ -6,9 +6,15 @@
 </span>
 
 @code {
+    /// <summary>
+    /// Singular form of the label e.g. Month
+    /// </summary>
     [Parameter]
     public required string Label { get; set; }
     
+    /// <summary>
+    /// Plural form. By default, adds a single lowercase 's' to the singular form.
+    /// </summary>
     [Parameter]
     public string Plural { get; set; } = "";
     
