@@ -227,7 +227,11 @@ public class SampleWeddingDetails : IWeddingDetails
     public IEnumerable<Event> Events { get; } 
     
     public DressCode DressCode { get; } 
-        = new DressCode("Cocktail", "Please dress smartly for the occasion. Cocktail attire is preferred, but feel free to wear something that makes you feel comfortable and happy.");
+        = new DressCode(
+            "Cocktail", 
+            "Please dress smartly for the occasion. Cocktail attire is preferred, but feel free to wear something that makes you feel comfortable and happy.",
+            new WebsiteImage("https://onefabday.com/wp-content/uploads/2023/03/122-mark-donovan-photography.jpg", "An image of female wedding guests in a line.")
+        );
     
     public AccommodationDetails AccommodationDetails { get; } = new (
         "If you would like to stay until the end, we suggest staying at a nearby hotel.",
