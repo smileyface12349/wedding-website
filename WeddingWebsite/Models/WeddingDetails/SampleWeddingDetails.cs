@@ -52,7 +52,9 @@ public class SampleWeddingDetails : IWeddingDetails
                 null, 
                 [
                     new WeddingModal("View Menu", [
-                        new ("Main Course", "Roast chicken, potatoes and vegetables")
+                        new ("Starter", "Avocado and prawns"),
+                        new ("Main Course", "Roast chicken, potatoes and vegetables"),
+                        new ("Dessert", "Trio of chocolate brownie, lemon posset and creme brulee")
                     ])
                 ]
             ),
