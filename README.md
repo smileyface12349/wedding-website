@@ -17,13 +17,27 @@ This repository does not contain a real implementation so that the details are k
 
 ## Setup Instructions
 
-1. Fork this repository
-2. Navigate to `/Models/WeddingDetails` and supply a new implementation of `IWeddingDetails`. You may want to use `SampleWeddingDetails` as an example, and you may also safely remove `SampleWeddingDetails` if you don't need it. Then replace `SampleWeddingDetails` in `Program.cs` with your new implementation.
-3. Set up the database (TODO).
-4. Install .NET 9, then run the website with `dotnet run Program.cs`. This will host your website locally. You may also want to set up a service to keep this running and/or a reverse proxy. Note you should use `dotnet publish` instead for production use.
+1. Fork this repository.
+2. Run `dotnet restore`.
+3. Set up the database.
+4. Do configuration (optional for now).
+5. Install .NET 9, then run the website with `dotnet run Program.cs`. This will host your website locally. You may also want to set up a service to keep this running and/or a reverse proxy. Note you should use `dotnet publish` instead for production use.
 
-## Customising the Layout
-Customising all the details is already possible, but what if you want to change the layout of the website? First, check if there's any configuration options in `IWeddingDetails` that suit your needs. If not, you'll need to make some changes to the code. You should be able to do this easily in your local repository. If you're feeling generous, hide your changes behind a configuration option in `IWebsiteConfig` and then make a PR here with your changes so that other people can benefit from it! I will try and review PRs quickly and improve the product for everyone, however I will not merge any PRs that change the default behaviour in a way that is just 'personal preference'.
+## Configuration
+
+Configuration is done in two entirely separate places.
+
+### Wedding Details
+
+This is for all details related to the wedding. I try and stay away from implementation details in this class, it merely specifies information about the wedding and it's up to each section to choose how to render it. 
+
+By default, `SampleWeddingDetails.cs` is being used. If you go into `Program.cs`, you can change `SampleWeddingDetails.cs` to your new implementation of `IWeddingDetails`
+
+### Website Config
+
+The config affects how the website displays, but is completely separate from the details of the wedding. This includes which sections there are, colour scheme and other options for each section.
+
+If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference, I'll only change the default behaviour to fix bugs and make changes which are definitely improvements.
 
 ## Interactivity
 
