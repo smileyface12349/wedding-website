@@ -27,6 +27,17 @@ h1:focus {
     outline: none;
 }
 
+.text-danger {
+    color: #e50000;
+}
+
+.login-input {
+    flex: 1;
+    padding: 5px;
+    outline: 1px solid var(--primary);
+    border-radius: 5px;
+}
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
