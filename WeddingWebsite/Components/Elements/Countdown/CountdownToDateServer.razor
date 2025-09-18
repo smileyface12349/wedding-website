@@ -17,9 +17,9 @@
     
     /// <summary>
     /// Warning: This component renders server-side. Enabling seconds will generate 2 HTTP requests every second.
-    /// On imperfect connections, the timer is visibly laggy.
+    /// On imperfect connections, the timer is visibly laggy. Use <see cref="CountdownToDate"/> for client-side
+    /// rendering with JavaScript.
     /// </summary>
-    /// <see cref="CountdownToDate"/>
     [Parameter]
     public bool ShowSeconds { get; set; } = false;
     

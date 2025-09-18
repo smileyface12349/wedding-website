@@ -3,7 +3,7 @@
 /// <summary>
 /// Global theme colours. These are sometimes useful, but are generally overridden by the colours for a particular section.
 /// </summary>
-/// <see cref="WeddingWebsite.Models.Theme.SectionTheme"/>
+/// <seealso cref="WeddingWebsite.Models.Theme.SectionTheme"/>
 public record WeddingColours(
     Colour Primary,
     Colour PrimaryBackground,
