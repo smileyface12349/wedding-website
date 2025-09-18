@@ -26,10 +26,44 @@ public class SampleWeddingDetails : IWeddingDetails
         // Cannot access venues in static context
         Events = new List<Event>
         {
-            new ("Ceremony", TimeOnly.Parse("12:00"), TimeOnly.Parse("13:00"), "The church service in which we get married.", CeremonyVenue, new WebsiteImage("https://www.wedgewoodweddings.com/hubfs/3.0%20Feature%20Images%201000%20x%20500%20px/Blog/Lets%20Talk%20About%20Beach%20Weddings.png", "A wedding ceremony on a beach")),
-            new ("Drinks Reception", TimeOnly.Parse("13:30"), TimeOnly.Parse("15:00"), "Join us for drinks and canapés in the garden.", ReceptionVenue, new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")),
-            new ("Wedding Breakfast", TimeOnly.Parse("15:30"), TimeOnly.Parse("18:00"), "A sit-down meal with speeches and toasts.", ReceptionVenue, new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), null, [new WeddingModal("View Menu", [new ("Main Course", "Roast chicken, potatoes and vegetables")])]),
-            new ("Evening Reception", TimeOnly.Parse("19:00"), TimeOnly.Parse("23:00"), "An evening of dancing and celebration.", ReceptionVenue, new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding"))
+            new (
+                "Ceremony", 
+                TimeOnly.Parse("12:00"), 
+                TimeOnly.Parse("13:00"), 
+                "The church service in which we get married.",
+                CeremonyVenue, 
+                new WebsiteImage("https://www.wedgewoodweddings.com/hubfs/3.0%20Feature%20Images%201000%20x%20500%20px/Blog/Lets%20Talk%20About%20Beach%20Weddings.png", "A wedding ceremony on a beach")
+            ),
+            new (
+                "Drinks Reception", 
+                TimeOnly.Parse("13:30"),
+                TimeOnly.Parse("15:00"), 
+                "Join us for drinks and canapés in the garden.", 
+                ReceptionVenue, 
+                new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
+                ),
+            new (
+                "Wedding Breakfast", 
+                TimeOnly.Parse("15:30"), 
+                TimeOnly.Parse("18:00"),
+                "A sit-down meal with speeches and toasts.", 
+                ReceptionVenue, 
+                new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), 
+                null, 
+                [
+                    new WeddingModal("View Menu", [
+                        new ("Main Course", "Roast chicken, potatoes and vegetables")
+                    ])
+                ]
+            ),
+            new (
+                "Evening Reception", 
+                TimeOnly.Parse("19:00"),
+                TimeOnly.Parse("23:00"),
+                "An evening of dancing and celebration.", 
+                ReceptionVenue, 
+                new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
+            )
         };
     }
 
