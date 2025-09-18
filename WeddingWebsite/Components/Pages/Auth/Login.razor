@@ -34,17 +34,17 @@
                 <ValidationSummary class="text-danger" role="alert"/>
                 <div>
                     <label for="email" class="form-label">Email</label>
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                    <InputText @bind-Value="Input.Email" class="input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
                     <ValidationMessage For="() => Input.Email" class="text-danger"/>
                 </div>
                 <div>
                     <label for="password" class="form-label">Password</label>
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                    <InputText type="password" @bind-Value="Input.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="password" id="password"/>
                     <ValidationMessage For="() => Input.Password" class="text-danger"/>
                 </div>
                 <div>
                     <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input"/>
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
                         Remember me
                     </label>
                 </div>
