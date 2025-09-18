@@ -12,3 +12,6 @@
 
 ## Any other comments?
 <!-- Please specify anything interesting about your implementation, other solutions you considered etc. -->
+
+## Does this close any issues?
+<!-- If so, write "Closes #N" for each issue closed, e.g. "Closes #10, Closes #13" -->
