@@ -20,6 +20,7 @@ public class WebsiteConfig : IWebsiteConfig
     
         Sections = [
             new Section.Timeline(new SectionTheme(surfaceVariant, Colours.Primary, outlinedBox)),
+            new Section.DressCode(new SectionTheme(Colour.White, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(Colour.White, Colours.Primary, outlinedBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
         ];
