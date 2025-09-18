@@ -1,0 +1,25 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.WeddingComponents
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    @if (WrapInBox)
+    {
+        <Box>
+            <h2>Dress Code</h2>
+            <DressCode/>
+        </Box>
+    }
+    else
+    {
+        <SectionHeading>Dress Code</SectionHeading>
+        <DressCode/>
+    }
+</Section>
+
+@code {
+    [Parameter] public bool WrapInBox { get; set; } = true;
+}
