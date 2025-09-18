@@ -24,6 +24,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_HaveAtLeastOneContactForEachOption(details, config);
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
         Contacts_InformAboutLoginContact(details);
+        Contacts_ShouldNotHaveDuplicates(details);
 
         return validationIssues;
     }
@@ -197,6 +198,18 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (contactMethod != null)
         {
             Info($"The contact method {contactMethod.Text} is visible to users who are not signed in.");
+        }
+    }
+
+    /// <summary>
+    /// A user may think that all contacts need to be added to ExtraContacts and not just NotablePeople.
+    /// </summary>
+    private void Contacts_ShouldNotHaveDuplicates(IWeddingDetails details)
+    {
+        var duplicateContacts = details.NotablePeople.Concat(details.ExtraContacts).Select(contact => contact.NameAndRole).GroupBy(contact => contact).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateContacts.Any())
+        {
+            Warning($"There are duplicate contacts for {string.Join(", ", duplicateContacts)}. Did you accidentally add it to ExtraContacts when it's already in NotablePeople?");
         }
     }
 }
