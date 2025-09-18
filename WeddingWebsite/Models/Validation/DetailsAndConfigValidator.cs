@@ -7,6 +7,12 @@ namespace WeddingWebsite.Models.Validation;
 public class DetailsAndConfigValidator: IDetailsAndConfigValidator
 {
     private IList<ValidationIssue> validationIssues = [];
+    private ILogger<DetailsAndConfigValidator> logger;
+
+    public DetailsAndConfigValidator()
+    {
+        logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<DetailsAndConfigValidator>();
+    }
     
     public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
         validationIssues = [];
@@ -45,7 +51,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// An error that leads to incorrect / misleading information, or severe and definitely undesired behaviour.
     /// These errors must still be recoverable i.e. the site should render without throwing.
     /// </summary>
-    private void Error(string message) {
+    private void Error(string message)
+    {
+        logger.LogError(message);
         validationIssues.Add(new ValidationIssue(ValidationIssueSeverity.Error, message));
     }
     
@@ -53,6 +61,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// An issue that seems weird, but may be valid. E.g. specifying data that's overridden by another setting.
     /// </summary>
     private void Warning(string message) {
+        logger.LogWarning(message);
         validationIssues.Add(new ValidationIssue(ValidationIssueSeverity.Warning, message));
     }
     
@@ -60,6 +69,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// Something worth flagging, but very unlikely to cause a problem.
     /// </summary>
     private void Info(string message) {
+        logger.LogInformation(message);
         validationIssues.Add(new ValidationIssue(ValidationIssueSeverity.Info, message));
     }
     
