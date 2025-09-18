@@ -53,4 +53,9 @@ public abstract record Section
         public Contact(SectionTheme theme, bool urgencyOption = true)
             : this(theme, Enum.GetValues<ContactReason>(), urgencyOption) {}
     }
+
+    /// <summary>
+    /// Shows the dress code. By default, it is shown inside a box.
+    /// </summary>
+    public sealed record DressCode(SectionTheme Theme, bool WrapInBox = true) : Section(Theme);
 }
