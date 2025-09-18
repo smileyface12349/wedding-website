@@ -11,10 +11,13 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IWeddingDetails WeddingDetails
 
 @attribute [AllowAnonymous]
 
 <PageTitle>Log in</PageTitle>
+
+<img class="background-image" src="@WeddingDetails.MainImage.Url" alt="@WeddingDetails.MainImage.AltText"/>
 
 <div class="container">
     <section class="login-modal">

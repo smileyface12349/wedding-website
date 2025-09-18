@@ -10,3 +10,12 @@
     align-items: center;
     justify-content: center;
 }
+
+.background-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+}
