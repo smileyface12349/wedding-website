@@ -47,8 +47,6 @@ public interface IWeddingDetails
     /// to unauthenticated users.
     /// </summary>
     public WebsiteImage MainImage { get; }
-    public IEnumerable<WebsiteImage> GalleryImages { get; }
-    public WebsiteLink RegistryLink { get; }
     
     // Helper methods
     public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);
