@@ -3,8 +3,10 @@
 
 @inject IWebsiteConfig Config
 
-<div class="rounded-corner-box @CssShadow" style="background: @Background; color: @Background.GetTextColour()">
-    @TopContent
+<div class="rounded-corner-box @CssShadow @CssHorizontal" style="background: @Background; color: @Background.GetTextColour()">
+    <div class="top-content">
+        @TopContent
+    </div>
     <div class="rounded-corner-box-inner">
         @ChildContent
     </div>
@@ -17,10 +19,15 @@
     [Parameter]
     public RenderFragment? TopContent { get; set; }
     
+    [Parameter]
+    public bool Horizontal { get; set; }
+    
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
     private Colour Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
     
     private string CssShadow => Theme is { Background.IsDark: false } ? "shadow" : "";
+
+    private string CssHorizontal => Horizontal ? "horizontal" : "";
 }
