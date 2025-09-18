@@ -31,22 +31,24 @@
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator/>
                 <hr/>
-                <ValidationSummary class="text-danger" role="alert"/>
                 <div class="form-input">
                     <label for="email" class="form-label">Email</label>
                     <InputText @bind-Value="Input.Email" class="input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
-                    <ValidationMessage For="() => Input.Email" class="text-danger"/>
                 </div>
+                @* <ValidationMessage For="() => Input.Email" class="validation-message text-danger"/> *@
                 <div class="form-input">
                     <label for="password" class="form-label">Password</label>
                     <InputText type="password" @bind-Value="Input.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="password" id="password"/>
-                    <ValidationMessage For="() => Input.Password" class="text-danger"/>
                 </div>
+                @* <ValidationMessage For="() => Input.Password" class="validation-message text-danger"/> *@
                 <div class="form-input">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
                         Remember me
                     </label>
+                </div>
+                <div class="validation-container">
+                    <ValidationSummary class="text-danger" role="alert"/>
                 </div>
                 <div>
                     <button type="submit" style="background: @ModalTheme.Primary">Log in</button>
