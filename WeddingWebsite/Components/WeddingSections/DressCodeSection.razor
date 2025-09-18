@@ -1,5 +1,6 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Components.WeddingComponents
 
@@ -8,15 +9,27 @@
 <Section>
     @if (WrapInBox)
     {
-        <Box>
-            <h2>Dress Code</h2>
-            <DressCode Dress="WeddingDetails.DressCode"/>
+        <Box Horizontal="true">
+            <TopContent>
+                <WebsiteElement Element="WeddingDetails.DressCode.Media"/>
+            </TopContent>
+            <ChildContent>
+                <h2>Dress Code</h2>
+                <DressCode Dress="WeddingDetails.DressCode"/>
+            </ChildContent>
         </Box>
     }
     else
     {
         <SectionHeading>Dress Code</SectionHeading>
-        <DressCode Dress="WeddingDetails.DressCode"/>
+        <SideBySide>
+            <LeftContent>
+                <WebsiteElement Element="WeddingDetails.DressCode.Media"/>
+            </LeftContent>
+            <RightContent>
+                <DressCode Dress="WeddingDetails.DressCode"/>
+            </RightContent>
+        </SideBySide>
     }
 </Section>
 
