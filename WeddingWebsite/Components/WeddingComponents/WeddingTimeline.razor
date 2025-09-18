@@ -5,7 +5,6 @@
 @using WeddingWebsite.Models.Venues
 @using WeddingWebsite.Models.WebsiteConfig
 
-@inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
 
 <div class="desktop">
@@ -47,6 +46,12 @@
 </div>
 
 @code {
+    
+    [Parameter]
+    public required IEnumerable<Event> Events { get; set; }
+    
+    [Parameter]
+    public AccommodationDetails? AccommodationDetails { get; set; }
 
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
@@ -60,7 +65,7 @@
         string? previousVenueName = null;
         TimeOnly? previousEndTime = null;
         
-        foreach (var ev in WeddingDetails.Events)
+        foreach (var ev in Events)
         {
             // Generate a timeline item for the venue change
             if (previousVenueName != ev.Venue.Name && ev.Venue.Directions != null) {
@@ -88,7 +93,7 @@
         }
         
         // Finally, add an accommodation item if appropriate
-        if (WeddingDetails.AccommodationDetails.Hotels.Any()) {
+        if (AccommodationDetails != null && AccommodationDetails.Hotels.Any()) {
             timelineItems = timelineItems.Append(GenerateAccommodationTimelineItem());
         }
     }
@@ -111,16 +116,18 @@
         return new WebsiteSection("Address", venue.Address, new WebsiteGoogleMapsEmbed(venue.Location));
     }
     
-    private TimelineItem GenerateAccommodationTimelineItem() {
+    private TimelineItem GenerateAccommodationTimelineItem()
+    {
+        if (AccommodationDetails == null) throw new ArgumentNullException();
         return new TimelineItem(
             TimelineItemType.Accommodation,
-            WeddingDetails.Events.LastOrDefault()?.End.ToString() ?? "End",
+            Events.LastOrDefault()?.End.ToString() ?? "End",
             "Accommodation",
-            WeddingDetails.AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
+            AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
-            [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(WeddingDetails.AccommodationDetails))],
+            [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(AccommodationDetails))],
             @Icons.Material.Filled.Hotel,
-            WeddingDetails.AccommodationDetails.Image
+            AccommodationDetails.Image
         );
     }
     
@@ -143,10 +150,11 @@
     }
     
     private string GenerateAccommodationShortString() {
-        if (!WeddingDetails.AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)) {
-            return string.Join(", ", WeddingDetails.AccommodationDetails.Hotels.Select(hotel => hotel.Name));
+        if (AccommodationDetails == null) throw new ArgumentNullException();
+        if (!AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)) {
+            return string.Join(", ", AccommodationDetails.Hotels.Select(hotel => hotel.Name));
         } else {
-            return string.Join(", ", WeddingDetails.AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(hotel => hotel.Name)) + " (or " + (WeddingDetails.AccommodationDetails.Hotels.Count(hotel => !hotel.Emphasise)) + " others)";
+            return string.Join(", ", AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(hotel => hotel.Name)) + " (or " + (AccommodationDetails.Hotels.Count(hotel => !hotel.Emphasise)) + " others)";
         }
     }
     
