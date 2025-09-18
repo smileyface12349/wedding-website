@@ -2,10 +2,8 @@
     --primary: #36b3d6;
     --bg-primary: #a2eaf6;
     --primary-dark: #102542;
-    --secondary: #f1dc22;
-    --secondary-dark: #e68019;
-    --secondary-background: #fefce7;
-    --tertiary: #275c34;
+    --bg-variant: #fefce7;
+    --secondary: #275c34;
 }
 
 @font-face {
@@ -21,22 +19,23 @@ body {
     margin: 0;
 }
 
-a, .btn-link {
+a {
     color: #006bb7;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 h1:focus {
     outline: none;
+}
+
+.text-danger {
+    color: #e50000;
+}
+
+.login-input {
+    flex: 1;
+    padding: 5px;
+    outline: 1px solid var(--primary);
+    border-radius: 5px;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -45,10 +44,6 @@ h1:focus {
 
 .invalid {
     outline: 1px solid #e50000;
-}
-
-.validation-message {
-    color: #e50000;
 }
 
 .blazor-error-boundary {
@@ -60,10 +55,6 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
-
-.darker-border-checkbox.form-check-input {
-    border-color: #929292;
-}
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
     color: var(--bs-secondary-color);

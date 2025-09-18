@@ -22,6 +22,9 @@ public enum ContactReason
     [Description("Travel & Logistics")]
     Logistics,
     
+    /// <summary>
+    /// The first contact method with this reason is visible to unauthenticated users.
+    /// </summary>
     [Description("Website")]
     Website,
     

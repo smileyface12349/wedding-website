@@ -23,6 +23,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         
         Contacts_HaveAtLeastOneContactForEachOption(details, config);
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
+        Contacts_InformAboutLoginContact(details);
 
         return validationIssues;
     }
@@ -184,6 +185,18 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                 Warning($"You have two sections of type {type}. Are you sure you want two the same?");
             }
             sectionTypes.Add(type);
+        }
+    }
+
+    /// <summary>
+    /// Inform that a contact is visible to users who are signed out.
+    /// </summary>
+    private void Contacts_InformAboutLoginContact(IWeddingDetails details)
+    {
+        var contactMethod = details.LoginContactMethod;
+        if (contactMethod != null)
+        {
+            Info($"The contact method {contactMethod.Text} is visible to users who are not signed in.");
         }
     }
 }

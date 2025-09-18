@@ -22,4 +22,6 @@ public interface IWeddingDetails
     // Helper methods
     public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);
     public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson(new Name("Blank", "Bride"), Role.Bride);
+    public IContactMethod? LoginContactMethod => NotablePeople.Concat(ExtraContacts).Select(p => p.ContactDetails.NotUrgent).FirstOrDefault(p => p.MatchesReason(ContactReason.Website))?.Methods.FirstOrDefault() 
+                                                 ?? NotablePeople.Concat(ExtraContacts).Select(p => p.ContactDetails.Urgent).FirstOrDefault(p => p.MatchesReason(ContactReason.Website))?.Methods.FirstOrDefault();
 }
