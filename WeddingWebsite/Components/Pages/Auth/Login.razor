@@ -2,16 +2,20 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
 
 @inject SignInManager<Account> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IWeddingDetails WeddingDetails
+@inject IWebsiteConfig Config
 
 @attribute [AllowAnonymous]
 
@@ -20,50 +24,54 @@
 <img class="background-image" src="@WeddingDetails.MainImage.Url" alt="@WeddingDetails.MainImage.AltText"/>
 
 <div class="container">
-    <section class="login-modal">
-        <h1>Log in</h1>
-        <p>@errorMessage</p>
-        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-            <DataAnnotationsValidator />
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div>
-                <label for="email" class="form-label">Email</label>
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
-            </div>
-            <div>
-                <label for="password" class="form-label">Password</label>
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div>
-                <label class="form-label">
-                    <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                    Remember me
-                </label>
-            </div>
-            <div>
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-            </div>
-            <p>Forgot your password? Please contact me to reset it.</p>
-            @* <div> *@
-            @*     <p> *@
-            @*         <a href="Account/ForgotPassword">Forgot your password?</a> *@
-            @*     </p> *@
-            @*     <p> *@
-            @*         <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a> *@
-            @*     </p> *@
-            @*     <p> *@
-            @*         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a> *@
-            @*     </p> *@
-            @* </div> *@
-        </EditForm>
-    </section>
+    <CascadingValue Value="ModalTheme">
+        <Box>
+            <h1>Log in</h1>
+            <p>@errorMessage</p>
+            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                <DataAnnotationsValidator/>
+                <hr/>
+                <ValidationSummary class="text-danger" role="alert"/>
+                <div>
+                    <label for="email" class="form-label">Email</label>
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                    <ValidationMessage For="() => Input.Email" class="text-danger"/>
+                </div>
+                <div>
+                    <label for="password" class="form-label">Password</label>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                    <ValidationMessage For="() => Input.Password" class="text-danger"/>
+                </div>
+                <div>
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input"/>
+                        Remember me
+                    </label>
+                </div>
+                <div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                </div>
+                <p>Forgot your password? Please contact me to reset it.</p>
+                @* <div> *@
+                @*     <p> *@
+                @*         <a href="Account/ForgotPassword">Forgot your password?</a> *@
+                @*     </p> *@
+                @*     <p> *@
+                @*         <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a> *@
+                @*     </p> *@
+                @*     <p> *@
+                @*         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a> *@
+                @*     </p> *@
+                @* </div> *@
+            </EditForm>
+        </Box>
+    </CascadingValue>
 </div>
 
 @code {
     private string? errorMessage;
+
+    private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.Filled, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
