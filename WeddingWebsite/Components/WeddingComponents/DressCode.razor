@@ -1,5 +1,7 @@
-﻿<p>Dress code goes here</p>
+﻿<p>@Dress.Title</p>
+<p>@Dress.Description</p>
 
 @code {
-    
+    [Parameter]
+    public required Models.DressCode Dress { get; set; }
 }
