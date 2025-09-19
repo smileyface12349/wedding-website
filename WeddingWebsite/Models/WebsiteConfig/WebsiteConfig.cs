@@ -11,12 +11,7 @@ public class WebsiteConfig : IWebsiteConfig
         new Colour(39, 92, 52, true)
     );
     public IEnumerable<Section> Sections { get; }
-    public TopButtonsConfig TopButtons { get; } = new TopButtonsConfig(
-        [
-            new LinkButton("Accommodation", "#accommodation")
-        ],
-        Colour.White
-    );
+    public TopButtonsConfig TopButtons { get; }
     
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
@@ -30,5 +25,16 @@ public class WebsiteConfig : IWebsiteConfig
             new Section.MeetWeddingParty(new SectionTheme(Colour.White, Colours.Primary, outlinedBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
         ];
+
+        var coral = new Colour(239, 111, 108);
+        var salmon = new Colour(240, 100, 73, new Colour(30, 30, 30, true));
+        var lightGreen = new Colour(112, 229, 130);
+        
+        TopButtons = new TopButtonsConfig(
+            [
+                new LinkButton("Accommodation", "#accommodation")
+            ],
+            salmon
+        );
     }
 }
