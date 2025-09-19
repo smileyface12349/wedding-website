@@ -1,4 +1,4 @@
-﻿using WeddingWebsite.Models.People;
+﻿using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -11,7 +11,18 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 
 public interface IWebsiteConfig
 {
+    /// <summary>
+    /// Colour theme. This is sometimes used, but usually overridden by the section themes.
+    /// </summary>
     public WeddingColours Colours { get; }
+    
+    /// <summary>
+    /// The sections to show on the website, and per-section config.
+    /// </summary>
     public IEnumerable<Section> Sections { get; }
     
+    /// <summary>
+    /// The buttons to display on the top of the homepage e.g. "RSPV".
+    /// </summary>
+    public IEnumerable<LinkButton> TopButtons { get; }
 }

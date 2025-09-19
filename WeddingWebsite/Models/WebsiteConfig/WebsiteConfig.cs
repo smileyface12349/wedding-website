@@ -1,5 +1,5 @@
-﻿using WeddingWebsite.Models.People;
-using WeddingWebsite.Models.Theme;
+﻿using WeddingWebsite.Models.Theme;
+using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -11,6 +11,9 @@ public class WebsiteConfig : IWebsiteConfig
         new Colour(39, 92, 52, true)
     );
     public IEnumerable<Section> Sections { get; }
+    public IEnumerable<LinkButton> TopButtons { get; } = [
+        new LinkButton("Accommodation", "#accommodation")
+    ];
     
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
