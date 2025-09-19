@@ -23,7 +23,7 @@
             <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
         </CascadingValue>
     }
-    <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.TopButtons.Colour, null))">
+    <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.TopButtons.Colour ?? Config.Colours.Secondary, null))">
         <div class="top-buttons">
             @foreach (var button in Config.TopButtons.Buttons)
             {
