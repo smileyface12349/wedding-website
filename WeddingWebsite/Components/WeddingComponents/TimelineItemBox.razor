@@ -26,7 +26,7 @@
         }
         <div class="event-location">
             <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
-            <span>@Item.VenueName</span>
+            <span>@Location</span>
         </div>
     </ChildContent>
 </Box>
@@ -34,4 +34,6 @@
 @code {
     [Parameter]
     public required WeddingTimeline.TimelineItem Item { get; set; }
+
+    private string Location => Item.LocationWithinVenue == null ? Item.VenueName : $"{Item.LocationWithinVenue} ({Item.VenueName})";
 }
