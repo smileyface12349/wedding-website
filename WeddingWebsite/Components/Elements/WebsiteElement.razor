@@ -1,9 +1,11 @@
 ﻿@using WeddingWebsite.Models.WebsiteElement
 
 @if (Element is WebsiteImage) {
-    <img class="website-element @ClassName" style="max-height: @MaxHeight" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
+    <img class="website-element @ClassName" style="max-height: @MaxHeight; object-fit: @ObjectFit;@MaybeFillHeight" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
 } else if (Element is WebsiteGoogleMapsEmbed) {
     <GoogleMapsEmbed Location=@(((WebsiteGoogleMapsEmbed)Element).Location) Height="@MaxHeight" ClassName="@ClassName" />
+} else if (Element is Models.WebsiteElement.LinkButton) {
+    <LinkButton Data="@((Models.WebsiteElement.LinkButton)Element)"/>
 } else if (Element is not null) {
     <p>Website element type not recognised: @Element?.GetType()</p>
 }
@@ -14,7 +16,17 @@
     
     [Parameter]
     public string MaxHeight { get; set; } = "10000px";
+
+    /// <summary>
+    /// If false, no information should be discarded. If true, the element should fill the space even if it means
+    /// cropping out parts of it. Currently, this ony affects images.
+    /// </summary>
+    [Parameter]
+    public bool Cover { get; set; } = false;
     
     [Parameter]
     public string ClassName { get; set; } = "";
+
+    private string ObjectFit => Cover ? "cover" : "contain";
+    private string MaybeFillHeight => Cover ? "height: 100%;" : "";
 }
