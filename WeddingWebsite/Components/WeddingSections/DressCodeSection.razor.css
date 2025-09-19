@@ -3,3 +3,8 @@
     text-align: center;
     margin-top: 10px;
 }
+
+.dress-code-no-box-image {
+    border-radius: 15px;
+    overflow: hidden;
+}
