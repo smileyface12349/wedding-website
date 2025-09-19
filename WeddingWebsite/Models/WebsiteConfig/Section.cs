@@ -57,5 +57,9 @@ public abstract record Section
     /// <summary>
     /// Shows the dress code. By default, it is shown inside a box.
     /// </summary>
-    public sealed record DressCode(SectionTheme Theme, bool WrapInBox = true) : Section(Theme);
+    public sealed record DressCode(
+        SectionTheme Theme, 
+        bool WrapInBox = true,
+        bool ShowContact = true
+    ) : Section(Theme);
 }
