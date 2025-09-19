@@ -8,3 +8,19 @@
 .outlined-box-inner {
     padding: 10px 15px;
 }
+
+@media only screen and (min-width: 600px) {
+    .horizontal {
+        display: flex;
+    }
+
+    .horizontal .top-content {
+        flex: 1;
+        max-height: 300px;
+        overflow: hidden;
+    }
+
+    .horizontal .rounded-corner-box-inner {
+        flex: 1;
+    }
+}

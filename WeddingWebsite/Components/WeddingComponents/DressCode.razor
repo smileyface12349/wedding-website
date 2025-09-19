@@ -1,0 +1,16 @@
+﻿@using WeddingWebsite.Models.People
+
+<h3>@Dress.Title</h3>
+<p>@Dress.Description</p>
+@if (Contact != null)
+{
+    <p>Questions? Contact @Contact.NameAndRole on @Contact.ContactDetails.GetAllOptions().FirstOrDefault()?.Text.</p>
+}
+
+@code {
+    [Parameter]
+    public required Models.DressCode Dress { get; set; }
+    
+    [Parameter]
+    public IContact? Contact { get; set; }
+}

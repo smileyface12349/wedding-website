@@ -1,6 +1,9 @@
-﻿namespace WeddingWebsite.Models;
+﻿using WeddingWebsite.Models.WebsiteElement;
+
+namespace WeddingWebsite.Models;
 
 public record DressCode(
     string Title,
-    string Description
+    string Description,
+    IWebsiteElement? Media = null 
 );

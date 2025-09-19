@@ -31,6 +31,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
         Contacts_InformAboutLoginContact(details);
         Contacts_ShouldNotHaveDuplicates(details);
+        Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
 
         return validationIssues;
     }
@@ -220,6 +221,30 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (duplicateContacts.Any())
         {
             Warning($"There are duplicate contacts for {string.Join(", ", duplicateContacts)}. Did you accidentally add it to ExtraContacts when it's already in NotablePeople?");
+        }
+    }
+
+    /// <summary>
+    /// If you specify reasons to be contactable, you should specify methods to contact too. This affects some features
+    /// which choose the first contact and rely on a method existing if there's a contact that exists.
+    /// </summary>
+    private void Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(IWeddingDetails details)
+    {
+        foreach (var contact in details.NotablePeople.Concat(details.ExtraContacts))
+        {
+            // This deliberately validates on every reason, not just those enabled in the contacts section, as there
+            // are various sections using specific reasons even if they are not enabled for the section.
+            foreach (var reason in Enum.GetValues<ContactReason>())
+            {
+                if (!contact.ContactDetails.Urgent.Methods.Any() && contact.ContactDetails.Urgent.MatchesReason(reason))
+                {
+                    Error($"{contact.NameAndRole} is listed as an urgent contact for reason {reason}, but there are no contact methods. Either add an urgent contact method, or remove this contact reason.");
+                }
+                if (!contact.ContactDetails.NotUrgent.Methods.Any() && contact.ContactDetails.NotUrgent.MatchesReason(reason))
+                {
+                    Error($"{contact.NameAndRole} is listed as a non-urgent contact for reason {reason}, but there are no contact methods. Either add a non-urgent contact method, or remove this contact reason.");
+                }
+            }
         }
     }
 }

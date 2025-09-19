@@ -3,15 +3,15 @@
 @if (Theme != null && Theme.BoxStyle != null) {
     <CascadingValue Value="Theme.BoxStyle.InnerTheme">
         @if (Theme.BoxStyle.Type == BoxType.Outlined) {
-            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
         } else if (Theme.BoxStyle.Type == BoxType.Filled) {
-            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
         } else {
             <p>Unsupported box type: @Theme.BoxStyle.Type</p>
         }
     </CascadingValue>
 } else {
-    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent"/>
+    <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
 }
 
 @code {
@@ -23,4 +23,7 @@
     
     [Parameter]
     public RenderFragment? TopContent { get; set; }
+    
+    [Parameter]
+    public bool Horizontal { get; set; }
 }
