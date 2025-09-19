@@ -84,6 +84,7 @@
                 ev.Name,
                 "",
                 ev.Venue.Name,
+                ev.LocationWithinVenue,
                 ev.Modals,
                 ev.Icon,
                 ev.Image
@@ -105,6 +106,7 @@
             title : "Transport",
             description : ev.Venue.Directions!.Description,
             venueName : previousVenueName != null ? previousVenueName + " → " + ev.Venue.Name : "Your House → " + ev.Venue.Name,
+            locationWithinVenue: null,
             modals : [new WeddingModal("Travel Directions", ev.Venue.Directions!.Content.Prepend(GenerateTransportTopSection(ev.Venue)))],
             icon: Icons.Material.Filled.DirectionsCar,
             image : ev.Venue.Directions?.CoverImage,
@@ -125,6 +127,7 @@
             "Accommodation",
             AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
+            null,
             [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(AccommodationDetails))],
             @Icons.Material.Filled.Hotel,
             AccommodationDetails.Image
@@ -164,6 +167,7 @@
         string title,
         string description,
         string venueName,
+        string? locationWithinVenue,
         IEnumerable<WeddingModal> modals,
         string? icon = null,
         WebsiteImage? image = null,
@@ -175,6 +179,7 @@
         public string Title { get; } = title;
         public IEnumerable<WebsiteSection> Description { get; init; } = [new (null, description)];
         public string VenueName { get; } = venueName;
+        public string? LocationWithinVenue { get; } = locationWithinVenue;
         public IEnumerable<WeddingModal> Modals { get; } = modals;
         public string? Icon { get; } = icon;
         public WebsiteImage? Image { get; } = image;
