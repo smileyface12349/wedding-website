@@ -14,29 +14,15 @@ public class WebsiteConfig : IWebsiteConfig
     
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
-    
-        var theme1 = new SectionTheme(
-            Colour.White,
-            Colours.Primary,
-            new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null))
-        );
-        
-        var theme2 = new SectionTheme(
-            surfaceVariant,
-            Colours.Primary,
-            new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null))
-        );
-        
-        var theme3 = new SectionTheme(
-            Colours.Secondary,
-            Colours.Primary,
-            new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null))
-        );
+
+        var filledBox = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
+        var outlinedBox = new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null));
     
         Sections = [
-            new Section.Timeline(theme2),
-            new Section.MeetWeddingParty(theme1),
-            new Section.Contact(theme3)
+            new Section.Timeline(new SectionTheme(surfaceVariant, Colours.Primary, outlinedBox)),
+            new Section.DressCode(new SectionTheme(Colour.White, Colours.Primary, filledBox)),
+            new Section.MeetWeddingParty(new SectionTheme(Colour.White, Colours.Primary, outlinedBox)),
+            new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
         ];
     }
 }

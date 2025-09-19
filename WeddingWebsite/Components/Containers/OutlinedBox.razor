@@ -1,8 +1,10 @@
 ﻿@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
-<div class="outlined-box" style="background: @Background; color: @Background.GetTextColour()">
-    @TopContent
+<div class="outlined-box @CssHorizontal" style="background: @Background; color: @Background.GetTextColour()">
+    <div class="top-content">
+        @TopContent
+    </div>
     <div class="outlined-box-inner">
         @ChildContent
     </div>
@@ -18,8 +20,13 @@
     [Parameter]
     public RenderFragment? TopContent { get; set; }
     
+    [Parameter]
+    public bool Horizontal { get; set; }
+    
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
     private Colour Background => Theme != null ? Theme.Background : Colour.White;
+    
+    private string CssHorizontal => Horizontal ? "horizontal" : "";
 }

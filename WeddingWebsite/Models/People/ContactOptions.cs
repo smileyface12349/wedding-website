@@ -6,6 +6,10 @@ public record ContactOptions
     /// Null is a special state that matches any reason.
     /// </summary>
     private IEnumerable<ContactReason>? Reasons;
+    
+    /// <summary>
+    /// Put your preferred contact method first - some parts of the UI may only use the first one.
+    /// </summary>
     public IEnumerable<IContactMethod> Methods { get; }
     
     public ContactOptions(IEnumerable<ContactReason>? reasons, IEnumerable<IContactMethod> methods) {

@@ -10,4 +10,8 @@
     .side-by-side-container {
         flex-direction: column;
     }
+    
+    .side {
+        margin: 0 !important;
+    }
 }

@@ -38,6 +38,8 @@ namespace WeddingWebsite.Components.Containers
     /// </summary>
     /// <param name="LeftContent">Left content</param>
     /// <param name="RightContent">Right content</param>
+    /// <param name="HalfSpacing">(Optional) Half of the space to apply between the two sides when displaying
+    /// vertically. Defaults to 0px.</param>
     partial class SideBySide {}
 }
 

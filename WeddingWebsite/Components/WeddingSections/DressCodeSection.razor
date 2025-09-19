@@ -1,0 +1,49 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.People
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    @if (WrapInBox)
+    {
+        <div style="height: 25px"></div>
+        <Box Horizontal="true">
+            <TopContent>
+                <WebsiteElement Element="WeddingDetails.DressCode.Media"/>
+            </TopContent>
+            <ChildContent>
+                <h2>Dress Code</h2>
+                <DressCode Dress="WeddingDetails.DressCode" Contact="Contact"/>
+            </ChildContent>
+        </Box>
+    }
+    else
+    {
+        <SectionHeading>Dress Code</SectionHeading>
+        <SideBySide HalfSpacing="10px">
+            <LeftContent>
+                <div class="dress-code-no-box-image box-shadow">
+                    <WebsiteElement Element="WeddingDetails.DressCode.Media"/>
+                </div>
+            </LeftContent>
+            <RightContent>
+                <DressCode Dress="WeddingDetails.DressCode" Contact="Contact"/>
+            </RightContent>
+        </SideBySide>
+    }
+</Section>
+
+@code {
+    [Parameter] public required bool WrapInBox { get; set; }
+    
+    [Parameter] public required bool ShowContact { get; set; }
+
+    private IContact? Contact => !ShowContact ? null : 
+        WeddingDetails.Contacts.FirstOrDefault(c => c.ContactDetails.NotUrgent.MatchesReason(ContactReason.DressCode))
+        ?? WeddingDetails.Contacts.FirstOrDefault(c => c.ContactDetails.Urgent.MatchesReason(ContactReason.DressCode));
+
+}
