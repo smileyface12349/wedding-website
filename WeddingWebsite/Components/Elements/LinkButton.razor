@@ -1,0 +1,17 @@
+﻿@inject IWebsiteConfig Config
+
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+
+<a href="@Data.Link" style="border-color: @Colour; background: @Colour; color: @Colour.GetTextColour()" class="box-shadow">@Data.Text</a>
+
+@code {
+    [Parameter]
+    public required Models.WebsiteElement.LinkButton Data { get; set; }
+    
+    [CascadingParameter]
+    public SectionTheme? Theme { get; set; }
+    
+    private Colour Colour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    
+}

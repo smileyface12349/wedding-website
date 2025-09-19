@@ -5,11 +5,22 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 public class Colour
 {
     private readonly MudColor mudColor;
+    private readonly Colour? customTextColour;
     public bool IsDark { get; }
     
     public Colour(byte red, byte green, byte blue, bool isDark = false) {
         mudColor = new (red, green, blue, (byte) 255);
         IsDark = isDark;
+    }
+
+    /// <summary>
+    /// Specify an entirely custom text colour. Warning: This is not always used.
+    /// </summary>
+    public Colour(byte red, byte green, byte blue, Colour textColour)
+    {
+        mudColor = new(red, green, blue, (byte)255);
+        customTextColour = textColour;
+        IsDark = !textColour.IsDark;
     }
     
     public Colour(string hex)
@@ -29,6 +40,10 @@ public class Colour
     /// Obtain a suitable text colour to use against this background. Other text colours are fine too.
     /// </summary>
     public Colour GetTextColour() {
+        if (customTextColour != null)
+        {
+            return customTextColour;
+        }
         if (IsDark) {
             return White;
         } else {
@@ -38,4 +53,6 @@ public class Colour
     
     public static Colour White => new Colour(255, 255, 255, false);
     public static Colour DarkGrey => new Colour(66, 66, 66, true);
+    public static Colour VeryDarkGrey => new Colour(30, 30, 30, true);
+    public static Colour Black => new Colour(0, 0, 0, true);
 }

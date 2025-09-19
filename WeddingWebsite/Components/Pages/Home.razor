@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Elements.Countdown
 @using WeddingWebsite.Components.WeddingSections
 @using WeddingWebsite.Models.Theme
@@ -22,6 +23,19 @@
             <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
         </CascadingValue>
     }
+    <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.TopButtons.Colour ?? Config.Colours.Secondary, null))">
+        <div class="top-buttons">
+            @code {
+                string buttonSpacing = "10px";
+            }
+            <span style="margin-left: @buttonSpacing"></span>
+            @foreach (var button in Config.TopButtons.Buttons)
+            {
+                <LinkButton Data="button"/>
+                <span style="margin-left: @buttonSpacing"></span>
+            }
+        </div>
+    </CascadingValue>
 </div>
 
 

@@ -1,0 +1,14 @@
+﻿a {
+    background: none;
+    transition-duration: 0.2s;
+    border-style: solid;
+    border-width: 2px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+a:hover {
+    font-size: 28px;
+}

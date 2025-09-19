@@ -41,3 +41,8 @@
 .bottom-spacer {
     height: 50px;
 }
+
+.top-buttons {
+    text-align: center;
+    margin-top: 10vh;
+}
