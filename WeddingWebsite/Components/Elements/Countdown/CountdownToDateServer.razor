@@ -53,11 +53,11 @@
     
     PeriodicTimer? periodicTimer;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         periodicTimer = new PeriodicTimer(TimeSpan.FromSeconds(ShowSeconds ? 1 : 60));
         OnTimeChange();
-        RunTimer(); 
+        await RunTimer(); 
     }
 
     async Task RunTimer()
