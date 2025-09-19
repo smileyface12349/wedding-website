@@ -25,9 +25,14 @@
     }
     <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.TopButtons.Colour ?? Config.Colours.Secondary, null))">
         <div class="top-buttons">
+            @code {
+                string buttonSpacing = "10px";
+            }
+            <span style="margin-left: @buttonSpacing"></span>
             @foreach (var button in Config.TopButtons.Buttons)
             {
                 <LinkButton Data="button"/>
+                <span style="margin-left: @buttonSpacing"></span>
             }
         </div>
     </CascadingValue>
