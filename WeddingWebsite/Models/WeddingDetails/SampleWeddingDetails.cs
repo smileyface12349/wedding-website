@@ -233,7 +233,11 @@ public class SampleWeddingDetails : IWeddingDetails
     public DressCode DressCode { get; } 
         = new DressCode(
             "Cocktail", 
-            "Please dress smartly for the occasion. Cocktail attire is preferred, but feel free to wear something that makes you feel comfortable and happy.",
+            [
+                new WebsiteSection(null, "Please arrive dressed in smart, polished attire perfect for an evening celebration."),
+                new WebsiteSection("Men", "A dark suit and tie or a smart blazer with dress pants are perfect for this occasion. Finish the look with polished shoes and a sleek watch."),
+                new WebsiteSection("Women", "A knee-length or midi dress, or a stylish jumpsuit, paired with elegant heels or dressy flats. Accessorize with a clutch and statement jewelry to complete your look.")
+            ],
             new WebsiteImage("https://onefabday.com/wp-content/uploads/2023/03/122-mark-donovan-photography.jpg", "An image of female wedding guests in a line.")
         );
     
