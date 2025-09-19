@@ -73,7 +73,7 @@
 @code {
     private string? errorMessage;
 
-    private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.Filled, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }

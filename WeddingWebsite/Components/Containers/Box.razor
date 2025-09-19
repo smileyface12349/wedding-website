@@ -2,9 +2,9 @@
 
 @if (Theme != null && Theme.BoxStyle != null) {
     <CascadingValue Value="Theme.BoxStyle.InnerTheme">
-        @if (Theme.BoxStyle.Type == BoxType.Outlined) {
+        @if (Theme.BoxStyle.Type == BoxType.OutlinedSquare) {
             <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
-        } else if (Theme.BoxStyle.Type == BoxType.Filled) {
+        } else if (Theme.BoxStyle.Type == BoxType.FilledRounded) {
             <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
         } else {
             <p>Unsupported box type: @Theme.BoxStyle.Type</p>

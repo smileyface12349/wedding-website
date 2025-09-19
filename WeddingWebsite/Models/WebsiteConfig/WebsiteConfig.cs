@@ -15,8 +15,8 @@ public class WebsiteConfig : IWebsiteConfig
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
 
-        var filledBox = new BoxStyle(BoxType.Filled, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
-        var outlinedBox = new BoxStyle(BoxType.Outlined, new SectionTheme(Colour.White, Colours.Primary, null));
+        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
+        var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
     
         Sections = [
             new Section.Timeline(new SectionTheme(surfaceVariant, Colours.Primary, outlinedBox)),

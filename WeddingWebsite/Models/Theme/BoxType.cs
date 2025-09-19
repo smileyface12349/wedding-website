@@ -2,6 +2,6 @@
 
 public enum BoxType
 {
-    Outlined,
-    Filled
+    OutlinedSquare,
+    FilledRounded
 }
