@@ -27,7 +27,7 @@ public class WebsiteConfig : IWebsiteConfig
         ];
 
         var coral = new Colour(239, 111, 108);
-        var salmon = new Colour(240, 100, 73, new Colour(30, 30, 30, true));
+        var salmon = new Colour(240, 100, 73, Colour.VeryDarkGrey);
         var lightGreen = new Colour(112, 229, 130);
         
         TopButtons = new TopButtonsConfig(

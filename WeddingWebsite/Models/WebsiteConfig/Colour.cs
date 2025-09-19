@@ -53,4 +53,6 @@ public class Colour
     
     public static Colour White => new Colour(255, 255, 255, false);
     public static Colour DarkGrey => new Colour(66, 66, 66, true);
+    public static Colour VeryDarkGrey => new Colour(30, 30, 30, true);
+    public static Colour Black => new Colour(0, 0, 0, true);
 }
