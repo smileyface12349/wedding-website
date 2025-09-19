@@ -24,5 +24,5 @@ public interface IWebsiteConfig
     /// <summary>
     /// The buttons to display on the top of the homepage e.g. "RSPV".
     /// </summary>
-    public IEnumerable<LinkButton> TopButtons { get; }
+    public TopButtonsConfig TopButtons { get; }
 }

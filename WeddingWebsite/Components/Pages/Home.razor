@@ -25,7 +25,7 @@
     }
     <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.Colours.Surface, null))">
         <div class="top-buttons">
-            @foreach (var button in Config.TopButtons)
+            @foreach (var button in Config.TopButtons.Buttons)
             {
                 <LinkButton Data="button"/>
             }
