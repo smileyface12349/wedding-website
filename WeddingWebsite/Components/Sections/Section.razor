@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<section id="@Id" class="@(Padding ? "with-padding" : "")" style="background: @CssBackground;@CssColorAttribute">
+<section id="@Id" class="@(Padding ? "with-padding" : "")" style="@CssBackground;@CssColorAttribute">
     <div class="section-content @(Center ? "centered" : "")">
         @ChildContent
     </div>
@@ -23,7 +23,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string CssBackground => Theme?.Background.ToString() ?? Background;
+    private string CssBackground => Theme?.Background.GetBackgroundCss() ?? Background;
     private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
     
     /// <summary>

@@ -10,7 +10,7 @@ namespace WeddingWebsite.Models.Theme;
 /// null. If you don't set it to null you'll be going on forever!
 /// </summary>
 public sealed record SectionTheme(
-    Colour Background,
+    IBackground Background,
     Colour Primary,
     BoxStyle? BoxStyle
 );

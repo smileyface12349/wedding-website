@@ -3,7 +3,7 @@
 
 @inject IWebsiteConfig Config
 
-<div class="rounded-corner-box @CssShadow @CssHorizontal" style="background: @Background; color: @Background.GetTextColour()">
+<div class="rounded-corner-box @CssShadow @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour()">
     <div class="top-content">
         @TopContent
     </div>
@@ -25,7 +25,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private Colour Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
+    private IBackground Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
     
     private string CssShadow => Theme is { Background.IsDark: false } ? "shadow" : "";
 
