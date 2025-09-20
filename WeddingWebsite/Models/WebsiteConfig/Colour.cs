@@ -12,6 +12,11 @@ public class Colour : IBackground
         mudColor = new (red, green, blue, (byte) 255);
         IsDark = isDark;
     }
+    
+    public Colour(byte red, byte green, byte blue, byte alpha, bool isDark = false) {
+        mudColor = new (red, green, blue, alpha);
+        IsDark = isDark;
+    }
 
     /// <summary>
     /// Specify an entirely custom text colour. Warning: This is not always used.
@@ -59,4 +64,5 @@ public class Colour : IBackground
     public static Colour DarkGrey => new Colour(66, 66, 66, true);
     public static Colour VeryDarkGrey => new Colour(30, 30, 30, true);
     public static Colour Black => new Colour(0, 0, 0, true);
+    public static Colour Transparent => new Colour(0, 0, 0, 0);
 }
