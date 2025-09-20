@@ -10,7 +10,6 @@
     width: 100%;
     text-align: center;
     font-family: Amsterdam, cursive;
-    color: var(--bg-primary);
     font-size: clamp(48px, 8vw, 64px);
     line-height: 1.5;
     text-shadow: 2px 2px 4px #000000;
