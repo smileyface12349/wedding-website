@@ -21,9 +21,11 @@ public class WebsiteConfig : IWebsiteConfig
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
+        
+        var bricks = new BackgroundImage("/bricks.jpg", false, "50%", new Colour(255, 255, 255, 150), true, true);
     
         Sections = [
-            new Section.Timeline(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox), true),
+            new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
