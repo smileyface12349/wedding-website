@@ -12,7 +12,7 @@
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25" UserAttributes="@(new Dictionary<string, object?> {{"id", item.GetId()}})">
             <ItemOpposite>
-                <h3 style="color: @PrimaryColour">@item.Time</h3>
+                <h3 style="color: @PrimaryColour;@CssTextShadow">@item.Time</h3>
             </ItemOpposite>
             <ItemContent>
                 <TimelineItemBox Item="@item"/>
@@ -32,7 +32,7 @@
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
             <ItemContent>
-                <h3 style="color: @PrimaryColour">@item.Time</h3>
+                <h3 style="color: @PrimaryColour;@CssTextShadow">@item.Time</h3>
                 <TimelineItemBox Item="@item"/>
             </ItemContent>
             <ItemDot>
@@ -44,6 +44,14 @@
     }
 </MudTimeline>
 </div>
+
+@if (Theme?.Background.ExtraContrast == true) {
+    <style>
+        :root {
+            --mud-palette-divider: @Theme.Background.GetTextColour() !important;
+        }
+    </style>
+}
 
 @code {
     
@@ -57,6 +65,8 @@
     public SectionTheme? Theme { get; set; }
     
     private Colour PrimaryColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    
+    private string CssTextShadow => Theme is { Background: { IsDark: false, ExtraContrast: true } } ? "text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.75);" : "";
 
     private IEnumerable<TimelineItem> timelineItems = [];
     
