@@ -9,6 +9,8 @@
 function delayScroll(e) {
     // TODO: This is to combat blazor refreshing the component server-side, sending an incorrect version back. Need to work through a better solution.
     setTimeout(onScroll, 250);
+    setTimeout(onScroll, 500);
+    setTimeout(onScroll, 1000);
 }
 
 window.addEventListener('scroll', onScroll);
