@@ -1,6 +1,6 @@
 ﻿namespace WeddingWebsite.Models.WebsiteConfig;
 
-public record BackgroundImage(string Url, bool IsDark, string Width = "100%", Colour? OverlayColour = null, bool Parallax = false) : IBackground
+public record BackgroundImage(string Url, bool IsDark, string Width = "100%", Colour? OverlayColour = null, bool Parallax = false, bool ExtraContrast = false) : IBackground
 {
     public Colour GetTextColour() => IsDark ? Colour.White : Colour.Black;
     public string GetBackgroundCss() {

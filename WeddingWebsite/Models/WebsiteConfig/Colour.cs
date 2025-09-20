@@ -7,6 +7,7 @@ public class Colour : IBackground
     private readonly MudColor mudColor;
     private readonly Colour? customTextColour;
     public bool IsDark { get; }
+    public bool ExtraContrast => false;
     
     public Colour(byte red, byte green, byte blue, bool isDark = false) {
         mudColor = new (red, green, blue, (byte) 255);
