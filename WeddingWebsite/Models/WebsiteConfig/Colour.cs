@@ -2,7 +2,7 @@
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
-public class Colour
+public class Colour : IBackground
 {
     private readonly MudColor mudColor;
     private readonly Colour? customTextColour;
@@ -50,7 +50,11 @@ public class Colour
             return DarkGrey;
         }
     }
-    
+
+    public string GetBackgroundCss() {
+        return $"background-color: {GetHex()};";
+    }
+
     public static Colour White => new Colour(255, 255, 255, false);
     public static Colour DarkGrey => new Colour(66, 66, 66, true);
     public static Colour VeryDarkGrey => new Colour(30, 30, 30, true);
