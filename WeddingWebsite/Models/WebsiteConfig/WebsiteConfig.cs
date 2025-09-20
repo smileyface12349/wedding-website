@@ -7,22 +7,25 @@ public class WebsiteConfig : IWebsiteConfig
 {
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
-        new Colour(162, 234, 246),
-        new Colour(39, 92, 52, true)
+        new Colour("#A3D5E0"),
+        new Colour("#B6D7A8"),
+        new Colour("#F2F1ED")
     );
     public IEnumerable<Section> Sections { get; }
     public TopButtonsConfig TopButtons { get; }
     
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
+        
+        var purple = new Colour("#DCCCEC");
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
     
         Sections = [
-            new Section.Timeline(new SectionTheme(surfaceVariant, Colours.Primary, outlinedBox)),
-            new Section.DressCode(new SectionTheme(Colour.White, Colours.Primary, filledBox)),
-            new Section.MeetWeddingParty(new SectionTheme(Colour.White, Colours.Primary, outlinedBox)),
+            new Section.Timeline(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox), true),
+            new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
+            new Section.MeetWeddingParty(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
         ];
 
@@ -34,7 +37,7 @@ public class WebsiteConfig : IWebsiteConfig
             [
                 new LinkButton("Accommodation", "#accommodation")
             ],
-            salmon
+            new Colour("#F9DC5C")
         );
     }
 }
