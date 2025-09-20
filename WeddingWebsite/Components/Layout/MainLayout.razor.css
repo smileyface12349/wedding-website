@@ -21,27 +21,26 @@
     align-items: center;
     transition-property: background-color;
     transition-duration: 0.2s;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
-.top-row.scrolled {
-    background-color: var(--bg-primary);
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    
+.top-row:not(.scrolled) {
+    background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .top-row a {
     white-space: nowrap;
     margin-left: 1.5rem;
     text-decoration: none;
-    color: white;
-}
-
-.top-row.scrolled a {
     color: var(--mud-palette-text-primary);
 }
 
+.top-row:not(.scrolled) a {
+    color: white;
+}
+
 .top-row a:hover {
-    color: #aaaaaa;
+    color: #666;
 }
 
 #blazor-error-ui {
