@@ -6,7 +6,7 @@
 }
 
 .bride-and-groom-names {
-    margin-top: 35vh;
+    margin-top: 32vh;
     width: 100%;
     text-align: center;
     font-family: Amsterdam, cursive;
@@ -17,7 +17,7 @@
 
 @media only screen and (max-width: 500px) {
     .bride-and-groom-names {
-        margin-top: 20vh;
+        margin-top: 18vh;
     }
     .bride-and-groom-names span {
         display: block;
