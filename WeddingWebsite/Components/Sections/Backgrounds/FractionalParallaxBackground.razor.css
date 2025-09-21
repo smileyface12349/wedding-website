@@ -1,3 +1,9 @@
 ﻿#background-scroll-amount {
     display: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+    #background {
+        background-position: top 0 left 0 !important;
+    }
+}
