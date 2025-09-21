@@ -1,6 +1,15 @@
 ﻿@using WeddingWebsite.Models.WebsiteConfig
 
-<!-- TODO: Render differently depending on the type -->
+@if (Background is BackgroundImage { IsFractionalParallax: true } image)
+{
+    <FractionalParallaxBackground Background="image">
+        @ChildContent
+    </FractionalParallaxBackground>
+}
+else
+{
+    @ChildContent
+}
 
 @code {
     [Parameter]
