@@ -8,9 +8,9 @@ namespace WeddingWebsite.Models.WebsiteConfig;
 /// </summary>
 public abstract record Section
 {
-    public SectionTheme Theme { get; }
+    public SectionTheme? Theme { get; }
 
-    private Section(SectionTheme theme) {
+    private Section(SectionTheme? theme) {
         Theme = theme;
     }
     
@@ -18,26 +18,26 @@ public abstract record Section
     /// A countdown timer to the start of the first event.
     /// Note: If this is not given, it will automatically display in the top section instead.
     /// </summary>
-    public sealed record Countdown(SectionTheme Theme) : Section(Theme);
+    public sealed record Countdown(SectionTheme? Theme = null) : Section(Theme);
     
     /// <summary>
     /// A timeline of all the events happening in the day, including travel directions and accommodation.
     /// Unlike most sections, the heading is disabled by default. This is because it looks nice with the timeline
     /// running right to the edge of the section, and the purpose of the section is clear already.
     /// </summary>
-    public sealed record Timeline(SectionTheme Theme, bool ShowHeading = false) : Section(Theme);
+    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false) : Section(Theme);
     
     /// <summary>
     /// Introductions from the wedding party
     /// </summary>
     public sealed record MeetWeddingParty(
-        SectionTheme Theme,
+        SectionTheme? Theme,
         IEnumerable<Role> RolesLeft,
         IEnumerable<Role> RolesRight,
         MeetWeddingPartyDisplay DisplayMode = MeetWeddingPartyDisplay.Default
     ) : Section(Theme)
     {
-        public MeetWeddingParty(SectionTheme theme, MeetWeddingPartyDisplay displayMode = MeetWeddingPartyDisplay.Default) 
+        public MeetWeddingParty(SectionTheme? theme = null, MeetWeddingPartyDisplay displayMode = MeetWeddingPartyDisplay.Default) 
             : this(theme, [Role.Groom, Role.BestMan, Role.Groomsman], [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid], displayMode) {}
     }
     
@@ -45,12 +45,12 @@ public abstract record Section
     /// Shows suggested contacts based on what the enquiry is about.
     /// </summary>
     public sealed record Contact(
-        SectionTheme Theme,
+        SectionTheme? Theme,
         IEnumerable<ContactReason> ReasonsToShow,
         bool ShowUrgencyOption = true
     ) : Section(Theme)
     {
-        public Contact(SectionTheme theme, bool urgencyOption = true)
+        public Contact(SectionTheme? theme = null, bool urgencyOption = true)
             : this(theme, Enum.GetValues<ContactReason>(), urgencyOption) {}
     }
 
@@ -58,7 +58,7 @@ public abstract record Section
     /// Shows the dress code. By default, it is shown inside a box.
     /// </summary>
     public sealed record DressCode(
-        SectionTheme Theme, 
+        SectionTheme? Theme = null, 
         bool WrapInBox = true,
         bool ShowContact = true
     ) : Section(Theme);
