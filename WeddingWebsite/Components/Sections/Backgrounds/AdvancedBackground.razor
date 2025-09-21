@@ -1,0 +1,11 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+
+<!-- TODO: Render differently depending on the type -->
+
+@code {
+    [Parameter]
+    public required IBackground Background { get; set; }
+    
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}
