@@ -22,7 +22,7 @@ public class WebsiteConfig : IWebsiteConfig
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colours.Primary, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
         
-        var bricks = new BackgroundImage("/bricks.jpg", false, "50%", new Colour(255, 255, 255, 150), true, true);
+        var bricks = new BackgroundImage("/bg/bricks.jpg", false, "50%", new Colour(255, 255, 255, 150), true, true);
     
         Sections = [
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
