@@ -158,6 +158,28 @@ namespace WeddingWebsite.Components.Sections
     partial class TwoBoxesSection {}
 }
 
+namespace WeddingWebsite.Components.Sections.Backgrounds
+{
+    /// <summary>
+    /// Displays a background that's too complex to use just CSS for. The CSS is always there as a suitable approximation
+    /// as sometimes components will not bother to use this.
+    /// </summary>
+    partial class AdvancedBackground {}
+    
+    /// <summary>
+    /// Displays a parallax background with fractional scrolling. Parallax of 0 (no parallax) or 1 (fixed background
+    /// position) are already supported with pure CSS and should not use this component.
+    /// </summary>
+    partial class FractionalParallaxBackground {}
+    
+    /// <summary>
+    /// Stack two backgrounds on top of each other (which may themselves be stacked too). Please note that applying an
+    /// overlay colour on top of an image is already supported in raw CSS (but applying an image on top of a solid
+    /// colour is not, so would need this component).
+    /// </summary>
+    partial class StackedBackground {}
+}
+
 namespace WeddingWebsite.Components.WeddingComponents
 {
     /// <summary>
