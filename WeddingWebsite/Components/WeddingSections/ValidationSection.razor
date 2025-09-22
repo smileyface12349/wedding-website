@@ -13,7 +13,7 @@
 
 @if (Environment.IsDevelopment()) {
     <CascadingValue Value="Theme">
-        <Section Padding="false" Background="red">
+        <Section Padding="false">
             <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
         </Section>
     </CascadingValue>
