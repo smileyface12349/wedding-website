@@ -1,0 +1,8 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+
+<p>@Backstory.Content.First()</p>
+
+@code {
+    [Parameter]
+    public required Backstory Backstory { get; set; }
+}
