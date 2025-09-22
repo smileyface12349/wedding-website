@@ -1,8 +1,28 @@
-﻿@using WeddingWebsite.Models.WebsiteConfig
+﻿@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.WebsiteConfig
 
-<p>@Backstory.Content.First()</p>
+<div class="row">
+    <div class="image-container">
+        <WebsiteElement Element="Backstory.GroomImage" MaxHeight="@suitableHeightString"/>
+    </div>
+    <div class="text">
+        @foreach (var paragraph in Backstory.Content)
+        {
+            <p>@paragraph</p>
+        }
+    </div>
+    <div class="image-container">
+        <WebsiteElement Element="Backstory.BrideImage" MaxHeight="@suitableHeightString"/>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public required Backstory Backstory { get; set; }
+
+    // some logic to guess a suitable height based on the amount of text, but it probably isn't very good
+    private const int minImageHeight = 250;
+    private const int maxImageHeight = 600;
+    private double suitableHeight => (double) Backstory.Content.Sum(para => para.Split().Length) * 3;
+    private string suitableHeightString => Math.Min(Math.Max(suitableHeight, minImageHeight), maxImageHeight) + "px";
 }

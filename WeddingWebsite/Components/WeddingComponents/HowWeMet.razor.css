@@ -1,1 +1,13 @@
-﻿
+﻿.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.text {
+    flex: 1;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    align-self: center;
+    line-height: 1.5;
+}
