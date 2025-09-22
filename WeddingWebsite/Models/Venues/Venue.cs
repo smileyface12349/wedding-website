@@ -11,4 +11,12 @@ namespace WeddingWebsite.Models.Venues;
 /// <param name="Directions">Used in timeline and venue showcase.</param>
 /// <param name="Description">Used in venue showcase only.</param>
 /// <param name="Media">Used in venue showcase only.</param>
-public record Venue(string Name, Location Location, string Address, TravelDirections? Directions = null, string? Description = null, IWebsiteElement? Media = null);
+/// <param name="Modals">Used in venue showcase only.</param>
+public record Venue(string Name, Location Location, string Address, TravelDirections? Directions, string? Description, IWebsiteElement? Media, IEnumerable<WeddingModal> Modals)
+{
+    /// <summary>
+    /// Default with no modals.
+    /// </summary>
+    public Venue(string Name, Location Location, string Address, TravelDirections? Directions = null, string? Description = null, IWebsiteElement? Media = null) 
+        : this(Name, Location, Address, Directions, Description, Media, []) {}
+}
