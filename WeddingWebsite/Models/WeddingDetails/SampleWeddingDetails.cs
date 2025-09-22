@@ -20,7 +20,7 @@ namespace WeddingWebsite.Models.WeddingDetails;
 /// In practice, you won't actually be using this implementation but I'd recommend keeping it around in case you need it.
 /// </summary>
 
-public class SampleWeddingDetails : IWeddingDetails
+public sealed class SampleWeddingDetails : IWeddingDetails
 {
     public SampleWeddingDetails() {
         // Cannot access venues in static context
