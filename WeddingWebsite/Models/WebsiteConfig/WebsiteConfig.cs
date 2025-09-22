@@ -26,6 +26,7 @@ public class WebsiteConfig : IWebsiteConfig
         var darkPurple = new Colour(137, 108, 166);
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
+        var whiteFilledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Colours.Primary, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
         
         var bricks = new BackgroundImage("/bg/bricks.jpg", false, "50%", new Colour(255, 255, 255, 150), 0.3, true);
@@ -35,7 +36,7 @@ public class WebsiteConfig : IWebsiteConfig
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(bricks, Colours.Primary, outlinedBox)),
             new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
-            new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
+            new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];
         
         TopButtons = new TopButtonsConfig(
