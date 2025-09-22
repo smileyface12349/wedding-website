@@ -1,7 +1,6 @@
 ﻿
 
 function onScroll(e) {
-    console.log("Scrolled, new offset: " + getOffset());
     document.querySelector('#background').style="background-position: top " + getOffset() + "px left 0px";
 }
 
