@@ -52,7 +52,7 @@
                 Primary = Config.Colours.Primary.ToString(),
                 PrimaryLighten = Config.Colours.PrimaryBackground.ToString(),
                 Secondary = Config.Colours.Secondary.ToString(),
-                Surface = Config.Colours.Surface.ToString()
+                Surface = (Config.Colours.Surface as Colour)?.ToString() ?? Colour.White.ToString()
             },
         };
     } 
