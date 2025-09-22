@@ -210,7 +210,8 @@ public class SampleWeddingDetails : IWeddingDetails
             ],
             null,
             20
-        )
+        ),
+        new WebsiteImage("https://media.swncdn.com/via/9367-flickr-faunggs-photos.jpg", "The Garden of Eden filled with animals and Adam and Eve")
     );
     
     public Venue CeremonyVenue { get; } = new(
@@ -225,7 +226,8 @@ public class SampleWeddingDetails : IWeddingDetails
             null,
             null,
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
-        )
+        ),
+        new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton")
     );
     
     public IEnumerable<Event> Events { get; } 
