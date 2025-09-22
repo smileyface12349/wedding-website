@@ -8,7 +8,7 @@ public record WeddingColours(
     Colour Primary,
     Colour PrimaryBackground,
     Colour Secondary,
-    Colour Surface
+    IBackground Surface
 ) {
     public WeddingColours(Colour primary, Colour primaryBackground, Colour secondary) 
         : this (primary,  primaryBackground, secondary, Colour.White) { }
@@ -32,5 +32,5 @@ public record WeddingColours(
     /// <summary>
     /// Default background colour
     /// </summary>
-    public Colour Surface { get; } = Surface;
+    public IBackground Surface { get; } = Surface;
 }

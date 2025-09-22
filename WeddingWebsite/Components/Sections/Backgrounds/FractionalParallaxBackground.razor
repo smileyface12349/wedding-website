@@ -1,0 +1,24 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Components.Interactivity
+
+<div id="background">
+    @ChildContent
+</div>
+
+<style>
+    #background {
+        @Background.GetBackgroundCss()
+    }
+</style>
+
+<div id="background-scroll-amount">@Background.Parallax</div>
+
+<PageScript Src="./Components/Sections/Backgrounds/FractionalParallaxBackground.razor.js" />
+
+@code {
+    [Parameter]
+    public required BackgroundImage Background { get; set; }
+    
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}

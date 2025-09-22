@@ -1,0 +1,13 @@
+﻿<AdvancedBackground Background="@Background.Behind">
+    <AdvancedBackground Background="@Background.InFront">
+        @ChildContent
+    </AdvancedBackground>
+</AdvancedBackground>
+
+@code {
+    [Parameter]
+    public required Models.WebsiteConfig.StackedBackground Background { get; set; }
+    
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}

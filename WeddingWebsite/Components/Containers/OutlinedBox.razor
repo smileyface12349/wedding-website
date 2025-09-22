@@ -1,8 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
-@inject IWebsiteConfig Config
-
 <div class="outlined-box @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour()">
     <div class="top-content">
         @TopContent
@@ -28,7 +26,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private IBackground Background => Theme != null ? Theme.Background : Config.Colours.Surface;
+    private IBackground Background => Theme != null ? Theme.Background : new NoBackground();
     
     private string CssHorizontal => Horizontal ? "horizontal" : "";
 }

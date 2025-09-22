@@ -1,10 +1,26 @@
 ﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Components.Sections.Backgrounds
 
-<section id="@Id" class="@(Padding ? "with-padding" : "")" style="@CssBackground;@CssColorAttribute">
-    <div class="section-content @(Center ? "centered" : "")">
-        @ChildContent
-    </div>
-</section>
+@if (BackgroundHasPureCssImplementation)
+{
+    <section id="@Id" class="@(Padding ? "with-padding" : "")" style="@CssBackground;@CssColorAttribute">
+        <div class="section-content @(Center ? "centered" : "")">
+            @ChildContent
+        </div>
+    </section>
+}
+else
+{
+    <AdvancedBackground Background="AdvancedBackground">
+        <section id="@Id" class="@(Padding ? "with-padding" : "")" style="@CssColorAttribute">
+            <div class="section-content @(Center ? "centered" : "")">
+                @ChildContent
+            </div>
+        </section>
+    </AdvancedBackground>
+}
+
 
 @code {
 
@@ -23,12 +39,9 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string CssBackground => Theme?.Background.GetBackgroundCss() ?? Background;
+    private string CssBackground => Theme?.Background.GetBackgroundCss() ?? new NoBackground().GetBackgroundCss();
     private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
-    
-    /// <summary>
-    /// Default background - overridden by theme
-    /// </summary>
-    [Parameter]
-    public string Background { get; set; } = "transparent";
+    private bool BackgroundHasPureCssImplementation => Theme == null || Theme.Background.HasPureCssImplementation;
+    private IBackground? AdvancedBackground => Theme?.Background;
+
 }

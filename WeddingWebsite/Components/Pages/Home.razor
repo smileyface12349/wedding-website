@@ -52,7 +52,7 @@
 }
 
 @if (Config.Sections.Any()) {
-    <div class="bottom-spacer" style="background: @(Config.Sections.LastOrDefault()?.Theme?.Background ?? Config.Colours.Surface)"></div>
+    <div class="bottom-spacer" style="@(Config.Sections.LastOrDefault()?.Theme?.Background.GetBackgroundCss() ?? new NoBackground().GetBackgroundCss())"></div>
 }
 
 

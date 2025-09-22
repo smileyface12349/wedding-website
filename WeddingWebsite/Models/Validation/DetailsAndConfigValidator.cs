@@ -19,6 +19,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         
         Sections_ShouldNotBeEmpty(config);
         Sections_ShouldNotHaveDuplicates(config);
+        Sections_ShouldNotHaveTwoFractionalParallaxBackgrounds(config);
         
         People_ThereIsABrideAndGroom(details);
         
@@ -197,6 +198,26 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                 Warning($"You have two sections of type {type}. Are you sure you want two the same?");
             }
             sectionTypes.Add(type);
+        }
+    }
+
+    /// <summary>
+    /// This is because I haven't figured out how to pass parameters to JS yet.
+    /// </summary>
+    private void Sections_ShouldNotHaveTwoFractionalParallaxBackgrounds(IWebsiteConfig config)
+    {
+        var fractionalParallaxes = new HashSet<double>();
+        foreach (var section in config.Sections)
+        {
+            if (section.Theme != null && section.Theme.Background is BackgroundImage img && img.IsFractionalParallax)
+            {
+                fractionalParallaxes.Add(img.Parallax);
+            }
+        }
+
+        if (fractionalParallaxes.Count > 1)
+        {
+            Error($"Only one fractional parallax amount is supported per page. The homepage contains {fractionalParallaxes.Count} such values, namely {string.Join(", ", fractionalParallaxes)}. All fractional parallax sections will use the first value.");
         }
     }
 
