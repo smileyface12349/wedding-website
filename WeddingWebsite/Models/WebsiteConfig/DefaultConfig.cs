@@ -3,7 +3,7 @@ using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
-public class WebsiteConfig : IWebsiteConfig
+public class DefaultConfig : IWebsiteConfig
 {
     public WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
@@ -15,7 +15,7 @@ public class WebsiteConfig : IWebsiteConfig
     public TopButtonsConfig TopButtons { get; }
     public bool BrideFirst => false;
 
-    public WebsiteConfig() {
+    public DefaultConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
         
         var purple = new Colour("#DCCCEC");

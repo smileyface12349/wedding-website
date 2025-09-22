@@ -15,10 +15,17 @@ using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// This is the stuff that needs to be configured
+// Swap out SampleWeddingDetails for your own implementation.
 builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
-builder.Services.AddScoped<IWebsiteConfig, WebsiteConfig>(); // TODO: I don't think this is the best practice for config
-builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>(); // TODO: Switch to credentials.json?
+
+// If you want to, swap out DefaultConfig for your own implementation (you can inherit from DefaultConfig).
+builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
+
+// Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
+// which will automatically throw a NotImplementedException when attempting to use credentials.
+builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
+
+
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
 
 builder.Services.AddRazorComponents()
