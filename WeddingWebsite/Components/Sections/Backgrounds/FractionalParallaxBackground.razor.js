@@ -1,7 +1,9 @@
 ﻿
 
 function onScroll(e) {
-    document.querySelector('#background').style="background-position: top " + getOffset() + "px left 0px";
+    document.querySelectorAll('#background').forEach(
+        element => element.style = "background-position: top " + getOffset() + "px left 0px"
+    );
 }
 
 function getOffset() {

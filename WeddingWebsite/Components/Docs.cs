@@ -169,6 +169,8 @@ namespace WeddingWebsite.Components.Sections.Backgrounds
     /// <summary>
     /// Displays a parallax background with fractional scrolling. Parallax of 0 (no parallax) or 1 (fixed background
     /// position) are already supported with pure CSS and should not use this component.
+    ///
+    /// Limitation: All fractional parallax backgrounds on a given page need to use the same Parallax value.
     /// </summary>
     partial class FractionalParallaxBackground {}
     
