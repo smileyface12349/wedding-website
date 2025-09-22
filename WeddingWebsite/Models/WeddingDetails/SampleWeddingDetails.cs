@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
+using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WeddingDetails;
@@ -70,6 +71,13 @@ public class SampleWeddingDetails : IWeddingDetails
                 new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
             )
         };
+        
+        // Using same images as with people
+        Backstory = new Backstory(
+            "It all began when SpongeBob SquarePants took a wrong turn at Jellyfish Fields and ended up in a spooky kelp forest — only to bump into Scooby-Doo chasing what he thought was a sea ghost (it was just a jellyfish wearing sunglasses). After a shared snack of Scooby Snacks and Krabby Patties, the two instantly bonded over their love of mysteries and mayonnaise. From that day on, they were inseparable — solving underwater whodunits and laughing through haunted shipwrecks. Their wedding (attended by Shaggy and Patrick as co-best men) is a celebration of friendship, snacks, and just a little bit of underwater mystery.",
+            GetPersonByRole(Role.Bride).Media,
+            GetPersonByRole(Role.Groom).Media
+        );
     }
 
     public IEnumerable<NotablePerson> NotablePeople { get; } = [
@@ -195,7 +203,7 @@ public class SampleWeddingDetails : IWeddingDetails
         ),
     ];
     
-    private IPerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
+    private NotablePerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
 
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2028-8-14");
         
@@ -265,7 +273,9 @@ public class SampleWeddingDetails : IWeddingDetails
             new ContactOptions(null, [new EmailAddress("shared@wedding.com")])
         ))
     ];
-    
+
+    public Backstory Backstory { get; }
+
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
         
