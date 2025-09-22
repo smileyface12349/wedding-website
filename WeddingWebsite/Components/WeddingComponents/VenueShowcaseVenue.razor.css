@@ -1,4 +1,10 @@
-﻿.address {
+﻿h3 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.address {
     display: flex;
     margin-bottom: 10px;
 }
