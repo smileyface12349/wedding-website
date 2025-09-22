@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Venues
+
+<Box>
+    <TopContent>
+        <WebsiteElement Element="Venue.Media" MaxHeight="300px" Cover="true"></WebsiteElement>
+    </TopContent>
+    <ChildContent>
+        <h3>@Venue.Name</h3>
+        <p>@Venue.Description</p>
+        <div class="address">
+            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+            <span>@Venue.Address</span>
+        </div>
+    </ChildContent>
+</Box>
+
+@code {
+    [Parameter]
+    public required Venue Venue { get; set; }
+}
