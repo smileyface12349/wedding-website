@@ -1,0 +1,14 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    <SectionHeading>How We Met</SectionHeading>
+    <HowWeMet Backstory="WeddingDetails.Backstory"/>
+</Section>
+
+@code {
+    
+}

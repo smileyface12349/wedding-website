@@ -1,0 +1,23 @@
+﻿@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.WebsiteConfig
+
+<div class="row">
+    <div class="image-container">
+        <WebsiteElement Element="Backstory.GroomImage" MaxHeight="300px"/>
+    </div>
+    <div class="text">
+        @foreach (var paragraph in Backstory.Content)
+        {
+            <p>@paragraph</p>
+        }
+    </div>
+    <div class="image-container">
+        <WebsiteElement Element="Backstory.BrideImage" MaxHeight="300px"/>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public required Backstory Backstory { get; set; }
+    
+}

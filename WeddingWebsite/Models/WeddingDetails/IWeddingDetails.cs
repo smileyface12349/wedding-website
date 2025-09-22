@@ -1,5 +1,6 @@
 ﻿using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
+using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WeddingDetails;
@@ -47,6 +48,11 @@ public interface IWeddingDetails
     /// to unauthenticated users.
     /// </summary>
     public WebsiteImage MainImage { get; }
+    
+    /// <summary>
+    /// Used for the "how we met" section.
+    /// </summary>
+    public Backstory Backstory { get; }
     
     // Helper methods
     public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);

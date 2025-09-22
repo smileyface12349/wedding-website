@@ -67,4 +67,10 @@ public abstract record Section
     /// A showcase of the venues. All this information is already in the timeline.
     /// </summary>
     public sealed record VenueShowcase(SectionTheme? Theme = null) : Section(Theme);
+
+    /// <summary>
+    /// A simple section with images either side and some text in the middle. If you want to add more detail, please
+    /// add a new section called "Our Story" using a timeline component instead of modifying this section.
+    /// </summary>
+    public sealed record HowWeMet(SectionTheme? Theme = null) : Section(Theme);
 }
