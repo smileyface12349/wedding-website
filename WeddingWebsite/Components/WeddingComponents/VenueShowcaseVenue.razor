@@ -2,6 +2,7 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Venues
 @using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Models.WebsiteElement
 
 <Box>
     <TopContent>
@@ -14,6 +15,10 @@
             <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
             <span>@Venue.Address</span>
         </div>
+        @if (TravelDirectionsModal != null)
+        {
+            <ModalButton Modal="@TravelDirectionsModal"/>
+        }
         @foreach (var modal in Venue.Modals) {
             <ModalButton Modal="@modal"/>
         }
@@ -23,4 +28,7 @@
 @code {
     [Parameter]
     public required Venue Venue { get; set; }
+
+    private WeddingModal? TravelDirectionsModal => Venue.Directions == null ? null 
+        : new WeddingModal("Travel Directions", Venue.Directions!.Content.Prepend(new WebsiteSection(new WebsiteGoogleMapsEmbed(Venue.Location))));
 }
