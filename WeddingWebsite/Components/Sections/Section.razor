@@ -39,14 +39,9 @@ else
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string CssBackground => Theme?.Background.GetBackgroundCss() ?? Background;
+    private string CssBackground => Theme?.Background.GetBackgroundCss() ?? new NoBackground().GetBackgroundCss();
     private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
     private bool BackgroundHasPureCssImplementation => Theme == null || Theme.Background.HasPureCssImplementation;
     private IBackground? AdvancedBackground => Theme?.Background;
-    
-    /// <summary>
-    /// Default background - overridden by theme
-    /// </summary>
-    [Parameter]
-    public string Background { get; set; } = "transparent";
+
 }
