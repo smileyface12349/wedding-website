@@ -22,7 +22,7 @@
 
     // some logic to guess a suitable height based on the amount of text, but it probably isn't very good
     private const int minImageHeight = 250;
-    private const int maxImageHeight = 600;
+    private const int maxImageHeight = 400;
     private double suitableHeight => (double) Backstory.Content.Sum(para => para.Split().Length) * 3;
     private string suitableHeightString => Math.Min(Math.Max(suitableHeight, minImageHeight), maxImageHeight) + "px";
 }
