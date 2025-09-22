@@ -1,0 +1,36 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Venues
+@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Models.WebsiteElement
+
+<Box CustomCss="height: 500px;">
+    <TopContent>
+        <WebsiteElement Element="Venue.Media" Cover="true"></WebsiteElement>
+    </TopContent>
+    <ChildContent>
+        <h3>@Venue.Name</h3>
+        <p>@Venue.Description</p>
+        <div class="address">
+            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+            <span>@Venue.Address</span>
+        </div>
+        @if (TravelDirectionsModal != null)
+        {
+            <ModalButton Modal="@TravelDirectionsModal"/>
+        }
+        @foreach (var modal in Venue.Modals) {
+            <ModalButton Modal="@modal"/>
+        }
+        <div style="margin-bottom: 5px"></div>
+    </ChildContent>
+</Box>
+<div style="margin-bottom: 20px"></div>
+
+@code {
+    [Parameter]
+    public required Venue Venue { get; set; }
+
+    private WeddingModal? TravelDirectionsModal => Venue.Directions == null ? null 
+        : new WeddingModal("Travel Directions", Venue.Directions!.Content.Prepend(new WebsiteSection(new WebsiteGoogleMapsEmbed(Venue.Location))));
+}

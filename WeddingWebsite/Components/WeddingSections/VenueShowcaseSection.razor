@@ -1,0 +1,13 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    <SectionHeading>Venue Showcase</SectionHeading>
+    <VenueShowcase Venues="WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList()"/>
+</Section>
+
+@code {
+}

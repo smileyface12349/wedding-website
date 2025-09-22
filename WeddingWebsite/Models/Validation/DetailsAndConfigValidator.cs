@@ -27,12 +27,15 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Events_EarliestStartTimeIsFirstEvent(details);
         Events_LatestFinishTimeIsLastEvent(details);
         Events_IsNotEmpty(details);
+        Events_ShouldNotHaveTwoVenuesWithTheSameName(details);
         
         Contacts_HaveAtLeastOneContactForEachOption(details, config);
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
         Contacts_InformAboutLoginContact(details);
         Contacts_ShouldNotHaveDuplicates(details);
         Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
+        
+        VenueShowcase_ShouldNotHaveMoreThanTwoVenues(details, config);
 
         return validationIssues;
     }
@@ -266,6 +269,36 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                     Error($"{contact.NameAndRole} is listed as a non-urgent contact for reason {reason}, but there are no contact methods. Either add a non-urgent contact method, or remove this contact reason.");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// This could be fixed fairly easily, but it's not there right now.
+    /// </summary>
+    private void VenueShowcase_ShouldNotHaveMoreThanTwoVenues(IWeddingDetails details, IWebsiteConfig config)
+    {
+        if (GetSection<Section.VenueShowcase>(config) != null)
+        {
+            var venues = details.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name);
+            if (venues.Count() > 2)
+            {
+                Warning($"The venue showcase section only supports a maximum of two venues. You have {venues.Count()} venues. Only the first two will be shown.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// This can mess up the venue showcase.
+    /// </summary>
+    private void Events_ShouldNotHaveTwoVenuesWithTheSameName(IWeddingDetails details)
+    {
+        var venues = details.Events.Select(ev => ev.Venue);
+        var distinct = venues.Distinct();
+        var distinctByName = venues.DistinctBy(v => v.Name);
+
+        if (distinct.Count() != distinctByName.Count())
+        {
+            Warning("Venues are often compared by their names. You have at least two events that have venues with the same name, but some of the other data differs. If this is the same venue, please define your venue once and use the same instance for all events at the same venue. If you have two venues with the same name, then this is not currently supported and you should rename one of them.");
         }
     }
 }

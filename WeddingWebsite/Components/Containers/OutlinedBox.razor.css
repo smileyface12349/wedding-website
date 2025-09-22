@@ -3,6 +3,13 @@
     border-width: 2px;
     border-style: solid;
     border-radius: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-content {
+    flex: 1;
+    min-height: 0;
 }
 
 .outlined-box-inner {
@@ -11,7 +18,7 @@
 
 @media only screen and (min-width: 600px) {
     .horizontal {
-        display: flex;
+        flex-direction: row;
     }
 
     .horizontal .top-content {

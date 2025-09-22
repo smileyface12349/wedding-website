@@ -1,7 +1,7 @@
 ﻿@using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
-<div class="outlined-box @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour()">
+<div class="outlined-box @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour();@CustomCss">
     <div class="top-content">
         @TopContent
     </div>
@@ -22,6 +22,9 @@
     
     [Parameter]
     public bool Horizontal { get; set; }
+    
+    [Parameter] 
+    public string CustomCss { get; set; } = "";
     
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }

@@ -6,9 +6,12 @@ namespace WeddingWebsite.Components.Containers
     /// <summary>
     /// A box which changes type depending on the cascading SectionTheme.
     /// Type is either <see cref="OutlinedBox"/> or <see cref="RoundedCornerBox"/>.
+    /// If the box has a specific height (with custom css), then the top content automatically shrinks when needed.
     /// </summary>
     /// <param name="ChildContent">The content to be placed within the default padding.</param>
     /// <param name="TopContent">(Optional) The content to be placed above the normal content, with no padding.</param>
+    /// <param name="Horizontal">(Optional) Display horizontal, when wide enough. Defaults to false.</param>
+    /// <param name="CustomCss">(Optional) Custom CSS styles.</param>
     partial class Box {}
     
     /// <summary>
