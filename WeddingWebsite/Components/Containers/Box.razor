@@ -3,9 +3,9 @@
 @if (Theme != null && Theme.BoxStyle != null) {
     <CascadingValue Value="Theme.BoxStyle.InnerTheme">
         @if (Theme.BoxStyle.Type == BoxType.OutlinedSquare) {
-            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
+            <OutlinedBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal" CustomCss="@CustomCss"/>
         } else if (Theme.BoxStyle.Type == BoxType.FilledRounded) {
-            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal"/>
+            <RoundedCornerBox ChildContent="@ChildContent" TopContent="@TopContent" Horizontal="Horizontal" CustomCss="@CustomCss"/>
         } else {
             <p>Unsupported box type: @Theme.BoxStyle.Type</p>
         }
@@ -26,4 +26,7 @@
     
     [Parameter]
     public bool Horizontal { get; set; }
+    
+    [Parameter] 
+    public string CustomCss { get; set; } = "";
 }
