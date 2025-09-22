@@ -25,4 +25,9 @@ public interface IWebsiteConfig
     /// The buttons to display on the top of the homepage e.g. "RSPV".
     /// </summary>
     public TopButtonsConfig TopButtons { get; }
+    
+    /// <summary>
+    /// If false, shows "GROOM and BRIDE". If true, shows "BRIDE and GROOM".
+    /// </summary>
+    public bool BrideFirst { get; }
 }

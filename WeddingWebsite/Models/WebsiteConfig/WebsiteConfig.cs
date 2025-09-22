@@ -13,7 +13,8 @@ public class WebsiteConfig : IWebsiteConfig
     );
     public IEnumerable<Section> Sections { get; }
     public TopButtonsConfig TopButtons { get; }
-    
+    public bool BrideFirst => false;
+
     public WebsiteConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
         
