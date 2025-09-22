@@ -1,9 +1,12 @@
 ﻿@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WebsiteElement
+
+@inject IWebsiteConfig Config
 
 <div class="row">
     <div class="image-container">
-        <WebsiteElement Element="Backstory.GroomImage" MaxHeight="300px"/>
+        <WebsiteElement Element="@leftImage" MaxHeight="300px"/>
     </div>
     <div class="text">
         @foreach (var paragraph in Backstory.Content)
@@ -12,12 +15,15 @@
         }
     </div>
     <div class="image-container">
-        <WebsiteElement Element="Backstory.BrideImage" MaxHeight="300px"/>
+        <WebsiteElement Element="@rightImage" MaxHeight="300px"/>
     </div>
 </div>
 
 @code {
     [Parameter]
     public required Backstory Backstory { get; set; }
-    
+
+    private IWebsiteElement? leftImage => Config.BrideFirst ? Backstory.BrideImage : Backstory.GroomImage;
+    private IWebsiteElement? rightImage => Config.BrideFirst ? Backstory.GroomImage : Backstory.BrideImage;
+
 }

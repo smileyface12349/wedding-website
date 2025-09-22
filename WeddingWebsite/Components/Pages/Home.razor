@@ -16,7 +16,16 @@
 @((MarkupString)@WeddingDetails.MainImage.GetHtml("main-image"))
 
 <div class="main-image-content">
-    <h1 class="bride-and-groom-names" style="color: @Config.Colours.PrimaryBackground"><span class="groom-name">@WeddingDetails.Groom.Name.First</span> & <span class="bride-name">@WeddingDetails.Bride.Name.First</span></h1>
+    <h1 class="bride-and-groom-names" style="color: @Config.Colours.PrimaryBackground">
+        @if (Config.BrideFirst)
+        {
+            <span><span class="bride-name">@WeddingDetails.Bride.Name.First</span> & <span class="groom-name">@WeddingDetails.Groom.Name.First</span></span>
+        }
+        else
+        {
+            <span><span class="groom-name">@WeddingDetails.Groom.Name.First</span> & <span class="bride-name">@WeddingDetails.Bride.Name.First</span></span>
+        }
+    </h1>
     <h2 class="wedding-date">@WeddingDetails.WeddingDate.ToShortDateString().Replace('/', '.')</h2>
     @if (!Config.Sections.Any(sect => sect is Section.Countdown)) {
         <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Config.Colours.PrimaryBackground, Config.Colours.Primary, null))))">
