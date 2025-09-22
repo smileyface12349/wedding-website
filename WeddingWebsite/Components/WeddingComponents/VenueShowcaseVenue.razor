@@ -1,6 +1,7 @@
 ﻿@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Venues
+@using WeddingWebsite.Components.Dialogs
 
 <Box>
     <TopContent>
@@ -13,6 +14,9 @@
             <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
             <span>@Venue.Address</span>
         </div>
+        @foreach (var modal in Venue.Modals) {
+            <ModalButton Modal="@modal"/>
+        }
     </ChildContent>
 </Box>
 
