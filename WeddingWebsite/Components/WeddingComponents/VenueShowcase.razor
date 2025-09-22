@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.Venues
+
+@if (Venues.Count >= 2)
+{
+    <SideBySide HalfSpacing="10px">
+        <LeftContent>
+            <VenueShowcaseVenue Venue="@Venues[0]"/>
+        </LeftContent>
+        <RightContent>
+            <VenueShowcaseVenue Venue="@Venues[1]"/>
+        </RightContent>
+    </SideBySide>
+} else if (Venues.Count == 1)
+{
+    <VenueShowcaseVenue Venue="@Venues[0]"/>
+}
+
+@code {
+    [Parameter]
+    public required IList<Venue> Venues { get; set; }
+}
