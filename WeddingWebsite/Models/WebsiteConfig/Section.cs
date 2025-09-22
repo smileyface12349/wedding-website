@@ -62,4 +62,9 @@ public abstract record Section
         bool WrapInBox = true,
         bool ShowContact = true
     ) : Section(Theme);
+
+    /// <summary>
+    /// A showcase of the venues. All this information is already in the timeline.
+    /// </summary>
+    public sealed record VenueShowcase(SectionTheme? Theme = null) : Section(Theme);
 }
