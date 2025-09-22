@@ -211,6 +211,7 @@ public class SampleWeddingDetails : IWeddingDetails
             null,
             20
         ),
+        "A beautiful picturesque garden for a wonderful party with the animals!",
         new WebsiteImage("https://media.swncdn.com/via/9367-flickr-faunggs-photos.jpg", "The Garden of Eden filled with animals and Adam and Eve")
     );
     
@@ -227,6 +228,7 @@ public class SampleWeddingDetails : IWeddingDetails
             null,
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
         ),
+        "A very large church, also for all the animals, I guess.",
         new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton")
     );
     
