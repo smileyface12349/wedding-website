@@ -32,6 +32,7 @@ public class WebsiteConfig : IWebsiteConfig
         var bricks = new BackgroundImage("/bg/bricks.jpg", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
     
         Sections = [
+            new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(bricks, Colours.Primary, outlinedBox)),
