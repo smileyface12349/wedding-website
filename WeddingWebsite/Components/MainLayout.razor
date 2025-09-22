@@ -36,7 +36,11 @@
     <span class="dismiss">🗙</span>
 </div>
 
-
+<style>
+    body {
+        @Config.Colours.Surface.GetBackgroundCss();
+    }
+</style>
 
 
 <MudThemeProvider Theme="Theme" />
@@ -52,7 +56,7 @@
                 Primary = Config.Colours.Primary.ToString(),
                 PrimaryLighten = Config.Colours.PrimaryBackground.ToString(),
                 Secondary = Config.Colours.Secondary.ToString(),
-                Surface = Config.Colours.Surface.ToString()
+                Surface = (Config.Colours.Surface as Colour)?.ToString() ?? Colour.White.ToString()
             },
         };
     } 

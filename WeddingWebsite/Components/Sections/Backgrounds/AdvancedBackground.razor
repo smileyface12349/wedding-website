@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Models.WebsiteConfig
+
+@if (Background is BackgroundImage { IsFractionalParallax: true } image)
+{
+    <FractionalParallaxBackground Background="image">
+        @ChildContent
+    </FractionalParallaxBackground>
+}
+else
+{
+    <div style="@Background.GetBackgroundCss()">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required IBackground Background { get; set; }
+    
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+}
