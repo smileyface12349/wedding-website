@@ -22,8 +22,10 @@ public class WebsiteConfig : IWebsiteConfig
         var salmon = new Colour(236, 129, 108, Colour.VeryDarkGrey);
         var lightGreen = new Colour(112, 229, 130);
         var darkGreen = new Colour(50, 150, 50);
+        var darkYellow = new Colour(246, 190, 0);
+        var darkPurple = new Colour(137, 108, 166);
 
-        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkGreen, null));
+        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
         
         var bricks = new BackgroundImage("/bg/bricks.jpg", false, "50%", new Colour(255, 255, 255, 150), 0.3, true);
@@ -32,6 +34,7 @@ public class WebsiteConfig : IWebsiteConfig
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(bricks, Colours.Primary, outlinedBox)),
+            new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, filledBox))
         ];
         
