@@ -1,0 +1,32 @@
+﻿h1 {
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.form-floating {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+button {
+    background: var(--primary);
+    box-shadow: 1px 2px 6px rgba(0,0,0,0.2);
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 20px;
+    margin-left: 45%; /* Yes, I am that lazy */
+}
+
+button:hover {
+    box-shadow: 1px 2px 12px rgba(0,0,0,0.4);
+}
