@@ -5,6 +5,7 @@
 @using WeddingWebsite.Models
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Services
 @using Section = WeddingWebsite.Components.Sections.Section
 
@@ -13,6 +14,7 @@
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
 
 <PageTitle>My Account</PageTitle>
 
@@ -49,7 +51,14 @@
                 }
             </div>
 
-            <p>Unfortunately, we are unable to accommodate any extra +1's.</p>
+            @if (Guests.Any())
+            {
+                <p>Unfortunately, we are unable to accommodate any extra +1's.</p>
+            }
+            else
+            {
+                <p>Your account does not have any guests associated with it. If you think this is an error, please contact @WeddingDetails.LoginContactMethod?.Text as soon as possible.</p>
+            }
         </div>
     </Section>
 </CascadingValue>
