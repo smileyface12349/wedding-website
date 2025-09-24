@@ -14,7 +14,7 @@
     z-index: 10;
     padding-right: 1.5rem;
     width: 100%;
-    border-bottom: 1px solid #d6d5d5;
+    border-bottom: 1px solid #b5b5b5;
     justify-content: flex-start;
     height: 3.5rem;
     display: flex;
@@ -25,7 +25,7 @@
 }
 
 .top-row:not(.scrolled) {
-    background: rgba(0, 0, 0, 0.1) !important;
+    background: rgba(0, 0, 0, 0.2) !important;
 }
 
 .top-row a {
