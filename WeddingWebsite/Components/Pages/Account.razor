@@ -1,0 +1,59 @@
+﻿@page "/account"
+
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models
+@using WeddingWebsite.Services
+
+@layout MainLayout
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div style="margin-top: 100px"></div>
+<Section Center="true">
+    <SectionHeading>Your Account</SectionHeading>
+    <div class="account-content">
+        <div class="email">
+            <label for="email">E-mail address</label>
+            <MudSpacer/>
+            <input aria-disabled="true" value="@Email" disabled />
+        </div>
+        <h3>Guests</h3>
+        <p>Your account is shared between @Guests.Count() guests. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).</p>
+        <div class="guests-list">
+            @foreach (var guest in Guests)
+            {
+                <div class="guest">
+                    <span class="guest-name">@guest.Name.Full</span>
+                    <MudSpacer/>
+                    <button disabled>RSVP</button>
+                </div>
+            }
+        </div>
+
+        <p>Unfortunately, we are unable to accommodate any extra +1's.</p>
+    </div>
+</Section>
+
+@code {
+    [Inject]
+    public required IRsvpService RsvpService { get; set; }
+
+    public IEnumerable<Guest> Guests { get; set; } = [];
+    public string Email { get; set; } = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        var guestResponses = RsvpService.GetOwnGuests(user);
+        Guests = guestResponses.Select(guest => guest.ToGuestObject());
+        
+        Email = user.Identity?.Name ?? "";
+    }
+}

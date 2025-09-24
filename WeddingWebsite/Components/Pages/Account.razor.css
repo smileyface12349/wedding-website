@@ -1,0 +1,51 @@
+﻿.account-content {
+    max-width: 400px;
+    margin: auto;
+}
+
+label, input, .guest-name {
+    font-size: 18px;
+}
+
+input {
+    padding: 3px 5px;
+    outline: #000 solid 1px;
+    border-radius: 2px;
+}
+
+p {
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.email {
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 50px;
+    align-items: center;
+}
+
+h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 32px;
+}
+
+.guest {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #aaa;
+    border: #444;
+    color: #444;
+    padding: 5px;
+    cursor: not-allowed;
+    border-radius: 10px;
+}
+
+.guests-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
