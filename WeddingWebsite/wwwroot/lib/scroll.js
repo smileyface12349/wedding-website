@@ -1,5 +1,7 @@
-﻿function onScroll(e) {
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+﻿const scrollThreshold = 30;
+
+function onScroll(e) {
+    if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
         document.querySelector('.top-row').classList.add('scrolled')
     } else {
         document.querySelector('.top-row').classList.remove('scrolled')
