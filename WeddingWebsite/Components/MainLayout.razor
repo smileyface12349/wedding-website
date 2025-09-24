@@ -7,6 +7,12 @@
 <MudPopoverProvider />
 <MudDialogProvider />
 
+<style>
+    body {
+        @Config.Colours.Surface.GetBackgroundCss();
+    }
+</style>
+
 <div class="page">
     <main>
         <AuthorizeView>
@@ -36,12 +42,6 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-<style>
-    body {
-        @Config.Colours.Surface.GetBackgroundCss();
-    }
-</style>
 
 
 <MudThemeProvider Theme="Theme" />
