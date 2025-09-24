@@ -27,7 +27,10 @@
                 <input aria-disabled="true" value="@Email" id="email" disabled />
             </div>
             <h3>Guests</h3>
-            <p>Your account is shared between @Guests.Count() guests. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).</p>
+            @if (Guests.Count() > 1)
+            {
+                <p>Your account is shared between @Guests.Count() guests. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).</p>
+            }
             <div class="warning-message">
                 <MudIcon Icon="@Icons.Material.Filled.Warning"/>
                 <p>RSVPs are not yet open.</p>
