@@ -3,9 +3,8 @@
 namespace WeddingWebsite.Models;
 
 public record Guest(
-    ContactDetails ContactDetails,
     Name Name,
-    RSPVStatus? Rspv = null
+    RsvpStatus Rsvp = RsvpStatus.NotResponded
 ) : IPerson
 {
     public Role Role => Role.Unknown;
