@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
 
@@ -19,35 +20,42 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <p>@Message</p>
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
+<Section>
+    
+    <h1>Create Account</h1>
+    <p>Create a new account for someone else.</p>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <p>@Message</p>
+            <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                <DataAnnotationsValidator />
+                <h2>Account Details</h2>
+                <hr />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="form-floating">
+                    <label for="email">Email</label>
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email" />
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+                <div class="form-floating">
+                    <label for="password">Password</label>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="password" />
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+                <div class="form-floating">
+                    <label for="confirm-password">Confirm Password</label>
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="confirm-password" />
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+                <h2>Guests</h2>
+                <p>Quickly add some guests now, or add them later. Guests should be added before sending out the credentials.</p>
+                <button type="submit">Register</button>
+            </EditForm>
+        </div>
     </div>
-</div>
+
+</Section>
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -55,15 +63,10 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
-
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     public async Task RegisterUser(EditContext editContext)
     {
-        Logger.LogInformation("Registering a new user.");
-    
         var user = CreateUser();
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -74,17 +77,7 @@
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
-            return;
         }
-
-        Logger.LogInformation("User created a new account with password.");
-
-        var userId = await UserManager.GetUserIdAsync(user);
-        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-        // await SignInManager.SignInAsync(user, isPersistent: false);
-        // RedirectManager.RedirectTo(ReturnUrl);
     }
 
     private Account CreateUser()
