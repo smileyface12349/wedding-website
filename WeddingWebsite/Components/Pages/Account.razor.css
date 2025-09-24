@@ -21,7 +21,7 @@ p {
 .email {
     display: flex;
     margin-bottom: 10px;
-    margin-top: 50px;
+    margin-top: 60px;
     align-items: center;
 }
 
@@ -33,7 +33,7 @@ h3 {
 
 .guest {
     display: flex;
-    margin-bottom: 10px;
+    align-items: center;
 }
 
 button {
@@ -48,4 +48,14 @@ button {
 .guests-list {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.warning-message {
+    display: flex;
+    align-items: center;
+}
+
+.warning-message > p {
+    margin-bottom: 0;
+    margin-left: 10px;
 }
