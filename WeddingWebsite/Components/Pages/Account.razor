@@ -1,0 +1,94 @@
+﻿@page "/account"
+
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@layout MainLayout
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
+
+<PageTitle>My Account</PageTitle>
+
+<CascadingValue TValue="SectionTheme" Value="Theme">
+    <Section Center="true">
+        <div style="margin-top: 150px"></div>
+        <SectionHeading>Your Account</SectionHeading>
+        <div class="account-content">
+            <div class="email">
+                <label for="email">E-mail address</label>
+                <MudSpacer/>
+                <input aria-disabled="true" value="@Email" id="email" disabled />
+            </div>
+            <SectionHeading>Guests</SectionHeading>
+            <div class="warning-message">
+                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                <p>RSVPs are not yet open.</p>
+            </div>
+            @if (Guests.Count() > 1)
+            {
+                <p>Your account is shared between @Guests.Count() guests. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).</p>
+            }
+            <div class="guests-list">
+                @foreach (var guest in Guests)
+                {
+                    <Box>
+                        <div class="guest">
+                            <span class="guest-name">@guest.Name.Full</span>
+                            <MudSpacer/>
+                            <button disabled>RSVP</button>
+                        </div>
+                    </Box>
+                    <div style="margin-bottom: 10px"></div>
+                }
+            </div>
+
+            @if (Guests.Any())
+            {
+                <p>Unfortunately, we are unable to accommodate any extra +1's.</p>
+            }
+            else
+            {
+                <p>Your account does not have any guests associated with it. If you think this is an error, please contact @WeddingDetails.LoginContactMethod?.Text as soon as possible.</p>
+            }
+        </div>
+    </Section>
+</CascadingValue>
+
+<style>
+    body {
+        @(Theme?.Background.GetBackgroundCss() ?? Config.Colours.Surface.GetBackgroundCss()) !important;
+    }
+</style>
+
+@code {
+    [Inject]
+    public required IRsvpService RsvpService { get; set; }
+
+    private IEnumerable<Guest> Guests { get; set; } = [];
+    private string Email { get; set; } = "";
+    private SectionTheme? Theme => Config.AccountConfig.Theme;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        var guestResponses = RsvpService.GetOwnGuests(user);
+        Guests = guestResponses.Select(guest => guest.ToGuestObject());
+        
+        Email = user.Identity?.Name ?? "";
+    }
+}

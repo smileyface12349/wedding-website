@@ -14,6 +14,7 @@ public class DefaultConfig : IWebsiteConfig
     public IEnumerable<Section> Sections { get; }
     public TopButtonsConfig TopButtons { get; }
     public bool BrideFirst => false;
+    public AccountConfig AccountConfig { get; set; }
 
     public DefaultConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
@@ -47,5 +48,7 @@ public class DefaultConfig : IWebsiteConfig
             ],
             new Colour("#F9DC5C")
         );
+
+        AccountConfig = new AccountConfig(new SectionTheme(purple, Colours.Primary, filledBox));
     }
 }

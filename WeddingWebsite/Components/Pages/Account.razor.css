@@ -1,0 +1,59 @@
+﻿.account-content {
+    max-width: 400px;
+    margin: auto;
+}
+
+label, input, .guest-name {
+    font-size: 18px;
+}
+
+input {
+    padding: 3px 5px;
+    outline: #000 solid 1px;
+    border-radius: 2px;
+}
+
+p {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.email {
+    display: flex;
+    margin-bottom: 60px;
+    margin-top: 60px;
+    align-items: center;
+}
+
+.guest {
+    display: flex;
+    align-items: center;
+}
+
+button {
+    background: #aaa;
+    border: #444;
+    color: #444;
+    padding: 5px;
+    cursor: not-allowed;
+    border-radius: 10px;
+}
+
+.guests-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.warning-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+
+.warning-message > p {
+    margin-bottom: 0;
+    margin-left: 10px;
+    font-size: 16px;
+}
