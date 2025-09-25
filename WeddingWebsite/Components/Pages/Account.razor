@@ -1,5 +1,7 @@
 ﻿@page "/account"
 
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Models
@@ -14,6 +16,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebsiteConfig Config
 @inject IWeddingDetails WeddingDetails
+@inject UserManager<Data.Account> UserManager
+@inject ISnackbar Snackbar
+
+@rendermode InteractiveServer
+
+<MudSnackbarProvider />
 
 <PageTitle>My Account</PageTitle>
 
@@ -22,10 +30,47 @@
         <div style="margin-top: 150px"></div>
         <SectionHeading>Your Account</SectionHeading>
         <div class="account-content">
-            <div class="email">
-                <label for="email">E-mail address</label>
-                <MudSpacer/>
-                <input aria-disabled="true" value="@Email" id="email" disabled />
+            <div class="account-details">
+                <div class="account-detail">
+                    <label for="email">E-mail Address</label>
+                    <MudSpacer/>
+                    <input aria-disabled="true" value="@Email" id="email" disabled/>
+                </div>
+                @if (ShowChangePassword)
+                {
+                    <EditForm Model="ChangePasswordInput" method="post" OnValidSubmit="ChangePassword" FormName="change-password">
+                        <DataAnnotationsValidator />
+                        <div class="account-detail">
+                            <label for="old-password">Current Password</label>
+                            <MudSpacer/>
+                            <input type="password" @bind-value="ChangePasswordInput.OldPassword" id="old-password" placeholder="Old Password" />
+                        </div>
+                        <div class="account-detail">
+                            <label for="new-password">New Password</label>
+                            <MudSpacer/>
+                            <input type="password" @bind-value="ChangePasswordInput.NewPassword" id="new-password" placeholder="New Password" />
+                        </div>
+                        <div class="account-detail">
+                            <label for="confirm-new-password">Confirm Password</label>
+                            <MudSpacer/>
+                            <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="New Password" />
+                        </div>
+                        <ValidationSummary class="text-danger" role="alert"/>
+                        @if (ErrorText != "")
+                        {
+                            <p class="text-danger">@ErrorText</p>
+                        }
+                        <button type="submit" style="background: @Theme?.Primary; margin-top: 10px">Submit</button>
+                    </EditForm>
+                }
+                else
+                {
+                    <div class="account-detail">
+                        <label for="change-password">Password</label>
+                        <MudSpacer/>
+                        <a id="change-password" @onclick="EnableChangePassword">Change Password</a>
+                    </div>
+                }
             </div>
             <SectionHeading>Guests</SectionHeading>
             <div class="warning-message">
@@ -43,7 +88,7 @@
                         <div class="guest">
                             <span class="guest-name">@guest.Name.Full</span>
                             <MudSpacer/>
-                            <button disabled>RSVP</button>
+                            <button class="rsvp-button" disabled>RSVP</button>
                         </div>
                     </Box>
                     <div style="margin-bottom: 10px"></div>
@@ -71,10 +116,16 @@
 @code {
     [Inject]
     public required IRsvpService RsvpService { get; set; }
+    
+    [SupplyParameterFromForm]
+    private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
     private IEnumerable<Guest> Guests { get; set; } = [];
-    private string Email { get; set; } = "";
     private SectionTheme? Theme => Config.AccountConfig.Theme;
+
+    private string ErrorText { get; set; } = "";
+    private string Email { get; set; } = "";
+    private bool ShowChangePassword { get; set; } = false;
     
     protected override async Task OnInitializedAsync()
     {
@@ -88,5 +139,64 @@
         Guests = RsvpService.GetOwnGuests(user);
         
         Email = user.Identity?.Name ?? "";
+    }
+
+    private void EnableChangePassword()
+    {
+        ShowChangePassword = true;
+    }
+    
+    private void ChangePassword()
+    {
+        var account = UserManager.FindByEmailAsync(Email).Result;
+        if (account == null)
+        {
+            ErrorText = "Could not find your account.";
+            return;
+        }
+        
+        var passwordValid = UserManager.CheckPasswordAsync(account, ChangePasswordInput.OldPassword).Result;
+        if (!passwordValid)
+        {
+            ErrorText = "Access denied - The current password is incorrect.";
+            return;
+        }
+        
+        var token = UserManager.GeneratePasswordResetTokenAsync(account).Result;
+        var result = UserManager.ResetPasswordAsync(account, token, ChangePasswordInput.NewPassword).Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
+            ChangePasswordInput.OldPassword = "";
+            ChangePasswordInput.NewPassword = "";
+            ChangePasswordInput.ConfirmNewPassword = "";
+            ShowChangePassword = false;
+            ErrorText = "";
+            
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomStart;
+            Snackbar.Add("Password changed successfully.", Severity.Success, c => c.SnackbarVariant = Variant.Text);
+        }
+    }
+    
+    private sealed class ChangePasswordInputModel
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current Password")]
+        public string OldPassword { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "Passwords must be at least 5 characters.", MinimumLength = 5)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New Password")]
+        public string NewPassword { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm New Password")]
+        [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmNewPassword { get; set; } = "";
     }
 }
