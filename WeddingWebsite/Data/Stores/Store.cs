@@ -10,7 +10,7 @@ namespace WeddingWebsite.Data.Stores;
 public class Store : IStore
 {
     [Authorize]
-    public IEnumerable<GuestResponse> GetGuestsForUser(string userId)
+    public IEnumerable<GuestWithId> GetGuestsForUser(string userId)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
         connection.Open();
@@ -25,15 +25,13 @@ public class Store : IStore
         command.Parameters.AddWithValue(":userId", userId);
 
         using var reader = command.ExecuteReader();
-        var guests = new List<GuestResponse>();
+        var guests = new List<GuestWithId>();
         while (reader.Read())
         {
-            guests.Add(new GuestResponse(
-                userId,
+            guests.Add(new GuestWithId(
                 reader.GetString(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetInt16(3)
+                new Name(reader.GetString(1), reader.GetString(2)),
+                RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(3))
             ));
         }
 
@@ -125,7 +123,7 @@ public class Store : IStore
     }
 
     [Authorize(Roles = "Admin")]
-    public IEnumerable<Guest> GetGuestsForAccount(string userId)
+    public IEnumerable<GuestWithId> GetGuestsForAccount(string userId)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
         connection.Open();
@@ -133,20 +131,21 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText =
             """
-                SELECT FirstName, LastName, RsvpStatus
+                SELECT GuestId, FirstName, LastName, RsvpStatus
                 FROM Guests
                 WHERE UserId = :userId
             """;
         command.Parameters.AddWithValue(":userId", userId);
         
         using var reader = command.ExecuteReader();
-        var guests = new List<Guest>();
+        var guests = new List<GuestWithId>();
         while (reader.Read())
         {
-            var firstName = reader.GetString(0);
-            var lastName = reader.GetString(1);
-            var rsvpStatus = RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(2));
-            guests.Add(new Guest(new Name(firstName, lastName), rsvpStatus));
+            var guestId = reader.GetString(0);
+            var firstName = reader.GetString(1);
+            var lastName = reader.GetString(2);
+            var rsvpStatus = RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(3));
+            guests.Add(new GuestWithId(guestId, new Name(firstName, lastName), rsvpStatus));
         }
 
         return guests;

@@ -85,8 +85,7 @@
             return;
         }
         
-        var guestResponses = RsvpService.GetOwnGuests(user);
-        Guests = guestResponses.Select(guest => guest.ToGuestObject());
+        Guests = RsvpService.GetOwnGuests(user);
         
         Email = user.Identity?.Name ?? "";
     }

@@ -18,7 +18,7 @@ public class AdminService(IStore store) : IAdminService
         return store.GetAllAccounts();
     }
     
-    public IEnumerable<Guest> GetGuestsForAccount(string userId)
+    public IEnumerable<GuestWithId> GetGuestsForAccount(string userId)
     {
         return store.GetGuestsForAccount(userId);
     }

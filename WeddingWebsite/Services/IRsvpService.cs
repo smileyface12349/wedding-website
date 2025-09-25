@@ -5,5 +5,5 @@ namespace WeddingWebsite.Services;
 
 public interface IRsvpService
 {
-    public IEnumerable<GuestResponse> GetOwnGuests(ClaimsPrincipal user);
+    public IEnumerable<GuestWithId> GetOwnGuests(ClaimsPrincipal user);
 }

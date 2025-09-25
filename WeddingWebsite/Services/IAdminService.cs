@@ -7,5 +7,5 @@ public interface IAdminService
 {
     void AddGuestToAccount(string userId, string firstName, string lastName);
     IEnumerable<AccountWithGuests> GetAllAccounts();
-    IEnumerable<Guest> GetGuestsForAccount(string userId);
+    IEnumerable<GuestWithId> GetGuestsForAccount(string userId);
 }
