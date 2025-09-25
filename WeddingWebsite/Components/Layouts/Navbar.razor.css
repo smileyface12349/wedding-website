@@ -1,0 +1,34 @@
+﻿.top-row {
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    padding-right: 1.5rem;
+    width: 100%;
+    border-bottom: 1px solid #b5b5b5;
+    justify-content: flex-start;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.top-row:not(.scrolled) {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.top-row a {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: var(--mud-palette-text-primary);
+}
+
+.top-row:not(.scrolled) a {
+    color: white;
+}
+
+.top-row a:hover {
+    color: #666;
+}
