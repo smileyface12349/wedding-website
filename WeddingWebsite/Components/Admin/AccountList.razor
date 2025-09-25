@@ -26,8 +26,19 @@
 
 @code {
     private IEnumerable<AccountWithGuests> Accounts { get; set; } = [];
-    
-    private string GetGuestNames(AccountWithGuests account) => string.Join(", ", account.Guests.Select(guest => guest.Name.Full));
+
+    private string GetGuestNames(AccountWithGuests account)
+    {
+        if (account.Guests.Any())
+        {
+            return string.Join(", ", account.Guests.Select(guest => guest.Name.Full));
+        }
+        else
+        {
+            return "No guests";
+        }
+    }
+        
 
     private string GetRsvpSummary(AccountWithGuests account)
     {
