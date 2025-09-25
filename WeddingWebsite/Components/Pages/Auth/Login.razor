@@ -76,7 +76,7 @@
     private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    public required HttpContext HttpContext { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -100,7 +100,7 @@
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
-            Logger.LogInformation("User logged in.");
+            Logger.LogInformation($"User logged in: {Input.Email}.");
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)

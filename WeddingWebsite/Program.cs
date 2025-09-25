@@ -31,6 +31,7 @@ builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
 builder.Services.AddScoped<RsvpController>();
 builder.Services.AddScoped<IRsvpService, RsvpService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IStore, Store>();
 
 builder.Services.AddRazorComponents()
@@ -62,7 +63,10 @@ builder.Services.AddIdentityCore<Account>(options => {
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
 })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

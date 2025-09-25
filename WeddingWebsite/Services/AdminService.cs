@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using WeddingWebsite.Data.Stores;
 
 namespace WeddingWebsite.Services;
 
 [Authorize (Roles = "Admin")]
-public class AdminService
+public class AdminService(IStore store) : IAdminService
 {
-    
+    public void AddGuestToAccount(string userId, string firstName, string lastName)
+    {
+        store.AddGuestToAccount(userId, firstName, lastName);
+    }
 }

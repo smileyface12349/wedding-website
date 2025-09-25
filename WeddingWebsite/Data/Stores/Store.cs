@@ -39,4 +39,25 @@ public class Store : IStore
 
         return guests;
     }
+    
+    [Authorize(Roles = "Admin")]
+    public void AddGuestToAccount(string userId, string firstName, string lastName)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+        @"
+            INSERT INTO Guests (GuestId, UserId, FirstName, LastName, RsvpStatus)
+            VALUES (:guestId, :userId, :firstName, :lastName, :rsvpStatus)
+        ";
+        command.Parameters.AddWithValue(":guestId", Guid.NewGuid().ToString());
+        command.Parameters.AddWithValue(":userId", userId);
+        command.Parameters.AddWithValue(":firstName", firstName);
+        command.Parameters.AddWithValue(":lastName", lastName);
+        command.Parameters.AddWithValue(":rsvpStatus", RsvpStatusEnumConverter.RsvpStatusToDatabaseInteger(RsvpStatus.NotResponded));
+
+        command.ExecuteNonQuery();
+    }
 }
