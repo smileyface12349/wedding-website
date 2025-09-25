@@ -1,0 +1,35 @@
+﻿.content {
+    max-width: 800px;
+    margin: 100px auto auto;
+}
+
+::deep .mb {
+    margin-bottom: 20px;
+}
+
+::deep .flex-container {
+    display: flex;
+}
+
+::deep h1, ::deep h2, ::deep h3, ::deep h4, ::deep p, ::deep label, ::deep a {
+    margin-bottom: 10px;
+}
+
+::deep .flex-grow {
+    flex: 1;
+}
+
+::deep button, ::deep .button {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--mud-palette-text-primary);
+    box-shadow: 1px 2px 6px rgba(0,0,0,0.2);
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 3px 6px;
+}
+
+::deep button:hover, ::deep .button:hover {
+    box-shadow: 1px 2px 12px rgba(0,0,0,0.4);
+}
+
