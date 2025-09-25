@@ -4,8 +4,9 @@
 @using WeddingWebsite.Services
 
 @inject IAdminService AdminService
+@inject NavigationManager NavigationManager
 
-<MudTable Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true">
+<MudTable T="AccountWithGuests" RowStyle="cursor: pointer" Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true" OnRowClick="RowClicked">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Accounts</MudText>
         <MudSpacer />
@@ -42,6 +43,16 @@
         var numYes = account.Guests.Count(g => g.Rsvp == RsvpStatus.Yes);
         var numNo = account.Guests.Count(g => g.Rsvp == RsvpStatus.No);
         return $"{numYes} yes, {numNo} no";
+    }
+    
+    private void RowClicked(TableRowClickEventArgs<AccountWithGuests> args)
+    {
+        if (args.Item == null)
+        {
+            return;
+        }
+        var accountId = args.Item.Id;
+        NavigationManager.NavigateTo($"/admin/account/{accountId}");
     }
 
     protected override void OnInitialized()
