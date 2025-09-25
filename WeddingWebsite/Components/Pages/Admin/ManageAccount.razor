@@ -40,9 +40,9 @@
         <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
     
+    <h2>Permissions</h2>
     <AuthorizeView Roles="Owner">
         <Authorized>
-            <h2>Permissions</h2>
             @if (IsUserAdmin())
             {
                 <p>This user is an administrator.</p>
@@ -62,7 +62,6 @@
             }
         </Authorized>
         <NotAuthorized>
-            <h2>Permissions</h2>
             @if (IsUserOwner())
             {
                 <p>Role: Owner.</p>
