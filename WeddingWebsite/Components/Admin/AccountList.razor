@@ -1,0 +1,65 @@
+@using WeddingWebsite.Data
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models
+@using WeddingWebsite.Services
+
+@inject IAdminService AdminService
+
+<MudTable Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Accounts</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"/>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Email)">Email</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Guests.Count())">Guests</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Guests.Count(g => g.Rsvp == RsvpStatus.NotResponded))">RSVP</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Guests">@GetGuestNames(context)</MudTd>
+        <MudTd DataLabel="RSVP">@GetRsvpSummary(context)</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IEnumerable<AccountWithGuests> Accounts { get; set; } = [];
+    
+    private string GetGuestNames(AccountWithGuests account) => string.Join(", ", account.Guests.Select(guest => guest.Name.Full));
+
+    private string GetRsvpSummary(AccountWithGuests account)
+    {
+        if (!account.Guests.Any())
+            return "N/A";
+        if (account.Guests.All(g => g.Rsvp == RsvpStatus.NotResponded))
+            return "No responses";
+        if (account.Guests.All(g => g.Rsvp == RsvpStatus.No))
+            return "All no";
+        if (account.Guests.All(g => g.Rsvp == RsvpStatus.Yes))
+            return "All yes";
+        
+        var numYes = account.Guests.Count(g => g.Rsvp == RsvpStatus.Yes);
+        var numNo = account.Guests.Count(g => g.Rsvp == RsvpStatus.No);
+        return $"{numYes} yes, {numNo} no";
+    }
+
+    protected override void OnInitialized()
+    {
+        Accounts = AdminService.GetAllAccounts();
+    }
+
+    private string searchString = "";
+    
+    private bool SearchFilter(AccountWithGuests account)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (account.Email != null && account.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (account.Guests.Any(guest => guest.Name.Full.Contains(searchString, StringComparison.OrdinalIgnoreCase)))
+            return true;
+        return false;
+    }
+
+}
