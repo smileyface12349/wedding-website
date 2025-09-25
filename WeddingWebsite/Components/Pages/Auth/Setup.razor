@@ -82,19 +82,22 @@
         await RedirectIfUsersExist();
     }
     
-    private async Task RedirectIfUsersExist()
+    private async Task<bool> RedirectIfUsersExist()
     {
         var anyUsers = await UserManager.Users.AnyAsync();
         if (anyUsers)
         {
             RedirectManager.RedirectTo("/");
+            return true;
         }
+
+        return false;
     }
 
     public async Task RegisterUser(EditContext editContext)
     {
         // Check if there are any users already - if so, don't allow setup
-        await RedirectIfUsersExist();
+        if (await RedirectIfUsersExist()) return;
         
         // Create the admin role if it doesn't exist
         if (!await RoleManager.RoleExistsAsync("Admin"))
