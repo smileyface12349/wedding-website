@@ -123,4 +123,32 @@ public class Store : IStore
 
         return accounts;
     }
+
+    [Authorize(Roles = "Admin")]
+    public IEnumerable<Guest> GetGuestsForAccount(string userId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT FirstName, LastName, RsvpStatus
+                FROM Guests
+                WHERE UserId = :userId
+            """;
+        command.Parameters.AddWithValue(":userId", userId);
+        
+        using var reader = command.ExecuteReader();
+        var guests = new List<Guest>();
+        while (reader.Read())
+        {
+            var firstName = reader.GetString(0);
+            var lastName = reader.GetString(1);
+            var rsvpStatus = RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(2));
+            guests.Add(new Guest(new Name(firstName, lastName), rsvpStatus));
+        }
+
+        return guests;
+    }
 }

@@ -19,4 +19,9 @@ public interface IStore
     /// Retrieves all registered accounts along with their guests.
     /// </summary>
     public IEnumerable<AccountWithGuests> GetAllAccounts();
+
+    /// <summary>
+    /// Gets all guests associated with a specific account.
+    /// </summary>
+    public IEnumerable<Guest> GetGuestsForAccount(string userId);
 }
