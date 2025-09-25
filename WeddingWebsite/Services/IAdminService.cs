@@ -8,4 +8,5 @@ public interface IAdminService
     void AddGuestToAccount(string userId, string firstName, string lastName);
     IEnumerable<AccountWithGuests> GetAllAccounts();
     IEnumerable<GuestWithId> GetGuestsForAccount(string userId);
+    Guest? GetGuest(string userId, string guestId);
 }
