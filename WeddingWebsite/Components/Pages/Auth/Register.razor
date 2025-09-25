@@ -64,7 +64,15 @@
                     <label for="guest3">Guest 3 (optional)</label>
                     <InputText @bind-Value="Input.Guest3" class="form-control" placeholder="Johnny Smith" id="guest3" />
                 </div>
-                <p>If you want to add more than three guests, please add three now and the rest later.</p>
+                <div class="form-floating">
+                    <label for="guest4">Guest 4 (optional)</label>
+                    <InputText @bind-Value="Input.Guest4" class="form-control" placeholder="Janet Smith" id="guest4" />
+                </div>
+                <div class="form-floating">
+                    <label for="guest5">Guest 5 (optional)</label>
+                    <InputText @bind-Value="Input.Guest5" class="form-control" placeholder="Jacob Smith" id="guest5" />
+                </div>
+                <p>You can always add more later.</p>
                 <button type="submit">Register</button>
             </EditForm>
         </div>
@@ -94,7 +102,7 @@
             identityErrors = result.Errors;
         }
         
-        foreach (var guestName in new[] { Input.Guest1, Input.Guest2, Input.Guest3 })
+        foreach (var guestName in new[] { Input.Guest1, Input.Guest2, Input.Guest3, Input.Guest4, Input.Guest5 })
         {
             if (string.IsNullOrWhiteSpace(guestName)) continue;
             var names = guestName.Split(' ', 2);
@@ -147,5 +155,7 @@
         [Display(Name = "Guest 1 (optional)")] public string Guest1 { get; set; } = "";
         [Display(Name = "Guest 2 (optional)")] public string Guest2 { get; set; } = "";
         [Display(Name = "Guest 3 (optional)")] public string Guest3 { get; set; } = "";
+        [Display(Name = "Guest 4 (optional)")] public string Guest4 { get; set; } = "";
+        [Display(Name = "Guest 5 (optional)")] public string Guest5 { get; set; } = "";
     }
 }
