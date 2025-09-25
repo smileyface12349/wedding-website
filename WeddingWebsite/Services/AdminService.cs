@@ -27,4 +27,9 @@ public class AdminService(IStore store) : IAdminService
     {
         return store.GetGuestsForAccount(userId).FirstOrDefault(g => g.Id == guestId);
     }
+    
+    public void RenameGuest(string guestId, string newFirstName, string newLastName)
+    {
+        store.RenameGuest(guestId, newFirstName, newLastName);
+    }
 }
