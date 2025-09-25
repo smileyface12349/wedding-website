@@ -3,8 +3,13 @@
     margin: auto;
 }
 
-label, input, .guest-name {
+label, input, .guest-name, a {
     font-size: 18px;
+}
+
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 input {
@@ -18,11 +23,15 @@ p {
     text-align: center;
 }
 
-.email {
+.account-detail {
     display: flex;
-    margin-bottom: 60px;
-    margin-top: 60px;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.account-details {
+    margin-top: 60px;
+    margin-bottom: 60px;
 }
 
 .guest {
@@ -31,12 +40,23 @@ p {
 }
 
 button {
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 2px 2px 5px #aaa;
+}
+
+button:hover {
+    box-shadow: 4px 4px 10px #aaa;
+    cursor: pointer;
+}
+
+.rsvp-button {
     background: #aaa;
     border: #444;
     color: #444;
-    padding: 5px;
-    cursor: not-allowed;
-    border-radius: 10px;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
 }
 
 .guests-list {
