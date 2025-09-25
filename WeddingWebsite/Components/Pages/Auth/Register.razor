@@ -8,6 +8,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Services
 
 @inject UserManager<Account> UserManager
 @inject IUserStore<Account> UserStore
@@ -15,6 +16,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IAdminService AdminService
 
 @attribute [Authorize ( Roles = "Admin") ]
 
@@ -35,7 +37,7 @@
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating">
                     <label for="email">Email</label>
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email" />
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="john@smith.com" id="email" />
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating">
@@ -49,7 +51,20 @@
                     <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
                 </div>
                 <h2>Guests</h2>
-                <p>Quickly add some guests now, or add them later. Guests should be added before sending out the credentials.</p>
+                <p>Quickly add some guests now, or add them later. Please enter first name and surname, or leave them blank.</p>
+                <div class="form-floating">
+                    <label for="guest1">Guest 1 (optional)</label>
+                    <InputText @bind-Value="Input.Guest1" class="form-control" placeholder="John Smith" id="guest1" />
+                </div>
+                <div class="form-floating">
+                    <label for="guest2">Guest 2 (optional)</label>
+                    <InputText @bind-Value="Input.Guest2" class="form-control" placeholder="Jane Smith" id="guest2" />
+                </div>
+                <div class="form-floating">
+                    <label for="guest3">Guest 3 (optional)</label>
+                    <InputText @bind-Value="Input.Guest3" class="form-control" placeholder="Johnny Smith" id="guest3" />
+                </div>
+                <p>If you want to add more than three guests, please add three now and the rest later.</p>
                 <button type="submit">Register</button>
             </EditForm>
         </div>
@@ -77,6 +92,15 @@
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
+        }
+        
+        foreach (var guestName in new[] { Input.Guest1, Input.Guest2, Input.Guest3 })
+        {
+            if (string.IsNullOrWhiteSpace(guestName)) continue;
+            var names = guestName.Split(' ', 2);
+            var firstName = names[0];
+            var lastName = names.Length > 1 ? names[1] : "";
+            AdminService.AddGuestToAccount(user.Id, firstName, lastName);
         }
     }
 
@@ -119,5 +143,9 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+
+        [Display(Name = "Guest 1 (optional)")] public string Guest1 { get; set; } = "";
+        [Display(Name = "Guest 2 (optional)")] public string Guest2 { get; set; } = "";
+        [Display(Name = "Guest 3 (optional)")] public string Guest3 { get; set; } = "";
     }
 }

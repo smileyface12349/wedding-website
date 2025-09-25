@@ -3,7 +3,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-p {
+p, h2, .form-floating {
     margin-bottom: 10px;
 }
 
