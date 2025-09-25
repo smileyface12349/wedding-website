@@ -1,0 +1,23 @@
+﻿@page "/Admin"
+@using WeddingWebsite.Components.Admin
+@using WeddingWebsite.Components.Layouts
+
+@attribute [Authorize(Roles = "Admin")]
+
+@layout SimpleLayout
+
+<h1>Admin Page</h1>
+
+<p>Welcome to the admin page. This page is not accessible to non-admin users.</p>
+
+<h2>Register a new user</h2>
+<p>Only admins can create new accounts.</p>
+<a href="/account/register" role="button" class="button">Register</a>
+
+<h2>Manage user accounts</h2>
+<p>Here is a full list of all accounts registered on the website.</p>
+<AccountList/>
+
+@code {
+    
+}
