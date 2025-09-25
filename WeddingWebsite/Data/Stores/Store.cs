@@ -150,4 +150,43 @@ public class Store : IStore
 
         return guests;
     }
+
+    [Authorize(Roles = "Admin")]
+    public void RenameGuest(string guestId, string newFirstName, string newLastName)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                UPDATE Guests
+                SET FirstName = :newFirstName, LastName = :newLastName
+                WHERE GuestId = :guestId
+            """;
+        
+        command.Parameters.AddWithValue(":newFirstName", newFirstName);
+        command.Parameters.AddWithValue(":newLastName", newLastName);
+        command.Parameters.AddWithValue(":guestId", guestId);
+        
+        command.ExecuteNonQuery();
+    }
+
+    [Authorize(Roles = "Admin")]
+    public void DeleteGuest(string guestId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                DELETE FROM Guests
+                WHERE GuestId = :guestId
+            """;
+        
+        command.Parameters.AddWithValue(":guestId", guestId);
+        
+        command.ExecuteNonQuery();
+    }
 }

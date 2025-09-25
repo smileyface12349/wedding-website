@@ -22,4 +22,19 @@ public class AdminService(IStore store) : IAdminService
     {
         return store.GetGuestsForAccount(userId);
     }
+    
+    public Guest? GetGuest(string userId, string guestId)
+    {
+        return store.GetGuestsForAccount(userId).FirstOrDefault(g => g.Id == guestId);
+    }
+    
+    public void RenameGuest(string guestId, string newFirstName, string newLastName)
+    {
+        store.RenameGuest(guestId, newFirstName, newLastName);
+    }
+    
+    public void DeleteGuest(string guestId)
+    {
+        store.DeleteGuest(guestId);
+    }
 }

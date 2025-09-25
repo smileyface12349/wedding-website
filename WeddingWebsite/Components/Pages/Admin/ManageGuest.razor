@@ -1,0 +1,122 @@
+﻿@page "/Admin/Account/{UserId}/{GuestId}"
+
+@using Microsoft.AspNetCore.Identity
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Data
+@using WeddingWebsite.Models
+@using WeddingWebsite.Services
+
+@layout SimpleLayout
+
+@attribute [Authorize(Roles = "Admin")]
+
+@inject UserManager<Account> UserManager
+@inject IAdminService AdminService
+@inject NavigationManager NavigationManager
+@inject ILogger<ManageGuest> Logger
+
+<PageTitle>Manage Account</PageTitle>
+
+<div class="narrow-section">
+    <h1 class="text-center">Manage Guest</h1>
+
+    @if (SomethingDiffers)
+    {
+        <p class="text-red">You have unsaved changes. Press the apply button besides the red input(s) to apply.</p>
+    }
+    
+    @if (ErrorText != "")
+    {
+        <p class="text-red">@ErrorText</p>
+    }
+
+    <div class="flex-container mb">
+        <label for="email">Account Email</label>
+        <span class="flex-grow"></span>
+        <input value="@Account?.Email" id="email" class="mr" disabled />
+    </div>
+    
+    <div class="flex-container mb">
+        <label for="name">Full Name</label>
+        <span class="flex-grow"></span>
+        <input @bind-value="Name" id="name" class="mr @NameDiffers" />
+        <button @onclick="ApplyNameChange">Apply</button>
+    </div>
+    
+    <h2>RSVP</h2>
+    <p>This section will contain all details put on the form. It will be implemented once RSVPs have been implemented.</p>
+    
+    <h2>Delete the Guest</h2>
+    <p>This cannot be undone. All RSVP data will be lost.</p>
+    @if (HasClickedDelete)
+    {
+        <p class="text-red">Are you sure? This cannot be undone.</p>
+        <button @onclick="DeleteGuest">Delete this Guest (click again to confirm)</button>
+    }
+    else
+    {
+        <button @onclick="ClickDelete">Delete this Guest</button>
+    }
+    
+</div>
+
+@code {
+    [Parameter] public required string UserId { get; set; }
+    [Parameter] public required string GuestId { get; set; }
+
+    private Account? Account { get; set; }
+    private Guest? Guest { get; set; }
+
+    private string ErrorText { get; set; } = "";
+    private string Name { get; set; } = "";
+    private bool HasClickedDelete { get; set; } = false;
+
+    private bool SomethingDiffers => NameDiffers != "";
+    private string NameDiffers => Account is null || Guest?.Name.Full == Name ? "" : "input-error";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Account = await UserManager.FindByIdAsync(UserId);
+        
+        if (Account is null)
+        {
+            ErrorText = "Could not find that user.";
+            return;
+        }
+
+        Guest = AdminService.GetGuest(UserId, GuestId);
+        
+        if (Guest is null)
+        {
+            ErrorText = "Could not find that guest.";
+            return;
+        }
+
+        Name = Guest.Name.Full;
+    }
+    
+    private void ApplyNameChange()
+    {
+        if (Account is null || Guest is null) return;
+
+        var name = Name.Split(" ");
+        var firstName = name.First();
+        var lastName = name.Length > 1 ? string.Join(" ", name.Skip(1)) : "";
+        AdminService.RenameGuest(GuestId, firstName, lastName);
+        Guest = AdminService.GetGuest(UserId, GuestId);
+    }
+    
+    private void ClickDelete()
+    {
+        HasClickedDelete = true;
+    }
+
+    private void DeleteGuest()
+    {
+        Logger.LogInformation($"Deleting guest {GuestId} for user {UserId}. Full data: {Guest?.ToString() ?? "null"}");
+        AdminService.DeleteGuest(GuestId);
+        NavigationManager.NavigateTo($"/Admin/Account/{UserId}");
+    }
+
+
+}
