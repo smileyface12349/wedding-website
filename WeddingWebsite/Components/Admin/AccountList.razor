@@ -33,6 +33,19 @@
     {
         if (!account.Guests.Any())
             return "N/A";
+
+        if (account.Guests.Count() == 1)
+        {
+            var guest = account.Guests.First();
+            return guest.Rsvp switch
+            {
+                RsvpStatus.NotResponded => "No response",
+                RsvpStatus.Yes => "Yes",
+                RsvpStatus.No => "No",
+                _ => "Error"
+            };
+        }
+        
         if (account.Guests.All(g => g.Rsvp == RsvpStatus.NotResponded))
             return "No responses";
         if (account.Guests.All(g => g.Rsvp == RsvpStatus.No))
