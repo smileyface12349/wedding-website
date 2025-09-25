@@ -8,7 +8,7 @@ namespace WeddingWebsite.Services;
 [Authorize]
 public class RsvpService(IStore store) : IRsvpService
 {
-    public IEnumerable<GuestResponse> GetOwnGuests(ClaimsPrincipal user)
+    public IEnumerable<GuestWithId> GetOwnGuests(ClaimsPrincipal user)
     {
         var claim = user.FindFirst(ClaimTypes.NameIdentifier);
         var userId = claim.Value;
