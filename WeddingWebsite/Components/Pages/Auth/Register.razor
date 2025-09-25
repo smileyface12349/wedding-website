@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
@@ -20,64 +21,72 @@
 
 @attribute [Authorize ( Roles = "Admin") ]
 
+@layout SimpleLayout
+
 <PageTitle>Register</PageTitle>
 
 <Section>
-    
-    <h1>Create Account</h1>
-    <p>Create a new account for someone else.</p>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <p>@Message</p>
-            <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
-                <DataAnnotationsValidator />
-                <h2>Account Details</h2>
-                <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating">
-                    <label for="email">Email</label>
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="john@smith.com" id="email" />
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
-                </div>
-                <div class="form-floating">
-                    <label for="password">Password</label>
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="password" />
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
-                </div>
-                <div class="form-floating">
-                    <label for="confirm-password">Confirm Password</label>
-                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="confirm-password" />
-                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-                </div>
-                <h2>Guests</h2>
-                <p>Quickly add some guests now, or add them later. Please enter first name and surname, or leave them blank.</p>
-                <div class="form-floating">
-                    <label for="guest1">Guest 1 (optional)</label>
-                    <InputText @bind-Value="Input.Guest1" class="form-control" placeholder="John Smith" id="guest1" />
-                </div>
-                <div class="form-floating">
-                    <label for="guest2">Guest 2 (optional)</label>
-                    <InputText @bind-Value="Input.Guest2" class="form-control" placeholder="Jane Smith" id="guest2" />
-                </div>
-                <div class="form-floating">
-                    <label for="guest3">Guest 3 (optional)</label>
-                    <InputText @bind-Value="Input.Guest3" class="form-control" placeholder="Johnny Smith" id="guest3" />
-                </div>
-                <div class="form-floating">
-                    <label for="guest4">Guest 4 (optional)</label>
-                    <InputText @bind-Value="Input.Guest4" class="form-control" placeholder="Janet Smith" id="guest4" />
-                </div>
-                <div class="form-floating">
-                    <label for="guest5">Guest 5 (optional)</label>
-                    <InputText @bind-Value="Input.Guest5" class="form-control" placeholder="Jacob Smith" id="guest5" />
-                </div>
-                <p>You can always add more later.</p>
-                <button type="submit">Register</button>
-            </EditForm>
+    <div class="narrow-section">
+
+        <h1>Create Account</h1>
+        <p>Create a new account for someone else.</p>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <p>@Message</p>
+                <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                    <DataAnnotationsValidator />
+                    <h2>Account Details</h2>
+                    <hr />
+                    <ValidationSummary class="text-danger" role="alert" />
+                    <div class="form-input-and-label">
+                        <label for="email">Email</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="john@smith.com" id="email" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="password">Password</label>
+                        <span class="flex-grow"></span>
+                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="password" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="confirm-password">Confirm Password</label>
+                        <span class="flex-grow"></span>
+                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" id="confirm-password" />
+                    </div>
+                    <h2>Guests (Optional)</h2>
+                    <p>Quickly add some guests now, or add them later. Please enter first name and surname, or leave them blank.</p>
+                    <div class="form-input-and-label">
+                        <label for="guest1">Guest 1</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Guest1" class="form-control" placeholder="John Smith" id="guest1" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="guest2">Guest 2</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Guest2" class="form-control" placeholder="Jane Smith" id="guest2" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="guest3">Guest 3</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Guest3" class="form-control" placeholder="Johnny Smith" id="guest3" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="guest4">Guest 4</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Guest4" class="form-control" placeholder="Janet Smith" id="guest4" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="guest5">Guest 5</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Guest5" class="form-control" placeholder="Jacob Smith" id="guest5" />
+                    </div>
+                    <p>You can always add more later.</p>
+                    <button type="submit">Register</button>
+                </EditForm>
+            </div>
         </div>
     </div>
-
 </Section>
 
 @code {

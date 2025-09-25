@@ -20,6 +20,12 @@
     align-items: center;
 }
 
+::deep .form-input-and-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
 ::deep .flex-container p, ::deep .flex-container label {
     margin: 0;
 }
