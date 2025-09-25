@@ -24,4 +24,9 @@ public interface IStore
     /// Gets all guests associated with a specific account.
     /// </summary>
     public IEnumerable<GuestWithId> GetGuestsForAccount(string userId);
+    
+    /// <summary>
+    /// Renames a guest identified by guestId. Restricted to Admin users.
+    /// </summary>
+    public void RenameGuest(string guestId, string newFirstName, string newLastName);
 }
