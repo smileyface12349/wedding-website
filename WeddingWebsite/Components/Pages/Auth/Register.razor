@@ -110,6 +110,8 @@
             var lastName = names.Length > 1 ? names[1] : "";
             AdminService.AddGuestToAccount(user.Id, firstName, lastName);
         }
+        
+        RedirectManager.RedirectToCurrentPage();
     }
 
     private Account CreateUser()
