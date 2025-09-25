@@ -32,4 +32,9 @@ public class AdminService(IStore store) : IAdminService
     {
         store.RenameGuest(guestId, newFirstName, newLastName);
     }
+    
+    public void DeleteGuest(string guestId)
+    {
+        store.DeleteGuest(guestId);
+    }
 }

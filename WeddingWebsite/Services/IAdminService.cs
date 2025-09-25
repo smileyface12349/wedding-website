@@ -10,4 +10,5 @@ public interface IAdminService
     IEnumerable<GuestWithId> GetGuestsForAccount(string userId);
     Guest? GetGuest(string userId, string guestId);
     void RenameGuest(string guestId, string newFirstName, string newLastName);
+    void DeleteGuest(string guestId);
 }
