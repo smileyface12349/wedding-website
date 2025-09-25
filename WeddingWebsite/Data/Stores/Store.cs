@@ -111,6 +111,15 @@ public class Store : IStore
                 currentGuests.Add(new Guest(new Name(guestFirstName, guestLastName), guestRsvpStatus));
             }
         }
+        
+        if (currentAccountId != null)
+        {
+            accounts.Add(new AccountWithGuests(currentGuests)
+            {
+                Id = currentAccountId,
+                Email = currentAccountEmail!
+            });
+        }
 
         return accounts;
     }
