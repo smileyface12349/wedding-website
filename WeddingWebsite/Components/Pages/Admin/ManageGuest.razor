@@ -48,7 +48,16 @@
     
     <h2>Delete the Guest</h2>
     <p>This cannot be undone. All RSVP data will be lost.</p>
-    <button @onclick="DeleteGuest">Delete this Guest</button>
+    @if (HasClickedDelete)
+    {
+        <p class="text-red">Are you sure? This cannot be undone.</p>
+        <button @onclick="DeleteGuest">Delete this Guest (click again to confirm)</button>
+    }
+    else
+    {
+        <button @onclick="ClickDelete">Delete this Guest</button>
+    }
+    
 </div>
 
 @code {
@@ -60,6 +69,7 @@
 
     private string ErrorText { get; set; } = "";
     private string Name { get; set; } = "";
+    private bool HasClickedDelete { get; set; } = false;
 
     private bool SomethingDiffers => NameDiffers != "";
     private string NameDiffers => Account is null || Guest?.Name.Full == Name ? "" : "input-error";
@@ -94,6 +104,11 @@
         var lastName = name.Length > 1 ? string.Join(" ", name.Skip(1)) : "";
         AdminService.RenameGuest(GuestId, firstName, lastName);
         Guest = AdminService.GetGuest(UserId, GuestId);
+    }
+    
+    private void ClickDelete()
+    {
+        HasClickedDelete = true;
     }
 
     private void DeleteGuest()
