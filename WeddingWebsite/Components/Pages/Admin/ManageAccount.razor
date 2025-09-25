@@ -9,6 +9,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @inject UserManager<Account> UserManager
+@inject RoleManager<IdentityRole> RoleManager
 
 <div class="narrow-section">
     <h1 class="text-center">Manage Account</h1>
@@ -36,6 +37,27 @@
         <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Can't view passwords" />
         <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
+    
+    <AuthorizeView Roles="Owner">
+        <h2>Permissions</h2>
+        @if (IsUserAdmin())
+        {
+            <p>This user is an administrator.</p>
+            @if (IsUserOwner())
+            {
+                <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
+            }
+            else
+            {
+                <button @onclick="DemoteUser">Demote</button>
+            }
+        }
+        else
+        {
+            <p>This user does not have any special permissions.</p>
+            <button @onclick="PromoteUser">Promote to Admin</button>
+        }
+    </AuthorizeView>
 </div>
 
 @code {
@@ -86,6 +108,40 @@
         else
         {
             NewPassword = "";
+        }
+    }
+    
+    private bool IsUserAdmin()
+    {
+        if (Account is null) return false;
+        return UserManager.IsInRoleAsync(Account, "Admin").Result;
+    }
+    
+    private bool IsUserOwner()
+    {
+        if (Account is null) return false;
+        return UserManager.IsInRoleAsync(Account, "Owner").Result;
+    }
+
+    [Authorize (Roles = "Owner")]
+    private void DemoteUser()
+    {
+        if (Account is null) return;
+        var result = UserManager.RemoveFromRoleAsync(Account, "Admin").Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+    }
+
+    [Authorize (Roles = "Owner")]
+    private void PromoteUser()
+    {
+        if (Account is null) return;
+        var result = UserManager.AddToRoleAsync(Account, "Admin").Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
         }
     }
 
