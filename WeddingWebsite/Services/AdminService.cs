@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using WeddingWebsite.Data.Models;
 using WeddingWebsite.Data.Stores;
+using WeddingWebsite.Models;
 
 namespace WeddingWebsite.Services;
 
@@ -15,5 +16,10 @@ public class AdminService(IStore store) : IAdminService
     public IEnumerable<AccountWithGuests> GetAllAccounts()
     {
         return store.GetAllAccounts();
+    }
+    
+    public IEnumerable<Guest> GetGuestsForAccount(string userId)
+    {
+        return store.GetGuestsForAccount(userId);
     }
 }
