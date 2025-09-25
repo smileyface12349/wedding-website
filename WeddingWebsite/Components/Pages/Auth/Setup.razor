@@ -23,11 +23,7 @@
     
     <h1>Account Setup</h1>
 
-    <p>This page is used to create an admin user to get you started. Once there exists a user in the database, this page will not work. If it will give you any extra peace of mind, you can delete this page entirely after adding an admin user.</p>
-
-    <p>This is different from the normal registration page which permits admin users only, and should be used in future.</p>
-    
-    <p>Please note this user will be created with no guests. It is entirely valid to have accounts to permit login and even admin access that do not have any invited guests attached to the account.</p>
+    <p>Please create an account for yourself. This account will not only be given admin access, but will be the only account to be marked as "owner". The only difference is that owners have the ability to promote/demote other admins.</p>
 
     <div class="row">
         <div class="col-md-4">
@@ -35,7 +31,7 @@
             <EditForm Model="Input" asp-route-returnUrl="/" method="post" OnValidSubmit="RegisterUser" FormName="register">
                 <DataAnnotationsValidator />
                 <h2>Create an admin account</h2>
-                <p>A reminder to choose a secure password, as this account will have admin access!</p>
+                <p>Please choose a secure password!</p>
                 <hr style="margin-bottom: 5px" />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating">
@@ -110,12 +106,24 @@
             }
         }
         
-        Logger.LogInformation("Registering a new admin user.");
+        // Create the owner role if it doesn't exist
+        if (!await RoleManager.RoleExistsAsync("Owner"))
+        {
+            var roleResult = await RoleManager.CreateAsync(new IdentityRole("Owner"));
+            if (!roleResult.Succeeded)
+            {
+                identityErrors = roleResult.Errors;
+                return;
+            }
+        }
+        
+        Logger.LogInformation("Registering the owner.");
     
         var user = CreateUser();
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await UserManager.AddToRoleAsync(user, "Admin");
+        await UserManager.AddToRoleAsync(user, "Owner");
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
