@@ -49,12 +49,20 @@
         if (account.Guests.All(g => g.Rsvp == RsvpStatus.NotResponded))
             return "No responses";
         if (account.Guests.All(g => g.Rsvp == RsvpStatus.No))
-            return "All no";
+            return $"No (all {account.Guests.Count()})";
         if (account.Guests.All(g => g.Rsvp == RsvpStatus.Yes))
-            return "All yes";
+            return $"Yes (all {account.Guests.Count()})";
         
         var numYes = account.Guests.Count(g => g.Rsvp == RsvpStatus.Yes);
         var numNo = account.Guests.Count(g => g.Rsvp == RsvpStatus.No);
+        var numWaiting = account.Guests.Count(g => g.Rsvp == RsvpStatus.NotResponded);
+
+        if (numWaiting > 0)
+        {
+            return numNo > 0 
+                ? $"{numYes} yes, {numNo} no, {numWaiting} waiting"
+                : $"{numYes} yes, {numWaiting} waiting";
+        }
         return $"{numYes} yes, {numNo} no";
     }
     
