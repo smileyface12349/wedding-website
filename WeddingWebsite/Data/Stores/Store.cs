@@ -171,4 +171,22 @@ public class Store : IStore
         
         command.ExecuteNonQuery();
     }
+
+    [Authorize(Roles = "Admin")]
+    public void DeleteGuest(string guestId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                DELETE FROM Guests
+                WHERE GuestId = :guestId
+            """;
+        
+        command.Parameters.AddWithValue(":guestId", guestId);
+        
+        command.ExecuteNonQuery();
+    }
 }

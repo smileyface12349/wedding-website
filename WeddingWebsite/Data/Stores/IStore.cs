@@ -29,4 +29,9 @@ public interface IStore
     /// Renames a guest identified by guestId. Restricted to Admin users.
     /// </summary>
     public void RenameGuest(string guestId, string newFirstName, string newLastName);
+
+    /// <summary>
+    /// Deletes a guest. Restricted to Admin users.
+    /// </summary>
+    public void DeleteGuest(string guestId);
 }
