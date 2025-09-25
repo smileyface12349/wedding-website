@@ -9,4 +9,9 @@ public interface IStore
     /// Retrieve all guests associated with a specific user. Each guest is associated with exactly one user.
     /// </summary>
     public IEnumerable<GuestResponse> GetGuestsForUser(string userId);
+    
+    /// <summary>
+    /// Adds a new guest to the specified user's account. Restricted to Admin users.
+    /// </summary>
+    public void AddGuestToAccount(string userId, string firstName, string lastName);
 }
