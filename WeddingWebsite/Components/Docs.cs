@@ -1,6 +1,21 @@
 ﻿// Yes, this really is the best way. Docs aren't supported in .razor files, so it would need to be a code-behind file.
 // Instead of creating an extra file for each component, I thought I'd dump them all in here.
 
+namespace WeddingWebsite.Components.Layouts
+{
+    /// <summary>
+    /// The default layout, including a navbar and not much else so that you can customise things how you want.
+    /// </summary>
+    partial class MainLayout {}
+    
+    /// <summary>
+    /// This is designed for internal tools where style is not important. There will be some agressive default padding,
+    /// and lots of styles automatically applied to semantic elements directly. It's designed for building a functional
+    /// UI quickly, but deliberately gives very little control over the appearance.
+    /// </summary>
+    partial class SimpleLayout {}
+}
+
 namespace WeddingWebsite.Components.Containers
 {
     /// <summary>
