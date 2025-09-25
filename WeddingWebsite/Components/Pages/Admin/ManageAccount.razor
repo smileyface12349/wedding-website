@@ -4,6 +4,7 @@
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models
 @using WeddingWebsite.Services
 
@@ -14,6 +15,7 @@
 @inject UserManager<Account> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject IAdminService AdminService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -45,10 +47,11 @@
     </div>
     
     <h2>Guests</h2>
-    <MudTable T="Guest" Items="Guests" Class="mb">
+    <p>Click on a guest to manage/delete them.</p>
+    <MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Guest, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Guest, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name.Full</MudTd>
@@ -105,7 +108,7 @@
     [Parameter] public required string UserId { get; set; }
 
     private Account? Account { get; set; }
-    private IEnumerable<Guest> Guests { get; set; }
+    private IEnumerable<GuestWithId> Guests { get; set; } = [];
 
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
@@ -124,11 +127,20 @@
         if (Account is null)
         {
             ErrorText = "Could not find that user.";
-            Guests = [];
             return;
         }
         
         Guests = AdminService.GetGuestsForAccount(Account.Id);
+    }
+    
+    private void RowClicked(TableRowClickEventArgs<GuestWithId> args)
+    {
+        if (args.Item == null || Account is null)
+        {
+            return;
+        }
+        var guest = args.Item;
+        NavigationManager.NavigateTo($"/admin/account/{Account.Id}/{guest.Id}");
     }
 
     private void ApplyEmailChange()
