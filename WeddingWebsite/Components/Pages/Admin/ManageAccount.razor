@@ -15,14 +15,26 @@
 
     @if (SomethingDiffers)
     {
-        <p>You have unsaved changes. Press the apply button besides the red input(s) to apply.</p>
+        <p class="text-red">You have unsaved changes. Press the apply button besides the red input(s) to apply.</p>
+    }
+    
+    @if (ErrorText != "")
+    {
+        <p class="text-red">@ErrorText</p>
     }
 
-    <div class="flex-container">
+    <div class="flex-container mb">
         <label for="email">Email</label>
         <span class="flex-grow"></span>
         <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
         <button @onclick="ApplyEmailChange">Apply</button>
+    </div>
+    
+    <div class="flex-container mb">
+        <label for="new-password">New Password</label>
+        <span class="flex-grow"></span>
+        <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Can't view passwords" />
+        <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
 </div>
 
@@ -33,9 +45,11 @@
 
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
+    private string NewPassword { get; set; } = "";
 
-    private bool SomethingDiffers => EmailDiffers != "";
+    private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
     private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
+    private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,7 +69,23 @@
         var result = UserManager.UpdateAsync(Account).Result;
         if (!result.Succeeded)
         {
-            ErrorText = string.Join(", ", result.Errors.Select(e => e.Description));
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+    }
+
+    private void ApplyPasswordChange()
+    {
+        if (Account is null) return;
+        
+        var token = UserManager.GeneratePasswordResetTokenAsync(Account).Result;
+        var result = UserManager.ResetPasswordAsync(Account, token, NewPassword).Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
+            NewPassword = "";
         }
     }
 
