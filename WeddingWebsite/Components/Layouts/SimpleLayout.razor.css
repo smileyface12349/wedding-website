@@ -1,15 +1,17 @@
 ﻿.content {
-    max-width: 600px;
+    max-width: 800px;
     margin: 100px auto auto;
 }
 
-
+::deep .mb {
+    margin-bottom: 20px;
+}
 
 ::deep .flex-container {
     display: flex;
 }
 
-::deep h1, ::deep h2, ::deep h3, ::deep h4, ::deep p, ::deep label {
+::deep h1, ::deep h2, ::deep h3, ::deep h4, ::deep p, ::deep label, ::deep a {
     margin-bottom: 10px;
 }
 
