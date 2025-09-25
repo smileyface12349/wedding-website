@@ -55,6 +55,12 @@
             <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
         </RowTemplate>
     </MudTable>
+    <div class="flex-container mb">
+        <label for="new-guest">Add Extra Guest</label>
+        <span class="flex-grow"></span>
+        <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
+        <button @onclick="AddNewGuest">Add</button>
+    </div>
     
     <h2>Permissions</h2>
     <AuthorizeView Roles="Owner">
@@ -104,6 +110,7 @@
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
     private string NewPassword { get; set; } = "";
+    private string NewGuestName { get; set; } = "";
 
     private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
     private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
@@ -154,6 +161,19 @@
         {
             NewPassword = "";
         }
+    }
+
+    private void AddNewGuest()
+    {
+        if (Account is null) return;
+        if (NewGuestName == "") return;
+
+        var name = NewGuestName.Split(" ");
+        var firstName = name.First();
+        var lastName = name.Length > 1 ? string.Join(" ", name.Skip(1)) : "";
+        AdminService.AddGuestToAccount(Account.Id, firstName, lastName);
+        Guests = AdminService.GetGuestsForAccount(Account.Id);
+        NewGuestName = "";
     }
     
     private bool IsUserAdmin()
