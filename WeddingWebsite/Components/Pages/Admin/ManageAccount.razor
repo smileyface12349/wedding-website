@@ -2,7 +2,10 @@
 
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Models
+@using WeddingWebsite.Services
 
 @layout SimpleLayout
 
@@ -10,6 +13,7 @@
 
 @inject UserManager<Account> UserManager
 @inject RoleManager<IdentityRole> RoleManager
+@inject IAdminService AdminService
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -39,6 +43,18 @@
         <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Reset their password" />
         <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
+    
+    <h2>Guests</h2>
+    <MudTable T="Guest" Items="Guests" Class="mb">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Guest, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Guest, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name.Full</MudTd>
+            <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
+        </RowTemplate>
+    </MudTable>
     
     <h2>Permissions</h2>
     <AuthorizeView Roles="Owner">
@@ -83,6 +99,7 @@
     [Parameter] public required string UserId { get; set; }
 
     private Account? Account { get; set; }
+    private IEnumerable<Guest> Guests { get; set; }
 
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
@@ -96,6 +113,15 @@
     {
         Account = await UserManager.FindByIdAsync(UserId);
         Email = Account?.Email ?? "";
+        
+        if (Account is null)
+        {
+            ErrorText = "Could not find that user.";
+            Guests = [];
+            return;
+        }
+        
+        Guests = AdminService.GetGuestsForAccount(Account.Id);
     }
 
     private void ApplyEmailChange()
