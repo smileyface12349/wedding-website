@@ -39,24 +39,42 @@
     </div>
     
     <AuthorizeView Roles="Owner">
-        <h2>Permissions</h2>
-        @if (IsUserAdmin())
-        {
-            <p>This user is an administrator.</p>
-            @if (IsUserOwner())
+        <Authorized>
+            <h2>Permissions</h2>
+            @if (IsUserAdmin())
             {
-                <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
+                <p>This user is an administrator.</p>
+                @if (IsUserOwner())
+                {
+                    <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
+                }
+                else
+                {
+                    <button @onclick="DemoteUser">Demote</button>
+                }
             }
             else
             {
-                <button @onclick="DemoteUser">Demote</button>
+                <p>This user does not have any special permissions.</p>
+                <button @onclick="PromoteUser">Promote to Admin</button>
             }
-        }
-        else
-        {
-            <p>This user does not have any special permissions.</p>
-            <button @onclick="PromoteUser">Promote to Admin</button>
-        }
+        </Authorized>
+        <NotAuthorized>
+            <h2>Permissions</h2>
+            @if (IsUserOwner())
+            {
+                <p>Role: Owner.</p>
+            }
+            else if (IsUserAdmin())
+            {
+                <p>Role: Admin.</p>
+            }
+            else
+            {
+                <p>No special permissions.</p>
+            }
+            <p>Only owners can update permissions.</p>
+        </NotAuthorized>
     </AuthorizeView>
 </div>
 
