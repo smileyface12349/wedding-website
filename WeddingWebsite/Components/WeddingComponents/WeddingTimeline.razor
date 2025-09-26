@@ -47,8 +47,14 @@
 
 @if (Theme?.Background.ExtraContrast == true) {
     <style>
-        :root {
-            --mud-palette-divider: @Theme.Background.GetTextColour() !important;
+        .mud-timeline-vertical.mud-timeline-position-alternate::before {
+            right: calc(50% - 2px);
+        }
+        
+        .mud-timeline-vertical::before {
+            background: @Theme.Primary.ToString();
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            width: 4px;
         }
     </style>
 }
