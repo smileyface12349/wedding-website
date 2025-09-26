@@ -45,13 +45,13 @@ Interactivity is disabled by default, so if you're adding any new pages it will 
 
 While you may interchange render modes on the same page, I'd recommend setting the render mode for each page and having all components on the page use the same render mode. Otherwise, you will often end up with the worst of both worlds.
 
-### Static Server-Side Rendering
+### Server-Side Rendering
 
 Code in C#, with everything rendered on the server. Every button press triggers an HTTP request to re-render the component server-side.
 
 - Advantages: Fast page load, Secure, Code maintainability, Blazor libraries, Easy to enable.
-- Disadvantages: Slow interactivity, Connection required, Unstable.
-- Best for: Usages where a stable internet connection is likely or buttons that trigger privileged requests that would need to go to the server anyway.
+- Disadvantages: Slow interactivity, Connection required, Can be unstable.
+- Best for: Usages where a stable internet connection is likely and buttons either trigger privileged requests that would need to go to the server anyway, or are non-essential (e.g. admin page, homepage).
 - How to enable: Write `@rendermode InteractiveServer` at the top of the file.
 
 ### WebAssembly
@@ -60,7 +60,7 @@ Code in C#, rendering on the client. It is automatically pre-rendered on the ser
 
 - Advantages: Fast (except for first load), Code maintainability, Blazor libraries.
 - Disadvantages: Nontrivial first page load time. Okay-ish support for older browsers.
-- Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry, admin page).
+- Best for: Complex client-side logic in specific pages that require lots of interactivity (e.g. RSPV form, registry).
 - How to enable: Move the component to `WeddingWebsite.Client` project, then write `@rendermode InteractiveWebAssembly` at the top of the file.
 
 ### JavaScript
