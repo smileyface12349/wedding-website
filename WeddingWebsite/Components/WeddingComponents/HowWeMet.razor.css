@@ -17,6 +17,8 @@
 
 p {
     margin-bottom: 10px;
+    text-align: justify;
+    text-align-last: center;
 }
 
 @media only screen and (max-width: 700px) {
