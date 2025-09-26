@@ -26,7 +26,7 @@
             <span><span class="groom-name">@WeddingDetails.Groom.Name.First</span> & <span class="bride-name">@WeddingDetails.Bride.Name.First</span></span>
         }
     </h1>
-    <h2 class="wedding-date">@WeddingDetails.WeddingDate.ToShortDateString().Replace('/', '.')</h2>
+    <h2 class="wedding-date">@(WeddingDetails.WeddingDate.Day.ToString("D2")).@(WeddingDetails.WeddingDate.Month.ToString("D2")).@(WeddingDetails.WeddingDate.Year)</h2>
     @if (!Config.Sections.Any(sect => sect is Section.Countdown)) {
         <CascadingValue Value="@(new SectionTheme(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Config.Colours.PrimaryBackground, Config.Colours.Primary, null))))">
             <CountdownToDate CountdownTo="@WeddingDetails.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("13:00"))"/>
