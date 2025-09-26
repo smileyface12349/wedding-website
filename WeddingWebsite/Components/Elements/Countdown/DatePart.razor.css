@@ -16,3 +16,10 @@
 .label {
     font-size: clamp(12px, 3vw, 16px);
 }
+
+@media only screen and (max-width: 500px) {
+    .container {
+        min-width: 30px;
+        padding: 3px;
+    }
+}
