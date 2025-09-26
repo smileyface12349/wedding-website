@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.Sqlite;
 using WeddingWebsite.Data.Enums;
 using WeddingWebsite.Data.Models;
-using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 using WeddingWebsite.Models.People;
 
 namespace WeddingWebsite.Data.Stores;

@@ -1,5 +1,5 @@
 ﻿using WeddingWebsite.Data.Models;
-using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 
 namespace WeddingWebsite.Services;
 

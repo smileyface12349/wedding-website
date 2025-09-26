@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using WeddingWebsite.Data.Models;
 using WeddingWebsite.Data.Stores;
-using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 
 namespace WeddingWebsite.Services;
 
