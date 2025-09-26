@@ -1,0 +1,16 @@
+﻿<a href="/">Home</a>
+<a href="/#timeline" class="desktop-only">Timeline & Logistics</a>
+<a href="/#accommodation" class="desktop-only">Accommodation</a>
+<a href="javascript:alert('Registry is not yet available');">Registry</a>
+<a href="javascript:alert('Gallery is not yet available');">Gallery</a>
+<a href="/#contact" class="desktop-only">Contact</a>
+<MudSpacer/>
+<AuthorizeView Roles="Admin">
+    <a href="/Admin">Admin</a>
+</AuthorizeView>
+<a href="/Account">My Account</a>
+<a href="/Account/Logout">Logout</a>
+
+@code {
+    
+}
