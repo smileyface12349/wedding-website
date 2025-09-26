@@ -212,4 +212,29 @@ public class Store : IStore
         
         command.ExecuteNonQuery();
     }
+    
+    public string? GetUserIdByEmail(string email)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT Id
+                FROM AspNetUsers
+                WHERE Email = :email
+            """;
+        
+        command.Parameters.AddWithValue(":email", email);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var userId = reader.GetString(0);
+            return userId;
+        }
+        
+        return null;
+    }
 }

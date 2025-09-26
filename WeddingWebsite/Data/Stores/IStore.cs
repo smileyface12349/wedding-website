@@ -36,5 +36,13 @@ public interface IStore
     /// </summary>
     public void DeleteGuest(string guestId);
     
+    /// <summary>
+    /// Add log message to an account.
+    /// </summary>
     public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description);
+    
+    /// <summary>
+    /// Get user id from their email address
+    /// </summary>
+    public string? GetUserIdByEmail(string email);
 }
