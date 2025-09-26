@@ -19,11 +19,11 @@
     <h1 class="bride-and-groom-names" style="color: @Config.Colours.PrimaryBackground">
         @if (Config.BrideFirst)
         {
-            <span><span class="bride-name">@WeddingDetails.Bride.Name.First</span> & <span class="groom-name">@WeddingDetails.Groom.Name.First</span></span>
+            <span><span class="first-name">@WeddingDetails.Bride.Name.First</span> & <span class="second-name">@WeddingDetails.Groom.Name.First</span></span>
         }
         else
         {
-            <span><span class="groom-name">@WeddingDetails.Groom.Name.First</span> & <span class="bride-name">@WeddingDetails.Bride.Name.First</span></span>
+            <span><span class="first-name">@WeddingDetails.Groom.Name.First</span> & <span class="second-name">@WeddingDetails.Bride.Name.First</span></span>
         }
     </h1>
     <h2 class="wedding-date">@(WeddingDetails.WeddingDate.Day.ToString("D2")).@(WeddingDetails.WeddingDate.Month.ToString("D2")).@(WeddingDetails.WeddingDate.Year)</h2>
