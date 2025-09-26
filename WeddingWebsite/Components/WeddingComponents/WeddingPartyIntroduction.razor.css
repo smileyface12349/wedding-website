@@ -8,11 +8,11 @@
     max-height: 200px;
     width: 150px;
     object-fit: contain;
-    margin-bottom: 10px;
 }
 
 .right-content {
     flex: 1;
+    padding-left: 10px;
 }
 
 .name-and-role {
