@@ -2,7 +2,9 @@
 
 function updateCountdown() {
     let currentDate = new Date();
-    let countdownTo = new Date(document.getElementById('countdown-date').innerText);
+    let element = document.getElementById('countdown-date');
+    if (element == null) return;
+    let countdownTo = new Date(element.innerText);
 
     // repeatedly add months onto current time until overshooting the target
     let months = 0;
