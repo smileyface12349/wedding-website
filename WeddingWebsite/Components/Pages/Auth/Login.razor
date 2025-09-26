@@ -88,9 +88,6 @@
     
     [Inject]
     private IAccountService? AccountService { get; set; }
-    
-    [Inject]
-    private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,11 +106,9 @@
         if (result.Succeeded)
         {
             Logger.LogInformation($"User logged in: {Input.Email}.");
-            if (AccountService is not null && AuthenticationStateProvider is not null)
+            if (AccountService is not null)
             {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
-                AccountService.Log(user, AccountLogType.LogIn, "User logged in.");
+                AccountService.Log(Input.Email, AccountLogType.LogIn, "User logged in");
             }
             RedirectManager.RedirectTo(ReturnUrl);
         }
