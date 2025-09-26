@@ -2,9 +2,56 @@
 
 @inject IWebsiteConfig Config
 
-<div id="navbar-desktop" class="top-row" style="background-color: @Config.Colours.PrimaryBackground">
+<div id="navbar-desktop" class="top-row">
     <NavbarContent/>
 </div>
+
+<div class="top-row" id="navbar-mobile">
+    <a href="/" class="mobile-left-link">Wedding Website</a>
+    <div class="burger-menu-container">
+        <div class="burger-menu" onclick="burgerClicked(this)">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+    </div>
+    <div class="burger-dropdown-content" style="display: none">
+        <NavbarContent IsMobile="true"/>
+    </div>
+</div>
+
+<script>
+    function executeWithNoTransition(func) {
+        document.getElementById('navbar-mobile').setAttribute('style', 'transition-duration: 0s;')
+        func();
+        setTimeout(
+            () => {document.getElementById('navbar-mobile').removeAttribute('style')},
+            200
+        );
+    }
+
+    function addBackground() {
+        document.getElementById('navbar-mobile').classList.add('scrolled');
+    }
+    
+    function burgerClicked(x) {
+        x.classList.toggle("change");
+        let dropdown = document.getElementsByClassName('burger-dropdown-content')[0];
+        if (dropdown.style.display !== "none") {
+            executeWithNoTransition(onScroll);
+            dropdown.style.display = "none";
+        } else {
+            executeWithNoTransition(addBackground);
+            dropdown.style.display = "";
+        }
+    }
+</script>
+
+<style>
+    .top-row, .burger-dropdown-content {
+        background-color: @Config.Colours.PrimaryBackground;
+    }
+</style>
 
 @code {
     

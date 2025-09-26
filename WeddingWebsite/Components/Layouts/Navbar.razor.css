@@ -32,3 +32,87 @@
 .top-row ::deep a:hover {
     color: #666;
 }
+
+#navbar-mobile {
+    display: none;
+    grid-template-areas:
+        "name burger";
+    grid-template-columns: calc(100% - 50px) 50px;
+}
+
+#navbar-mobile ::deep a {
+    margin-bottom: 5px;
+}
+
+.mobile-left-link {
+    grid-area: name;
+    overflow: hidden;
+}
+
+.burger-menu-container {
+    grid-area: burger;
+    width: 50px;
+    height: 50px;
+}
+
+.burger-menu {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.bar1, .bar2, .bar3 {
+    width: 25px;
+    height: 2px;
+    background-color: #ffffff;
+    margin: 5px 0;
+    transition-duration: 0.4s;
+}
+
+.scrolled .bar1, .scrolled .bar2, .scrolled .bar3 {
+    background-color: var(--mud-palette-text-primary);
+}
+
+.change .bar1 {
+    transform: rotate(-45deg) translate(-5px, 3.5px) ;
+}
+
+.change .bar2 {
+    opacity: 0;
+}
+
+.change .bar3 {
+    transform: rotate(45deg) translate(-6px, -5px) ;
+}
+
+.burger-dropdown-content {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    transition-duration: 0.4s;
+    width: 100vw;
+    text-align: left;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.change .burger-dropdown-content {
+    z-index: 20;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+
+@media only screen and (max-width: 800px) {
+    #navbar-mobile {
+        display: grid;
+    }
+
+    #navbar-desktop {
+        display: none;
+    }
+
+}
