@@ -72,7 +72,7 @@
     
     private Colour PrimaryColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
     
-    private string CssTextShadow => Theme is { Background: { IsDark: false, ExtraContrast: true } } ? "text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75);" : "";
+    private string CssTextShadow => Theme is { Background: { IsDark: false, ExtraContrast: true } } ? "text-shadow: 0 0 2px rgba(0, 0, 0, 1);" : "";
 
     private IEnumerable<TimelineItem> timelineItems = [];
     
