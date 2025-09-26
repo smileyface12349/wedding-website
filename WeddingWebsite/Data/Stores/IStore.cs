@@ -1,5 +1,6 @@
 using WeddingWebsite.Data.Models;
 using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 
 namespace WeddingWebsite.Data.Stores;
 
@@ -34,4 +35,6 @@ public interface IStore
     /// Deletes a guest. Restricted to Admin users.
     /// </summary>
     public void DeleteGuest(string guestId);
+    
+    public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description);
 }

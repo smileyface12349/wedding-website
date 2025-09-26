@@ -189,4 +189,27 @@ public class Store : IStore
         
         command.ExecuteNonQuery();
     }
+
+    [Authorize]
+    public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                INSERT INTO AccountLog (LogId, Timestamp, AffectedUserId, ActorId, EventType, Description)
+                VALUES (:logId, :timestamp, :affectedUserId, :actorId, :eventType, :description)
+            """;
+        
+        command.Parameters.AddWithValue(":logId", Guid.NewGuid().ToString());
+        command.Parameters.AddWithValue(":timestamp", DateTime.UtcNow.Ticks);
+        command.Parameters.AddWithValue(":affectedUserId", affectedUserId);
+        command.Parameters.AddWithValue(":actorId", actorId);
+        command.Parameters.AddWithValue(":eventType", logType.ToDatabaseInteger());
+        command.Parameters.AddWithValue(":description", description);
+        
+        command.ExecuteNonQuery();
+    }
 }
