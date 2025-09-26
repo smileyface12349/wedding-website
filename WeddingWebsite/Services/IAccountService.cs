@@ -3,7 +3,7 @@ using WeddingWebsite.Data.Models;
 
 namespace WeddingWebsite.Services;
 
-public interface IRsvpService
+public interface IAccountService
 {
     public IEnumerable<GuestWithId> GetOwnGuests(ClaimsPrincipal user);
 }

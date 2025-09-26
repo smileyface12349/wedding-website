@@ -119,8 +119,7 @@
 
 @code {
     [Inject]
-    public required IRsvpService RsvpService { get; set; }
-    
+    public required IAccountService AccountService { get; set; }
     [SupplyParameterFromForm]
     private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
@@ -140,7 +139,7 @@
             return;
         }
         
-        Guests = RsvpService.GetOwnGuests(user);
+        Guests = AccountService.GetOwnGuests(user);
         
         Email = user.Identity?.Name ?? "";
     }

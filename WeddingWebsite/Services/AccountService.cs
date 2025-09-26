@@ -6,7 +6,7 @@ using WeddingWebsite.Data.Stores;
 namespace WeddingWebsite.Services;
 
 [Authorize]
-public class RsvpService(IStore store) : IRsvpService
+public class AccountService(IStore store) : IAccountService
 {
     public IEnumerable<GuestWithId> GetOwnGuests(ClaimsPrincipal user)
     {
