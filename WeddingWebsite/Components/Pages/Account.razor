@@ -60,7 +60,10 @@
                         {
                             <p class="text-danger">@ErrorText</p>
                         }
-                        <button type="submit" style="background: @Theme?.Primary; margin-top: 10px">Submit</button>
+                        <div class="change-password-buttons">
+                            <button type="submit" style="background: @Theme?.Primary">Submit</button>
+                            <button class="cancel-button" @onclick="() => ShowChangePassword = false">Cancel</button>
+                        </div>
                     </EditForm>
                 }
                 else
