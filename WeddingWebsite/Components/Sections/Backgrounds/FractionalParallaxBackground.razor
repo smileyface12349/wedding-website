@@ -1,15 +1,9 @@
 ﻿@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Components.Interactivity
 
-<div id="background">
+<div id="background" style="@Background.GetBackgroundCss()">
     @ChildContent
 </div>
-
-<style>
-    #background {
-        @Background.GetBackgroundCss()
-    }
-</style>
 
 <div id="background-scroll-amount">@Background.Parallax</div>
 
