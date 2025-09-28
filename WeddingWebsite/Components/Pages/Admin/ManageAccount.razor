@@ -22,14 +22,14 @@
 
 <PageTitle>Manage Account</PageTitle>
 
-<div class="narrow-section">
-    <h1 class="text-center">Manage Account</h1>
+<h1 class="text-center">Manage Account</h1>
 
+<div class="narrow-section">
     @if (SomethingDiffers)
     {
         <p class="text-red">You have unsaved changes. Press the apply button besides the red input(s) to apply.</p>
     }
-    
+
     @if (ErrorText != "")
     {
         <p class="text-red">@ErrorText</p>
@@ -41,7 +41,7 @@
         <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
         <button @onclick="ApplyEmailChange">Apply</button>
     </div>
-    
+
     <div class="flex-container mb">
         <label for="new-password">New Password</label>
         <span class="flex-grow"></span>
@@ -49,79 +49,80 @@
         <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
     
-    <h2>Guests</h2>
-    <p>Click on a guest to manage/delete them.</p>
-    <MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name.Full</MudTd>
-            <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
-        </RowTemplate>
-    </MudTable>
-    <div class="flex-container mb">
-        <label for="new-guest">Add Extra Guest</label>
-        <span class="flex-grow"></span>
-        <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
-        <button @onclick="AddNewGuest">Add</button>
-    </div>
-    
-    <h2>Permissions</h2>
-    <AuthorizeView Roles="Owner">
-        <Authorized>
-            @if (IsUserAdmin())
-            {
-                <p>This user is an administrator.</p>
-                @if (IsUserOwner())
-                {
-                    <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
-                }
-                else
-                {
-                    <button @onclick="DemoteUser">Demote</button>
-                }
-            }
-            else
-            {
-                <p>This user does not have any special permissions.</p>
-                <button @onclick="PromoteUser">Promote to Admin</button>
-            }
-        </Authorized>
-        <NotAuthorized>
+</div>
+
+<h2>Guests</h2>
+<p>Click on a guest to manage/delete them.</p>
+<MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name.Full</MudTd>
+        <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
+    </RowTemplate>
+</MudTable>
+<div class="flex-container mb">
+    <label for="new-guest">Add Extra Guest</label>
+    <span class="flex-grow"></span>
+    <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
+    <button @onclick="AddNewGuest">Add</button>
+</div>
+
+<h2>Permissions</h2>
+<AuthorizeView Roles="Owner">
+    <Authorized>
+        @if (IsUserAdmin())
+        {
+            <p>This user is an administrator.</p>
             @if (IsUserOwner())
             {
-                <p>Role: Owner.</p>
-            }
-            else if (IsUserAdmin())
-            {
-                <p>Role: Admin.</p>
+                <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
             }
             else
             {
-                <p>No special permissions.</p>
+                <button @onclick="DemoteUser">Demote</button>
             }
-            <p>Only owners can update permissions.</p>
-        </NotAuthorized>
-    </AuthorizeView>
+        }
+        else
+        {
+            <p>This user does not have any special permissions.</p>
+            <button @onclick="PromoteUser">Promote to Admin</button>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (IsUserOwner())
+        {
+            <p>Role: Owner.</p>
+        }
+        else if (IsUserAdmin())
+        {
+            <p>Role: Admin.</p>
+        }
+        else
+        {
+            <p>No special permissions.</p>
+        }
+        <p>Only owners can update permissions.</p>
+    </NotAuthorized>
+</AuthorizeView>
     
-    <h2>Logs</h2>
-    <p>Logs are read-only.</p>
-    <MudTable T="AccountLog" Items="Logs" Class="mb">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">Date</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Description)">Description</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Actor.Email)">Done By</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour:@context.Date.Minute</MudTd>
-            <MudTd>@context.Description</MudTd>
-            <MudTd>@context.Actor.Email</MudTd>
-        </RowTemplate>
-    </MudTable>
-    
-</div>
+
+<h2>Logs</h2>
+<p>Logs are read-only.</p>
+<MudTable T="AccountLog" Items="Logs" Class="mb">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">Date</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Actor.Email)">Done By</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour:@context.Date.Minute</MudTd>
+        <MudTd>@context.Description</MudTd>
+        <MudTd>@context.Actor.Email</MudTd>
+    </RowTemplate>
+</MudTable>
 
 @code {
     [Parameter] public required string UserId { get; set; }
