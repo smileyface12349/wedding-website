@@ -107,11 +107,16 @@
     {
         if (Account is null || Guest is null) return;
 
+        var oldName = Guest.Name.Full;
         var name = Name.Split(" ");
         var firstName = name.First();
         var lastName = name.Length > 1 ? string.Join(" ", name.Skip(1)) : "";
         AdminService.RenameGuest(GuestId, firstName, lastName);
         Guest = AdminService.GetGuest(UserId, GuestId);
+        if (LoggedInUser is not null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.RenameGuest, $"Guest renamed from {oldName} to {Guest?.Name.Full ?? "unknown name"}", UserId);
+        }
     }
     
     private void ClickDelete()
