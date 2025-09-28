@@ -114,7 +114,7 @@
 <MudTable T="AccountLog" Items="Logs" Class="mb">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">Date</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.LogType)">Description</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Actor.Email)">Done By</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
