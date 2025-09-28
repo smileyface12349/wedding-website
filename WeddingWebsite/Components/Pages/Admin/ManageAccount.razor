@@ -7,6 +7,7 @@
 @using WeddingWebsite.Data
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Services
 
 @layout SimpleLayout
@@ -14,8 +15,8 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @inject UserManager<Account> UserManager
-@inject RoleManager<IdentityRole> RoleManager
 @inject IAdminService AdminService
+@inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -179,6 +180,7 @@
         else
         {
             NewPassword = "";
+            AccountService.Log(LoggedInUser, AccountLogType.ChangePassword, "Admin changed their password", UserId);
         }
     }
 
