@@ -184,6 +184,7 @@
         {
             ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
             AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their email from {oldEmail} to {Email}", UserId);
+            Logs = AdminService.GetAccountLogs(UserId);
         }
     }
 
@@ -201,6 +202,7 @@
         {
             NewPassword = "";
             AccountService.Log(LoggedInUser, AccountLogType.ChangePassword, "Admin changed their password", UserId);
+            Logs = AdminService.GetAccountLogs(UserId);
         }
     }
 
@@ -216,6 +218,7 @@
         Guests = AdminService.GetGuestsForAccount(Account.Id);
         NewGuestName = "";
         AccountService.Log(LoggedInUser, AccountLogType.AddGuest, $"Add guest: {firstName} {lastName}", UserId);
+        Logs = AdminService.GetAccountLogs(UserId);
     }
     
     private bool IsUserAdmin()
@@ -242,6 +245,7 @@
         else
         {
             AccountService.Log(LoggedInUser, AccountLogType.ChangePermissions, "Demoted from Admin to User", UserId);
+            Logs = AdminService.GetAccountLogs(UserId);
         }
     }
 
@@ -257,6 +261,7 @@
         else
         {
             AccountService.Log(LoggedInUser, AccountLogType.ChangePermissions, "Promoted from User to Admin", UserId);
+            Logs = AdminService.GetAccountLogs(UserId);
         }
     }
 
