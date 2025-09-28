@@ -12,4 +12,7 @@ public enum AccountLogType
     
     [Description("Change email")]
     ChangeEmail,
+    
+    [Description("Change permissions")]
+    ChangePermissions,
 }
