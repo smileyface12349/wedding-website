@@ -158,12 +158,14 @@
             return;
         }
 
+        var oldEmail = Account.Email;
         Account.Email = Email;
         Account.UserName = Email;
         var result = UserManager.UpdateAsync(Account).Result;
         if (!result.Succeeded)
         {
             ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+            AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their email from {oldEmail} to {Email}", UserId);
         }
     }
 
