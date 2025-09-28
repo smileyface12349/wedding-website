@@ -105,6 +105,22 @@
             <p>Only owners can update permissions.</p>
         </NotAuthorized>
     </AuthorizeView>
+    
+    <h2>Logs</h2>
+    <p>Logs are read-only.</p>
+    <MudTable T="AccountLog" Items="Logs" Class="mb">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">Date</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Actor.Email)">Done By</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour:@context.Date.Minute</MudTd>
+            <MudTd>@context.Description</MudTd>
+            <MudTd>@context.Actor.Email</MudTd>
+        </RowTemplate>
+    </MudTable>
+    
 </div>
 
 @code {
@@ -112,6 +128,7 @@
 
     private Account? Account { get; set; }
     private IEnumerable<GuestWithId> Guests { get; set; } = [];
+    private IEnumerable<AccountLog> Logs { get; set; } = [];
 
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
@@ -139,6 +156,7 @@
         }
         
         Guests = AdminService.GetGuestsForAccount(Account.Id);
+        Logs = AdminService.GetAccountLogs(UserId);
     }
     
     private void RowClicked(TableRowClickEventArgs<GuestWithId> args)
