@@ -22,6 +22,9 @@
         <MudTd DataLabel="Guests">@GetGuestNames(context)</MudTd>
         <MudTd DataLabel="RSVP">@GetRsvpSummary(context)</MudTd>
     </RowTemplate>
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
 </MudTable>
 
 @code {
