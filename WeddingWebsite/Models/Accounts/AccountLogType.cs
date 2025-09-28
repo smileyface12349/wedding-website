@@ -18,4 +18,7 @@ public enum AccountLogType
     
     [Description("Delete guest")]
     DeleteGuest,
+    
+    [Description("Rename guest")]
+    RenameGuest
 }
