@@ -53,31 +53,39 @@
             var guest = account.Guests.First();
             return guest.Rsvp switch
             {
-                RsvpStatus.NotResponded => "No response",
+                RsvpStatus.NotResponded => "Not responded",
                 RsvpStatus.Yes => "Yes",
                 RsvpStatus.No => "No",
                 _ => "Error"
             };
         }
         
-        if (account.Guests.All(g => g.Rsvp == RsvpStatus.NotResponded))
-            return "No responses";
-        if (account.Guests.All(g => g.Rsvp == RsvpStatus.No))
-            return $"No (all {account.Guests.Count()})";
-        if (account.Guests.All(g => g.Rsvp == RsvpStatus.Yes))
-            return $"Yes (all {account.Guests.Count()})";
-        
+        var numResponded = account.Guests.Count(g => g.Rsvp != RsvpStatus.NotResponded);
         var numYes = account.Guests.Count(g => g.Rsvp == RsvpStatus.Yes);
         var numNo = account.Guests.Count(g => g.Rsvp == RsvpStatus.No);
-        var numWaiting = account.Guests.Count(g => g.Rsvp == RsvpStatus.NotResponded);
+        var numGuests = account.Guests.Count();
+        var numWaiting = numGuests - numResponded;
 
+        // INCOMPLETE. Examples: "3/4 responses (1 yes, 2 no)", "0/4 responses", "1/2 responses (1 yes)"
         if (numWaiting > 0)
         {
-            return numNo > 0 
-                ? $"{numYes} yes, {numNo} no, {numWaiting} waiting"
-                : $"{numYes} yes, {numWaiting} waiting";
+            var output = $"{numResponded}/{numGuests} responses";
+            var extraThings = new List<string>();
+            if (numYes > 0)
+                extraThings.Add($"{numYes} yes");
+            if (numNo > 0)
+                extraThings.Add($"{numNo} no");
+            if (extraThings.Any())
+                output += $" ({string.Join(", ", extraThings)})";
+            return output;
         }
-        return $"{numYes} yes, {numNo} no";
+        
+        // COMPLETE. Examples: "No (all 3)", "Yes (all 2)", "1 Yes, 1 No"
+        if (account.Guests.All(g => g.Rsvp == RsvpStatus.No))
+            return $"No (all {numGuests})";
+        if (account.Guests.All(g => g.Rsvp == RsvpStatus.Yes))
+            return $"Yes (all {account.Guests.Count()})";
+        return $"{numYes} Yes, {numNo} No";
     }
     
     private void RowClicked(TableRowClickEventArgs<AccountWithGuests> args)
