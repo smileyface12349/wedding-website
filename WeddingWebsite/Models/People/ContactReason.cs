@@ -4,7 +4,7 @@ namespace WeddingWebsite.Models.People;
 
 public enum ContactReason
 {
-    [Description("Attendance & RSPVs")]
+    [Description("Attendance & RSVPs")]
     Attendance,
     
     [Description("Dietary Requirements & Special Arrangements")]

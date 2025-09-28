@@ -232,7 +232,7 @@ public sealed class SampleWeddingDetails : IWeddingDetails
         "456 Holy Road, Eden, ED3 4GH",
         new TravelDirections(
             [
-                new WebsiteSection(null, "We suggest arriving by car. If you do not have a car, please let us know when you RSPV and we can arrange a lift for you."),
+                new WebsiteSection(null, "We suggest arriving by car. If you do not have a car, please let us know when you RSVP and we can arrange a lift for you."),
                 new WebsiteSection("Parking", "Please follow the signs to car parking. Please do not park in the spaces directly outside the entrance unless you are a blue badge holder, or have been informed directly that you may park there.")
             ],
             null,
