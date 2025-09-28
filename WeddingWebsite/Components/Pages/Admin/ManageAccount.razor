@@ -82,13 +82,13 @@
             }
             else
             {
-                <button @onclick="DemoteUser">Demote</button>
+                <button class="mb" @onclick="DemoteUser">Demote</button>
             }
         }
         else
         {
             <p>This user does not have any special permissions.</p>
-            <button @onclick="PromoteUser">Promote to Admin</button>
+            <button class="mb" @onclick="PromoteUser">Promote to Admin</button>
         }
     </Authorized>
     <NotAuthorized>
