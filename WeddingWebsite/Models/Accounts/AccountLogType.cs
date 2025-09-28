@@ -15,4 +15,7 @@ public enum AccountLogType
     
     [Description("Change permissions")]
     ChangePermissions,
+    
+    [Description("Delete guest")]
+    DeleteGuest,
 }
