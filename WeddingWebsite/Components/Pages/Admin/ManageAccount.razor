@@ -197,6 +197,7 @@
         AdminService.AddGuestToAccount(Account.Id, firstName, lastName);
         Guests = AdminService.GetGuestsForAccount(Account.Id);
         NewGuestName = "";
+        AccountService.Log(LoggedInUser, AccountLogType.AddGuest, $"Add guest: {firstName} {lastName}", UserId);
     }
     
     private bool IsUserAdmin()
