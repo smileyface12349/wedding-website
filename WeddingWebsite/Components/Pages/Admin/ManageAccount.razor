@@ -183,6 +183,9 @@
         if (!result.Succeeded)
         {
             ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
             AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their email from {oldEmail} to {Email}", UserId);
             Logs = AdminService.GetAccountLogs(UserId);
         }
