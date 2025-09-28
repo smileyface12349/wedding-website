@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.Sqlite;
+using WeddingWebsite.Core;
 using WeddingWebsite.Data.Enums;
 using WeddingWebsite.Data.Models;
-using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 using WeddingWebsite.Models.People;
 
 namespace WeddingWebsite.Data.Stores;
@@ -188,5 +189,104 @@ public class Store : IStore
         command.Parameters.AddWithValue(":guestId", guestId);
         
         command.ExecuteNonQuery();
+    }
+
+    [Authorize]
+    public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                INSERT INTO AccountLog (LogId, Timestamp, AffectedUserId, ActorId, EventType, Description)
+                VALUES (:logId, :timestamp, :affectedUserId, :actorId, :eventType, :description)
+            """;
+        
+        command.Parameters.AddWithValue(":logId", Guid.NewGuid().ToString());
+        command.Parameters.AddWithValue(":timestamp", DateTime.UtcNow.Ticks);
+        command.Parameters.AddWithValue(":affectedUserId", affectedUserId);
+        command.Parameters.AddWithValue(":actorId", actorId);
+        command.Parameters.AddWithValue(":eventType", logType.ToDatabaseInteger());
+        command.Parameters.AddWithValue(":description", description);
+        
+        command.ExecuteNonQuery();
+    }
+    
+    public string? GetUserIdByEmail(string email)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT Id
+                FROM AspNetUsers
+                WHERE Email = :email
+            """;
+        
+        command.Parameters.AddWithValue(":email", email);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var userId = reader.GetString(0);
+            return userId;
+        }
+        
+        return null;
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IEnumerable<AccountLog> GetAccountLogs(string userId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT log.Timestamp, 
+                       affectedUser.Id, affectedUser.Email, 
+                       actor.Id, actor.Email, 
+                       log.EventType, log.Description
+                FROM AccountLog log
+                JOIN AspNetUsers affectedUser ON log.AffectedUserId = affectedUser.Id
+                JOIN AspNetUsers actor ON log.ActorId = actor.Id
+                WHERE log.AffectedUserId = :userId
+                ORDER BY log.Timestamp DESC
+            """;
+        
+        command.Parameters.AddWithValue(":userId", userId);
+        
+        using var reader = command.ExecuteReader();
+        var logs = new List<AccountLog>();
+        while (reader.Read())
+        {
+            var timestampTicks = reader.GetInt64(0);
+            var affectedUserId = reader.GetString(1);
+            var affectedUserEmail = reader.GetString(2);
+            var actorId = reader.GetString(3);
+            var actorEmail = reader.GetString(4);
+            var eventTypeInt = reader.GetInt16(5);
+            
+            var logType = AccountLogTypeEnumConverter.DatabaseIntegerToAccountLogType(eventTypeInt);
+            
+            var description = reader.IsDBNull(6) ? logType.GetEnumDescription() : reader.GetString(6);
+            
+            var log = new AccountLog(
+                new DateTime(timestampTicks, DateTimeKind.Utc),
+                new Account { Id = affectedUserId, Email = affectedUserEmail },
+                new Account { Id = actorId, Email = actorEmail },
+                logType,
+                description
+            );
+            
+            logs.Add(log);
+        }
+
+        return logs;
     }
 }

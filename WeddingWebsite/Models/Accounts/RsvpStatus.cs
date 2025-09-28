@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WeddingWebsite.Models;
+namespace WeddingWebsite.Models.Accounts;
 
 public enum RsvpStatus
 {

@@ -1,4 +1,4 @@
-﻿using WeddingWebsite.Models;
+﻿using WeddingWebsite.Models.Accounts;
 
 namespace WeddingWebsite.Data.Models;
 

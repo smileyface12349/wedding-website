@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.People;
 
-namespace WeddingWebsite.Models;
+namespace WeddingWebsite.Models.Accounts;
 
 public record Guest(
     Name Name,

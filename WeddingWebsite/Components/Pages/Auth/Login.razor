@@ -6,9 +6,11 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Services
 
 @inject SignInManager<Account> SignInManager
 @inject ILogger<Login> Logger
@@ -83,6 +85,9 @@
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
+    
+    [Inject]
+    private IAccountService? AccountService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,13 +106,11 @@
         if (result.Succeeded)
         {
             Logger.LogInformation($"User logged in: {Input.Email}.");
+            if (AccountService is not null)
+            {
+                AccountService.Log(Input.Email, AccountLogType.LogIn, "User logged in");
+            }
             RedirectManager.RedirectTo(ReturnUrl);
-        }
-        else if (result.RequiresTwoFactor)
-        {
-            RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)
         {

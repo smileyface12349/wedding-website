@@ -5,6 +5,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
@@ -118,8 +119,7 @@
 
 @code {
     [Inject]
-    public required IRsvpService RsvpService { get; set; }
-    
+    public required IAccountService AccountService { get; set; }
     [SupplyParameterFromForm]
     private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
@@ -139,7 +139,7 @@
             return;
         }
         
-        Guests = RsvpService.GetOwnGuests(user);
+        Guests = AccountService.GetOwnGuests(user);
         
         Email = user.Identity?.Name ?? "";
     }
@@ -181,6 +181,8 @@
             
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomStart;
             Snackbar.Add("Password changed successfully.", Severity.Success, c => c.SnackbarVariant = Variant.Text);
+            
+            AccountService.Log(Email, AccountLogType.ChangePassword, "User changed their password.");
         }
     }
     

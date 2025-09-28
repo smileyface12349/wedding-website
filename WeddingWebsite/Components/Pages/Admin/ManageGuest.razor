@@ -1,9 +1,10 @@
 ﻿@page "/Admin/Account/{UserId}/{GuestId}"
 
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Data
-@using WeddingWebsite.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Services
 
 @layout SimpleLayout
@@ -12,8 +13,10 @@
 
 @inject UserManager<Account> UserManager
 @inject IAdminService AdminService
+@inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 @inject ILogger<ManageGuest> Logger
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -73,9 +76,14 @@
 
     private bool SomethingDiffers => NameDiffers != "";
     private string NameDiffers => Account is null || Guest?.Name.Full == Name ? "" : "input-error";
+    
+    private ClaimsPrincipal? LoggedInUser { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authenticationState.User;
+        
         Account = await UserManager.FindByIdAsync(UserId);
         
         if (Account is null)
@@ -99,11 +107,16 @@
     {
         if (Account is null || Guest is null) return;
 
+        var oldName = Guest.Name.Full;
         var name = Name.Split(" ");
         var firstName = name.First();
         var lastName = name.Length > 1 ? string.Join(" ", name.Skip(1)) : "";
         AdminService.RenameGuest(GuestId, firstName, lastName);
         Guest = AdminService.GetGuest(UserId, GuestId);
+        if (LoggedInUser is not null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.RenameGuest, $"Guest renamed from {oldName} to {Guest?.Name.Full ?? "unknown name"}", UserId);
+        }
     }
     
     private void ClickDelete()
@@ -115,6 +128,10 @@
     {
         Logger.LogInformation($"Deleting guest {GuestId} for user {UserId}. Full data: {Guest?.ToString() ?? "null"}");
         AdminService.DeleteGuest(GuestId);
+        if (LoggedInUser is not null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.DeleteGuest, $"Guest deleted: {Guest?.Name.Full ?? "unknown name"} ({GuestId})", UserId);
+        }
         NavigationManager.NavigateTo($"/Admin/Account/{UserId}");
     }
 

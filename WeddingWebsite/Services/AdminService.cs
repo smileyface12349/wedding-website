@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using WeddingWebsite.Data.Models;
 using WeddingWebsite.Data.Stores;
-using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accounts;
 
 namespace WeddingWebsite.Services;
 
@@ -36,5 +36,10 @@ public class AdminService(IStore store) : IAdminService
     public void DeleteGuest(string guestId)
     {
         store.DeleteGuest(guestId);
+    }
+    
+    public IEnumerable<AccountLog> GetAccountLogs(string userId)
+    {
+        return store.GetAccountLogs(userId);
     }
 }
