@@ -219,6 +219,10 @@
         if (!result.Succeeded)
         {
             ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        } 
+        else
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ChangePermissions, "Demoted from Admin to User", UserId);
         }
     }
 
@@ -230,6 +234,10 @@
         if (!result.Succeeded)
         {
             ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ChangePermissions, "Promoted from User to Admin", UserId);
         }
     }
 
