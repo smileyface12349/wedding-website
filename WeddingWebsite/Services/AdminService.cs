@@ -37,4 +37,9 @@ public class AdminService(IStore store) : IAdminService
     {
         store.DeleteGuest(guestId);
     }
+    
+    public IEnumerable<AccountLog> GetAccountLogs(string userId)
+    {
+        return store.GetAccountLogs(userId);
+    }
 }
