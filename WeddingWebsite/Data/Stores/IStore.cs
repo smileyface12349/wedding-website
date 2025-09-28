@@ -45,4 +45,9 @@ public interface IStore
     /// Get user id from their email address
     /// </summary>
     public string? GetUserIdByEmail(string email);
+
+    /// <summary>
+    /// Get all logs affecting a particular account, regardless of who performed the action.
+    /// </summary>
+    public IEnumerable<AccountLog> GetAccountLogs(string userId);
 }
