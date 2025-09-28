@@ -32,12 +32,13 @@ public class DefaultConfig : IWebsiteConfig
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
         
         var bricks = new BackgroundImage("/bg/bricks.jpg", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
+        var flowers = new BackgroundImage("/bg/blue-flowers.png", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
     
         Sections = [
             new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
-            new Section.MeetWeddingParty(new SectionTheme(bricks, Colours.Primary, outlinedBox)),
+            new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
             new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];
