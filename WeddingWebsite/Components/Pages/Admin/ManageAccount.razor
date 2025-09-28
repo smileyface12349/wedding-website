@@ -1,5 +1,6 @@
 ﻿@page "/Admin/Account/{UserId}"
 
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Core
@@ -16,6 +17,7 @@
 @inject RoleManager<IdentityRole> RoleManager
 @inject IAdminService AdminService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -118,9 +120,14 @@
     private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
     private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
     private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
+    
+    private ClaimsPrincipal LoggedInUser { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authenticationState.User;
+        
         Account = await UserManager.FindByIdAsync(UserId);
         Email = Account?.Email ?? "";
         
