@@ -9,4 +9,7 @@ public enum AccountLogType
     
     [Description("Change password")]
     ChangePassword,
+    
+    [Description("Change email")]
+    ChangeEmail,
 }

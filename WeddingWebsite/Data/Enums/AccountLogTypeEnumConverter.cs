@@ -10,6 +10,7 @@ public static class AccountLogTypeEnumConverter
         {
             AccountLogType.LogIn => 0,
             AccountLogType.ChangePassword => 1,
+            AccountLogType.ChangeEmail => 2,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -25,6 +26,7 @@ public static class AccountLogTypeEnumConverter
         {
             0 => AccountLogType.LogIn,
             1 => AccountLogType.ChangePassword,
+            2 => AccountLogType.ChangeEmail,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
