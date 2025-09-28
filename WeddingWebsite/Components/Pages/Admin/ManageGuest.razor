@@ -54,12 +54,13 @@
     @if (HasClickedDelete)
     {
         <p class="text-red">Are you sure? This cannot be undone.</p>
-        <button @onclick="DeleteGuest">Delete this Guest (click again to confirm)</button>
+        <button @onclick="DeleteGuest" class="block-button">Delete this Guest (click again to confirm)</button>
     }
     else
     {
-        <button @onclick="ClickDelete">Delete this Guest</button>
+        <button @onclick="ClickDelete" class="block-button">Delete this Guest</button>
     }
+    <a class="button grey-button" href="/admin/account/@UserId">Back to Manage Account</a>
     
 </div>
 

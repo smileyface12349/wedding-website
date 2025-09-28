@@ -54,6 +54,15 @@
     padding: 3px 6px;
 }
 
+::deep .block-button {
+    display: block;
+    margin-bottom: 10px;
+}
+
+::deep .grey-button {
+    background: #aaa;
+}
+
 ::deep button:hover, ::deep .button:hover {
     box-shadow: 1px 2px 12px rgba(0,0,0,0.4);
 }

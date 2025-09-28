@@ -6,7 +6,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager NavigationManager
 
-<MudTable T="AccountWithGuests" RowStyle="cursor: pointer" Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true" OnRowClick="RowClicked">
+<MudTable T="AccountWithGuests" Class="mb" RowStyle="cursor: pointer" Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true" OnRowClick="RowClicked">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Accounts</MudText>
         <MudSpacer />
