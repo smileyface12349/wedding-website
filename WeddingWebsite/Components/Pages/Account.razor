@@ -182,7 +182,7 @@
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomStart;
             Snackbar.Add("Password changed successfully.", Severity.Success, c => c.SnackbarVariant = Variant.Text);
             
-            AccountService.Log(Email, AccountLogType.ChangePassword, "User changed their password.");
+            AccountService.Log(Email, AccountLogType.ChangePassword, "User changed their password");
         }
     }
     
