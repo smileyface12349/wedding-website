@@ -131,7 +131,7 @@
         AdminService.DeleteGuest(GuestId);
         if (LoggedInUser is not null)
         {
-            AccountService.Log(LoggedInUser, AccountLogType.DeleteGuest, $"Guest deleted: {Guest?.Name.Full ?? "unknown name"} ({GuestId})", UserId);
+            AccountService.Log(LoggedInUser, AccountLogType.DeleteGuest, $"Guest deleted: {Guest?.Name.Full ?? "unknown name"}", UserId);
         }
         NavigationManager.NavigateTo($"/Admin/Account/{UserId}");
     }
