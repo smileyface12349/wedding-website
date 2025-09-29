@@ -49,68 +49,70 @@
         <button @onclick="ApplyPasswordChange">Apply</button>
     </div>
     
-</div>
+    <h2>Guests</h2>
+    <p>Click on a guest to manage/delete them.</p>
+    <MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name.Full</MudTd>
+            <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
+        </RowTemplate>
+    </MudTable>
+    <div class="flex-container mb">
+        <label for="new-guest">Add Extra Guest</label>
+        <span class="flex-grow"></span>
+        <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
+        <button @onclick="AddNewGuest">Add</button>
+    </div>
 
-<h2>Guests</h2>
-<p>Click on a guest to manage/delete them.</p>
-<MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name.Full</MudTd>
-        <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
-    </RowTemplate>
-</MudTable>
-<div class="flex-container mb">
-    <label for="new-guest">Add Extra Guest</label>
-    <span class="flex-grow"></span>
-    <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
-    <button @onclick="AddNewGuest">Add</button>
-</div>
-
-<h2>Permissions</h2>
-<AuthorizeView Roles="Owner">
-    <Authorized>
-        @if (IsUserAdmin())
-        {
-            <p>This user is an administrator.</p>
-            @if (IsUserOwner())
+    <h2>Permissions</h2>
+    <AuthorizeView Roles="Owner">
+        <Authorized>
+            @if (IsUserAdmin())
             {
-                <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
+                <p>This user is an administrator.</p>
+                @if (IsUserOwner())
+                {
+                    <p>This user is an owner. To modify owners, you will need to run manual SQL queries.</p>
+                }
+                else
+                {
+                    <button class="mb" @onclick="DemoteUser">Demote</button>
+                }
             }
             else
             {
-                <button class="mb" @onclick="DemoteUser">Demote</button>
+                <p>This user does not have any special permissions.</p>
+                <button class="mb" @onclick="PromoteUser">Promote to Admin</button>
             }
-        }
-        else
-        {
-            <p>This user does not have any special permissions.</p>
-            <button class="mb" @onclick="PromoteUser">Promote to Admin</button>
-        }
-    </Authorized>
-    <NotAuthorized>
-        @if (IsUserOwner())
-        {
-            <p>Role: Owner.</p>
-        }
-        else if (IsUserAdmin())
-        {
-            <p>Role: Admin.</p>
-        }
-        else
-        {
-            <p>No special permissions.</p>
-        }
-        <p>Only owners can update permissions.</p>
-    </NotAuthorized>
-</AuthorizeView>
+        </Authorized>
+        <NotAuthorized>
+            @if (IsUserOwner())
+            {
+                <p>Role: Owner.</p>
+            }
+            else if (IsUserAdmin())
+            {
+                <p>Role: Admin.</p>
+            }
+            else
+            {
+                <p>No special permissions.</p>
+            }
+            <p>Only owners can update permissions.</p>
+        </NotAuthorized>
+    </AuthorizeView>
     
 
-<h2>Logs</h2>
-<p>Logs are read-only. Times are in UTC.</p>
+    <h2>Logs</h2>
+    <p>Logs are read-only. Times are in UTC.</p>
+    
+</div>
+
+<div style="margin-bottom: 20px"></div>
 <MudTable T="AccountLog" Items="Logs" Class="mb">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">Date</MudTableSortLabel></MudTh>
@@ -127,7 +129,9 @@
     </PagerContent>
 </MudTable>
 
-<a class="button grey-button" href="/admin">Back to Admin Page</a>
+<div class="text-center">
+    <a class="button grey-button" href="/admin">Back to Admin Page</a>
+</div>
 
 @code {
     [Parameter] public required string UserId { get; set; }
