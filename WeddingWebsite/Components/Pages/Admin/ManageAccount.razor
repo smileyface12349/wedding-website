@@ -230,7 +230,7 @@
         AdminService.AddGuestToAccount(Account.Id, firstName, lastName);
         Guests = AdminService.GetGuestsForAccount(Account.Id);
         NewGuestName = "";
-        AccountService.Log(LoggedInUser, AccountLogType.AddGuest, $"Add guest: {firstName} {lastName}", UserId);
+        AccountService.Log(LoggedInUser, AccountLogType.AddGuest, $"Guest added: {firstName} {lastName}", UserId);
         Logs = AdminService.GetAccountLogs(UserId);
     }
     
