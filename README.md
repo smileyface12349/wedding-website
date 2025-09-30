@@ -1,4 +1,4 @@
-<img width="662" height="549" alt="image" src="https://github.com/user-attachments/assets/37478986-fe69-415f-a3b8-cc2af7ea2d66" /># Wedding Website
+# Wedding Website
 
 ## Features
 
@@ -24,15 +24,18 @@ Sections can be added to the website in any order, using as many or as few secti
 
 ### Top Section
 <img width="1913" height="908" alt="image" src="https://github.com/user-attachments/assets/4a0faefa-71f2-40fc-8998-c099ee92c5ad" />
+
 Displays a large background image and a countdown timer, with some customisable call-to-action buttons for key things that need doing currently (e.g. booking accommodation or RSVPing).
 This section is required at the top, unlike the rest which you may add in any order.
 
 ### How We Met
 <img width="1164" height="493" alt="image" src="https://github.com/user-attachments/assets/d345f5f6-5b21-4c4b-9f17-2b7f67ddb6a1" />
+
 A simple paragraph to give a bit of backstory.
 
 ### Timeline
 <img width="1065" height="840" alt="image" src="https://github.com/user-attachments/assets/cf98cd8b-5574-4cee-a01d-8feb78c25890" />
+
 The unusual timeline design conveys:
 - Timings of the day (with options for pop-ups including extra details about each event).
 - Travel directions (auto-generated for venue changes).
@@ -41,18 +44,22 @@ All in one coherent view. I find this much easier to use than having separate se
 
 ### Venue Showcase
 <img width="1078" height="710" alt="image" src="https://github.com/user-attachments/assets/a7e92d91-d8ad-4157-b1cb-b37e142fa8b8" />
+
 Shows you a little more information about the venues. Totally optional, as the important information is already in the timeline.
 
 ### Meet the Wedding Party
 <img width="1054" height="752" alt="image" src="https://github.com/user-attachments/assets/d191851f-6bd7-4a8d-87dc-fc15a7cf90f1" />
+
 For a little more information about the important people. Comes with various display modes, including chat messages if you prefer that.
 
 ### Dress Code
 <img width="1084" height="365" alt="image" src="https://github.com/user-attachments/assets/495fbe87-2494-4965-98f1-8a6f7ce1defa" />
+
 A tiny section to display the dress code. Doesn't have to be wrapped in a box.
 
 ### Contacts
 <img width="662" height="549" alt="image" src="https://github.com/user-attachments/assets/7b2bcfb9-c2d0-498c-bb1e-b40f3cc8540c" />
+
 This section recommends particular people based on the type of enquiry and how urgent it is.
 
 
