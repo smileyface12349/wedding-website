@@ -62,9 +62,7 @@
     </CascadingValue>
 }
 
-@if (Config.Sections.Any()) {
-    <div class="bottom-spacer" style="@(Config.Sections.LastOrDefault()?.Theme?.Background.GetBackgroundCss() ?? new NoBackground().GetBackgroundCss())"></div>
-}
+<Footer/>
 
 
 @code {

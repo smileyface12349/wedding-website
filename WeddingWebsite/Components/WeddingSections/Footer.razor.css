@@ -1,0 +1,22 @@
+﻿.footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    gap: 30px;
+    padding: 10px 0;
+}
+
+p {
+    font-size: 16px;
+}
+
+a {
+    color: #666;
+}
+
+img {
+    transform: translate(0, 3px);
+    margin-left: 3px;
+}
