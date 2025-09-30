@@ -36,7 +36,7 @@ A simple paragraph to give a bit of backstory.
 ### Timeline
 <img width="1065" height="840" alt="image" src="https://github.com/user-attachments/assets/cf98cd8b-5574-4cee-a01d-8feb78c25890" />
 
-The unusual timeline design conveys:
+This unique timeline design conveys:
 - Timings of the day (with options for pop-ups including extra details about each event).
 - Travel directions (auto-generated for venue changes).
 - Accommodation details (auto-generated at the end of the timeline).
