@@ -26,7 +26,7 @@
 
 <PageTitle>My Account</PageTitle>
 
-<CascadingValue TValue="SectionTheme" Value="Theme">
+<CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
     <Section Center="true">
         <div style="margin-top: 150px"></div>
         <SectionHeading>Your Account</SectionHeading>
@@ -125,6 +125,14 @@
 
     private IEnumerable<Guest> Guests { get; set; } = [];
     private SectionTheme? Theme => Config.AccountConfig.Theme;
+    private SectionTheme? ThemeNoBackground
+    {
+        get
+        {
+            if (Theme != null) return Theme with { Background = new NoBackground() };
+            return null;
+        }
+    }
 
     private string ErrorText { get; set; } = "";
     private string Email { get; set; } = "";
