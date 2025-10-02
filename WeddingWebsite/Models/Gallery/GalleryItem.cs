@@ -2,7 +2,7 @@
 
 namespace WeddingWebsite.Models.Gallery;
 
-public record GalleryItem(WebsiteImage Image)
+public record GalleryItem(WebsiteImage Image, int Size = 1)
 {
     /// <summary>
     /// Create a gallery item with a URL image and no alt text.

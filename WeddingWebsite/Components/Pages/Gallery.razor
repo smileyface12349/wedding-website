@@ -17,7 +17,7 @@
         <div class="gallery-images">
             @foreach (var img in sect.Items)
             {
-                <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" />
+                <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" style="grid-column: span @img.Size" />
             }
         </div>
     
