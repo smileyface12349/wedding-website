@@ -24,7 +24,7 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private string Background => Theme is { BoxStyle: not null } ? Theme.BoxStyle.InnerTheme.Background.ToString() : "var(--primary)";
+    private string Background => Theme?.BoxStyle?.InnerTheme.Background.ToString() ?? "var(--primary)";
     private string CssShadow => Theme is { BoxStyle.InnerTheme.Background.IsDark: false } ? "box-shadow" : "";
 
     protected override void OnInitialized() {
