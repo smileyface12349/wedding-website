@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using WeddingWebsite.Models.Gallery;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteConfig;
@@ -279,7 +280,20 @@ public sealed class SampleWeddingDetails : IWeddingDetails
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
         
-    public IEnumerable<WebsiteImage> GalleryImages { get; } = new List<WebsiteImage>();
+    public GalleryItems Gallery { get; } = new ([
+        new GallerySection(
+            [
+                new GalleryItem("https://pm1.aminoapps.com/6549/18b7f2ae94d82dbe03c54e4e8de0f17211236d70_hq.jpg"),
+                new GalleryItem("https://i.ytimg.com/vi/GAyzLbpZeKE/maxresdefault.jpg"),
+                new GalleryItem("https://ih1.redbubble.net/image.5821996399.7493/fposter,small,wall_texture,square_product,600x600.jpg"),
+                new GalleryItem("https://pbs.twimg.com/media/EbN2CI3WAAcVxXD?format=jpg&name=large"),
+                new GalleryItem("https://pbs.twimg.com/media/GfagNwOWQAAFWlB?format=jpg&name=medium"),
+                new GalleryItem("https://i.ytimg.com/vi/9tcHOMOVfrk/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDJ8fvK_Ob-YZ66NKdIqKydgxvhZQ"),
+            ], 
+            "General Pictures", 
+            "Aren't they having such a happy life together..."
+        )
+    ]);
     
     public WebsiteLink RegistryLink { get; }
         = new WebsiteLink("https://youtu.be/dQw4w9WgXcQ");
