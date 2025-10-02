@@ -158,7 +158,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         TimeOnly? previousEndTime = null;
         string? previousVenue = null;
         foreach (var ev in details.Events) {
-            if (previousEndTime != null && ev.Start != previousEndTime && ev.Venue.Name != previousVenue) {
+            if (previousEndTime != null && ev.Start != previousEndTime && ev.Venue.Name == previousVenue) {
                 Warning($"The event '{ev.Name}' starts at {ev.Start}, but the previous event ends at {previousEndTime}. Either set the end time of the previous event to {ev.Start}, add a separate event to represent a 'break', or change the venue to be different so that a travel directions step is generated. If you set the end time of the previous event to null, it will be interpreted as {ev.Start}.");
             }
             previousEndTime = ev.End ?? ev.Start;
