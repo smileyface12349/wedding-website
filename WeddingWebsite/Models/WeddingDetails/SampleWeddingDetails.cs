@@ -39,7 +39,7 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             new (
                 "Drinks Reception", 
                 TimeOnly.Parse("13:30"),
-                TimeOnly.Parse("15:00"), 
+                TimeOnly.Parse("15:30"), 
                 "Join us for drinks and canapés in the garden.", 
                 ReceptionVenue, 
                 "The Courtyard",
@@ -48,7 +48,7 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             new (
                 "Wedding Breakfast", 
                 TimeOnly.Parse("15:30"), 
-                TimeOnly.Parse("18:00"),
+                TimeOnly.Parse("19:00"),
                 "A sit-down meal with speeches and toasts.", 
                 ReceptionVenue, 
                 "The Barn",
