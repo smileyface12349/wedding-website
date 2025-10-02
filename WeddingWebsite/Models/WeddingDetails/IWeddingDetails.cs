@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.People;
+﻿using WeddingWebsite.Models.Gallery;
+using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
@@ -48,6 +49,11 @@ public interface IWeddingDetails
     /// to unauthenticated users.
     /// </summary>
     public WebsiteImage MainImage { get; }
+    
+    /// <summary>
+    /// Images to show on the gallery page.
+    /// </summary>
+    public GalleryItems Gallery { get; }
     
     /// <summary>
     /// Used for the "how we met" section.

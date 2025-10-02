@@ -1,0 +1,21 @@
+﻿.gallery-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+h2 {
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-size: 28px;
+}
+
+p {
+    margin-bottom: 10px;
+}
