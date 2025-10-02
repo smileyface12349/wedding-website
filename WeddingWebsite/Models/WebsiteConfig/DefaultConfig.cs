@@ -16,6 +16,8 @@ public class DefaultConfig : IWebsiteConfig
     public bool BrideFirst => false;
     public AccountConfig AccountConfig { get; set; }
 
+    public OptionalFeatures OptionalFeatures { get; set; } = new ();
+
     public DefaultConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
         

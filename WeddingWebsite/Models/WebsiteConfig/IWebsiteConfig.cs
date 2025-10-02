@@ -35,4 +35,10 @@ public interface IWebsiteConfig
     /// Config for the "My Account" page.
     /// </summary>
     public AccountConfig AccountConfig { get; }
+    
+    /// <summary>
+    /// Choose which optional features you want to enable. Some of these features may behave weirdly if you change
+    /// whether they are enabled after people have already used them.
+    /// </summary>
+    public OptionalFeatures OptionalFeatures { get; }
 }
