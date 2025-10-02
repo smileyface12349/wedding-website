@@ -61,6 +61,13 @@ public class Colour : IBackground
     public string GetBackgroundCss() {
         return $"background-color: {GetHex()};";
     }
+    
+    /// <summary>
+    /// Returns a copy with a different alpha value.
+    /// </summary>
+    public Colour WithAlpha(byte alpha = 255) {
+        return new Colour(mudColor.R, mudColor.G, mudColor.B, alpha, IsDark);
+    }
 
     public static Colour White => new Colour(255, 255, 255, false);
     public static Colour DarkGrey => new Colour(66, 66, 66, true);

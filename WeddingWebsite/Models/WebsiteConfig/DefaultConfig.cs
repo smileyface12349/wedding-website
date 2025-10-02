@@ -50,6 +50,6 @@ public class DefaultConfig : IWebsiteConfig
             new Colour("#F9DC5C")
         );
 
-        AccountConfig = new AccountConfig(new SectionTheme(Colours.PrimaryBackground, purple, whiteFilledBox));
+        AccountConfig = new AccountConfig(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
     }
 }
