@@ -12,7 +12,7 @@ namespace WeddingWebsite.Controllers;
 public class RsvpController (IAccountService accountService) : Controller
 {
     [HttpGet("/api/guests")]
-    public async Task<IEnumerable<GuestResponse>> GetGuests()
+    public IEnumerable<GuestResponse> GetGuests()
     {
         var guest = accountService.GetOwnGuests(HttpContext.User);
         return guest.Select(g => new GuestResponse(g.Id, g.Name.First, g.Name.Last, g.RsvpStatus.ToDatabaseInteger()));
