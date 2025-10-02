@@ -1,0 +1,47 @@
+﻿@using MudBlazor.Utilities
+@using WeddingWebsite.Models.WebsiteConfig
+@inherits LayoutComponentBase
+
+@inject IWebsiteConfig Config
+
+<MudPopoverProvider />
+<MudDialogProvider />
+
+<style>
+    body {
+        @Config.Colours.Surface.GetBackgroundCss();
+    }
+</style>
+
+<div class="page">
+    <main>
+        @Body
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+
+<MudThemeProvider Theme="Theme" />
+
+@code{
+    MudTheme? Theme {get; set;}
+    
+    protected override void OnInitialized() {
+        Theme = new MudTheme()
+        {
+            PaletteLight = new PaletteLight()
+            {
+                Primary = Config.Colours.Primary.ToString(),
+                PrimaryLighten = Config.Colours.PrimaryBackground.ToString(),
+                Secondary = Config.Colours.Secondary.ToString(),
+                Surface = (Config.Colours.Surface as Colour)?.ToString() ?? Colour.White.ToString()
+            },
+        };
+    } 
+}
+
