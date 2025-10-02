@@ -1,11 +1,24 @@
 ﻿@page "/Gallery"
 
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Models.WeddingDetails
 
 @layout SimpleLayout
 
+@inject IWeddingDetails WeddingDetails
+
 <h1>Gallery</h1>
 <p>We'll be sharing a selection of our pictures following the event.</p>
+
+@foreach (var sect in WeddingDetails.Gallery.Sections)
+{
+    <h2>@sect.Title</h2>
+    <p>@sect.Description</p>
+    @foreach (var img in sect.Items)
+    {
+        @((MarkupString)img.Image.GetHtml())
+    }
+}
 
 @code {
     
