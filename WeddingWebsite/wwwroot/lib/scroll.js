@@ -2,10 +2,10 @@
 
 function onScroll(e) {
     if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
-        document.querySelectorAll('.top-row').forEach(el => el.classList.add('scrolled'));
+        document.querySelectorAll('.top-row-scroll-background').forEach(el => el.classList.add('scrolled'));
     } else {
         if (mobileNavbarOpen()) return; // Don't remove the class if the mobile nav is open
-        document.querySelectorAll('.top-row').forEach(el => el.classList.remove('scrolled'));
+        document.querySelectorAll('.top-row-scroll-background').forEach(el => el.classList.remove('scrolled'));
     }
 }
 

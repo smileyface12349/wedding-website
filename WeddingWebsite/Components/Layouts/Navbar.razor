@@ -2,11 +2,11 @@
 
 @inject IWebsiteConfig Config
 
-<div id="navbar-desktop" class="top-row">
+<div id="navbar-desktop" class="top-row @CssScroll">
     <NavbarContent/>
 </div>
 
-<div class="top-row" id="navbar-mobile">
+<div class="top-row @CssScroll" id="navbar-mobile">
     <a href="/" class="mobile-left-link">Wedding Website</a>
     <div class="burger-menu-container">
         <div class="burger-menu" onclick="burgerClicked(this)">
@@ -54,5 +54,7 @@
 </style>
 
 @code {
+    [Parameter] public bool Scroll { get; set; } = false;
     
+    private string CssScroll => Scroll ? "top-row-scroll-background" : "scrolled";
 }
