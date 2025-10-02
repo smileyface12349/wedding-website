@@ -63,6 +63,10 @@
     background: #aaa;
 }
 
+::deep .red-button {
+    background: #ff5b5b;
+}
+
 ::deep button:hover, ::deep .button:hover {
     box-shadow: 1px 2px 12px rgba(0,0,0,0.4);
 }
@@ -84,4 +88,11 @@
 
 ::deep .text-red {
     color: red;
+}
+
+::deep .flex-center-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
