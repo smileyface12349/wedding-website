@@ -129,7 +129,29 @@
     </PagerContent>
 </MudTable>
 
-<div class="text-center">
+<div class="narrow-section">
+    @if (!IsUserOwner())
+    {
+        <AuthorizeView Roles="Owner">
+            <Authorized>
+                @if (DeletePressedCount == 0)
+                {
+                    <button class="button red-button block-button" @onclick="PressDelete">Delete Account</button>
+                }
+                else if (DeletePressedCount == 1)
+                {
+                    <p class="text-red">Are you sure you want to delete this account? This action cannot be undone.</p>
+                    <button class="button red-button block-button" @onclick="PressDelete">Delete Account (press again to confirm)</button>
+                }
+                else if (DeletePressedCount == 2)
+                {
+                    <p class="text-red">Are you super duper sure? All logs associated with this account will be lost. There is absolutely no way to recover this data.</p>
+                    <button class="button red-button block-button" @onclick="DeleteAccount">Delete Account (this is the final warning)</button>
+                }
+            </Authorized>
+        </AuthorizeView>
+    }
+
     <a class="button grey-button" href="/admin">Back to Admin Page</a>
 </div>
 
@@ -148,6 +170,8 @@
     private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
     private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
     private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
+    
+    private int DeletePressedCount { get; set; } = 0;
     
     private ClaimsPrincipal LoggedInUser { get; set; }
 
@@ -275,6 +299,33 @@
         {
             AccountService.Log(LoggedInUser, AccountLogType.ChangePermissions, "Promoted from User to Admin", UserId);
             Logs = AdminService.GetAccountLogs(UserId);
+        }
+    }
+
+    private void PressDelete()
+    {
+        DeletePressedCount++;
+    }
+    
+    [Authorize (Roles = "Owner")]
+    private void DeleteAccount()
+    {
+        if (Account is null) return;
+        
+        if (IsUserOwner())
+        {
+            ErrorText = "You cannot delete an owner account.";
+            return;
+        }
+        
+        var result = UserManager.DeleteAsync(Account).Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/admin");
         }
     }
 
