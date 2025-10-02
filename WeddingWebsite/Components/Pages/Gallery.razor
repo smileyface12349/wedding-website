@@ -14,10 +14,13 @@
 {
     <h2>@sect.Title</h2>
     <p>@sect.Description</p>
-    @foreach (var img in sect.Items)
-    {
-        @((MarkupString)img.Image.GetHtml())
-    }
+    <div class="gallery-images">
+        @foreach (var img in sect.Items)
+        {
+            <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" />
+        }
+    </div>
+    
 }
 
 @code {
