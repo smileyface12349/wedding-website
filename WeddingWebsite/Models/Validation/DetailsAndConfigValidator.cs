@@ -28,6 +28,10 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Events_LatestFinishTimeIsLastEvent(details);
         Events_IsNotEmpty(details);
         Events_ShouldNotHaveTwoVenuesWithTheSameName(details);
+        Events_StartTimesAreInChronologicalOrder(details);
+        Events_EndTimesAreInChronologicalOrder(details);
+        Events_EndTimeShouldBeAfterStartTime(details);
+        Events_PreviousEndTimeMatchesWithNextStartTime(details);
         
         Contacts_HaveAtLeastOneContactForEachOption(details, config);
         Contacts_WhenUrgencyDisabled_ShouldNotHaveUrgentContacts(details, config);
@@ -144,6 +148,68 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         }
         if (details.Events.Any(e => e.End != null && e.End > lastFinishTime)) {
             Error("The latest finish time must be the last element in the list. This is used for the accommodation details.");
+        }
+    }
+    
+    /// <summary>
+    /// There should not be any gaps in the timeline, except for travel directions.
+    /// </summary>
+    private void Events_PreviousEndTimeMatchesWithNextStartTime(IWeddingDetails details) {
+        TimeOnly? previousEndTime = null;
+        string? previousVenue = null;
+        foreach (var ev in details.Events) {
+            if (previousEndTime != null && ev.Start != previousEndTime && ev.Venue.Name != previousVenue) {
+                Warning($"The event '{ev.Name}' starts at {ev.Start}, but the previous event ends at {previousEndTime}. Either set the end time of the previous event to {ev.Start}, add a separate event to represent a 'break', or change the venue to be different so that a travel directions step is generated. If you set the end time of the previous event to null, it will be interpreted as {ev.Start}.");
+            }
+            previousEndTime = ev.End ?? ev.Start;
+            previousVenue = ev.Venue.Name;
+        }
+    }
+
+    /// <summary>
+    /// Events are displayed in the order they are defined, and chronological order is the only logical order to show.
+    /// </summary>
+    private void Events_StartTimesAreInChronologicalOrder(IWeddingDetails details)
+    {
+        TimeOnly? previousStartTime = null;
+        foreach (var ev in details.Events)
+        {
+            if (previousStartTime != null && ev.Start < previousStartTime)
+            {
+                Error($"The event '{ev.Name}' starts at {ev.Start}, which is before the previous event that starts at {previousStartTime}. Events should be defined in chronological order.");
+            }
+            previousStartTime = ev.Start;
+        }
+    }
+    
+    /// <summary>
+    /// Events are displayed in the order they are defined, and chronological order is the only logical order to show.
+    /// </summary>
+    private void Events_EndTimesAreInChronologicalOrder(IWeddingDetails details)
+    {
+        TimeOnly? previousEndTime = null;
+        foreach (var ev in details.Events)
+        {
+            var endTime = ev.End ?? ev.Start;
+            if (endTime < previousEndTime)
+            {
+                Error($"The event '{ev.Name}' ends at {endTime}, which is before the previous event that ends at {previousEndTime}. Events should be defined in chronological order.");
+            }
+            previousEndTime = endTime;
+        }
+    }
+    
+    /// <summary>
+    /// Events must not end before they start.
+    /// </summary>
+    private void Events_EndTimeShouldBeAfterStartTime(IWeddingDetails details)
+    {
+        foreach (var ev in details.Events)
+        {
+            if (ev.End != null && ev.End < ev.Start)
+            {
+                Error($"The event '{ev.Name}' ends at {ev.End}, which is before it starts at {ev.Start}. The end time must be after the start time.");
+            }
         }
     }
     
