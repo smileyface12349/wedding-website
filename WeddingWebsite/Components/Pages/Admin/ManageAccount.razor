@@ -39,15 +39,29 @@
         <label for="email">Email</label>
         <span class="flex-grow"></span>
         <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
-        <button @onclick="ApplyEmailChange">Apply</button>
+        @if (!IsUserOwner())
+        {
+            <button @onclick="ApplyEmailChange">Apply</button>
+        }
+        else
+        {
+            <AuthorizeView Roles="Owner">
+                <Authorized>
+                    <button @onclick="ApplyEmailChange">Apply</button>
+                </Authorized>
+            </AuthorizeView>
+        }
     </div>
 
-    <div class="flex-container mb">
-        <label for="new-password">New Password</label>
-        <span class="flex-grow"></span>
-        <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Reset their password" />
-        <button @onclick="ApplyPasswordChange">Apply</button>
-    </div>
+    @if (!IsUserOwner())
+    {
+        <div class="flex-container mb">
+            <label for="new-password">New Password</label>
+            <span class="flex-grow"></span>
+            <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Reset their password" />
+            <button @onclick="ApplyPasswordChange">Apply</button>
+        </div>
+    }
     
     <h2>Guests</h2>
     <p>Click on a guest to manage/delete them.</p>
