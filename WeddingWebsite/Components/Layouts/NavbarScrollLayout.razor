@@ -1,0 +1,22 @@
+﻿@using MudBlazor.Utilities
+@using WeddingWebsite.Models.WebsiteConfig
+@inherits LayoutComponentBase
+
+@inject IWebsiteConfig Config
+
+@layout BaseLayout
+
+<AuthorizeView>
+    <Authorized>
+        <Navbar Scroll="true" />
+    </Authorized>
+</AuthorizeView>
+
+<article class="content">
+    @Body
+</article>
+
+
+@code{
+
+}
