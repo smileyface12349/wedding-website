@@ -9,3 +9,13 @@
     height: 100%;
     object-fit: cover;
 }
+
+h2 {
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-size: 28px;
+}
+
+p {
+    margin-bottom: 10px;
+}

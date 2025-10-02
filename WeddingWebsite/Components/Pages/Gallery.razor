@@ -1,27 +1,29 @@
 ﻿@page "/Gallery"
 
-@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.WeddingDetails
-
-@layout SimpleLayout
 
 @inject IWeddingDetails WeddingDetails
 
-<h1>Gallery</h1>
-<p>We'll be sharing a selection of our pictures following the event.</p>
+<div style="margin-top: 50px;"></div>
 
-@foreach (var sect in WeddingDetails.Gallery.Sections)
-{
-    <h2>@sect.Title</h2>
-    <p>@sect.Description</p>
-    <div class="gallery-images">
-        @foreach (var img in sect.Items)
-        {
-            <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" />
-        }
-    </div>
+<Section>
+    <SectionHeading>Gallery</SectionHeading>
+
+    @foreach (var sect in WeddingDetails.Gallery.Sections)
+    {
+        <h2>@sect.Title</h2>
+        <p>@sect.Description</p>
+        <div class="gallery-images">
+            @foreach (var img in sect.Items)
+            {
+                <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" />
+            }
+        </div>
     
-}
+    }
+</Section>
+
 
 @code {
     
