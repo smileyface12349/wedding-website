@@ -1,4 +1,6 @@
 ﻿@page "/Registry/{ItemId}"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
@@ -6,6 +8,7 @@
 @using WeddingWebsite.Services
 
 @inject IRegistryService RegistryService
+@inject AuthenticationStateProvider AuthStateProvider
 
 @if (Item == null)
 {
@@ -51,6 +54,10 @@
                 </a>
             }
             <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
+            <h2>Claim this Item</h2>
+            <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
+            <Button OnClick="ClaimItem">Claim</Button>
+            <p class="text-danger">@ErrorText</p>
         </RightContent>
     </SideBySide>
 </Section>
@@ -61,9 +68,44 @@
     public required string ItemId { get; set; }
     
     private RegistryItem? Item { get; set; }
+    private string? UserId { get; set; }
+    
+    private string ErrorText { get; set; } = "";
 
     protected override void OnInitialized() 
     {
         Item = RegistryService.GetRegistryItemById(ItemId);
+        
+        var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+    
+    private void ClaimItem()
+    {
+        if (Item == null) return;
+        if (Item.IsFullyClaimed)
+        {
+            ErrorText = "This item has already been claimed.";
+            StateHasChanged();
+            return;
+        }
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        var result = RegistryService.ClaimRegistryItem(Item.Id, UserId);
+        if (!result)
+        {
+            ErrorText = "Sorry, this item has already been claimed by someone else.";
+        }
+
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
     }
 }

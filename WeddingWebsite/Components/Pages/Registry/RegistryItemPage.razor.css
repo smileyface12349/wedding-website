@@ -17,6 +17,7 @@
 
 h2 {
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
 .purchase-option {
@@ -38,4 +39,12 @@ h2 {
 .purchase-option-cost {
     font-size: 18px;
     font-weight: bold;
+}
+
+.claim-item-description {
+    margin-bottom: 10px;
+}
+
+.text-danger {
+    margin-top: 10px;
 }
