@@ -234,8 +234,8 @@ public class RegistryStore : IRegistryStore
                 reader.GetString(1),
                 reader.IsDBNull(2) ? null : reader.GetString(2),
                 reader.IsDBNull(3) ? null : reader.GetString(3),
-                new DateTime(reader.GetInt32(4), DateTimeKind.Utc),
-                reader.IsDBNull(5) ? null : new DateTime(reader.GetInt32(5), DateTimeKind.Utc),
+                new DateTime(reader.GetInt64(4), DateTimeKind.Utc),
+                reader.IsDBNull(5) ? null : new DateTime(reader.GetInt64(5), DateTimeKind.Utc),
                 reader.GetInt32(6),
                 reader.IsDBNull(7) ? null : reader.GetString(7)
             );
