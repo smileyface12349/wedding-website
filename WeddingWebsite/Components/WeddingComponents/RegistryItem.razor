@@ -1,4 +1,5 @@
 ﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.Theme
 
 <a href="/registry/@Item.Id">
     <Box CustomCss="height: 300px;">
@@ -10,14 +11,18 @@
         </TopContent>
         <ChildContent>
             <h2>@Item.Name</h2>
-            @if (Item.PurchaseMethods.Any())
-            {
-                <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
-            }
-            else
-            {
-                <p class="cost">[No purchase methods]</p>
-            }
+            <div class="cost-and-button">
+                @if (Item.PurchaseMethods.Any())
+                {
+                    <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
+                }
+                else
+                {
+                    <p class="cost"></p>
+                }
+                <button style="background: @ButtonColour">View</button>
+            </div>
+            
         </ChildContent>
     </Box>
 </a>
@@ -25,4 +30,9 @@
 @code {
     [Parameter]
     public required Models.Registry.RegistryItem Item { get; set; }
+    
+    [CascadingParameter]
+    private SectionTheme? Theme { get; set; }
+    
+    private string ButtonColour => Theme?.Primary.ToString() ?? "var(--primary)";
 }
