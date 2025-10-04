@@ -4,9 +4,15 @@
     object-fit: contain;
 }
 
+.generic-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 h2 {
     font-weight: normal;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .cost-and-button {
@@ -19,7 +25,7 @@ h2 {
 .cost {
     font-size: 18px;
     font-weight: bold;
-    color: #000;
+    color: #141414;
 }
 
 button {

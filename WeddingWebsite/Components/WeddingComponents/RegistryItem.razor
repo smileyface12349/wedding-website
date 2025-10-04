@@ -10,6 +10,7 @@
             }
         </TopContent>
         <ChildContent>
+            <p class="generic-name">@Item.GenericName</p>
             <h2>@Item.Name</h2>
             <div class="cost-and-button">
                 @if (Item.PurchaseMethods.Any())
@@ -22,7 +23,7 @@
                 }
                 <button style="background: @ButtonColour">View</button>
             </div>
-            
+
         </ChildContent>
     </Box>
 </a>
