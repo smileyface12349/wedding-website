@@ -10,3 +10,32 @@
     gap: 40px;
     font-size: 32px;
 }
+
+.description {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.purchase-option {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.purchase-option-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.purchase-option-name {
+    font-size: 18px;
+}
+
+.purchase-option-cost {
+    font-size: 18px;
+    font-weight: bold;
+}
