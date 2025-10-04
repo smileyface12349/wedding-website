@@ -1,0 +1,33 @@
+﻿@page "/Registry"
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+
+@inject IWebsiteConfig Config
+@inject IRegistryService RegistryService
+
+<Section>
+    <SectionHeading>Registry</SectionHeading>
+    
+    @if (Config.OptionalFeatures.Registry.IsActive())
+    {
+        <p>Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
+    }
+    else
+    {
+        <p>The registry is @Config.OptionalFeatures.Registry.IsActiveString().</p>
+    }
+</Section>
+
+@code {
+    private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (Config.OptionalFeatures.Registry.IsActive())
+        {
+            RegistryItems = await RegistryService.GetAllRegistryItems();
+        }
+    }
+}
