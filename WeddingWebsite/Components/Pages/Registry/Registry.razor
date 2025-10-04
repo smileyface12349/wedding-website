@@ -1,8 +1,9 @@
 ﻿@page "/Registry"
 @using WeddingWebsite.Components.Sections
-@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
+@using RegistryItem = WeddingWebsite.Models.Registry.RegistryItem
 
 @inject IWebsiteConfig Config
 @inject IRegistryService RegistryService
@@ -13,6 +14,15 @@
     @if (Config.OptionalFeatures.Registry.IsActive())
     {
         <p>Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
+        <div class="gifts-grid">
+            @foreach (var item in RegistryItems)
+            {
+                <div class="gift">
+                    <RegistryItem Item="item" />
+                </div>
+            }
+        </div>
+        
     }
     else
     {

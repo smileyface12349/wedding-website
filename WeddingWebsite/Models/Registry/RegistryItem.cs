@@ -15,4 +15,5 @@ public record RegistryItem(
 {
     public int QuantityClaimed => Claims.Sum(c => c.Quantity);
     public bool IsFullyClaimed => QuantityClaimed >= MaxQuantity;
+    public double CheapestCost => PurchaseMethods.Min(pm => pm.Cost);
 }
