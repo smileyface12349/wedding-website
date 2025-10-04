@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Models.Theme
+
+<button class="@CssClass" @onclick="() => OnClick?.Invoke()" style="background: @Colour">
+    @ChildContent
+</button>
+
+@code {
+  
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public Action? OnClick { get; set; }
+    
+    [Parameter]
+    public string CssClass { get; set; } = "";
+    
+    [CascadingParameter]
+    private SectionTheme? Theme { get; set; }
+    
+    private string Colour => Theme?.Primary.ToString() ?? "var(--primary)";
+}
