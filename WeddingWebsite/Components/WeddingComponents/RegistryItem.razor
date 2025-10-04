@@ -1,24 +1,26 @@
 ﻿@using WeddingWebsite.Components.Containers
 
-<Box CustomCss="height: 300px;">
-    <TopContent>
-        @if (Item.ImageUrl != null)
-        {
-            <img src="@Item.ImageUrl" alt=""/>
-        }
-    </TopContent>
-    <ChildContent>
-        <h2>@Item.Name</h2>
-        @if (Item.PurchaseMethods.Any())
-        {
-            <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
-        }
-        else
-        {
-            <p class="cost">[No purchase methods]</p>
-        }
-    </ChildContent>
-</Box>
+<a href="/registry/@Item.Id">
+    <Box CustomCss="height: 300px;">
+        <TopContent>
+            @if (Item.ImageUrl != null)
+            {
+                <img src="@Item.ImageUrl" alt=""/>
+            }
+        </TopContent>
+        <ChildContent>
+            <h2>@Item.Name</h2>
+            @if (Item.PurchaseMethods.Any())
+            {
+                <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
+            }
+            else
+            {
+                <p class="cost">[No purchase methods]</p>
+            }
+        </ChildContent>
+    </Box>
+</a>
 
 @code {
     [Parameter]
