@@ -48,3 +48,15 @@ h2 {
 .text-danger {
     margin-top: 10px;
 }
+
+.choose-purchase-option {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.choose-purchase-option-method {
+    cursor: pointer;
+}

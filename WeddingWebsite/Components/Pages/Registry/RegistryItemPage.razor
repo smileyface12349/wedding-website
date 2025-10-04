@@ -54,10 +54,35 @@
                 </a>
             }
             <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
-            <h2>Claim this Item</h2>
-            <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
-            <Button OnClick="ClaimItem">Claim</Button>
+            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
+            {
+                <h2>Item Claimed</h2>
+                <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
+                <div class="choose-purchase-option">
+                    @foreach (var method in Item.PurchaseMethods)
+                    {
+                        <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
+                            <Box>
+                                <p class="purchase-option-name">@method.Name</p>
+                            </Box>
+                        </a>
+                    }
+                </div>
+                <p class="claim-item-description">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
+                <Button OnClick="RemoveClaim">Unclaim</Button>
+            } else if (Item.IsFullyClaimed)
+            {
+                <h2>Item Already Claimed</h2>
+                <p>Sorry, this item has already been claimed by someone else.</p>
+            }
+            else
+            {
+                <h2>Claim this Item</h2>
+                <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
+                <Button OnClick="ClaimItem">Claim</Button>
+            }
             <p class="text-danger">@ErrorText</p>
+            
         </RightContent>
     </SideBySide>
 </Section>
@@ -104,6 +129,40 @@
         {
             ErrorText = "Sorry, this item has already been claimed by someone else.";
         }
+
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+    }
+    
+    private void RemoveClaim()
+    {
+        if (Item == null) return;
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        var result = RegistryService.UnclaimRegistryItem(Item.Id, UserId);
+        if (!result)
+        {
+            ErrorText = "Sorry, we were unable to remove your claim. Please try again later.";
+        }
+
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+    }
+    
+    private void ChoosePurchaseMethod(string methodId)
+    {
+        if (Item == null) return;
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        RegistryService.ChoosePurchaseMethod(Item.Id, UserId, methodId);
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
