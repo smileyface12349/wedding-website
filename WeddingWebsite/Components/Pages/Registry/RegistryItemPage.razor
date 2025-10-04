@@ -1,0 +1,47 @@
+﻿@page "/Registry/{ItemId}"
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Services
+
+@inject IRegistryService RegistryService
+
+@if (Item == null)
+{
+    <div class="not-found">
+        <p>Sorry, that item could not be found.</p>
+        <LinkButton Data=@(new Models.WebsiteElement.LinkButton("Back to Registry", "/registry"))/>
+    </div>
+    return;
+}
+
+<div style="margin-bottom: 100px"></div>
+<Section>
+    <SideBySide HalfSpacing="10px">
+        <LeftContent>
+            <img src="@Item.ImageUrl" alt=""/>
+        </LeftContent>
+        <RightContent>
+            <h1>@Item.Name</h1>
+            <p>@Item.Description</p>
+            @if (Item.MaxQuantity != 1)
+            {
+                <p>Quantity Claimed: @Item.QuantityClaimed/@Item.MaxQuantity.</p>
+            }
+        </RightContent>
+    </SideBySide>
+</Section>
+
+
+@code {
+    [Parameter]
+    public required string ItemId { get; set; }
+    
+    private RegistryItem? Item { get; set; }
+
+    protected override void OnInitialized() 
+    {
+        Item = RegistryService.GetRegistryItemById(ItemId);
+    }
+}
