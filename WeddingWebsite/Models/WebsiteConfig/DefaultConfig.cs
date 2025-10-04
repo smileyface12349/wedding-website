@@ -15,6 +15,12 @@ public class DefaultConfig : IWebsiteConfig
     public TopButtonsConfig TopButtons { get; }
     public bool BrideFirst => false;
     public AccountConfig AccountConfig { get; set; }
+    
+    // Default config will enable all optional features.
+    public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
+    {
+        Registry = new ActiveFeature()
+    };
 
     public DefaultConfig() {
         var surfaceVariant = new Colour(254, 252, 231);

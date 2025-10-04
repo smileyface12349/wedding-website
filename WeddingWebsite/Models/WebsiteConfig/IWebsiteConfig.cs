@@ -35,4 +35,9 @@ public interface IWebsiteConfig
     /// Config for the "My Account" page.
     /// </summary>
     public AccountConfig AccountConfig { get; }
+    
+    /// <summary>
+    /// Enable/disable optional features (e.g. RSVP, registry). You may configure a time to auto-activate.
+    /// </summary>
+    public OptionalFeatures OptionalFeatures { get; }
 }
