@@ -37,23 +37,40 @@
             <h2>Purchase Options</h2>
             @foreach (var method in Item.PurchaseMethods)
             {
-                <a href="@method.Url" target="_blank" rel="noopener noreferrer" class="purchase-option">
-                    <Box>
-                        <div class="purchase-option-content">
-                            <p class="purchase-option-name">@method.Name</p>
-                            <MudSpacer/>
-                            <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
-                            @if (method.DeliveryCost > 0)
-                            {
-                                <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
-                            }
-                            @if (method.Url != null)
-                            {
+                @if (method.Url != null)
+                {
+                    <a href="@method.Url" target="_blank" rel="noopener noreferrer" class="purchase-option">
+                        <Box>
+                            <div class="purchase-option-content">
+                                <p class="purchase-option-name">@method.Name</p>
+                                <MudSpacer/>
+                                <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
+                                @if (method.DeliveryCost > 0)
+                                {
+                                    <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
+                                }
                                 <Button>View</Button>
-                            }
-                        </div>
-                    </Box>
-                </a>
+                            </div>
+                        </Box>
+                    </a>
+                }
+                else
+                {
+                    <div class="purchase-option">
+                        <Box>
+                            <div class="purchase-option-content">
+                                <p class="purchase-option-name">@method.Name</p>
+                                <MudSpacer/>
+                                <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
+                                @if (method.DeliveryCost > 0)
+                                {
+                                    <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
+                                }
+                            </div>
+                        </Box>
+                    </div>
+                }
+                
             }
             <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
             @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
