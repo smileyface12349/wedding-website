@@ -2,14 +2,17 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
 
 @inject IRegistryService RegistryService
 @inject IWeddingDetails WeddingDetails
+@inject IWebsiteConfig Config
 @inject AuthenticationStateProvider AuthStateProvider
 
 @if (Item == null)
@@ -21,194 +24,196 @@
     return;
 }
 
-<div style="margin-bottom: 100px"></div>
-<Section>
-    <SideBySide HalfSpacing="10px">
-        <LeftContent>
-            <img src="@Item.ImageUrl" alt=""/>
-        </LeftContent>
-        <RightContent>
-            <h1>@Item.Name</h1>
-            <p class="description">@Item.Description</p>
-            @if (Item.MaxQuantity != 1)
-            {
-                <p>Quantity Claimed: @Item.QuantityClaimed/@Item.MaxQuantity.</p>
-            }
-            <h2>Purchase Options</h2>
-            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
-            {
-                if (Item.GetClaimByUser(UserId).PurchaseMethodId == null
-                    || ((Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay) && Item.GetClaimByUser(UserId).DeliveryAddress == null))
+<CascadingValue Value="Config.RegistryItemConfig.Theme">
+    <div style="margin-bottom: 100px"></div>
+    <Section>
+        <SideBySide HalfSpacing="10px">
+            <LeftContent>
+                <img src="@Item.ImageUrl" alt=""/>
+            </LeftContent>
+            <RightContent>
+                <h1>@Item.Name</h1>
+                <p class="description">@Item.Description</p>
+                @if (Item.MaxQuantity != 1)
                 {
-                    <p class="text-danger claim-item-description">Please finish selecting the details below before making a purchase.</p>
+                    <p>Quantity Claimed: @Item.QuantityClaimed/@Item.MaxQuantity.</p>
                 }
-            }
-            else
-            {
-                <p class="text-danger claim-item-description">Please do not make a purchase before claiming the item first - this will reserve it so we don't get two people buying the same thing!</p>
-            }
-            @foreach (var method in Item.PurchaseMethods)
-            {
-                @if (method.Url != null)
+                <h2>Purchase Options</h2>
+                @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
                 {
-                    <a href="@method.Url" target="_blank" rel="noopener noreferrer" class="purchase-option">
-                        <Box>
-                            <div class="purchase-option-content">
-                                <p class="purchase-option-name">@method.Name</p>
-                                <MudSpacer/>
-                                <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
-                                @if (method.DeliveryCost > 0)
-                                {
-                                    <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
-                                }
-                                <Button>View</Button>
-                            </div>
-                        </Box>
-                    </a>
+                    if (Item.GetClaimByUser(UserId).PurchaseMethodId == null
+                        || ((Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay) && Item.GetClaimByUser(UserId).DeliveryAddress == null))
+                    {
+                        <p class="text-danger claim-item-description">Please finish selecting the details below before making a purchase.</p>
+                    }
                 }
                 else
                 {
-                    <div class="purchase-option">
-                        <Box>
-                            <div class="purchase-option-content">
-                                <p class="purchase-option-name">@method.Name</p>
-                                <MudSpacer/>
-                                <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
-                                @if (method.DeliveryCost > 0)
-                                {
-                                    <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
-                                }
-                            </div>
-                        </Box>
-                    </div>
+                    <p class="text-danger claim-item-description">Please do not make a purchase before claiming the item first - this will reserve it so we don't get two people buying the same thing!</p>
                 }
-                
-            }
-            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
-            {
-                <h2>Item Purchased</h2>
-                <p class="claim-item-description">Thank you so much for your gift!</p>
-                <p>Purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>.</p>
-                @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                @foreach (var method in Item.PurchaseMethods)
                 {
-                    <p>Delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>.</p>
-                }
-                <p style="margin-top: 10px">Since this is now completed, you can no longer make any changes. If something went wrong, please contact @WeddingDetails.LoginContactMethod?.Text.</p>
-                <h2>Notes</h2>
-                <p class="claim-item-description">If you'd like to add any notes, you can do so in the box below. It's entirely up to you how you want to use this, if at all.</p>
-                <textarea rows="3" style="width: 100%;resize:none" placeholder="Add a note visible to you and the website administrators (optional)." @oninput="args => Notes = args.Value?.ToString() ?? string.Empty">@Notes</textarea>
-                @if (Notes != (Item.GetClaimByUser(UserId).Notes ?? ""))
-                {
-                    <p class="text-danger claim-item-description">You have unsaved changes.</p>
-                    <Button OnClick="SaveNotes">Save Notes</Button>
-                }
-            } else if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
-            {
-                @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
-                {
-                    <h2>Select Purchase Method</h2>
-                    <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
-                    <div class="choose-purchase-option">
-                        @foreach (var method in Item.PurchaseMethods)
-                        {
-                            <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
-                                <Box>
-                                    <p class="purchase-option-name">@method.Name</p>
-                                </Box>
-                            </a>
-                        }
-                    </div>
-                }
-                else if (Item.GetClaimByUser(UserId).DeliveryAddress == null && (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay || Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs))
-                {
-                    <h2>Select Delivery Address</h2>
-                    <p class="claim-item-description">Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => ChoosePurchaseMethod(null)">[Undo]</a></p>
-                    <p class="claim-item-description">You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!</p>
-                    @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs)
+                    @if (method.Url != null)
                     {
-                        @foreach (var address in DeliveryAddresses)
-                        {
-                            <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(address)">
-                                <Box>
-                                    <p class="purchase-option-name">@address</p>
-                                </Box>
-                            </a>
-                        }
-                    }
-                    @if (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
-                    {
-                        <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(DeliveryAddressBringOnDay)">
+                        <a href="@method.Url" target="_blank" rel="noopener noreferrer" class="purchase-option">
                             <Box>
-                                <p class="purchase-option-name">I'll bring it on the day</p>
+                                <div class="purchase-option-content">
+                                    <p class="purchase-option-name">@method.Name</p>
+                                    <MudSpacer/>
+                                    <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
+                                    @if (method.DeliveryCost > 0)
+                                    {
+                                        <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
+                                    }
+                                    <Button>View</Button>
+                                </div>
                             </Box>
                         </a>
                     }
+                    else
+                    {
+                        <div class="purchase-option">
+                            <Box>
+                                <div class="purchase-option-content">
+                                    <p class="purchase-option-name">@method.Name</p>
+                                    <MudSpacer/>
+                                    <p class="purchase-option-cost">£@method.Cost.ToString("0.00")</p>
+                                    @if (method.DeliveryCost > 0)
+                                    {
+                                        <p class="purchase-option-delivery-cost">+£@method.DeliveryCost.ToString("0.00") delivery</p>
+                                    }
+                                </div>
+                            </Box>
+                        </div>
+                    }
+                    
                 }
-                else if (!Item.GetClaimByUser(UserId).IsCompleted)
+                @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
                 {
-                    <h2>Item Ready to Purchase</h2>
-                    <p>Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[Undo]</a></p>
+                    <h2>Item Purchased</h2>
+                    <p class="claim-item-description">Thank you so much for your gift!</p>
+                    <p>Purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>.</p>
                     @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
                     {
-                        <p>Selected delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>. <a @onclick="() => ChooseDeliveryAddress(null)">[Undo]</a></p>
+                        <p>Delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>.</p>
                     }
-                    <p style="margin-top: 10px" class="claim-item-description">That's it! Now it's time to complete the purchase. Please do this in your own time and then press the button below to mark it as completed. Don't worry, you can return to this screen later and everything will be saved.</p>
-                    <p class="claim-item-description">Once you have marked this as completed, you will no longer be able to make any changes.</p>
-
-                    <p class="claim-item-description">@Item.GetPurchaseMethodByUser(UserId).Instructions</p>
-                    <Button OnClick="MarkCompleted">Mark as Completed (cannot be undone)</Button>
-                }
-                <p class="claim-item-description" style="margin-top: 10px">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
-                <Button OnClick="RemoveClaim">Unclaim</Button>
-                
-            } else if (Item.IsFullyClaimed)
-            {
-                <h2>Item Already Claimed</h2>
-                <p>Sorry, this item has already been claimed by someone else.</p>
-            }
-            else
-            {
-                <h2>Claim this Item</h2>
-                <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
-                <Button OnClick="ClaimItem">Claim</Button>
-            }
-            <p class="text-danger">@ErrorText</p>
-            
-        </RightContent>
-    </SideBySide>
-    <AuthorizeView Roles="Admin">
-        <Authorized>
-            <h1>Admin Section</h1>
-            <h2>Claims</h2>
-            @if (!Item.Claims.Any())
-            {
-                <p>This item does not yet have any claims.</p>
-            } 
-            else if (RevealClaimsToAdmin)
-            {
-                @foreach (var claim in Item.Claims)
+                    <p style="margin-top: 10px">Since this is now completed, you can no longer make any changes. If something went wrong, please contact @WeddingDetails.LoginContactMethod?.Text.</p>
+                    <h2>Notes</h2>
+                    <p class="claim-item-description">If you'd like to add any notes, you can do so in the box below. It's entirely up to you how you want to use this, if at all.</p>
+                    <textarea rows="3" style="width: 100%;resize:none" placeholder="Add a note visible to you and the website administrators (optional)." @oninput="args => Notes = args.Value?.ToString() ?? string.Empty">@Notes</textarea>
+                    @if (Notes != (Item.GetClaimByUser(UserId).Notes ?? ""))
+                    {
+                        <p class="text-danger claim-item-description">You have unsaved changes.</p>
+                        <Button OnClick="SaveNotes">Save Notes</Button>
+                    }
+                } else if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
                 {
-                    <Box>
-                        <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a>.</p>
-                        <p><b>Purchase Method:</b> @(claim.PurchaseMethodId != null ? Item.GetPurchaseMethodByUser(claim.UserId).Name : "Not selected")</p>
-                        <p><b>Delivery Address:</b> @(claim.DeliveryAddress ?? "Not selected")</p>
-                        <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
-                        <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
-                        <p><b>Quantity:</b> @claim.Quantity</p>
-                        <p><b>Notes:</b> @claim.Notes</p>
-                    </Box>
+                    @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
+                    {
+                        <h2>Select Purchase Method</h2>
+                        <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
+                        <div class="choose-purchase-option">
+                            @foreach (var method in Item.PurchaseMethods)
+                            {
+                                <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
+                                    <Box>
+                                        <p class="purchase-option-name">@method.Name</p>
+                                    </Box>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else if (Item.GetClaimByUser(UserId).DeliveryAddress == null && (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay || Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs))
+                    {
+                        <h2>Select Delivery Address</h2>
+                        <p class="claim-item-description">Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => ChoosePurchaseMethod(null)">[Undo]</a></p>
+                        <p class="claim-item-description">You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!</p>
+                        @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs)
+                        {
+                            @foreach (var address in DeliveryAddresses)
+                            {
+                                <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(address)">
+                                    <Box>
+                                        <p class="purchase-option-name">@address</p>
+                                    </Box>
+                                </a>
+                            }
+                        }
+                        @if (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                        {
+                            <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(DeliveryAddressBringOnDay)">
+                                <Box>
+                                    <p class="purchase-option-name">I'll bring it on the day</p>
+                                </Box>
+                            </a>
+                        }
+                    }
+                    else if (!Item.GetClaimByUser(UserId).IsCompleted)
+                    {
+                        <h2>Item Ready to Purchase</h2>
+                        <p>Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[Undo]</a></p>
+                        @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                        {
+                            <p>Selected delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>. <a @onclick="() => ChooseDeliveryAddress(null)">[Undo]</a></p>
+                        }
+                        <p style="margin-top: 10px" class="claim-item-description">That's it! Now it's time to complete the purchase. Please do this in your own time and then press the button below to mark it as completed. Don't worry, you can return to this screen later and everything will be saved.</p>
+                        <p class="claim-item-description">Once you have marked this as completed, you will no longer be able to make any changes.</p>
+
+                        <p class="claim-item-description">@Item.GetPurchaseMethodByUser(UserId).Instructions</p>
+                        <Button OnClick="MarkCompleted">Mark as Completed (cannot be undone)</Button>
+                    }
+                    <p class="claim-item-description" style="margin-top: 10px">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
+                    <Button OnClick="RemoveClaim">Unclaim</Button>
+                    
+                } else if (Item.IsFullyClaimed)
+                {
+                    <h2>Item Already Claimed</h2>
+                    <p>Sorry, this item has already been claimed by someone else.</p>
                 }
-            }
-            else
-            {
-                <p class="claim-item-description">This section is capable of showing you detailed information about who has claimed this item, and how they are purchasing it. It's an opt-in basis, so you don't have to know who's buying what.</p>
-                <Button OnClick="() => { RevealClaimsToAdmin = true; StateHasChanged(); }">Reveal Claims</Button>
-            }
-            <h2>Edit Item Details</h2>
-            <LinkButton Url="@EditUrl">Edit</LinkButton>
-        </Authorized>
-    </AuthorizeView>
-</Section>
+                else
+                {
+                    <h2>Claim this Item</h2>
+                    <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
+                    <Button OnClick="ClaimItem">Claim</Button>
+                }
+                <p class="text-danger">@ErrorText</p>
+                
+            </RightContent>
+        </SideBySide>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <h1>Admin Section</h1>
+                <h2>Claims</h2>
+                @if (!Item.Claims.Any())
+                {
+                    <p>This item does not yet have any claims.</p>
+                } 
+                else if (RevealClaimsToAdmin)
+                {
+                    @foreach (var claim in Item.Claims)
+                    {
+                        <Box>
+                            <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a>.</p>
+                            <p><b>Purchase Method:</b> @(claim.PurchaseMethodId != null ? Item.GetPurchaseMethodByUser(claim.UserId).Name : "Not selected")</p>
+                            <p><b>Delivery Address:</b> @(claim.DeliveryAddress ?? "Not selected")</p>
+                            <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
+                            <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
+                            <p><b>Quantity:</b> @claim.Quantity</p>
+                            <p><b>Notes:</b> @claim.Notes</p>
+                        </Box>
+                    }
+                }
+                else
+                {
+                    <p class="claim-item-description">This section is capable of showing you detailed information about who has claimed this item, and how they are purchasing it. It's an opt-in basis, so you don't have to know who's buying what.</p>
+                    <Button OnClick="() => { RevealClaimsToAdmin = true; StateHasChanged(); }">Reveal Claims</Button>
+                }
+                <h2>Edit Item Details</h2>
+                <LinkButton Url="@EditUrl">Edit</LinkButton>
+            </Authorized>
+        </AuthorizeView>
+    </Section>
+</CascadingValue>
 
 
 @code {

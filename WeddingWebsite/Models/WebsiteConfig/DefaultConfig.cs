@@ -16,6 +16,7 @@ public class DefaultConfig : IWebsiteConfig
     public bool BrideFirst => false;
     public PageConfig.Account AccountConfig { get; set; }
     public PageConfig.Registry RegistryConfig { get; set; }
+    public PageConfig.RegistryItem RegistryItemConfig { get; set; }
     
     // Default config will enable all optional features.
     public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
@@ -60,5 +61,6 @@ public class DefaultConfig : IWebsiteConfig
         AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
         
         RegistryConfig = new PageConfig.Registry(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox));
+        RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, whiteFilledBox));
     }
 }

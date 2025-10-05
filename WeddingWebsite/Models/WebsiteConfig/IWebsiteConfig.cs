@@ -41,6 +41,8 @@ public interface IWebsiteConfig
     /// </summary>
     public PageConfig.Registry RegistryConfig { get; }
     
+    public PageConfig.RegistryItem RegistryItemConfig { get; }
+    
     /// <summary>
     /// Enable/disable optional features (e.g. RSVP, registry). You may configure a time to auto-activate.
     /// </summary>
