@@ -5,7 +5,7 @@
 } else if (Element is WebsiteGoogleMapsEmbed) {
     <GoogleMapsEmbed Location=@(((WebsiteGoogleMapsEmbed)Element).Location) Height="@MaxHeight" ClassName="@ClassName" />
 } else if (Element is Models.WebsiteElement.LinkButton) {
-    <LinkButton Data="@((Models.WebsiteElement.LinkButton)Element)"/>
+    <GrowingLinkButton Data="@((Models.WebsiteElement.LinkButton)Element)"/>
 } else if (Element is not null) {
     <p>Website element type not recognised: @Element?.GetType()</p>
 }
