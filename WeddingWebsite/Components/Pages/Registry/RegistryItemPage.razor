@@ -193,13 +193,22 @@
                     @foreach (var claim in Item.Claims)
                     {
                         <Box>
-                            <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a>.</p>
+                            <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a></p>
                             <p><b>Purchase Method:</b> @(claim.PurchaseMethodId != null ? Item.GetPurchaseMethodByUser(claim.UserId).Name : "Not selected")</p>
                             <p><b>Delivery Address:</b> @(claim.DeliveryAddress ?? "Not selected")</p>
                             <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
                             <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
                             <p><b>Quantity:</b> @claim.Quantity</p>
-                            <p><b>Notes:</b> @claim.Notes</p>
+                            <p style="margin-bottom: 5px"><b>Notes:</b> @claim.Notes</p>
+                            @if (claim.IsCompleted)
+                            {
+                                <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
+                            }
+                            else
+                            {
+                                <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
+                                <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
+                            }
                         </Box>
                     }
                 }
