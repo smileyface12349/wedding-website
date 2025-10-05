@@ -130,10 +130,10 @@
     ];
     private readonly string[] AdminExclusiveFilters =
     [
-        "Bring on day",
-        "Deliver to us",
-        "Pending",
-        "Completed"
+        "Claimed: Bring on day",
+        "Claimed: Deliver to us",
+        "Claimed: Pending",
+        "Claimed: Completed"
     ];
 
     private enum SortOrder
@@ -175,19 +175,19 @@
             return false;
         }
         // Admin exclusive filters
-        if (EnabledFilters.Contains("Bring on day") && item.Claims.All(claim => claim.DeliveryAddress != RegistryItemPage.DeliveryAddressBringOnDay))
+        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.DeliveryAddress != RegistryItemPage.DeliveryAddressBringOnDay))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Deliver to us") && item.Claims.All(claim => claim.DeliveryAddress == RegistryItemPage.DeliveryAddressBringOnDay))
+        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.DeliveryAddress == RegistryItemPage.DeliveryAddressBringOnDay))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Pending") && item.Claims.All(c => c.IsCompleted))
+        if (EnabledFilters.Contains("Claimed: Pending") && item.Claims.All(c => c.IsCompleted))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Completed") && item.Claims.All(c => !c.IsCompleted))
+        if (EnabledFilters.Contains("Claimed: Completed") && item.Claims.All(c => !c.IsCompleted))
         {
             return false;
         }
