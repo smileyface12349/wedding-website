@@ -18,3 +18,13 @@ h2 {
 .grid-heading {
     grid-column: 1/-1;
 }
+
+.new-item-button {
+    padding: 2px 5px;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 18px;
+    background: var(--primary);
+    color: var(--mud-palette-text-primary);
+    border-radius: 4px;
+}

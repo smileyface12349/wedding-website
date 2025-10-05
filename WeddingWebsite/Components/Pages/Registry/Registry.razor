@@ -55,6 +55,13 @@
                     </Authorized>
                 </AuthorizeView>
             </div>
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <h2>Add New Item (Admin Only)</h2>
+                    <p>Add a new item to the registry.</p>
+                    <a href="/registry/new" class="new-item-button">Add Item</a>
+                </Authorized>
+            </AuthorizeView>
 
         }
         else
