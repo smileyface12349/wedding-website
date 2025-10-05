@@ -201,12 +201,12 @@ public class RegistryStore : IRegistryStore
             var method = new RegistryItemPurchaseMethod(
                 reader.GetString(0),
                 reader.GetString(1),
-                reader.GetDouble(2),
+                reader.GetDecimal(2),
                 reader.GetBoolean(3),
                 reader.GetBoolean(4),
                 reader.IsDBNull(5) ? null : reader.GetString(5),
                 reader.IsDBNull(6) ? null : reader.GetString(6),
-                reader.GetDouble(7)
+                reader.GetDecimal(7)
             );
             methods.Add(method);
         }
