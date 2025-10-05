@@ -1,4 +1,5 @@
 ﻿@page "/Registry"
+@using System.Security.Claims
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WebsiteConfig
@@ -7,23 +8,36 @@
 
 @inject IWebsiteConfig Config
 @inject IRegistryService RegistryService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <CascadingValue Value="Config.RegistryConfig.Theme">
     <Section>
+        <div style="margin-top: 50px;"></div>
         <SectionHeading>Registry</SectionHeading>
-    
+
         @if (Config.OptionalFeatures.Registry.IsActive())
         {
             <p>Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
             <div class="gifts-grid">
-                @foreach (var item in RegistryItems)
+                @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
+                {
+                    <h2 class="grid-heading">Items You've Claimed</h2>
+                    @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
+                    {
+                        <div class="gift">
+                            <RegistryItem Item="item"/>
+                        </div>
+                    }
+                    <h2 class="grid-heading">Other Registry Items</h2>
+                }
+                @foreach (var item in RegistryItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0))
                 {
                     <div class="gift">
-                        <RegistryItem Item="item" />
+                        <RegistryItem Item="item"/>
                     </div>
                 }
             </div>
-        
+
         }
         else
         {
@@ -34,12 +48,20 @@
 
 @code {
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
+    private string? UserId { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
         if (Config.OptionalFeatures.Registry.IsActive())
         {
             RegistryItems = await RegistryService.GetAllRegistryItems();
+        }
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }
