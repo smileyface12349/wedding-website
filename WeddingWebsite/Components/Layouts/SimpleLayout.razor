@@ -1,12 +1,18 @@
-﻿@inherits LayoutComponentBase
+﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@inherits LayoutComponentBase
 
 @layout MainLayout
 
-<div class="content">
-    @Body
-</div>
+@inject IWebsiteConfig Config
+
+<CascadingValue Value="Theme">
+    <div class="content">
+        @Body
+    </div>
+</CascadingValue>
 
 @code{
-
+    private SectionTheme Theme => new (Config.Colours.Surface, Config.Colours.Primary, new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 }
 
