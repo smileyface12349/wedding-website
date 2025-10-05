@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Services
 
@@ -53,49 +54,49 @@
         <InputCheckbox id="hide" class="form-check-input" @bind-Value="Model.Hide" />
     </div>
     <h2>Purchase Methods</h2>
-    <p>Add one or more purchase methods for this item.</p>
     @foreach (var method in Model.PurchaseMethods)
     {
-        <h3>Purchase Method</h3>
-        <div class="form-input-and-label">
-            <label class="form-label">Name</label>
-            <span class="flex-grow"></span>
-            <InputText class="form-control" @bind-Value="method.Name" placeholder="John Lewis" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label">URL</label>
-            <span class="flex-grow"></span>
-            <InputText class="form-control" @bind-Value="method.Url" placeholder="https://johnlewis.com/product" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label">Cost</label>
-            <span class="flex-grow"></span>
-            <InputNumber class="form-control" @bind-Value="method.Cost" placeholder="49.99" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label">Delivery Cost</label>
-            <span class="flex-grow"></span>
-            <InputNumber class="form-control" @bind-Value="method.Shipping" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label">Allow Bring On Day</label>
-            <span class="flex-grow"></span>
-            <InputCheckbox class="form-check-input" @bind-Value="method.AllowBringOnDay" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label">Allow Deliver To Us</label>
-            <span class="flex-grow"></span>
-            <InputCheckbox class="form-check-input" @bind-Value="method.AllowDeliverToUs" />
-        </div>
-        <div class="form-input-and-label">
-            <label class="form-label mr">Instructions</label>
-            <InputTextArea class="form-control flex-grow" @bind-Value="method.Instructions" placeholder="Optional extra instructions to show when purchasing" />
-        </div>
-        @if (Model.PurchaseMethods.Count > 1)
-        {
-            <p>Warning: Check that nobody has already selected this purchase method before deleting it.</p>
-            <button type="button" class="red-button block-button" @onclick="() => Model.PurchaseMethods.Remove(method)">Remove Method</button>
-        }
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="form-input-and-label">
+                <label class="form-label">Name</label>
+                <span class="flex-grow"></span>
+                <InputText class="form-control" @bind-Value="method.Name" placeholder="John Lewis" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">URL</label>
+                <span class="flex-grow"></span>
+                <InputText class="form-control" @bind-Value="method.Url" placeholder="https://johnlewis.com/product" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Cost</label>
+                <span class="flex-grow"></span>
+                <InputNumber class="form-control" @bind-Value="method.Cost" placeholder="49.99" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Delivery Cost</label>
+                <span class="flex-grow"></span>
+                <InputNumber class="form-control" @bind-Value="method.Shipping" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Allow Bring On Day</label>
+                <span class="flex-grow"></span>
+                <InputCheckbox class="form-check-input" @bind-Value="method.AllowBringOnDay" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Allow Deliver To Us</label>
+                <span class="flex-grow"></span>
+                <InputCheckbox class="form-check-input" @bind-Value="method.AllowDeliverToUs" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label mr">Instructions</label>
+                <InputTextArea class="form-control flex-grow" @bind-Value="method.Instructions" placeholder="Optional extra instructions to show when purchasing" />
+            </div>
+            @if (Model.PurchaseMethods.Count > 1)
+            {
+                <p>Warning: Check that nobody has already selected this purchase method before deleting it.</p>
+                <button type="button" class="red-button block-button" @onclick="() => Model.PurchaseMethods.Remove(method)">Remove Method</button>
+            }
+        </Box>
     }
     <button type="button" class="block-button" @onclick="() => Model.PurchaseMethods.Add(new())">Add Purchase Method</button>
     <div>
