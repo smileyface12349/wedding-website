@@ -63,4 +63,9 @@ public interface IRegistryStore
     /// This should be restricted to admin users only.
     /// </summary>
     void MarkClaimAsNotCompleted(string itemId, string userId);
+    
+    /// <summary>
+    /// Set notes for the claim. It's entirely up to the purchaser what they want to put here, if anything at all.
+    /// </summary>
+    void SetClaimNotes(string itemId, string userId, string? notes);
 }

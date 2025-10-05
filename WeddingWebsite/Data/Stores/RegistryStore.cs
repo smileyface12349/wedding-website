@@ -558,4 +558,26 @@ public class RegistryStore : IRegistryStore
             throw new InvalidOperationException($"No completed claim found for item ID {itemId} by user {userId}");
         }
     }
+
+    public void SetClaimNotes(string itemId, string userId, string? notes)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET Notes = :notes
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy;
+        ";
+        updateCmd.Parameters.AddWithValue(":notes", notes ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":claimedBy", userId);
+
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)
+        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId}");
+        }
+    }
 }
