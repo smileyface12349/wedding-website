@@ -157,6 +157,36 @@
             
         </RightContent>
     </SideBySide>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <h1>Admin Section</h1>
+            <h2>Claims</h2>
+            @if (!Item.Claims.Any())
+            {
+                <p>This item does not yet have any claims.</p>
+            } 
+            else if (RevealClaimsToAdmin)
+            {
+                @foreach (var claim in Item.Claims)
+                {
+                    <Box>
+                        <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a>.</p>
+                        <p><b>Purchase Method:</b> @(claim.PurchaseMethodId != null ? Item.GetPurchaseMethodByUser(claim.UserId).Name : "Not selected")</p>
+                        <p><b>Delivery Address:</b> @(claim.DeliveryAddress ?? "Not selected")</p>
+                        <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
+                        <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
+                        <p><b>Quantity:</b> @claim.Quantity</p>
+                        <p><b>Notes:</b> @claim.Notes</p>
+                    </Box>
+                }
+            }
+            else
+            {
+                <p class="claim-item-description">This section is capable of showing you detailed information about who has claimed this item, and how they are purchasing it. It's an opt-in basis, so you don't have to know who's buying what.</p>
+                <Button OnClick="() => { RevealClaimsToAdmin = true; StateHasChanged(); }">Reveal Claims</Button>
+            }
+        </Authorized>
+    </AuthorizeView>
 </Section>
 
 
@@ -171,6 +201,8 @@
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
     private string DeliveryAddressBringOnDay => "Bring it on the day";
+
+    private bool RevealClaimsToAdmin { get; set; } = false;
 
     protected override void OnInitialized() 
     {
