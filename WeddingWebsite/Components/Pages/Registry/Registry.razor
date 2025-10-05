@@ -36,6 +36,24 @@
                         <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
                     </div>
                 }
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        <h2 class="grid-heading">Hidden Items (Admin Only)</h2>
+                        @if (RegistryItems.Any(item => item.Hide))
+                        {
+                            @foreach (var item in RegistryItems.Where(item => item.Hide))
+                            {
+                                <div class="gift">
+                                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="grid-heading">There are no hidden items. If you mark an item as hidden, it won't appear in search results but it will be available to claim if people obtain the link to it.</p>
+                        }
+                    </Authorized>
+                </AuthorizeView>
             </div>
 
         }
