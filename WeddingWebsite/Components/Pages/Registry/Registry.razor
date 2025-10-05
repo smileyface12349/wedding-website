@@ -17,26 +17,33 @@
 
         @if (Config.OptionalFeatures.Registry.IsActive())
         {
-            <p class="claim-item-description">Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
-            <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By" Style="margin-bottom: 20px; margin-right: 20px; margin-top: 20px;">
-                <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
-                <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
-                <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
-            </MudSelect>
-            <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
-                @foreach (var filter in AllFilters)
-                {
-                    <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
-                }
-                <AuthorizeView Roles="Admin">
-                    <Authorized>
-                        @foreach (var filter in AdminExclusiveFilters)
+            <div class="description-and-filters-container">
+                <div class="page-description-container">
+                    <p style="margin-bottom: 10px">Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!</p>
+                    <p>You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!</p>
+                </div>
+                <div class="sort-and-filter-container">
+                    <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By">
+                        <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
+                        <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
+                        <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
+                    </MudSelect>
+                    <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
+                        @foreach (var filter in AllFilters)
                         {
                             <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
                         }
-                    </Authorized>
-                </AuthorizeView>
-            </MudSelect>
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                @foreach (var filter in AdminExclusiveFilters)
+                                {
+                                    <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                                }
+                            </Authorized>
+                        </AuthorizeView>
+                    </MudSelect>
+                </div>
+            </div>
             <div class="gifts-grid">
                 @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
                 {

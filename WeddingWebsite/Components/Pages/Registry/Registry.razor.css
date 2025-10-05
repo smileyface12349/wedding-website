@@ -28,3 +28,20 @@ h2 {
     color: var(--mud-palette-text-primary);
     border-radius: 4px;
 }
+
+.description-and-filters-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.description-and-filters-container > .page-description-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.sort-and-filter-container {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
