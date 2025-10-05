@@ -56,7 +56,17 @@
                 </a>
             }
             <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
-            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
+            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
+            {
+                <h2>Item Purchased</h2>
+                <p class="claim-item-description">Thank you so much for your gift!</p>
+                <p>Purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>.</p>
+                @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                {
+                    <p>Delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>.</p>
+                }
+                <p style="margin-top: 10px">Since this is now completed, you can no longer make any changes. If something went wrong, please contact @WeddingDetails.LoginContactMethod?.Text.</p>
+            } else if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
             {
                 @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
                 {
