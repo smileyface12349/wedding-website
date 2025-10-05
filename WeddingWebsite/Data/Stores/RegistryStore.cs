@@ -71,7 +71,7 @@ public class RegistryStore : IRegistryStore
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
-
+        
         using var transaction = connection.BeginTransaction();
         var cmd = connection.CreateCommand();
         cmd.Transaction = transaction;
@@ -101,18 +101,91 @@ public class RegistryStore : IRegistryStore
             throw new InvalidOperationException($"No registry item found with ID {item.Id}");
         }
 
-        // Delete existing purchase methods
-        var deleteCmd = connection.CreateCommand();
-        deleteCmd.Transaction = transaction;
-        deleteCmd.CommandText = @"
-            DELETE FROM RegistryItemPurchaseMethods
+        // Get IDs of existing purchase methods
+        var existingMethodIds = new HashSet<string>();
+        var getMethodsCmd = connection.CreateCommand();
+        getMethodsCmd.Transaction = transaction;
+        getMethodsCmd.CommandText = @"
+            SELECT Id
+            FROM RegistryItemPurchaseMethods
             WHERE ItemId = :itemId;
         ";
-        deleteCmd.Parameters.AddWithValue(":itemId", item.Id);
-        deleteCmd.ExecuteNonQuery();
-
-        // Re-add (updated) purchase methods
-        AddPurchaseMethods(item, connection, transaction);
+        getMethodsCmd.Parameters.AddWithValue(":itemId", item.Id);
+        using var reader = getMethodsCmd.ExecuteReader();
+        while (reader.Read())
+        {
+            existingMethodIds.Add(reader.GetString(0));
+        }
+        
+        // Update or insert purchase methods
+        foreach (var method in item.PurchaseMethods)
+        {
+            if (existingMethodIds.Contains(method.Id))
+            {
+                // Update existing method
+                var updateCmd = connection.CreateCommand();
+                updateCmd.Transaction = transaction;
+                updateCmd.CommandText = @"
+                    UPDATE RegistryItemPurchaseMethods
+                    SET Name = :name,
+                        Cost = :cost,
+                        AllowBringOnDay = :allowBringOnDay,
+                        AllowDeliverToUs = :allowDeliverToUs,
+                        Url = :url,
+                        Instructions = :instructions,
+                        DeliveryCost = :deliveryCost
+                    WHERE Id = :id AND ItemId = :itemId;
+                ";
+                updateCmd.Parameters.AddWithValue(":id", method.Id);
+                updateCmd.Parameters.AddWithValue(":itemId", item.Id);
+                updateCmd.Parameters.AddWithValue(":name", method.Name);
+                updateCmd.Parameters.AddWithValue(":cost", method.Cost);
+                updateCmd.Parameters.AddWithValue(":allowBringOnDay", method.AllowBringOnDay ? 1 : 0);
+                updateCmd.Parameters.AddWithValue(":allowDeliverToUs", method.AllowDeliverToUs ? 1 : 0);
+                updateCmd.Parameters.AddWithValue(":url", method.Url ?? (object)DBNull.Value);
+                updateCmd.Parameters.AddWithValue(":instructions", method.Instructions ?? (object)DBNull.Value);
+                updateCmd.Parameters.AddWithValue(":deliveryCost", method.DeliveryCost);
+                updateCmd.ExecuteNonQuery();
+            }
+            else
+            {
+                // Insert new method
+                var insertCmd = connection.CreateCommand();
+                insertCmd.Transaction = transaction;
+                insertCmd.CommandText = @"
+                    INSERT INTO RegistryItemPurchaseMethods
+                    (Id, ItemId, Name, Cost, AllowBringOnDay, AllowDeliverToUs, Url, Instructions, DeliveryCost)
+                    VALUES
+                    (:id, :itemId, :name, :cost, :allowBringOnDay, :allowDeliverToUs, :url, :instructions, :deliveryCost);
+                ";
+                insertCmd.Parameters.AddWithValue(":id", method.Id);
+                insertCmd.Parameters.AddWithValue(":itemId", item.Id);
+                insertCmd.Parameters.AddWithValue(":name", method.Name);
+                insertCmd.Parameters.AddWithValue(":cost", method.Cost);
+                insertCmd.Parameters.AddWithValue(":allowBringOnDay", method.AllowBringOnDay ? 1 : 0);
+                insertCmd.Parameters.AddWithValue(":allowDeliverToUs", method.AllowDeliverToUs ? 1 : 0);
+                insertCmd.Parameters.AddWithValue(":url", method.Url ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue(":instructions", method.Instructions ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue(":deliveryCost", method.DeliveryCost);
+                insertCmd.ExecuteNonQuery();
+            }
+            
+            existingMethodIds.Remove(method.Id); // Mark as processed
+        }
+        
+        // Delete removed purchase methods
+        foreach (var methodId in existingMethodIds)
+        {
+            var deleteCmd = connection.CreateCommand();
+            deleteCmd.Transaction = transaction;
+            deleteCmd.CommandText = @"
+                DELETE FROM RegistryItemPurchaseMethods
+                WHERE Id = :id AND ItemId = :itemId;
+            ";
+            deleteCmd.Parameters.AddWithValue(":id", methodId);
+            deleteCmd.Parameters.AddWithValue(":itemId", item.Id);
+            deleteCmd.ExecuteNonQuery();
+        }
 
         transaction.Commit();
     }
