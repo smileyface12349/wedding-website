@@ -47,7 +47,7 @@
             <div class="gifts-grid">
                 @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
                 {
-                    <h2 class="grid-heading">Items You've Claimed</h2>
+                    <h2 class="grid-heading" style="margin-top: 0">Items You've Claimed</h2>
                     @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
                     {
                         <div class="gift">
