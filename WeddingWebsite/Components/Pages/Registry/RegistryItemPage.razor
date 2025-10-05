@@ -222,7 +222,7 @@
     private string Notes { get; set; } = "";
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
-    private string DeliveryAddressBringOnDay => "Bring it on the day";
+    public static string DeliveryAddressBringOnDay => "Bring it on the day";
 
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";

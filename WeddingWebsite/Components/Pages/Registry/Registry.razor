@@ -17,7 +17,21 @@
 
         @if (Config.OptionalFeatures.Registry.IsActive())
         {
-            <p>Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
+            <p class="claim-item-description">Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
+            <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
+                @foreach (var filter in AllFilters)
+                {
+                    <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                }
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        @foreach (var filter in AdminExclusiveFilters)
+                        {
+                            <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                        }
+                    </Authorized>
+                </AuthorizeView>
+            </MudSelect>
             <div class="gifts-grid">
                 @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
                 {
@@ -30,11 +44,15 @@
                     }
                     <h2 class="grid-heading">Other Registry Items</h2>
                 }
-                @foreach (var item in RegistryItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
+                @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
                 {
                     <div class="gift">
                         <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
                     </div>
+                }
+                @if (!SortedAndFilteredItems.Any())
+                {
+                    <p class="grid-heading">There are no items matching the selected filters. Did you mean to remove the "Unclaimed" filter?</p>
                 }
                 <AuthorizeView Roles="Admin">
                     <Authorized>
@@ -73,7 +91,26 @@
 
 @code {
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
+    private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
+        .Where(ItemMatchesFilter)
+        .OrderBy(item => item.Priority);
     private string? UserId { get; set; }
+
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Unclaimed" };
+    private string EnabledFiltersString { get; set; } = "";
+    private readonly string[] AllFilters =
+    [
+        "Under £25",
+        "Under £50",
+        "Unclaimed"
+    ];
+    private readonly string[] AdminExclusiveFilters =
+    [
+        "Bring on day",
+        "Deliver to us",
+        "Pending",
+        "Completed"
+    ];
     
     protected override async Task OnInitializedAsync()
     {
@@ -88,5 +125,39 @@
         {
             UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
+    }
+
+    private bool ItemMatchesFilter(RegistryItem item)
+    {
+        if (EnabledFilters.Contains("Unclaimed") && item.IsFullyClaimed)
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Under £25") && item.PurchaseMethods.All(pm => pm.Cost >= 25))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Under £50") && item.PurchaseMethods.All(pm => pm.Cost >= 50))
+        {
+            return false;
+        }
+        // Admin exclusive filters
+        if (EnabledFilters.Contains("Bring on day") && item.Claims.All(claim => claim.DeliveryAddress != RegistryItemPage.DeliveryAddressBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Deliver to us") && item.Claims.All(claim => claim.DeliveryAddress == RegistryItemPage.DeliveryAddressBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Pending") && item.Claims.All(c => c.IsCompleted))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Completed") && item.Claims.All(c => !c.IsCompleted))
+        {
+            return false;
+        }
+        return true;
     }
 }
