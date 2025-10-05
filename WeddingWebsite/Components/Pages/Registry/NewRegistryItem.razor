@@ -1,0 +1,186 @@
+﻿@page "/Registry/New"
+
+@using System.ComponentModel.DataAnnotations
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Services
+
+@layout SimpleLayout
+
+@inject IRegistryService RegistryService
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>New Registry Item</h1>
+<p class="mb">Add a new item to the registry. Please note that there will be more options available after creating in the edit page - this page is designed to provide the most frequently used options to create items quickly.</p>
+
+<p>@ErrorText</p>
+<EditForm Model="Input" method="post" OnValidSubmit="OnSubmit" FormName="add-registry-item">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger mb" role="alert" />
+    <div class="form-input-and-label">
+        <label for="generic-name">Generic Name</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.GenericName" class="form-control" autocomplete="username" aria-required="true" placeholder="Toaster" id="generic-name" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="name">Name</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="Bosch Toaster 3000" id="name" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="description" class="mr">Description (optional)</label>
+        <InputTextArea @bind-Value="Input.Description" class="form-control flex-grow" placeholder="Describe what it is and why you want it." id="description" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="image-url">Image URL</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.ImageUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="store">Store</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.Store" class="form-control" autocomplete="username" aria-required="true" placeholder="John Lewis" id="store" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="product-url">Product URL</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.ProductUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://johnlewis.com/toaster3000" id="product-url" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="cost">Cost (excl. delivery)</label>
+        <span class="flex-grow"></span>
+        <InputNumber @bind-Value="Input.Cost" class="form-control" aria-required="true" placeholder="49.99" id="cost" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="delivery-cost">Delivery Cost</label>
+        <span class="flex-grow"></span>
+        <InputNumber @bind-Value="Input.DeliveryCost" class="form-control" aria-required="true" placeholder="4.99" id="delivery-cost" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="purchase-instructions" class="mr">Purchase Instructions (optional)</label>
+        <InputTextArea @bind-Value="Input.PurchaseInstructions" class="form-control flex-grow" placeholder="Any special instructions for purchasing at this store." id="purchase-instructions" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="allow-money-transfer">Allow Money Transfer</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox @bind-Value="Input.AllowMoneyTransfer" class="form-check-input" id="allow-money-transfer" />
+    </div>
+    @if (Input.AllowMoneyTransfer)
+    {
+        <div class="form-input-and-label">
+            <label for="money-transfer-purchase-instructions" class="mr">Money Transfer Purchase Instructions</label>
+            <InputTextArea @bind-Value="Input.MoneyTransferPurchaseInstructions" class="form-control flex-grow" placeholder="Please include details for where the money should be sent." id="money-transfer-purchase-instructions" />
+        </div>
+    }
+    <button type="submit">Add Item</button>
+</EditForm>
+
+
+@code {
+    private string ErrorText { get; set; } = "";
+    
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private void OnSubmit()
+    {
+        if (Input.Cost == null) return;
+        var primaryPurchaseMethod = new RegistryItemPurchaseMethod(
+            Guid.NewGuid().ToString(),
+            Input.Store,
+            Input.Cost.Value,
+            true,
+            true,
+            Input.ProductUrl == "" ? null : Input.ProductUrl,
+            Input.PurchaseInstructions == "" ? null : Input.PurchaseInstructions,
+            Input.DeliveryCost
+        );
+        var moneyTransferPurchaseMethod = Input.AllowMoneyTransfer ? new RegistryItemPurchaseMethod(
+            Guid.NewGuid().ToString(),
+            "Money Transfer",
+            Input.Cost.Value + Input.DeliveryCost,
+            false,
+            false,
+            null,
+            Input.MoneyTransferPurchaseInstructions == "" ? null : Input.MoneyTransferPurchaseInstructions,
+            0
+        ) : null;
+        var newItem = new RegistryItem(
+            Guid.NewGuid().ToString(),
+            Input.GenericName,
+            Input.Name,
+            Input.Description == "" ? null : Input.Description,
+            Input.ImageUrl == "" ? null : Input.ImageUrl,
+            new List<RegistryItemPurchaseMethod> { primaryPurchaseMethod }.Concat(moneyTransferPurchaseMethod is not null ? new[] { moneyTransferPurchaseMethod } : Array.Empty<RegistryItemPurchaseMethod>()).ToList(),
+            []
+        );
+        
+        RegistryService.AddItem(newItem);
+        NavigationManager.NavigateTo($"/Registry/{newItem.Id}");
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // Auto-fill the money transfer instructions with an existing item's instructions, if available
+        var registryItems = await RegistryService.GetAllRegistryItems();
+        var arbitraryItemWithMoneyTransfer = registryItems.FirstOrDefault(item => item.PurchaseMethods.Any(method => method is { Name: "Money Transfer", Instructions: not null }));
+        if (arbitraryItemWithMoneyTransfer != null)
+        {
+            Input.MoneyTransferPurchaseInstructions = arbitraryItemWithMoneyTransfer.PurchaseMethods.First(method => method is { Name: "Money Transfer", Instructions: not null }).Instructions!;
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [StringLength(30)]
+        [Display(Name = "Generic Name")]
+        public string GenericName { get; set; } = "";
+        
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Name")]
+        public string Name { get; set; } = "";
+        
+        [StringLength(1000)]
+        [Display(Name = "Description")]
+        public string Description { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Image URL")] 
+        public string ImageUrl { get; set; } = "";
+        
+        [Required]
+        [StringLength(30)]
+        [Display(Name = "Store")]
+        public string Store { get; set; } = "";
+        
+        [Required]
+        [Display(Name = "Product URL")]
+        public string ProductUrl { get; set; } = "";
+        
+        [Required]
+        [Range(0, 10000.00)]
+        [Display(Name = "Cost")]
+        public decimal? Cost { get; set; }
+        
+        [Required]
+        [Range(0, 100.00)]
+        [Display(Name = "Delivery Cost")]
+        public decimal DeliveryCost { get; set; } = 0;
+        
+        [StringLength(1000)]
+        [Display(Name = "Purchase Instructions")]
+        public string PurchaseInstructions { get; set; } = "";
+        
+        [Display(Name = "Allow Money Transfer")]
+        public bool AllowMoneyTransfer { get; set; } = true;
+        
+        [StringLength(1000)]
+        [Display(Name = "Money Transfer Purchase Instructions")]
+        public string MoneyTransferPurchaseInstructions { get; set; } = "";
+        
+    }
+}
