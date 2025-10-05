@@ -18,6 +18,11 @@
         @if (Config.OptionalFeatures.Registry.IsActive())
         {
             <p class="claim-item-description">Gifts are not required, but if you would like to give us a gift, here's some suggestions. If you'd prefer to give something else, that's fine too!</p>
+            <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By" Style="margin-bottom: 20px; margin-right: 20px; margin-top: 20px;">
+                <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
+                <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
+                <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
+            </MudSelect>
             <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
                 @foreach (var filter in AllFilters)
                 {
@@ -93,7 +98,20 @@
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
     private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
         .Where(ItemMatchesFilter)
-        .OrderBy(item => item.Priority);
+        .OrderBy(item =>
+        {
+            switch (CurrentSortOrder)
+            {
+                case SortOrder.Default:
+                    return -item.Priority;
+                case SortOrder.PriceLowToHigh:
+                    return item.CheapestCost;
+                case SortOrder.PriceHighToLow:
+                    return -item.CheapestCost;
+                default:
+                    return 0;
+            }
+        });
     private string? UserId { get; set; }
 
     private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Unclaimed" };
@@ -111,6 +129,15 @@
         "Pending",
         "Completed"
     ];
+
+    private enum SortOrder
+    {
+        Default,
+        PriceLowToHigh,
+        PriceHighToLow
+    }
+    
+    private SortOrder CurrentSortOrder { get; set; } = SortOrder.Default;
     
     protected override async Task OnInitializedAsync()
     {
