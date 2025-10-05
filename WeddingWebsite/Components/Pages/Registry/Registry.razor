@@ -25,15 +25,15 @@
                     @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
                     {
                         <div class="gift">
-                            <RegistryItem Item="item"/>
+                            <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? "Completed" : "Pending")" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
                         </div>
                     }
                     <h2 class="grid-heading">Other Registry Items</h2>
                 }
-                @foreach (var item in RegistryItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0))
+                @foreach (var item in RegistryItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
                 {
                     <div class="gift">
-                        <RegistryItem Item="item"/>
+                        <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
                     </div>
                 }
             </div>

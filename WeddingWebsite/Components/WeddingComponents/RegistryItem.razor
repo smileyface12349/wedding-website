@@ -21,7 +21,7 @@
                 {
                     <p class="cost"></p>
                 }
-                <button style="background: @ButtonColour">View</button>
+                <button style="background: @ButtonColour">@ButtonText</button>
             </div>
 
         </ChildContent>
@@ -32,8 +32,14 @@
     [Parameter]
     public required Models.Registry.RegistryItem Item { get; set; }
     
+    [Parameter]
+    public string ButtonText { get; set; } = "View";
+    
+    [Parameter]
+    public bool ButtonSuccess { get; set; } = true;
+    
     [CascadingParameter]
     private SectionTheme? Theme { get; set; }
     
-    private string ButtonColour => Theme?.Primary.ToString() ?? "var(--primary)";
+    private string ButtonColour => ButtonSuccess ? (Theme?.Primary.ToString() ?? "var(--primary)") : "#aaaaaa";
 }
