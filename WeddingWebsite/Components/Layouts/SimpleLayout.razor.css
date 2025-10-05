@@ -81,6 +81,12 @@
     border: 1px solid red;
 }
 
+::deep textarea {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+}
+
 ::deep .narrow-section {
     max-width: 400px;
     margin: auto;
