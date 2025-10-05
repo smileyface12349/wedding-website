@@ -1,14 +1,12 @@
 ﻿a {
-    background: none;
-    transition-duration: 0.2s;
-    border-style: solid;
-    border-width: 2px;
-    padding: 2px 6px;
+    border: none;
     border-radius: 5px;
-    cursor: pointer;
-    font-size: 24px;
+    padding: 2px 5px;
+    font-size: 16px;
+    color: var(--mud-palette-text-primary);
+    display: inline-block;
 }
 
 a:hover {
-    font-size: 28px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
