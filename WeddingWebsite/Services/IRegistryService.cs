@@ -16,5 +16,5 @@ public interface IRegistryService
     void ChooseDeliveryAddress(string itemId, string userId, string? address);
     void MarkClaimAsCompleted(string itemId, string userId);
     void MarkClaimAsNotCompleted(string itemId, string userId);
-    
+    void SetClaimNotes(string itemId, string userId, string? notes);
 }

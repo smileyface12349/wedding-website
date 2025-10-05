@@ -32,4 +32,6 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     
     [Authorize(Roles = "Admin")]
     public void MarkClaimAsNotCompleted(string itemId, string userId) => registryStore.MarkClaimAsNotCompleted(itemId, userId);
+    
+    public void SetClaimNotes(string itemId, string userId, string? notes) => registryStore.SetClaimNotes(itemId, userId, notes);
 }
