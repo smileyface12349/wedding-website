@@ -3,12 +3,16 @@ using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.People;
 
+/// <summary>
+/// Address is currently only used for the registry feature.
+/// </summary>
 public record NotablePerson(
     Name Name,
     Role Role,
     ContactDetails ContactDetails,
     IEnumerable<WebsiteSection> Content,
-    IWebsiteElement? Media = null
+    IWebsiteElement? Media = null,
+    string? Address = null
 ) : IPerson, IContact
 {
     /// <summary>

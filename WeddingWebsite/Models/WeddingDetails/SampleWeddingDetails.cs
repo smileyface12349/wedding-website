@@ -94,7 +94,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
                 new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
                 new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
             ],
-            new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null)
+            new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null),
+            "124 Conch Street, Bikini Bottom, Pacific Ocean"
         ),
         new (
             new Name("Scooby", "Doo"),
@@ -108,7 +109,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
                 new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
                 new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
             ],
-            new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null)
+            new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null),
+            "32 Mystery Lane, Coolsville, USA"
         ),
         new (
             new Name("John", "Smith"),
