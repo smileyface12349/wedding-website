@@ -185,6 +185,8 @@
                 <p class="claim-item-description">This section is capable of showing you detailed information about who has claimed this item, and how they are purchasing it. It's an opt-in basis, so you don't have to know who's buying what.</p>
                 <Button OnClick="() => { RevealClaimsToAdmin = true; StateHasChanged(); }">Reveal Claims</Button>
             }
+            <h2>Edit Item Details</h2>
+            <LinkButton Url="@EditUrl">Edit</LinkButton>
         </Authorized>
     </AuthorizeView>
 </Section>
@@ -203,6 +205,7 @@
     private string DeliveryAddressBringOnDay => "Bring it on the day";
 
     private bool RevealClaimsToAdmin { get; set; } = false;
+    private string EditUrl => $"/registry/edit/{ItemId}";
 
     protected override void OnInitialized() 
     {
