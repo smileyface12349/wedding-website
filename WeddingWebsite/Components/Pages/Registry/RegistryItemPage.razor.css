@@ -57,6 +57,6 @@ h2 {
     gap: 10px;
 }
 
-.choose-purchase-option-method {
+a {
     cursor: pointer;
 }

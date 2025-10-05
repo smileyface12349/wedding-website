@@ -5,9 +5,11 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Services
 
 @inject IRegistryService RegistryService
+@inject IWeddingDetails WeddingDetails
 @inject AuthenticationStateProvider AuthStateProvider
 
 @if (Item == null)
@@ -56,20 +58,63 @@
             <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
             @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
             {
-                <h2>Item Claimed</h2>
-                <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
-                <div class="choose-purchase-option">
-                    @foreach (var method in Item.PurchaseMethods)
+                @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
+                {
+                    <h2>Select Purchase Method</h2>
+                    <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
+                    <div class="choose-purchase-option">
+                        @foreach (var method in Item.PurchaseMethods)
+                        {
+                            <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
+                                <Box>
+                                    <p class="purchase-option-name">@method.Name</p>
+                                </Box>
+                            </a>
+                        }
+                    </div>
+                }
+                else if (Item.GetClaimByUser(UserId).DeliveryAddress == null && (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay || Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs))
+                {
+                    <h2>Select Delivery Address</h2>
+                    <p class="claim-item-description">Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => ChoosePurchaseMethod(null)">[Undo]</a></p>
+                    <p class="claim-item-description">You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!</p>
+                    @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs)
                     {
-                        <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
+                        @foreach (var address in DeliveryAddresses)
+                        {
+                            <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(address)">
+                                <Box>
+                                    <p class="purchase-option-name">@address</p>
+                                </Box>
+                            </a>
+                        }
+                    }
+                    @if (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                    {
+                        <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(DeliveryAddressBringOnDay)">
                             <Box>
-                                <p class="purchase-option-name">@method.Name</p>
+                                <p class="purchase-option-name">I'll bring it on the day</p>
                             </Box>
                         </a>
                     }
-                </div>
-                <p class="claim-item-description">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
+                }
+                else if (!Item.GetClaimByUser(UserId).IsCompleted)
+                {
+                    <h2>Item Ready to Purchase</h2>
+                    <p>Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[Undo]</a></p>
+                    @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                    {
+                        <p>Selected delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>. <a @onclick="() => ChooseDeliveryAddress(null)">[Undo]</a></p>
+                    }
+                    <p style="margin-top: 10px" class="claim-item-description">That's it! Now it's time to complete the purchase. Please do this in your own time and then press the button below to mark it as completed. Don't worry, you can return to this screen later and everything will be saved.</p>
+                    <p class="claim-item-description">Once you have marked this as completed, you will no longer be able to make any changes.</p>
+
+                    <p class="claim-item-description">@Item.GetPurchaseMethodByUser(UserId).Instructions</p>
+                    <Button OnClick="MarkCompleted">Mark as Completed (cannot be undone)</Button>
+                }
+                <p class="claim-item-description" style="margin-top: 10px">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
                 <Button OnClick="RemoveClaim">Unclaim</Button>
+                
             } else if (Item.IsFullyClaimed)
             {
                 <h2>Item Already Claimed</h2>
@@ -96,6 +141,9 @@
     private string? UserId { get; set; }
     
     private string ErrorText { get; set; } = "";
+    
+    private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
+    private string DeliveryAddressBringOnDay => "Bring it on the day";
 
     protected override void OnInitialized() 
     {
@@ -153,7 +201,7 @@
         StateHasChanged();
     }
     
-    private void ChoosePurchaseMethod(string methodId)
+    private void ChoosePurchaseMethod(string? methodId)
     {
         if (Item == null) return;
         if (UserId == null)
@@ -164,6 +212,54 @@
         }
         RegistryService.ChoosePurchaseMethod(Item.Id, UserId, methodId);
 
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+    }
+
+    private void ChooseDeliveryAddress(string? address)
+    {
+        if (Item == null) return;
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        RegistryService.ChooseDeliveryAddress(Item.Id, UserId, address);
+
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+    }
+
+    private void MarkCompleted()
+    {
+        if (Item == null) return;
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        
+        // Check that the purchase method is selected
+        var claim = Item.GetClaimByUser(UserId);
+        if (claim.PurchaseMethodId == null)
+        {
+            ErrorText = "Failed to mark as completed - please select a purchase method first.";
+            StateHasChanged();
+            return;
+        }
+        
+        // Check that the delivery address is selected if required
+        var method = Item.GetPurchaseMethodByUser(UserId);
+        if ((method.AllowDeliverToUs || method.AllowBringOnDay) && claim.DeliveryAddress == null)
+        {
+            ErrorText = "Failed to mark as completed - please select a delivery address first.";
+            StateHasChanged();
+            return;
+        }
+        
+        RegistryService.MarkClaimAsCompleted(Item.Id, UserId);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
     }

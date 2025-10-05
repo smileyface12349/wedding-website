@@ -21,4 +21,21 @@ public record RegistryItem(
     {
         return Claims.Where(c => c.UserId == userId).Sum(c => c.Quantity);
     }
+    
+    /// <summary>
+    /// Gets the unique claim for the specified user. Throws if there is no such claim.
+    /// </summary>
+    public RegistryItemClaim GetClaimByUser(string userId)
+    {
+        return Claims.Single(c => c.UserId == userId);
+    }
+
+    /// <summary>
+    /// Gets the purchase method that the user has selected. Throws if the user hasn't selected a purchase method.
+    /// </summary>
+    public RegistryItemPurchaseMethod GetPurchaseMethodByUser(string userId)
+    {
+        var claim = GetClaimByUser(userId);
+        return PurchaseMethods.Single(pm => pm.Id == claim.PurchaseMethodId);
+    }
 }
