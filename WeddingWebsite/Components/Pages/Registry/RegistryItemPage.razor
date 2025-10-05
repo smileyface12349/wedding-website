@@ -83,6 +83,14 @@
                     <p>Delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>.</p>
                 }
                 <p style="margin-top: 10px">Since this is now completed, you can no longer make any changes. If something went wrong, please contact @WeddingDetails.LoginContactMethod?.Text.</p>
+                <h2>Notes</h2>
+                <p class="claim-item-description">If you'd like to add any notes, you can do so in the box below. It's entirely up to you how you want to use this, if at all.</p>
+                <textarea rows="3" style="width: 100%;resize:none" placeholder="Add a note visible to you and the website administrators (optional)." @oninput="args => Notes = args.Value?.ToString() ?? string.Empty">@Notes</textarea>
+                @if (Notes != (Item.GetClaimByUser(UserId).Notes ?? ""))
+                {
+                    <p class="text-danger claim-item-description">You have unsaved changes.</p>
+                    <Button OnClick="SaveNotes">Save Notes</Button>
+                }
             } else if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
             {
                 @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
@@ -200,6 +208,7 @@
     private string? UserId { get; set; }
     
     private string ErrorText { get; set; } = "";
+    private string Notes { get; set; } = "";
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
     private string DeliveryAddressBringOnDay => "Bring it on the day";
@@ -216,6 +225,11 @@
         if (user.Identity != null && user.Identity.IsAuthenticated)
         {
             UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        if (Item != null && UserId != null && Item.NumClaimsByUser(UserId) > 0)
+        {
+            Notes = Item.GetClaimByUser(UserId).Notes ?? "";
         }
     }
     
@@ -322,6 +336,21 @@
         }
         
         RegistryService.MarkClaimAsCompleted(Item.Id, UserId);
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+    }
+    
+    private void SaveNotes()
+    {
+        if (Item == null) return;
+        if (UserId == null)
+        {
+            ErrorText = "Failed to obtain user id. Please try again later, or try logging out and back in again.";
+            StateHasChanged();
+            return;
+        }
+        
+        RegistryService.SetClaimNotes(Item.Id, UserId, Notes == "" ? null : Notes);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
     }
