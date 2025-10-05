@@ -35,6 +35,18 @@
                 <p>Quantity Claimed: @Item.QuantityClaimed/@Item.MaxQuantity.</p>
             }
             <h2>Purchase Options</h2>
+            @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
+            {
+                if (Item.GetClaimByUser(UserId).PurchaseMethodId == null
+                    || ((Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay) && Item.GetClaimByUser(UserId).DeliveryAddress == null))
+                {
+                    <p class="text-danger claim-item-description">Please finish selecting the details below before making a purchase.</p>
+                }
+            }
+            else
+            {
+                <p class="text-danger claim-item-description">Please do not make a purchase before claiming the item first - this will reserve it so we don't get two people buying the same thing!</p>
+            }
             @foreach (var method in Item.PurchaseMethods)
             {
                 @if (method.Url != null)
@@ -72,7 +84,6 @@
                 }
                 
             }
-            <p>Please do not purchase anything before claiming the item (see below) - this will reserve it so we don't get two people buying the same thing!</p>
             @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
             {
                 <h2>Item Purchased</h2>
