@@ -1,6 +1,7 @@
 ﻿@page "/Registry/{ItemId}"
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.IdentityModel.Tokens
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Elements
@@ -175,7 +176,15 @@
                         <p style="margin-top: 10px" class="claim-item-description">That's it! Now it's time to complete the purchase. Please do this in your own time and then press the button below to mark it as completed. Don't worry, you can return to this screen later and everything will be saved.</p>
                         <p class="claim-item-description">Once you have marked this as completed, you will no longer be able to make any changes.</p>
 
-                        <p class="claim-item-description">@Item.GetPurchaseMethodByUser(UserId).Instructions</p>
+                        @if (!Item.GetPurchaseMethodByUser(UserId).Url.IsNullOrEmpty())
+                        {
+                            <LinkButton Url="@Item.GetPurchaseMethodByUser(UserId).Url">Go to Purchase Page</LinkButton>
+                        }
+                        @if (!Item.GetPurchaseMethodByUser(UserId).Instructions.IsNullOrEmpty())
+                        {
+                            <p><b>Instructions:</b> @Item.GetPurchaseMethodByUser(UserId).Instructions</p>
+                        }
+                        <div style="margin-bottom: 10px"></div>
                         <Button OnClick="MarkCompleted">Mark as Completed (cannot be undone)</Button>
                     }
                     <p class="claim-item-description" style="margin-top: 10px">If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.</p>
