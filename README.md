@@ -6,6 +6,7 @@
 - Simple but robust theming support to quickly hot-swap the colours within particular sections.
 - A login system for guests to access the website, and a robust admin site to manage accounts. You may add multiple guests to a single account.
 - (RSVP system is coming soon).
+- Custom registry system allowing guests to browse items and claim them.
 - Responsive interface for all screen sizes.
 - Total separation of data and functionality makes it easy to customise the website for a different wedding, and keep private information off git.
 
