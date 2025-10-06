@@ -1,5 +1,4 @@
-﻿@page "/Registry"
-@using System.Security.Claims
+﻿@using System.Security.Claims
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.WebsiteConfig
@@ -12,92 +11,85 @@
 
 <CascadingValue Value="Config.RegistryConfig.Theme">
     <Section>
-        <div style="margin-top: 100px;"></div>
+        <div style="margin-top: 50px;"></div>
         <SectionHeading>Registry</SectionHeading>
-
-        @if (Config.OptionalFeatures.Registry.IsActive())
-        {
-            <div class="description-and-filters-container">
-                <div class="page-description-container">
-                    <p style="margin-bottom: 10px">Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!</p>
-                    <p>You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!</p>
-                </div>
-                <div class="sort-and-filter-container">
-                    <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By">
-                        <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
-                        <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
-                        <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
-                    </MudSelect>
-                    <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
-                        @foreach (var filter in AllFilters)
-                        {
-                            <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
-                        }
-                        <AuthorizeView Roles="Admin">
-                            <Authorized>
-                                @foreach (var filter in AdminExclusiveFilters)
-                                {
-                                    <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
-                                }
-                            </Authorized>
-                        </AuthorizeView>
-                    </MudSelect>
-                </div>
+        
+        <div class="description-and-filters-container">
+            <div class="page-description-container">
+                <p style="margin-bottom: 10px">Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!</p>
+                <p>You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!</p>
             </div>
-            <div class="gifts-grid">
-                @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
-                {
-                    <h2 class="grid-heading" style="margin-top: 0">Items You've Claimed</h2>
-                    @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
+            <div class="sort-and-filter-container">
+                <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By">
+                    <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
+                </MudSelect>
+                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
+                    @foreach (var filter in AllFilters)
                     {
-                        <div class="gift">
-                            <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? "Completed" : "Pending")" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
-                        </div>
+                        <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
                     }
-                    <h2 class="grid-heading">Other Registry Items</h2>
-                }
-                @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            @foreach (var filter in AdminExclusiveFilters)
+                            {
+                                <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="gifts-grid">
+            @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
+            {
+                <h2 class="grid-heading" style="margin-top: 0">Items You've Claimed</h2>
+                @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
                 {
                     <div class="gift">
-                        <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                        <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? "Completed" : "Pending")" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
                     </div>
                 }
-                @if (!SortedAndFilteredItems.Any())
-                {
-                    <p class="grid-heading">There are no items matching the selected filters. Did you mean to remove the "Unclaimed" filter?</p>
-                }
-                <AuthorizeView Roles="Admin">
-                    <Authorized>
-                        <h2 class="grid-heading">Hidden Items (Admin Only)</h2>
-                        @if (RegistryItems.Any(item => item.Hide))
-                        {
-                            @foreach (var item in RegistryItems.Where(item => item.Hide))
-                            {
-                                <div class="gift">
-                                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p class="grid-heading">There are no hidden items. If you mark an item as hidden, it won't appear in search results but it will be available to claim if people obtain the link to it.</p>
-                        }
-                    </Authorized>
-                </AuthorizeView>
-            </div>
+                <h2 class="grid-heading">Other Registry Items</h2>
+            }
+            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
+            {
+                <div class="gift">
+                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                </div>
+            }
+            @if (!SortedAndFilteredItems.Any())
+            {
+                <p class="grid-heading">There are no items matching the selected filters. Did you mean to remove the "Unclaimed" filter?</p>
+            }
             <AuthorizeView Roles="Admin">
                 <Authorized>
-                    <h2>Add New Item (Admin Only)</h2>
-                    <p>Add a new item to the registry.</p>
-                    <a href="/registry/new" class="new-item-button">Add Item</a>
+                    <h2 class="grid-heading">Hidden Items (Admin Only)</h2>
+                    @if (RegistryItems.Any(item => item.Hide))
+                    {
+                        @foreach (var item in RegistryItems.Where(item => item.Hide))
+                        {
+                            <div class="gift">
+                                <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="grid-heading">There are no hidden items. If you mark an item as hidden, it won't appear in search results but it will be available to claim if people obtain the link to it.</p>
+                    }
                 </Authorized>
             </AuthorizeView>
+        </div>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <h2>Add New Item (Admin Only)</h2>
+                <p>Add a new item to the registry.</p>
+                <a href="/registry/new" class="new-item-button">Add Item</a>
+            </Authorized>
+        </AuthorizeView>
 
-        }
-        else
-        {
-            <p>The registry is @Config.OptionalFeatures.Registry.IsActiveString().</p>
-        }
     </Section>
 </CascadingValue>
 
@@ -147,10 +139,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        if (Config.OptionalFeatures.Registry.IsActive())
-        {
-            RegistryItems = await RegistryService.GetAllRegistryItems();
-        }
+        RegistryItems = await RegistryService.GetAllRegistryItems();
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;

@@ -1,0 +1,38 @@
+﻿@page "/Registry"
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+
+@inject IWebsiteConfig Config
+
+@if (Config.OptionalFeatures.Registry.IsActive())
+{
+    <div style="margin-top: 50px"></div>
+    <Registry/>
+}
+else
+{
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <div style="margin-top: 56px"></div>
+            <CascadingValue Value="ErrorSectionTheme">
+                <Section Center="true" Padding="false">
+                    <p style="padding: 5px">The registry is @Config.OptionalFeatures.Registry.IsActiveString(). However, as an administrator, you are able to access it anyway.</p>
+                </Section>
+                <Registry/>
+            </CascadingValue>
+        </Authorized>
+        <NotAuthorized>
+            <div style="margin-top: 100px"></div>
+            <Section Center="true">
+                <SectionHeading>Registry</SectionHeading>
+                <p style="margin-top: 70px; font-size: 16px">The registry is @Config.OptionalFeatures.Registry.IsActiveString().</p>
+            </Section>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code {
+    private SectionTheme ErrorSectionTheme => new (new Colour(255, 100, 100), Colour.White, null);
+}
