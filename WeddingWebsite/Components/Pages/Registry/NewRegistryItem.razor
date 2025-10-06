@@ -72,6 +72,11 @@
     @if (Input.AllowMoneyTransfer)
     {
         <div class="form-input-and-label">
+            <label for="include-delivery-cost-in-money-transfer">Include Delivery Cost in Money Transfer</label>
+            <span class="flex-grow"></span>
+            <InputCheckbox @bind-Value="Input.IncludeDeliveryCostInMoneyTransfer" class="form-check-input" id="include-delivery-cost-in-money-transfer" />
+        </div>
+        <div class="form-input-and-label">
             <label for="money-transfer-purchase-instructions" class="mr">Money Transfer Purchase Instructions</label>
             <InputTextArea @bind-Value="Input.MoneyTransferPurchaseInstructions" class="form-control flex-grow" placeholder="Please include details for where the money should be sent." id="money-transfer-purchase-instructions" />
         </div>
@@ -102,7 +107,7 @@
         var moneyTransferPurchaseMethod = Input.AllowMoneyTransfer ? new RegistryItemPurchaseMethod(
             Guid.NewGuid().ToString(),
             "Money Transfer",
-            Input.Cost.Value + Input.DeliveryCost,
+            Input.IncludeDeliveryCostInMoneyTransfer ? Input.Cost.Value + Input.DeliveryCost : Input.Cost.Value,
             false,
             false,
             null,
@@ -179,6 +184,9 @@
         
         [Display(Name = "Allow Money Transfer")]
         public bool AllowMoneyTransfer { get; set; } = true;
+        
+        [Display(Name = "Include Delivery Cost in Money Transfer")]
+        public bool IncludeDeliveryCostInMoneyTransfer { get; set; } = true;
         
         [StringLength(1000)]
         [Display(Name = "Money Transfer Purchase Instructions")]
