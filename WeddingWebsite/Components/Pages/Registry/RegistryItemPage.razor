@@ -118,7 +118,7 @@
                         <h2>Select Purchase Method</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p class="claim-item-description">Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                            <p class="claim-item-description">Selected quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
                         }
                         <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
                         <div class="choose-purchase-option">
@@ -137,7 +137,7 @@
                         <h2>Select Delivery Address</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p>Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                            <p>Selected quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
                         }
                         <p class="claim-item-description">Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => ChoosePurchaseMethod(null)">[Undo]</a></p>
                         <p class="claim-item-description">You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!</p>
@@ -166,15 +166,14 @@
                         <h2>Item Ready to Purchase</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p>Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                            <p>Selected quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
                         }
                         <p>Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[Undo]</a></p>
                         @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
                         {
                             <p>Selected delivery address: <b>@Item.GetClaimByUser(UserId).DeliveryAddress</b>. <a @onclick="() => ChooseDeliveryAddress(null)">[Undo]</a></p>
                         }
-                        <p style="margin-top: 10px" class="claim-item-description">That's it! Now it's time to complete the purchase. Please do this in your own time and then press the button below to mark it as completed. Don't worry, you can return to this screen later and everything will be saved.</p>
-                        <p class="claim-item-description">Once you have marked this as completed, you will no longer be able to make any changes.</p>
+                        <p style="margin-top: 10px" class="claim-item-description">Thank you for filling in those details! You're now free to complete the purchase when you're ready. Once done, please mark it as completed.</p>
 
                         @if (!Item.GetPurchaseMethodByUser(UserId).Url.IsNullOrEmpty())
                         {
