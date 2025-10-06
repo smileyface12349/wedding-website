@@ -61,7 +61,14 @@
             }
             @if (!SortedAndFilteredItems.Any())
             {
-                <p class="grid-heading">There are no items matching the selected filters. Did you mean to remove the "Unclaimed" filter?</p>
+                @if (!RegistryItems.Any())
+                {
+                    <p class="grid-heading">The registry is currently empty.</p>
+                }
+                else
+                {
+                    <p class="grid-heading">There are no items matching the selected filters.</p>
+                }
             }
             <AuthorizeView Roles="Admin">
                 <Authorized>
