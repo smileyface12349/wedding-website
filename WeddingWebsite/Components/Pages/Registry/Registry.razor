@@ -104,6 +104,7 @@
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
     private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
         .Where(ItemMatchesFilter)
+        .Where(item => !item.Hide)
         .OrderBy(item =>
         {
             switch (CurrentSortOrder)
@@ -148,7 +149,7 @@
     
     protected override async Task OnInitializedAsync()
     {
-        RegistryItems = await RegistryService.GetAllRegistryItems();
+        RegistryItems = await RegistryService.GetAllRegistryItems(true);
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
