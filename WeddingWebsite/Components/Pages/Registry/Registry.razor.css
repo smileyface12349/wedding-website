@@ -46,3 +46,27 @@ h2 {
     flex-direction: column;
     gap: 10px;
 }
+
+@media only screen and (max-width: 800px) {
+    .description-and-filters-container {
+        flex-direction: column;
+    }
+
+    .description-and-filters-container > .page-description-container {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .sort-and-filter-container {
+        width: 100%;
+        flex-direction: row;
+        gap: 20px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .sort-and-filter-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
