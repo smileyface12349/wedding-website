@@ -1,0 +1,202 @@
+﻿@using System.Security.Claims
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using RegistryItem = WeddingWebsite.Models.Registry.RegistryItem
+
+@inject IWebsiteConfig Config
+@inject IRegistryService RegistryService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<CascadingValue Value="Config.RegistryConfig.Theme">
+    <Section>
+        <div style="margin-top: 50px;"></div>
+        <SectionHeading>Registry</SectionHeading>
+        
+        <div class="description-and-filters-container">
+            <div class="page-description-container">
+                <p style="margin-bottom: 10px">Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!</p>
+                <p>You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!</p>
+            </div>
+            <div class="sort-and-filter-container">
+                <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By">
+                    <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
+                </MudSelect>
+                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
+                    @foreach (var filter in AllFilters)
+                    {
+                        <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                    }
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            @foreach (var filter in AdminExclusiveFilters)
+                            {
+                                <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="gifts-grid">
+            @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
+            {
+                <h2 class="grid-heading" style="margin-top: 0">Items You've Claimed</h2>
+                @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
+                {
+                    <div class="gift">
+                        <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? "Completed" : "Pending")" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
+                    </div>
+                }
+                <h2 class="grid-heading">Other Registry Items</h2>
+            }
+            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
+            {
+                <div class="gift">
+                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                </div>
+            }
+            @if (!SortedAndFilteredItems.Any())
+            {
+                @if (!RegistryItems.Any())
+                {
+                    <p class="grid-heading">The registry is currently empty.</p>
+                }
+                else
+                {
+                    <p class="grid-heading">There are no items matching the selected filters.</p>
+                }
+            }
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <h2 class="grid-heading">Hidden Items (Admin Only)</h2>
+                    @if (RegistryItems.Any(item => item.Hide))
+                    {
+                        @foreach (var item in RegistryItems.Where(item => item.Hide))
+                        {
+                            <div class="gift">
+                                <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="grid-heading">There are no hidden items. If you mark an item as hidden, it won't appear in search results but it will be available to claim if people obtain the link to it.</p>
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </div>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <h2>Add New Item (Admin Only)</h2>
+                <p>Add a new item to the registry.</p>
+                <a href="/registry/new" class="new-item-button">Add Item</a>
+            </Authorized>
+        </AuthorizeView>
+
+    </Section>
+</CascadingValue>
+
+@code {
+    private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
+    private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
+        .Where(ItemMatchesFilter)
+        .OrderBy(item =>
+        {
+            switch (CurrentSortOrder)
+            {
+                case SortOrder.Default:
+                    return -item.Priority;
+                case SortOrder.PriceLowToHigh:
+                    return item.CheapestCost;
+                case SortOrder.PriceHighToLow:
+                    return -item.CheapestCost;
+                default:
+                    return 0;
+            }
+        });
+    private string? UserId { get; set; }
+
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Unclaimed" };
+    private string EnabledFiltersString { get; set; } = "";
+    private readonly string[] AllFilters =
+    [
+        "Unclaimed",
+        "Under £50",
+        "Can bring on day",
+        "Can transfer money"
+    ];
+    private readonly string[] AdminExclusiveFilters =
+    [
+        "Claimed: Bring on day",
+        "Claimed: Deliver to us",
+        "Claimed: Pending",
+        "Claimed: Completed"
+    ];
+
+    private enum SortOrder
+    {
+        Default,
+        PriceLowToHigh,
+        PriceHighToLow
+    }
+    
+    private SortOrder CurrentSortOrder { get; set; } = SortOrder.Default;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        RegistryItems = await RegistryService.GetAllRegistryItems();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+
+    private bool ItemMatchesFilter(RegistryItem item)
+    {
+        if (EnabledFilters.Contains("Unclaimed") && item.IsFullyClaimed)
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Under £25") && item.PurchaseMethods.All(pm => pm.Cost >= 25))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Under £50") && item.PurchaseMethods.All(pm => pm.Cost >= 50))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Can bring on day") && item.PurchaseMethods.All(pm => !pm.AllowBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Can transfer money") && item.PurchaseMethods.All(pm => pm.AllowBringOnDay || pm.AllowDeliverToUs))
+        {
+            return false;
+        }
+        // Admin exclusive filters
+        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.DeliveryAddress != RegistryItemPage.DeliveryAddressBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.DeliveryAddress == RegistryItemPage.DeliveryAddressBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Claimed: Pending") && item.Claims.All(c => c.IsCompleted))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Claimed: Completed") && item.Claims.All(c => !c.IsCompleted))
+        {
+            return false;
+        }
+        return true;
+    }
+}

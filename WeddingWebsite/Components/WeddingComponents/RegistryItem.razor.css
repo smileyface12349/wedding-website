@@ -1,0 +1,40 @@
+﻿img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+}
+
+.generic-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.cost-and-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.cost {
+    font-size: 18px;
+    font-weight: bold;
+    color: #141414;
+}
+
+button {
+    padding: 2px 5px;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

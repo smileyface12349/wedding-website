@@ -1,8 +1,8 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<a class="@CssClass" href="@Url" style="background: @Colour">
+<button class="@CssClass" @onclick="() => OnClick?.Invoke()" style="background: @Colour">
     @ChildContent
-</a>
+</button>
 
 @code {
   
@@ -10,7 +10,7 @@
     public required RenderFragment ChildContent { get; set; }
     
     [Parameter]
-    public string? Url { get; set; }
+    public Action? OnClick { get; set; }
     
     [Parameter]
     public string CssClass { get; set; } = "";

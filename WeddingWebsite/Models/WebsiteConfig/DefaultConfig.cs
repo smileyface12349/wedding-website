@@ -14,7 +14,15 @@ public class DefaultConfig : IWebsiteConfig
     public IEnumerable<Section> Sections { get; }
     public TopButtonsConfig TopButtons { get; }
     public bool BrideFirst => false;
-    public AccountConfig AccountConfig { get; set; }
+    public PageConfig.Account AccountConfig { get; set; }
+    public PageConfig.Registry RegistryConfig { get; set; }
+    public PageConfig.RegistryItem RegistryItemConfig { get; set; }
+    
+    // Default config will enable all optional features.
+    public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
+    {
+        Registry = new ActiveFeature()
+    };
 
     public DefaultConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
@@ -50,6 +58,9 @@ public class DefaultConfig : IWebsiteConfig
             new Colour("#F9DC5C")
         );
 
-        AccountConfig = new AccountConfig(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
+        AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
+        
+        RegistryConfig = new PageConfig.Registry(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox));
+        RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, whiteFilledBox));
     }
 }

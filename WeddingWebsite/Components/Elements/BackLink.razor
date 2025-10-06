@@ -1,0 +1,9 @@
+﻿<a href="@Url">← @Text</a>
+
+@code {
+    [Parameter]
+    public required string Url { get; set; }
+    
+    [Parameter]
+    public string Text { get; set; } = "Back";
+}

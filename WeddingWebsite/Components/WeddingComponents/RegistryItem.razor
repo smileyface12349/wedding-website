@@ -1,0 +1,45 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.Theme
+
+<a href="/registry/@Item.Id">
+    <Box CustomCss="height: 300px;">
+        <TopContent>
+            @if (Item.ImageUrl != null)
+            {
+                <img src="@Item.ImageUrl" alt=""/>
+            }
+        </TopContent>
+        <ChildContent>
+            <p class="generic-name">@Item.GenericName</p>
+            <h2>@Item.Name</h2>
+            <div class="cost-and-button">
+                @if (Item.PurchaseMethods.Any())
+                {
+                    <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
+                }
+                else
+                {
+                    <p class="cost"></p>
+                }
+                <button style="background: @ButtonColour">@ButtonText</button>
+            </div>
+
+        </ChildContent>
+    </Box>
+</a>
+
+@code {
+    [Parameter]
+    public required Models.Registry.RegistryItem Item { get; set; }
+    
+    [Parameter]
+    public string ButtonText { get; set; } = "View";
+    
+    [Parameter]
+    public bool ButtonSuccess { get; set; } = true;
+    
+    [CascadingParameter]
+    private SectionTheme? Theme { get; set; }
+    
+    private string ButtonColour => ButtonSuccess ? (Theme?.Primary.ToString() ?? "var(--primary)") : "#aaaaaa";
+}

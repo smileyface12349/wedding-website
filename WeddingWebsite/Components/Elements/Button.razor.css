@@ -1,12 +1,10 @@
-﻿a {
+﻿button {
     border: none;
     border-radius: 5px;
     padding: 2px 5px;
     font-size: 16px;
-    color: var(--mud-palette-text-primary);
-    display: inline-block;
 }
 
-a:hover {
+button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

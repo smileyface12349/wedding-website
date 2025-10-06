@@ -1,0 +1,233 @@
+﻿@page "/Registry/Edit/{ItemId}"
+
+@using System.ComponentModel.DataAnnotations
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Services
+
+@inject IRegistryService RegistryService
+@inject NavigationManager NavigationManager
+
+@layout SimpleLayout
+
+<h1>Manage Item</h1>
+<p>Modify as many or as few details as you want, then press save at the bottom. Please note that this will override any edits made while this tab is left open, including to fields that you are not modifying.</p>
+
+<EditForm Model="Model" class="form" OnValidSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger mb" role="alert" />
+
+    <div class="form-input-and-label">
+        <label for="generic-name" class="form-label">Generic Name</label>
+        <span class="flex-grow"></span>
+        <InputText id="generic-name" class="form-control" @bind-Value="Model.GenericName" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="name" class="form-label">Name</label>
+        <span class="flex-grow"></span>
+        <InputText id="name" class="form-control" @bind-Value="Model.Name" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="description" class="form-label mr">Description</label>
+        <InputTextArea id="description" class="form-control flex-grow" @bind-Value="Model.Description" placeholder="Optional description to show at the top of the item page" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="image-url" class="form-label">Image URL</label>
+        <span class="flex-grow"></span>
+        <img width="30" height="30" src="@Model.ImageUrl" alt="Invalid image" style="object-fit: contain; margin-right: 20px;"/>
+        <InputText id="image-url" class="form-control" @bind-Value="Model.ImageUrl" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="quantity" class="form-label">Max Quantity</label>
+        <span class="flex-grow"></span>
+        <InputNumber id="quantity" class="form-control" @bind-Value="Model.Quantity" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="priority" class="form-label">Priority (affects default sort order, higher = top)</label>
+        <span class="flex-grow"></span>
+        <InputNumber id="priority" class="form-control" @bind-Value="Model.Priority" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="hide" class="form-label">Hide from registry page (still available with link)</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox id="hide" class="form-check-input" @bind-Value="Model.Hide" />
+    </div>
+    <h2>Purchase Methods</h2>
+    @foreach (var method in Model.PurchaseMethods)
+    {
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="form-input-and-label">
+                <label class="form-label">Name</label>
+                <span class="flex-grow"></span>
+                <InputText class="form-control" @bind-Value="method.Name" placeholder="John Lewis" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">URL</label>
+                <span class="flex-grow"></span>
+                <InputText class="form-control" @bind-Value="method.Url" placeholder="https://johnlewis.com/product" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Cost</label>
+                <span class="flex-grow"></span>
+                <InputNumber class="form-control" @bind-Value="method.Cost" placeholder="49.99" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Delivery Cost</label>
+                <span class="flex-grow"></span>
+                <InputNumber class="form-control" @bind-Value="method.Shipping" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Allow Bring On Day</label>
+                <span class="flex-grow"></span>
+                <InputCheckbox class="form-check-input" @bind-Value="method.AllowBringOnDay" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label">Allow Deliver To Us</label>
+                <span class="flex-grow"></span>
+                <InputCheckbox class="form-check-input" @bind-Value="method.AllowDeliverToUs" />
+            </div>
+            <div class="form-input-and-label">
+                <label class="form-label mr">Instructions</label>
+                <InputTextArea class="form-control flex-grow" @bind-Value="method.Instructions" placeholder="Optional extra instructions to show when purchasing" />
+            </div>
+            @if (Model.PurchaseMethods.Count > 1)
+            {
+                <p>Warning: Check that nobody has already selected this purchase method before deleting it.</p>
+                <button type="button" class="red-button block-button" @onclick="() => Model.PurchaseMethods.Remove(method)">Remove Method</button>
+            }
+        </Box>
+    }
+    <button type="button" class="block-button" @onclick="() => Model.PurchaseMethods.Add(new())">Add Purchase Method</button>
+    <div>
+        <button type="submit" class="block-button">Save Changes</button>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public required string ItemId { get; set; }
+    
+    private EditRegistryItemModel Model { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        var item = RegistryService.GetRegistryItemById(ItemId);
+        if (item == null)
+        {
+            NavigationManager.NavigateTo("/Registry");
+            return;
+        }
+        
+        Model = new EditRegistryItemModel
+        {
+            GenericName = item.GenericName,
+            Name = item.Name,
+            Description = item.Description,
+            ImageUrl = item.ImageUrl ?? "",
+            Quantity = item.MaxQuantity,
+            Priority = item.Priority,
+            Hide = item.Hide,
+            PurchaseMethods = item.PurchaseMethods.Select(pm => new EditRegistryItemModel.PurchaseMethodModel
+            {
+                Id = pm.Id,
+                Name = pm.Name,
+                Url = pm.Url ?? "",
+                Cost = pm.Cost,
+                Shipping = pm.DeliveryCost,
+                AllowBringOnDay = pm.AllowBringOnDay,
+                AllowDeliverToUs = pm.AllowDeliverToUs,
+                Instructions = pm.Instructions ?? ""
+            }).ToList()
+        };
+    }
+    
+    private void OnSubmit()
+    {
+        var item = RegistryService.GetRegistryItemById(ItemId);
+        if (item == null)
+        {
+            NavigationManager.NavigateTo("/Registry");
+            return;
+        }
+
+        item = item with
+        {
+            GenericName = Model.GenericName,
+            Name = Model.Name,
+            Description = Model.Description == "" ? null : Model.Description,
+            ImageUrl = Model.ImageUrl == "" ? null : Model.ImageUrl,
+            MaxQuantity = Model.Quantity,
+            Priority = Model.Priority,
+            Hide = Model.Hide,
+            PurchaseMethods = Model.PurchaseMethods.Select(pm => new RegistryItemPurchaseMethod(
+                Id: pm.Id,
+                Name: pm.Name,
+                Url: pm.Url == "" ? null : pm.Url,
+                Cost: pm.Cost ?? 0,
+                DeliveryCost: pm.Shipping,
+                AllowBringOnDay: pm.AllowBringOnDay,
+                AllowDeliverToUs: pm.AllowDeliverToUs,
+                Instructions: pm.Instructions == "" ? null : pm.Instructions
+            )).ToList()
+        };
+
+        RegistryService.UpdateItem(item);
+        NavigationManager.NavigateTo($"/Registry/{ItemId}");
+    }
+    
+    private sealed class EditRegistryItemModel
+    {
+        [Required] 
+        public string GenericName { get; set; } = "";
+        
+        [Required]
+        public string Name { get; set; } = "";
+
+        public string? Description { get; set; }
+
+        [Required] [Url]
+        public string ImageUrl { get; set; } = "";
+        
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
+        public int Quantity { get; set; } = 1;
+        
+        [Required]
+        public int Priority { get; set; }
+
+        public bool Hide { get; set; }
+
+        public List<PurchaseMethodModel> PurchaseMethods { get; set; } = new();
+
+        public sealed class PurchaseMethodModel
+        {
+            public string Id { get; set; } = Guid.NewGuid().ToString();
+            
+            [Required]
+            public string Name { get; set; } = "";
+
+            [Required]
+            [Url]
+            public string Url { get; set; } = "";
+
+            [Required]
+            [Range(0, double.MaxValue, ErrorMessage = "Cost must be positive")]
+            public decimal? Cost { get; set; }
+
+            [Required]
+            [Range(0, double.MaxValue, ErrorMessage = "Delivery cost cannot be negative")]
+            public decimal Shipping { get; set; } = 0;
+            
+            public string? Notes { get; set; }
+            
+            public bool AllowBringOnDay { get; set; } = true;
+            
+            public bool AllowDeliverToUs { get; set; } = true;
+            
+            public string Instructions { get; set; } = "";
+            
+        }
+    }
+}
