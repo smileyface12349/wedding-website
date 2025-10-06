@@ -92,6 +92,10 @@
                 {
                     <h2>Item Purchased</h2>
                     <p class="claim-item-description">Thank you so much for your gift!</p>
+                    @if (Item.MaxQuantity > 1)
+                    {
+                        <p>Quantity purchased: <b>@Item.GetClaimByUser(UserId).Quantity</b>.</p>
+                    }
                     <p>Purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>.</p>
                     @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
                     {
@@ -111,6 +115,10 @@
                     @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
                     {
                         <h2>Select Purchase Method</h2>
+                        @if (Item.MaxQuantity > 1)
+                        {
+                            <p class="claim-item-description">Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                        }
                         <p>Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.</p>
                         <div class="choose-purchase-option">
                             @foreach (var method in Item.PurchaseMethods)
@@ -126,6 +134,10 @@
                     else if (Item.GetClaimByUser(UserId).DeliveryAddress == null && (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay || Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs))
                     {
                         <h2>Select Delivery Address</h2>
+                        @if (Item.MaxQuantity > 1)
+                        {
+                            <p>Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                        }
                         <p class="claim-item-description">Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => ChoosePurchaseMethod(null)">[Undo]</a></p>
                         <p class="claim-item-description">You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!</p>
                         @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs)
@@ -151,6 +163,10 @@
                     else if (!Item.GetClaimByUser(UserId).IsCompleted)
                     {
                         <h2>Item Ready to Purchase</h2>
+                        @if (Item.MaxQuantity > 1)
+                        {
+                            <p>Selected Quantity: <b>@Item.GetClaimByUser(UserId).Quantity</b>. <a @onclick="RemoveClaim">[Undo]</a></p>
+                        }
                         <p>Selected purchase method: <b>@Item.GetPurchaseMethodByUser(UserId).Name</b>. <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[Undo]</a></p>
                         @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
                         {
@@ -174,6 +190,13 @@
                 {
                     <h2>Claim this Item</h2>
                     <p class="claim-item-description">If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.</p>
+                    @if (Item.MaxQuantity > 1)
+                    {
+                        <div class="quantity-selector">
+                            <label for="quantity">Quantity:</label>
+                            <input id="quantity" type="number" min="1" max="@(Item.MaxQuantity - Item.QuantityClaimed)" @bind-value="SelectedQuantity"/>
+                        </div>
+                    }
                     <Button OnClick="ClaimItem">Claim</Button>
                 }
                 <p class="text-danger">@ErrorText</p>
@@ -234,6 +257,7 @@
     
     private string ErrorText { get; set; } = "";
     private string Notes { get; set; } = "";
+    private string? SelectedQuantity { get; set; } = "1";
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
     public static string DeliveryAddressBringOnDay => "Bring it on the day";
@@ -273,12 +297,31 @@
             StateHasChanged();
             return;
         }
-        var result = RegistryService.ClaimRegistryItem(Item.Id, UserId);
+
+        var quantity = 1;
+        if (Item.MaxQuantity > 1)
+        {
+            if (!int.TryParse(SelectedQuantity, out quantity))
+            {
+                ErrorText = "Please enter a valid quantity.";
+                StateHasChanged();
+                return;
+            }
+
+            if (quantity > (Item.MaxQuantity - Item.QuantityClaimed) || quantity < 1)
+            {
+                ErrorText = $"Please enter a quantity between 1 and {Item.MaxQuantity - Item.QuantityClaimed}.";
+                StateHasChanged();
+                return;
+            }
+        }
+        var result = RegistryService.ClaimRegistryItem(Item.Id, UserId, quantity);
         if (!result)
         {
             ErrorText = "Sorry, this item has already been claimed by someone else.";
         }
 
+        ErrorText = "";
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
     }

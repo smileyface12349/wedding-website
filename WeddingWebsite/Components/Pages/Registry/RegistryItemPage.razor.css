@@ -72,3 +72,7 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.quantity-selector {
+    margin-bottom: 10px;
+}
