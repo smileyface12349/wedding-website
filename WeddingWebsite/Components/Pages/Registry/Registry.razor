@@ -118,7 +118,9 @@
     private readonly string[] AllFilters =
     [
         "Unclaimed",
-        "Under £50"
+        "Under £50",
+        "Can bring on day",
+        "Can transfer money"
     ];
     private readonly string[] AdminExclusiveFilters =
     [
@@ -160,6 +162,14 @@
             return false;
         }
         if (EnabledFilters.Contains("Under £50") && item.PurchaseMethods.All(pm => pm.Cost >= 50))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Can bring on day") && item.PurchaseMethods.All(pm => !pm.AllowBringOnDay))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Can transfer money") && item.PurchaseMethods.All(pm => pm.AllowBringOnDay || pm.AllowDeliverToUs))
         {
             return false;
         }

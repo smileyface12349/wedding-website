@@ -36,11 +36,12 @@ h2 {
 
 .description-and-filters-container > .page-description-container {
     flex: 1;
-    margin-right: 20px;
+    margin-right: 40px;
+    text-align: justify;
 }
 
 .sort-and-filter-container {
-    width: 200px;
+    width: 250px;
     display: flex;
     flex-direction: column;
     gap: 10px;
