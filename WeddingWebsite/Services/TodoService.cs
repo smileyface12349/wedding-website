@@ -42,4 +42,10 @@ public class TodoService(ITodoStore todoStore) : ITodoService
     {
         return todoStore.GetTodoItem(itemId);
     }
+
+    public void AddNewItem()
+    {
+        var newId = Guid.NewGuid().ToString();
+        todoStore.AddTodoItem(newId);
+    }
 }

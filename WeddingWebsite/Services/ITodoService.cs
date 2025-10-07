@@ -9,4 +9,5 @@ public interface ITodoService
     void MarkItemAsWaiting(string itemId, TimeSpan waitingTime);
     void MarkItemAsActionRequired(string itemId);
     TodoItem? GetTodoItem(string itemId);
+    void AddNewItem();
 }
