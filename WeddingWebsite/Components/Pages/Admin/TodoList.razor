@@ -1,9 +1,7 @@
 ﻿@page "/Todo"
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Components.Sections
-@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.WeddingComponents
-@using WeddingWebsite.Core
 @using WeddingWebsite.Models.Todo
 @using WeddingWebsite.Services
 
@@ -17,19 +15,11 @@
     <SectionHeading>Todo List</SectionHeading>
     <p>A handy little to-do list that's built-in to the website. It's nothing special, but it might help to keep track of what needs doing in one place, without having to use another service.</p>
     
-    @foreach (var items in GroupedTodoItems)
+    @foreach (var status in Enum.GetValues<TodoItemStatus>())
     {
-        <Box>
-            @if (items.GetGroup()?.Name != null)
-            {
-                <h3>@items.GetGroup().Name</h3>
-            }
-            @foreach (var item in items)
-            {
-                <TodoListItem Item="item" />
-            }
-        </Box>
+        <TodoListForStatus Status="status" GroupedTodoItems="GroupedTodoItems"/>
     }
+    
 </Section>
 
 @code {
