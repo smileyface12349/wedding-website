@@ -73,4 +73,10 @@ public abstract record Section
     /// add a new section called "Our Story" using a timeline component instead of modifying this section.
     /// </summary>
     public sealed record HowWeMet(SectionTheme? Theme = null) : Section(Theme);
+
+    /// <summary>
+    /// Displays to admins only (unless a non-admin has been assigned a task). Shows all tasks marked as
+    /// "Action Required", either assigned to the particular user or ones that are assigned to nobody.
+    /// </summary>
+    public sealed record TodoListSummary(SectionTheme? Theme = null) : Section(Theme);
 }

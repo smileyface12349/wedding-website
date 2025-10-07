@@ -62,6 +62,7 @@
         @if (sect is Section.DressCode dress) { <DressCodeSection WrapInBox="dress.WrapInBox" ShowContact="dress.ShowContact"/> }
         @if (sect is Section.VenueShowcase) { <VenueShowcaseSection/> }
         @if (sect is Section.HowWeMet) { <HowWeMetSection/> }
+        @if (sect is Section.TodoListSummary) { <TodoSummarySection/> }
     </CascadingValue>
 }
 
