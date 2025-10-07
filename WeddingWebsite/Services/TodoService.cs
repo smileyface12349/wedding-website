@@ -79,4 +79,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
             }
         }
     }
+    
+    public void RenameGroup(string groupId, string newName)
+    {
+        todoStore.RenameTodoGroup(groupId, newName);
+    }
 }
