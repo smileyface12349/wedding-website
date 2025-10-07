@@ -27,9 +27,7 @@
 
     private string Description => Status switch
     {
-        TodoItemStatus.ActionRequired => "These items are ready to make progress now.",
-        TodoItemStatus.Waiting => "These items are waiting for action from other people. Items will automatically be moved back to Action Required after 3 days, at which point you will need to mark it as still waiting.",
-        TodoItemStatus.Completed => "These items are done, and no further action is required.",
-        _ => "No description available for this status."
+        TodoItemStatus.Waiting => "Waiting for something out of your control. Items will automatically be moved back to Action Required after 3 days.",
+        _ => ""
     };
 }
