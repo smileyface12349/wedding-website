@@ -6,7 +6,7 @@
 <p>@Description</p>
 @foreach (var items in GroupedTodoItems.Where(group => group.FirstOrDefault()?.Status == Status))
 {
-    <Box>
+    <Box CustomCss="margin-bottom: 10px">
         @if (items.GetGroup()?.Name != null)
         {
             <h3>@items.GetGroup().Name</h3>
