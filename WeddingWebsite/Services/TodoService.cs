@@ -26,4 +26,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
     {
         todoStore.SetTodoItemCompletedAt(itemId, DateTime.UtcNow);
     }
+    
+    public void MarkItemAsWaiting(string itemId, TimeSpan waitingTime)
+    {
+        todoStore.SetTodoItemWaitingUntil(itemId, DateTime.UtcNow.Add(waitingTime));
+    }
 }
