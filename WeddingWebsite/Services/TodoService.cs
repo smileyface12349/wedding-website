@@ -3,7 +3,7 @@ using WeddingWebsite.Models.Todo;
 
 namespace WeddingWebsite.Services;
 
-public class TodoService(ITodoStore todoStore) : ITodoService
+public class TodoService(ITodoStore todoStore, IStore store) : ITodoService
 {
     public IEnumerable<IEnumerable<TodoItem>> GetGroupedTodoItems()
     {
@@ -88,5 +88,15 @@ public class TodoService(ITodoStore todoStore) : ITodoService
     public void DeleteItem(string itemId)
     {
         todoStore.DeleteTodoItem(itemId);
+    }
+    
+    public void SetItemOwnerByEmail(string itemId, string? ownerEmail)
+    {
+        string? ownerId = null;
+        if (ownerEmail != null)
+        {
+            ownerId = store.GetUserIdByEmail(ownerEmail);
+        }
+        todoStore.SetTodoItemOwner(itemId, ownerId);
     }
 }

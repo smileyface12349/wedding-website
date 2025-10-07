@@ -4,50 +4,43 @@ using WeddingWebsite.Models.Todo;
 
 namespace WeddingWebsite.Data.Stores;
 
-[Authorize (Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class TodoStore : ITodoStore
 {
     private const string ConnectionString = "DataSource=Data\\app.db;Cache=Shared";
-    
+
     public void AddTodoItem(string id)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
-        
+
         var cmd = connection.CreateCommand();
         cmd.CommandText = "INSERT INTO TodoItems (Id) VALUES (:id)";
         cmd.Parameters.AddWithValue(":id", id);
         cmd.ExecuteNonQuery();
     }
-    
+
     public void RenameTodoItem(string id, string newText)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
-        
+
         var cmd = connection.CreateCommand();
         cmd.CommandText = "UPDATE TodoItems SET Text = :text WHERE Id = :id";
         cmd.Parameters.AddWithValue(":id", id);
         cmd.Parameters.AddWithValue(":text", newText);
         cmd.ExecuteNonQuery();
     }
-    
-    public void SetTodoItemOwnerByEmail(string id, string? ownerEmail)
+
+    public void SetTodoItemOwner(string id, string? ownerId)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
 
-        string? userId = null;
-        if (ownerEmail != null) 
-        {
-            var store = new Store();
-            userId = store.GetUserIdByEmail(ownerEmail);
-        }
-        
         var cmd = connection.CreateCommand();
         cmd.CommandText = "UPDATE TodoItems SET OwnerId = :ownerId WHERE Id = :id";
         cmd.Parameters.AddWithValue(":id", id);
-        cmd.Parameters.AddWithValue(":ownerId", userId);
+        cmd.Parameters.AddWithValue(":ownerId", ownerId == null ? DBNull.Value : ownerId);
         cmd.ExecuteNonQuery();
     }
     

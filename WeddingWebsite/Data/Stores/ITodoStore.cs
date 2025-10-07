@@ -6,7 +6,7 @@ public interface ITodoStore
 {
     void AddTodoItem(string id);
     void RenameTodoItem(string id, string newText);
-    void SetTodoItemOwnerByEmail(string id, string ownerEmail);
+    void SetTodoItemOwner(string id, string? ownerId);
     void SetTodoItemGroup(string id, string? groupId);
     void SetTodoItemWaitingUntil(string id, DateTime? waitingUntil);
     void SetTodoItemCompletedAt(string id, DateTime? completedAt);
