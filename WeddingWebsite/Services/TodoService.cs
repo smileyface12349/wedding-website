@@ -37,4 +37,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
         todoStore.SetTodoItemWaitingUntil(itemId, null);
         todoStore.SetTodoItemCompletedAt(itemId, null);
     }
+    
+    public TodoItem? GetTodoItem(string itemId)
+    {
+        return todoStore.GetTodoItem(itemId);
+    }
 }

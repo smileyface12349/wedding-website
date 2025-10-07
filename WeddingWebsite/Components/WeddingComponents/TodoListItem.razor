@@ -4,6 +4,12 @@
 
 @inject ITodoService TodoService
 
+@if (Item == null)
+{
+    <div>ERROR: Item not found.</div>
+    return;
+}
+
 <div class="todo-item">
     <div class="todo-text">@Item.Text</div>
     <MudSpacer/>
@@ -15,7 +21,7 @@
     {
         <div class="todo-owner">No owner assigned</div>
     }
-    @if (Item.Status == TodoItemStatus.Waiting || Item.Status == TodoItemStatus.Completed)
+    @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
     {
         <Button OnClick="MarkItemAsActionRequired">Action Required</Button>
     }
@@ -31,20 +37,28 @@
 
 @code {
     [Parameter]
-    public required TodoItem Item { get; set; }
+    public TodoItem? Item { get; set; }
+    
+    private void ApplyToItem(Action<TodoItem> action)
+    {
+        if (Item == null) return;
+        action(Item);
+        Item = TodoService.GetTodoItem(Item.Id);
+        StateHasChanged();
+    }
 
     private void MarkItemAsCompleted()
     {
-        TodoService.MarkItemAsCompleted(Item.Id);
+        ApplyToItem(item => TodoService.MarkItemAsCompleted(item.Id));
     }
     
     private void MarkItemAsWaiting()
     {
-        TodoService.MarkItemAsWaiting(Item.Id, TimeSpan.FromDays(3));
+        ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(3)));
     }
     
     private void MarkItemAsActionRequired()
     {
-        TodoService.MarkItemAsActionRequired(Item.Id);
+        ApplyToItem(item => TodoService.MarkItemAsActionRequired(item.Id));
     }
 }
