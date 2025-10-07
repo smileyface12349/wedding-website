@@ -1,4 +1,4 @@
-﻿@using WeddingWebsite.Core
+﻿    @using WeddingWebsite.Core
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Todo
@@ -11,10 +11,12 @@
     {
         <h3>@Items.GetGroup().Name</h3>
     }
+    <div class="todo-item-list">
     @foreach (var item in Items)
     {
         <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged" />
     }
+    </div>
     @if (Items.GetGroup() != null)
     {
         <div class="group-actions">
