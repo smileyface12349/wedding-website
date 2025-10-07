@@ -34,27 +34,32 @@
         <div class="todo-text">@Item.Text</div>
     }
     <MudSpacer/>
-    @if (IsEditing)
-    {
-        <MudSelect @bind-Value="OwnerEmail" Dense="true">
-            <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
-            @foreach (var email in PossibleOwnerEmails)
+    
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            @if (IsEditing)
             {
-                <MudSelectItem Value="@email">@email</MudSelectItem>
+                <MudSelect @bind-Value="OwnerEmail" Dense="true">
+                    <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
+                    @foreach (var email in PossibleOwnerEmails)
+                    {
+                        <MudSelectItem Value="@email">@email</MudSelectItem>
+                    }
+                </MudSelect>
             }
-        </MudSelect>
-    }
-    else
-    {
-        @if (Item.OwnerEmail != null)
-        {
-            <div class="todo-owner">Owner: @Item.OwnerEmail</div>
-        }
-        else
-        {
-            <div class="todo-owner">No owner assigned</div>
-        }
-    }
+            else
+            {
+                @if (Item.OwnerEmail != null)
+                {
+                    <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+                }
+                else
+                {
+                    <div class="todo-owner">No owner assigned</div>
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
     
     @if (IsEditing)
     {
@@ -96,9 +101,13 @@
             </button>
         }
 
-        <button @onclick="EnableEditMode" class="invisible-button">
-            <MudIcon Icon="@Icons.Material.Filled.Edit"/>
-        </button>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <button @onclick="EnableEditMode" class="invisible-button">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit"/>
+                </button>
+            </Authorized>
+        </AuthorizeView>
     }
 
 </div>
