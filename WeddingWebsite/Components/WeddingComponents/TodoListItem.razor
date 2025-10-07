@@ -15,6 +15,10 @@
     {
         <div class="todo-owner">No owner assigned</div>
     }
+    @if (Item.Status == TodoItemStatus.Waiting || Item.Status == TodoItemStatus.Completed)
+    {
+        <Button OnClick="MarkItemAsActionRequired">Action Required</Button>
+    }
     @if (Item.Status == TodoItemStatus.ActionRequired)
     {
         <Button OnClick="MarkItemAsWaiting">Waiting</Button>
@@ -37,5 +41,10 @@
     private void MarkItemAsWaiting()
     {
         TodoService.MarkItemAsWaiting(Item.Id, TimeSpan.FromDays(3));
+    }
+    
+    private void MarkItemAsActionRequired()
+    {
+        TodoService.MarkItemAsActionRequired(Item.Id);
     }
 }
