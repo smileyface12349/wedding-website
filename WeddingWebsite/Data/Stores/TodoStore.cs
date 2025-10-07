@@ -174,7 +174,18 @@ public class TodoStore : ITodoStore
 
         return items;
     }
-    
+
+    public void DeleteTodoItem(string id)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = "DELETE FROM TodoItems WHERE Id = :id";
+        cmd.Parameters.AddWithValue(":id", id);
+        cmd.ExecuteNonQuery();
+    }
+
     public void AddTodoGroup(string id, string name)
     {
         using var connection = new SqliteConnection(ConnectionString);

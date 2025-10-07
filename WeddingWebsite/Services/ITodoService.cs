@@ -14,4 +14,5 @@ public interface ITodoService
     void GroupItem(string itemId);
     void RemoveGroupFromItem(string itemId);
     void RenameGroup(string groupId, string newName);
+    void DeleteItem(string itemId);
 }

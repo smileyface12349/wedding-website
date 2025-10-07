@@ -12,6 +12,7 @@ public interface ITodoStore
     void SetTodoItemCompletedAt(string id, DateTime? completedAt);
     TodoItem? GetTodoItem(string id);
     IList<TodoItem> GetAllTodoItems();
+    void DeleteTodoItem(string id);
     
     void AddTodoGroup(string id, string name);
     void RenameTodoGroup(string id, string newName);

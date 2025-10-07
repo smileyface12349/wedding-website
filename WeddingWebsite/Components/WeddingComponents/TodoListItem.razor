@@ -37,6 +37,9 @@
         }
         <Button OnClick="SaveEdits">Save</Button>
         <Button OnClick="CancelEdits">Cancel</Button>
+        <button @onclick="Delete" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
+        </button>
     }
     else
     {
@@ -136,5 +139,11 @@
         {
             CancelEdits();
         }
+    }
+    
+    private void Delete()
+    {
+        ApplyToItem(item => TodoService.DeleteItem(item.Id));
+        IsEditing = false;
     }
 }

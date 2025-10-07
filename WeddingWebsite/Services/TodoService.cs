@@ -84,4 +84,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
     {
         todoStore.RenameTodoGroup(groupId, newName);
     }
+
+    public void DeleteItem(string itemId)
+    {
+        todoStore.DeleteTodoItem(itemId);
+    }
 }
