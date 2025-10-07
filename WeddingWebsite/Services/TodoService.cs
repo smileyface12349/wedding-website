@@ -21,4 +21,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
         
         return groupedItems;
     }
+    
+    public void MarkItemAsCompleted(string itemId)
+    {
+        todoStore.SetTodoItemCompletedAt(itemId, DateTime.UtcNow);
+    }
 }

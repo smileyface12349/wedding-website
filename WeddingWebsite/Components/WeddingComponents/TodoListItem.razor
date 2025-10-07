@@ -1,4 +1,8 @@
 ﻿@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+@using WeddingWebsite.Components.Elements
+
+@inject ITodoService TodoService
 
 <div class="todo-item">
     <div class="todo-text">@Item.Text</div>
@@ -11,9 +15,18 @@
     {
         <div class="todo-owner">No owner assigned</div>
     }
+    @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
+    {
+        <Button OnClick="MarkItemAsCompleted">Done</Button>
+    }
 </div>
 
 @code {
     [Parameter]
     public required TodoItem Item { get; set; }
+
+    private void MarkItemAsCompleted()
+    {
+        TodoService.MarkItemAsCompleted(Item.Id);
+    }
 }

@@ -5,5 +5,5 @@ namespace WeddingWebsite.Services;
 public interface ITodoService
 {
     IEnumerable<IEnumerable<TodoItem>> GetGroupedTodoItems();
-    
+    void MarkItemAsCompleted(string itemId);
 }
