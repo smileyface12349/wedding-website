@@ -36,9 +36,11 @@
             <Button OnClick="Group">Add Group</Button>
         }
         <Button OnClick="SaveEdits">Save</Button>
-        <Button OnClick="CancelEdits">Cancel</Button>
         <button @onclick="Delete" class="invisible-button">
             <MudIcon Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
+        </button>
+        <button @onclick="CancelEdits" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Cancel"/>
         </button>
     }
     else
