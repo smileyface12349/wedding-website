@@ -35,7 +35,9 @@
         {
             <Button OnClick="Group">Add Group</Button>
         }
-        <Button OnClick="SaveEdits">Save</Button>
+        <button @onclick="SaveEdits" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Save"/>
+        </button>
         <button @onclick="Delete" class="invisible-button">
             <MudIcon Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
         </button>
@@ -47,15 +49,21 @@
     {
         @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
         {
-            <Button OnClick="MarkItemAsActionRequired">Action Required</Button>
+            <button @onclick="MarkItemAsActionRequired" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+            </button>
         }
         @if (Item.Status == TodoItemStatus.ActionRequired)
         {
-            <Button OnClick="MarkItemAsWaiting">Waiting</Button>
+            <button @onclick="MarkItemAsWaiting" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.AccessTime"/>
+            </button>
         }
         @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
         {
-            <Button OnClick="MarkItemAsCompleted">Done</Button>
+            <button @onclick="MarkItemAsCompleted" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.Done"/>
+            </button>
         }
         <button @onclick="EnableEditMode" class="invisible-button">
             <MudIcon Icon="@Icons.Material.Filled.Edit"/>
