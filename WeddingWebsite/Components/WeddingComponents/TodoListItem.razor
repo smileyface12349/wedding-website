@@ -4,6 +4,7 @@
 @using WeddingWebsite.Components.Elements
 
 @inject ITodoService TodoService
+@inject IAdminService AdminService
 
 @if (Item == null)
 {
@@ -33,14 +34,28 @@
         <div class="todo-text">@Item.Text</div>
     }
     <MudSpacer/>
-    @if (Item.OwnerEmail != null)
+    @if (IsEditing)
     {
-        <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+        <MudSelect @bind-Value="OwnerEmail" Dense="true">
+            <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
+            @foreach (var email in PossibleOwnerEmails)
+            {
+                <MudSelectItem Value="@email">@email</MudSelectItem>
+            }
+        </MudSelect>
     }
     else
     {
-        <div class="todo-owner">No owner assigned</div>
+        @if (Item.OwnerEmail != null)
+        {
+            <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+        }
+        else
+        {
+            <div class="todo-owner">No owner assigned</div>
+        }
     }
+    
     @if (IsEditing)
     {
         @if (Item.Group == null)
@@ -94,10 +109,21 @@
     
     [Parameter]
     public Action? ParentStateHasChanged { get; set; }
+
+    private IList<string> PossibleOwnerEmails { get; set; } = [];
     
     private bool IsEditing { get; set; }
     private string Text { get; set; } = "";
-    
+    private string OwnerEmail { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        PossibleOwnerEmails = AdminService.GetAllAccounts()
+            .Where(a => a.Email != null)
+            .Select(a => a.Email!)
+            .ToList();
+    }
+
     // Automatically enable edit mode for new items
     protected override void OnParametersSet()
     {
@@ -113,12 +139,14 @@
         if (Item == null) return;
         IsEditing = true;
         Text = Item.Text ?? "";
+        OwnerEmail = Item.OwnerEmail ?? "";
         StateHasChanged();
     }
     
     private void SaveEdits()
     {
         ApplyToItem(item => TodoService.RenameItem(item.Id, Text));
+        ApplyToItem(item => TodoService.SetItemOwnerByEmail(item.Id, string.IsNullOrWhiteSpace(OwnerEmail) ? null : OwnerEmail));
         IsEditing = false;
         StateHasChanged();
     }
@@ -161,7 +189,7 @@
     private void Group()
     {
         ApplyToItem(item => TodoService.GroupItem(item.Id));
-        if (Text == Item?.Text)
+        if (Text == (Item?.Text ?? "") && OwnerEmail == (Item?.OwnerEmail ?? ""))
         {
             CancelEdits();
         }
