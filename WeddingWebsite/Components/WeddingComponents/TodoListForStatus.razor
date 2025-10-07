@@ -1,0 +1,33 @@
+﻿@using WeddingWebsite.Models.Todo
+
+<h2>@Name</h2>
+<p>@Description</p>
+@foreach (var items in GroupedTodoItems.Where(group => group.FirstOrDefault()?.Status == Status))
+{
+    <TodoListGroup Items="items" ParentStateHasChanged="ParentStateHasChanged"/>
+}
+
+@code {
+    [Parameter]
+    public TodoItemStatus Status { get; set; }
+    
+    [Parameter]
+    public IEnumerable<IEnumerable<TodoItem>> GroupedTodoItems { get; set; } = [];
+    
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
+
+    private string Name => Status switch
+    {
+        TodoItemStatus.ActionRequired => "Action Required",
+        TodoItemStatus.Waiting => "Waiting",
+        TodoItemStatus.Completed => "Completed",
+        _ => "Unknown Status"
+    };
+
+    private string Description => Status switch
+    {
+        TodoItemStatus.Waiting => "Waiting for something out of your control. Items will automatically be moved back to Action Required after 3 days.",
+        _ => ""
+    };
+}

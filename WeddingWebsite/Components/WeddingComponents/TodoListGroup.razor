@@ -1,0 +1,95 @@
+﻿    @using WeddingWebsite.Core
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+
+@inject ITodoService TodoService
+
+<Box CustomCss="margin-bottom: 10px">
+    @if (Items.GetGroup() != null) {
+        <div class="group-heading">
+            @if (IsEditing)
+            {
+                <input @bind="Name" style="margin-bottom: 3px;"/>
+                <button @onclick="SaveEdits" class="invisible-button">
+                    <MudIcon Icon="@Icons.Material.Filled.Save"/>
+                </button>
+            }
+            else
+            {
+                <h3>@Items.GetGroup()?.Name</h3>
+                <button @onclick="EnableEditMode" class="invisible-button">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small"/>
+                </button>
+            }
+        </div>
+    }
+    <div class="todo-item-list">
+        @foreach (var item in Items)
+        {
+            <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged"/>
+        }
+    </div>
+    @if (Items.GetGroup() != null)
+    {
+        @if (IsEditing)
+        {
+            <div class="group-actions">
+                <Button OnClick="AddNewItem">New Item in Group</Button>
+                @if (Items.Count() == 1)
+                {
+                    <Button OnClick="Ungroup">Ungroup</Button>
+                }
+                <Button OnClick="CancelEdits">Exit Edit Mode</Button>
+            </div>
+        }
+    }
+</Box>
+
+@code {
+    private bool IsEditing { get; set; } = false;
+    private string Name { get; set; } = "";
+    
+    [Parameter]
+    public required IEnumerable<TodoItem> Items { get; set; }
+    
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
+
+    private void Ungroup()
+    {
+        if (Items.Count() > 1) return;
+        var item = Items.First();
+        TodoService.RemoveGroupFromItem(item.Id);
+        ParentStateHasChanged?.Invoke();
+    }
+    
+    private void AddNewItem()
+    {
+        if (Items.GetGroup() == null) return;
+        TodoService.AddNewItem(Items.GetGroup()?.Id);
+        ParentStateHasChanged?.Invoke();
+    }
+    
+    private void EnableEditMode()
+    {
+        Name = Items.GetGroup()?.Name ?? "Error";
+        IsEditing = true;
+        StateHasChanged();
+    }
+    
+    private void CancelEdits()
+    {
+        IsEditing = false;
+        StateHasChanged();
+    }
+    
+    private void SaveEdits()
+    {
+        if (Items.GetGroup() == null) return;
+        TodoService.RenameGroup(Items.GetGroup()?.Id, Name);
+        IsEditing = false;
+        ParentStateHasChanged?.Invoke();
+    }
+}

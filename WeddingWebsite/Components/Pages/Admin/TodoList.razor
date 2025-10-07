@@ -1,0 +1,59 @@
+﻿@page "/Todo"
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+
+@layout SimpleLayout
+
+@attribute [Authorize(Roles = "Admin")]
+
+@inject ITodoService TodoService
+@inject Models.WebsiteConfig.IWebsiteConfig Config
+
+<PageTitle>Todo List</PageTitle>
+
+<Section Center="true">
+    <h1>To-Do List</h1>
+    @if (HasSummarySection)
+    {
+        <p class="description">Keep track of what needs doing on this page. Tasks assigned to you will be visible on the homepage too.</p>
+    }
+    else
+    {
+        <p class="description">Keep track of what needs doing on this page. In the config file, you can add the <code>TodoListSummary</code> section which will display tasks assigned to you on the homepage.</p>
+    }
+    
+     <Button OnClick="AddNewItem" AddBottomMargin="true">Add New Item</Button>
+    
+    @foreach (var status in Enum.GetValues<TodoItemStatus>())
+    {
+        <TodoListForStatus Status="status" GroupedTodoItems="GroupedTodoItems" ParentStateHasChanged="RefreshState"/>
+    }
+    
+</Section>
+
+@code {
+    private IEnumerable<IEnumerable<TodoItem>> GroupedTodoItems { get; set; } = [];
+
+    private bool HasSummarySection => Config.Sections.Any(s => s is Models.WebsiteConfig.Section.TodoListSummary);
+    
+    protected override void OnInitialized()
+    {
+        GroupedTodoItems = TodoService.GetGroupedTodoItems();
+    }
+
+    private void RefreshState()
+    {
+        GroupedTodoItems = TodoService.GetGroupedTodoItems();
+        StateHasChanged();
+    }
+
+    private void AddNewItem()
+    {
+        TodoService.AddNewItem();
+        RefreshState();
+    }
+}

@@ -1,0 +1,218 @@
+﻿@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+@using WeddingWebsite.Components.Elements
+
+@inject ITodoService TodoService
+@inject IAdminService AdminService
+@inject ISnackbar Snackbar
+
+@if (Item == null)
+{
+    <div>ERROR: Item not found.</div>
+    return;
+}
+
+<div class="todo-item">
+    @switch (Item.Status)
+    {
+        case TodoItemStatus.ActionRequired:
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" class="status-icon"/>
+            break;
+        case TodoItemStatus.Waiting:
+            <MudIcon Icon="@Icons.Material.Filled.AccessTime" Color="Color.Info" class="status-icon"/>
+            break;
+        case TodoItemStatus.Completed:
+            <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" class="status-icon"/>
+            break;
+    }
+    @if (IsEditing)
+    {
+        <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?"/>
+    }
+    else
+    {
+        <div class="todo-text">@Item.Text</div>
+    }
+    <MudSpacer/>
+    
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            @if (IsEditing)
+            {
+                <MudSelect @bind-Value="OwnerEmail" Dense="true">
+                    <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
+                    @foreach (var email in PossibleOwnerEmails)
+                    {
+                        <MudSelectItem Value="@email">@email</MudSelectItem>
+                    }
+                </MudSelect>
+            }
+            else
+            {
+                @if (Item.OwnerEmail != null)
+                {
+                    <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+                }
+                else
+                {
+                    <div class="todo-owner">No owner assigned</div>
+                }
+            }
+        </Authorized>
+    </AuthorizeView>
+    
+    @if (IsEditing)
+    {
+        @if (Item.Group == null)
+        {
+            <Button OnClick="Group">Add Group</Button>
+        }
+
+        <button @onclick="SaveEdits" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Save"/>
+        </button>
+        <button @onclick="Delete" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
+        </button>
+        <button @onclick="CancelEdits" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Cancel"/>
+        </button>
+    }
+    else
+    {
+        @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
+        {
+            <button @onclick="MarkItemAsActionRequired" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+            </button>
+        }
+
+        @if (Item.Status == TodoItemStatus.ActionRequired)
+        {
+            <button @onclick="MarkItemAsWaiting" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.AccessTime"/>
+            </button>
+        }
+
+        @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
+        {
+            <button @onclick="MarkItemAsCompleted" class="invisible-button">
+                <MudIcon Icon="@Icons.Material.Filled.Done"/>
+            </button>
+        }
+
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <button @onclick="EnableEditMode" class="invisible-button">
+                    <MudIcon Icon="@Icons.Material.Filled.Edit"/>
+                </button>
+            </Authorized>
+        </AuthorizeView>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public TodoItem? Item { get; set; }
+    
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
+
+    private IList<string> PossibleOwnerEmails { get; set; } = [];
+    
+    private bool IsEditing { get; set; }
+    private string Text { get; set; } = "";
+    private string OwnerEmail { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        PossibleOwnerEmails = AdminService.GetAllAccounts()
+            .Where(a => a.Email != null)
+            .Select(a => a.Email!)
+            .ToList();
+        
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+        Snackbar.Configuration.SnackbarVariant = Variant.Text;
+    }
+
+    // Automatically enable edit mode for new items
+    protected override void OnParametersSet()
+    {
+        if (Item?.Text == null)
+        {
+            IsEditing = true;
+            Text = "";
+        }
+    }
+
+    private void EnableEditMode()
+    {
+        if (Item == null) return;
+        IsEditing = true;
+        Text = Item.Text ?? "";
+        OwnerEmail = Item.OwnerEmail ?? "";
+        StateHasChanged();
+    }
+    
+    private void SaveEdits()
+    {
+        ApplyToItem(item => TodoService.RenameItem(item.Id, Text));
+        ApplyToItem(item => TodoService.SetItemOwnerByEmail(item.Id, string.IsNullOrWhiteSpace(OwnerEmail) ? null : OwnerEmail));
+        IsEditing = false;
+        StateHasChanged();
+    }
+    
+    private void CancelEdits()
+    {
+        IsEditing = false;
+        if (Item?.Text == null)
+        {
+            // This prevents it from auto-enabling edit mode upon refresh, as the user has explicitly chosen for no text
+            ApplyToItem(item => TodoService.RenameItem(item.Id, ""));
+        }
+        StateHasChanged();
+    }
+    
+    private void ApplyToItem(Action<TodoItem> action)
+    {
+        if (Item == null) return;
+        action(Item);
+        Item = TodoService.GetTodoItem(Item.Id);
+        StateHasChanged();
+        ParentStateHasChanged?.Invoke();
+    }
+
+    private void MarkItemAsCompleted()
+    {
+        ApplyToItem(item => TodoService.MarkItemAsCompleted(item.Id));
+        Snackbar.Add($"Completed: {Item?.Text}", Severity.Success);
+    }
+    
+    private void MarkItemAsWaiting()
+    {
+        ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(3)));
+        Snackbar.Add($"Snoozed for 3 days: {Item?.Text}", Severity.Info);
+    }
+    
+    private void MarkItemAsActionRequired()
+    {
+        ApplyToItem(item => TodoService.MarkItemAsActionRequired(item.Id));
+        Snackbar.Add($"Marked as action required: {Item?.Text}", Severity.Warning);
+    }
+    
+    private void Group()
+    {
+        ApplyToItem(item => TodoService.GroupItem(item.Id));
+        if (Text == (Item?.Text ?? "") && OwnerEmail == (Item?.OwnerEmail ?? ""))
+        {
+            CancelEdits();
+        }
+    }
+    
+    private void Delete()
+    {
+        ApplyToItem(item => TodoService.DeleteItem(item.Id));
+        IsEditing = false;
+    }
+}
