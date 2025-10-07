@@ -12,9 +12,21 @@
 }
 
 <div class="todo-item">
+    @switch (Item.Status)
+    {
+        case TodoItemStatus.ActionRequired:
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" class="status-icon"/>
+            break;
+        case TodoItemStatus.Waiting:
+            <MudIcon Icon="@Icons.Material.Filled.AccessTime" Color="Color.Info" class="status-icon"/>
+            break;
+        case TodoItemStatus.Completed:
+            <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" class="status-icon"/>
+            break;
+    }
     @if (IsEditing)
     {
-        <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?" />
+        <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?"/>
     }
     else
     {
@@ -35,6 +47,7 @@
         {
             <Button OnClick="Group">Add Group</Button>
         }
+
         <button @onclick="SaveEdits" class="invisible-button">
             <MudIcon Icon="@Icons.Material.Filled.Save"/>
         </button>
@@ -53,23 +66,26 @@
                 <MudIcon Icon="@Icons.Material.Filled.Warning"/>
             </button>
         }
+
         @if (Item.Status == TodoItemStatus.ActionRequired)
         {
             <button @onclick="MarkItemAsWaiting" class="invisible-button">
                 <MudIcon Icon="@Icons.Material.Filled.AccessTime"/>
             </button>
         }
+
         @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
         {
             <button @onclick="MarkItemAsCompleted" class="invisible-button">
                 <MudIcon Icon="@Icons.Material.Filled.Done"/>
             </button>
         }
+
         <button @onclick="EnableEditMode" class="invisible-button">
             <MudIcon Icon="@Icons.Material.Filled.Edit"/>
         </button>
     }
-    
+
 </div>
 
 @code {
