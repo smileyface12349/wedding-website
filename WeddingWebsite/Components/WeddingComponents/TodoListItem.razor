@@ -132,5 +132,9 @@
     private void Group()
     {
         ApplyToItem(item => TodoService.GroupItem(item.Id));
+        if (Text == Item?.Text)
+        {
+            CancelEdits();
+        }
     }
 }
