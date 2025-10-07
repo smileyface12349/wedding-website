@@ -61,14 +61,24 @@
     [Parameter]
     public Action? ParentStateHasChanged { get; set; }
     
-    private bool IsEditing { get; set; } = false;
+    private bool IsEditing { get; set; }
     private string Text { get; set; } = "";
+    
+    // Automatically enable edit mode for new items
+    protected override void OnParametersSet()
+    {
+        if (Item?.Text == null)
+        {
+            IsEditing = true;
+            Text = "";
+        }
+    }
 
     private void EnableEditMode()
     {
         if (Item == null) return;
         IsEditing = true;
-        Text = Item.Text;
+        Text = Item.Text ?? "";
         StateHasChanged();
     }
     
@@ -82,6 +92,11 @@
     private void CancelEdits()
     {
         IsEditing = false;
+        if (Item?.Text == null)
+        {
+            // This prevents it from auto-enabling edit mode upon refresh, as the user has explicitly chosen for no text
+            ApplyToItem(item => TodoService.RenameItem(item.Id, ""));
+        }
         StateHasChanged();
     }
     

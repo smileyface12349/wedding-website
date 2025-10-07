@@ -121,7 +121,7 @@ public class TodoStore : ITodoStore
 
             TodoGroup? group = groupId != null && groupName != null ? new TodoGroup(groupId, groupName) : null;
 
-            return new TodoItem(itemId, ownerEmail, text ?? "", group, waitingUntil, completedAt);
+            return new TodoItem(itemId, ownerEmail, text, group, waitingUntil, completedAt);
         }
 
         return null;
@@ -169,7 +169,7 @@ public class TodoStore : ITodoStore
 
             TodoGroup? group = groupId != null && groupName != null ? new TodoGroup(groupId, groupName) : null;
 
-            items.Add(new TodoItem(itemId, ownerEmail, text ?? "", group, waitingUntil, completedAt));
+            items.Add(new TodoItem(itemId, ownerEmail, text, group, waitingUntil, completedAt));
         }
 
         return items;
