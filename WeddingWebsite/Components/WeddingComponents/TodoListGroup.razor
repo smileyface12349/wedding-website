@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Core
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.Todo
+
+<Box CustomCss="margin-bottom: 10px">
+    @if (Items.GetGroup()?.Name != null)
+    {
+        <h3>@Items.GetGroup().Name</h3>
+    }
+    @foreach (var item in Items)
+    {
+        <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged" />
+    }
+</Box>
+
+@code {
+    [Parameter]
+    public required IEnumerable<TodoItem> Items { get; set; }
+    
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
+}

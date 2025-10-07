@@ -1,21 +1,10 @@
-﻿@using WeddingWebsite.Core
-@using WeddingWebsite.Components.Containers
-@using WeddingWebsite.Models.Todo
+﻿@using WeddingWebsite.Models.Todo
 
 <h2>@Name</h2>
 <p>@Description</p>
 @foreach (var items in GroupedTodoItems.Where(group => group.FirstOrDefault()?.Status == Status))
 {
-    <Box CustomCss="margin-bottom: 10px">
-        @if (items.GetGroup()?.Name != null)
-        {
-            <h3>@items.GetGroup().Name</h3>
-        }
-        @foreach (var item in items)
-        {
-            <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged" />
-        }
-    </Box>
+    <TodoListGroup Items="items" ParentStateHasChanged="ParentStateHasChanged"/>
 }
 
 @code {
