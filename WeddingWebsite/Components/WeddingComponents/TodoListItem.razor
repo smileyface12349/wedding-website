@@ -1,0 +1,19 @@
+﻿@using WeddingWebsite.Models.Todo
+
+<div class="todo-item">
+    <div class="todo-text">@Item.Text</div>
+    <MudSpacer/>
+    @if (Item.OwnerEmail != null)
+    {
+        <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+    }
+    else
+    {
+        <div class="todo-owner">No owner assigned</div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required TodoItem Item { get; set; }
+}

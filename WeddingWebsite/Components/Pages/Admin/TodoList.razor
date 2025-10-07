@@ -2,6 +2,7 @@
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Core
 @using WeddingWebsite.Models.Todo
 @using WeddingWebsite.Services
@@ -25,18 +26,7 @@
             }
             @foreach (var item in items)
             {
-                <div class="todo-item">
-                    <div class="todo-text">@item.Text</div>
-                    <MudSpacer/>
-                    @if (item.OwnerEmail != null)
-                    {
-                        <div class="todo-owner">Owner: @item.OwnerEmail</div>
-                    }
-                    else
-                    {
-                        <div class="todo-owner">No owner assigned</div>
-                    }
-                </div>
+                <TodoListItem Item="item" />
             }
         </Box>
     }
