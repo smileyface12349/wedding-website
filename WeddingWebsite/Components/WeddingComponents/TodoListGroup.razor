@@ -1,6 +1,10 @@
 ﻿@using WeddingWebsite.Core
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+
+@inject ITodoService TodoService
 
 <Box CustomCss="margin-bottom: 10px">
     @if (Items.GetGroup()?.Name != null)
@@ -11,6 +15,15 @@
     {
         <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged" />
     }
+    @if (Items.GetGroup() != null)
+    {
+        <div class="group-actions">
+            @if (Items.Count() == 1)
+            {
+                <Button OnClick="Ungroup">Ungroup</Button>
+            }
+        </div>
+    }
 </Box>
 
 @code {
@@ -19,4 +32,12 @@
     
     [Parameter]
     public Action? ParentStateHasChanged { get; set; }
+
+    private void Ungroup()
+    {
+        if (Items.Count() > 1) return;
+        var item = Items.First();
+        TodoService.RemoveGroupFromItem(item.Id);
+        ParentStateHasChanged?.Invoke();
+    }
 }
