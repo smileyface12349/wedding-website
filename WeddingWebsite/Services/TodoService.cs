@@ -48,4 +48,9 @@ public class TodoService(ITodoStore todoStore) : ITodoService
         var newId = Guid.NewGuid().ToString();
         todoStore.AddTodoItem(newId);
     }
+    
+    public void RenameItem(string itemId, string newText)
+    {
+        todoStore.RenameTodoItem(itemId, newText);
+    }
 }

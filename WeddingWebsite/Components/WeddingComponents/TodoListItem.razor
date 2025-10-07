@@ -11,7 +11,14 @@
 }
 
 <div class="todo-item">
-    <div class="todo-text">@Item.Text</div>
+    @if (IsEditing)
+    {
+        <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?" />
+    }
+    else
+    {
+        <div class="todo-text">@Item.Text</div>
+    }
     <MudSpacer/>
     @if (Item.OwnerEmail != null)
     {
@@ -21,18 +28,30 @@
     {
         <div class="todo-owner">No owner assigned</div>
     }
-    @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
+    @if (IsEditing)
     {
-        <Button OnClick="MarkItemAsActionRequired">Action Required</Button>
+        <Button OnClick="SaveEdits">Save</Button>
+        <Button OnClick="CancelEdits">Cancel</Button>
     }
-    @if (Item.Status == TodoItemStatus.ActionRequired)
+    else
     {
-        <Button OnClick="MarkItemAsWaiting">Waiting</Button>
+        @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
+        {
+            <Button OnClick="MarkItemAsActionRequired">Action Required</Button>
+        }
+        @if (Item.Status == TodoItemStatus.ActionRequired)
+        {
+            <Button OnClick="MarkItemAsWaiting">Waiting</Button>
+        }
+        @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
+        {
+            <Button OnClick="MarkItemAsCompleted">Done</Button>
+        }
+        <button @onclick="EnableEditMode" class="invisible-button">
+            <MudIcon Icon="@Icons.Material.Filled.Edit"/>
+        </button>
     }
-    @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
-    {
-        <Button OnClick="MarkItemAsCompleted">Done</Button>
-    }
+    
 </div>
 
 @code {
@@ -41,6 +60,30 @@
     
     [Parameter]
     public Action? ParentStateHasChanged { get; set; }
+    
+    private bool IsEditing { get; set; } = false;
+    private string Text { get; set; } = "";
+
+    private void EnableEditMode()
+    {
+        if (Item == null) return;
+        IsEditing = true;
+        Text = Item.Text;
+        StateHasChanged();
+    }
+    
+    private void SaveEdits()
+    {
+        ApplyToItem(item => TodoService.RenameItem(item.Id, Text));
+        IsEditing = false;
+        StateHasChanged();
+    }
+    
+    private void CancelEdits()
+    {
+        IsEditing = false;
+        StateHasChanged();
+    }
     
     private void ApplyToItem(Action<TodoItem> action)
     {

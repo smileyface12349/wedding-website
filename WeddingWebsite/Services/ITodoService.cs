@@ -10,4 +10,5 @@ public interface ITodoService
     void MarkItemAsActionRequired(string itemId);
     TodoItem? GetTodoItem(string itemId);
     void AddNewItem();
+    void RenameItem(string itemId, string newText);
 }
