@@ -16,7 +16,7 @@
     <SectionHeading>Todo List</SectionHeading>
     <p>A handy little to-do list that's built-in to the website. It's nothing special, but it might help to keep track of what needs doing in one place, without having to use another service.</p>
     
-     <Button OnClick="AddNewItem">Add New Item</Button>
+     <Button OnClick="AddNewItem" AddBottomMargin="true">Add New Item</Button>
     
     @foreach (var status in Enum.GetValues<TodoItemStatus>())
     {
