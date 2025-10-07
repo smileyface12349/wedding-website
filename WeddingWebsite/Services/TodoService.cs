@@ -99,4 +99,12 @@ public class TodoService(ITodoStore todoStore, IStore store) : ITodoService
         }
         todoStore.SetTodoItemOwner(itemId, ownerId);
     }
+    
+    public IEnumerable<TodoItem> GetTodoItemsRequiringActionForGivenEmailOrNoEmail(string email)
+    {
+        var allItems = todoStore.GetAllTodoItems();
+        return allItems
+            .Where(item => item.OwnerEmail == null || item.OwnerEmail == email)
+            .Where(item => item.Status == TodoItemStatus.ActionRequired);
+    }
 }
