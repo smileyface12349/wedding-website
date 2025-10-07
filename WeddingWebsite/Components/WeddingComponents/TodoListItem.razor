@@ -39,12 +39,16 @@
     [Parameter]
     public TodoItem? Item { get; set; }
     
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
+    
     private void ApplyToItem(Action<TodoItem> action)
     {
         if (Item == null) return;
         action(Item);
         Item = TodoService.GetTodoItem(Item.Id);
         StateHasChanged();
+        ParentStateHasChanged?.Invoke();
     }
 
     private void MarkItemAsCompleted()

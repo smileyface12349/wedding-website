@@ -13,7 +13,7 @@
         }
         @foreach (var item in items)
         {
-            <TodoListItem Item="item" />
+            <TodoListItem Item="item" ParentStateHasChanged="ParentStateHasChanged" />
         }
     </Box>
 }
@@ -24,6 +24,9 @@
     
     [Parameter]
     public IEnumerable<IEnumerable<TodoItem>> GroupedTodoItems { get; set; } = [];
+    
+    [Parameter]
+    public Action? ParentStateHasChanged { get; set; }
 
     private string Name => Status switch
     {
