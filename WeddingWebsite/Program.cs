@@ -35,6 +35,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IRegistryService, RegistryService>();
 builder.Services.AddScoped<IStore, Store>();
 builder.Services.AddScoped<IRegistryStore, RegistryStore>();
+builder.Services.AddScoped<ITodoStore, TodoStore>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
