@@ -1,0 +1,41 @@
+﻿@page "/Todo"
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Core
+@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+
+@layout SimpleLayout
+
+@attribute [Authorize(Roles = "Admin")]
+
+@inject ITodoService TodoService
+
+<Section>
+    <SectionHeading>Todo List</SectionHeading>
+    <p>A handy little to-do list that's built-in to the website. It's nothing special, but it might help to keep track of what needs doing in one place, without having to use another service.</p>
+    
+    @foreach (var items in GroupedTodoItems)
+    {
+        <Box>
+            @if (items.GetGroup()?.Name != null)
+            {
+                <h3>@items.GetGroup().Name</h3>
+            }
+            @foreach (var item in items)
+            {
+                <div class="todo-item">@item.Text</div>
+            }
+        </Box>
+    }
+</Section>
+
+@code {
+    private IEnumerable<IEnumerable<TodoItem>> GroupedTodoItems { get; set; } = [];
+    
+    protected override void OnInitialized()
+    {
+        GroupedTodoItems = TodoService.GetGroupedTodoItems();
+    }
+}
