@@ -43,10 +43,14 @@ public class TodoService(ITodoStore todoStore) : ITodoService
         return todoStore.GetTodoItem(itemId);
     }
 
-    public void AddNewItem()
+    public void AddNewItem(string? groupId = null)
     {
         var newId = Guid.NewGuid().ToString();
         todoStore.AddTodoItem(newId);
+        if (groupId != null)
+        {
+            todoStore.SetTodoItemGroup(newId, groupId);
+        }
     }
     
     public void RenameItem(string itemId, string newText)

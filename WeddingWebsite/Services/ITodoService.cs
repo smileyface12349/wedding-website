@@ -9,7 +9,7 @@ public interface ITodoService
     void MarkItemAsWaiting(string itemId, TimeSpan waitingTime);
     void MarkItemAsActionRequired(string itemId);
     TodoItem? GetTodoItem(string itemId);
-    void AddNewItem();
+    void AddNewItem(string? groupId = null);
     void RenameItem(string itemId, string newText);
     void GroupItem(string itemId);
     void RemoveGroupFromItem(string itemId);

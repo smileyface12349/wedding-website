@@ -18,6 +18,7 @@
     @if (Items.GetGroup() != null)
     {
         <div class="group-actions">
+            <Button OnClick="AddNewItem">New Item in Group</Button>
             @if (Items.Count() == 1)
             {
                 <Button OnClick="Ungroup">Ungroup</Button>
@@ -38,6 +39,13 @@
         if (Items.Count() > 1) return;
         var item = Items.First();
         TodoService.RemoveGroupFromItem(item.Id);
+        ParentStateHasChanged?.Invoke();
+    }
+    
+    private void AddNewItem()
+    {
+        if (Items.GetGroup() == null) return;
+        TodoService.AddNewItem(Items.GetGroup()?.Id);
         ParentStateHasChanged?.Invoke();
     }
 }
