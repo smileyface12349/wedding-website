@@ -1,0 +1,85 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Todo
+@using WeddingWebsite.Services
+@using LinkButton = WeddingWebsite.Models.WebsiteElement.LinkButton
+
+@inject ITodoService TodoService
+@inject AuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        @if (TodoItemsAssignedToUser.Any() || TodoItemsNoOwner.Any())
+        {
+            <Section>
+                <SectionHeading>To-Do</SectionHeading>
+                <p>Only items marked as "Action Required" are shown here. This section will be hidden if all items are either "Waiting" or "Completed".</p>
+                @if (TodoItemsAssignedToUser.Any())
+                {
+                    <h3>Assigned to You</h3>
+                    @foreach (var item in TodoItemsAssignedToUser)
+                    {
+                        <Box CustomCss="margin-bottom: 10px">
+                            <TodoListItem Item="item" ParentStateHasChanged="UpdateState"/>
+                        </Box>
+                    }
+                }
+                @if (TodoItemsNoOwner.Any())
+                {
+                    <h3>No Owner Assigned</h3>
+                    @foreach (var item in TodoItemsNoOwner)
+                    {
+                        <Box CustomCss="margin-bottom: 10px">
+                            <TodoListItem Item="item" ParentStateHasChanged="UpdateState"/>
+                        </Box>
+                    }
+                }
+                <div class="link-container">
+                    <LinkButton Url="/todo">Go to Todo List</LinkButton>
+                </div>
+            </Section>
+        }
+    </Authorized>
+    <NotAuthorized>
+        @if (TodoItemsAssignedToUser.Any())
+        {
+            <Section>
+                <SectionHeading>To-Do</SectionHeading>
+                <p>An admin has given you some task(s). When they're done, please press the tick. If the task is waiting on factors outside of your control, press the clock icon to snooze it for 3 days.</p>
+                @foreach (var item in TodoItemsAssignedToUser)
+                {
+                    <Box CustomCss="margin-bottom: 10px">
+                        <TodoListItem Item="item" ParentStateHasChanged="UpdateState"/>
+                    </Box>
+                }
+            </Section>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    private IEnumerable<TodoItem> TodoItemsNoOwner { get; set; } = [];
+    private IEnumerable<TodoItem> TodoItemsAssignedToUser { get; set; } = [];
+    
+    protected override void OnInitialized()
+    {
+        
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
+        var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+        var email = user.Identity?.Name ?? "";
+
+        var todoItems = TodoService.GetTodoItemsRequiringActionForGivenEmailOrNoEmail(email).ToList();
+        TodoItemsNoOwner = todoItems.Where(item => string.IsNullOrWhiteSpace(item.OwnerEmail));
+        TodoItemsAssignedToUser = todoItems.Where(item => item.OwnerEmail == email);
+        
+        StateHasChanged();
+    }
+}
