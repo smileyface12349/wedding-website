@@ -1,10 +1,10 @@
-﻿@using System.Text.RegularExpressions
-@using WeddingWebsite.Models.Todo
+﻿@using WeddingWebsite.Models.Todo
 @using WeddingWebsite.Services
 @using WeddingWebsite.Components.Elements
 
 @inject ITodoService TodoService
 @inject IAdminService AdminService
+@inject ISnackbar Snackbar
 
 @if (Item == null)
 {
@@ -131,6 +131,9 @@
             .Where(a => a.Email != null)
             .Select(a => a.Email!)
             .ToList();
+        
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+        Snackbar.Configuration.SnackbarVariant = Variant.Text;
     }
 
     // Automatically enable edit mode for new items
@@ -183,16 +186,19 @@
     private void MarkItemAsCompleted()
     {
         ApplyToItem(item => TodoService.MarkItemAsCompleted(item.Id));
+        Snackbar.Add($"Completed: {Item?.Text}", Severity.Success);
     }
     
     private void MarkItemAsWaiting()
     {
         ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(3)));
+        Snackbar.Add($"Snoozed for 3 days: {Item?.Text}", Severity.Info);
     }
     
     private void MarkItemAsActionRequired()
     {
         ApplyToItem(item => TodoService.MarkItemAsActionRequired(item.Id));
+        Snackbar.Add($"Marked as action required: {Item?.Text}", Severity.Warning);
     }
     
     private void Group()
