@@ -32,7 +32,7 @@ public class DefaultConfig : IWebsiteConfig
         var salmon = new Colour(236, 129, 108, Colour.VeryDarkGrey);
         var lightGreen = new Colour(112, 229, 130);
         var darkGreen = new Colour(50, 150, 50);
-        var darkYellow = new Colour(246, 190, 0);
+        var yellow = new Colour("#F9DC5C");
         var darkPurple = new Colour(137, 108, 166);
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
@@ -43,6 +43,7 @@ public class DefaultConfig : IWebsiteConfig
         var flowers = new BackgroundImage("/bg/blue-flowers.png", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
     
         Sections = [
+            new Section.TodoListSummary(new SectionTheme(salmon, Colour.White, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colour.White, null)))),
             new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
@@ -55,7 +56,7 @@ public class DefaultConfig : IWebsiteConfig
             [
                 new LinkButton("Accommodation", "#accommodation")
             ],
-            new Colour("#F9DC5C")
+            yellow
         );
 
         AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
