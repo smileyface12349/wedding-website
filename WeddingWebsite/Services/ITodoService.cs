@@ -11,4 +11,6 @@ public interface ITodoService
     TodoItem? GetTodoItem(string itemId);
     void AddNewItem();
     void RenameItem(string itemId, string newText);
+    void GroupItem(string itemId);
+    void RemoveGroupFromItem(string itemId);
 }

@@ -1,4 +1,5 @@
-﻿@using WeddingWebsite.Models.Todo
+﻿@using System.Text.RegularExpressions
+@using WeddingWebsite.Models.Todo
 @using WeddingWebsite.Services
 @using WeddingWebsite.Components.Elements
 
@@ -30,6 +31,10 @@
     }
     @if (IsEditing)
     {
+        @if (Item.Group == null)
+        {
+            <Button OnClick="Group">Add Group</Button>
+        }
         <Button OnClick="SaveEdits">Save</Button>
         <Button OnClick="CancelEdits">Cancel</Button>
     }
@@ -122,5 +127,10 @@
     private void MarkItemAsActionRequired()
     {
         ApplyToItem(item => TodoService.MarkItemAsActionRequired(item.Id));
+    }
+    
+    private void Group()
+    {
+        ApplyToItem(item => TodoService.GroupItem(item.Id));
     }
 }

@@ -53,4 +53,26 @@ public class TodoService(ITodoStore todoStore) : ITodoService
     {
         todoStore.RenameTodoItem(itemId, newText);
     }
+
+    public void GroupItem(string itemId)
+    {
+        var groupId = Guid.NewGuid().ToString();
+        todoStore.AddTodoGroup(groupId, "Todo Group");
+        todoStore.SetTodoItemGroup(itemId, groupId);
+    }
+    
+    public void RemoveGroupFromItem(string itemId)
+    {
+        var item = todoStore.GetTodoItem(itemId);
+        if (item?.Group != null)
+        {
+            var groupId = item.Group.Id;
+            todoStore.SetTodoItemGroup(itemId, null);
+            var allItems = todoStore.GetAllTodoItems();
+            if (allItems.All(i => i.Group?.Id != groupId))
+            {
+                todoStore.RemoveTodoGroup(groupId);
+            }
+        }
+    }
 }
