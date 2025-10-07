@@ -33,6 +33,7 @@ builder.Services.AddScoped<RsvpController>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IRegistryService, RegistryService>();
+builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddScoped<IStore, Store>();
 builder.Services.AddScoped<IRegistryStore, RegistryStore>();
 builder.Services.AddScoped<ITodoStore, TodoStore>();
