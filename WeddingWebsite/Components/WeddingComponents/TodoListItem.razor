@@ -89,9 +89,11 @@
 
         @if (Item.Status == TodoItemStatus.ActionRequired)
         {
-            <button @onclick="MarkItemAsWaiting" class="invisible-button">
-                <MudIcon Icon="@Icons.Material.Filled.AccessTime"/>
-            </button>
+            <MudMenu Icon="@Icons.Material.Filled.AccessTime">
+                <MudMenuItem OnClick="() => MarkItemAsWaiting(3)" Label="3 days"/>
+                <MudMenuItem OnClick="() => MarkItemAsWaiting(7)" Label="1 week"/>
+                <MudMenuItem OnClick="() => MarkItemAsWaiting(30)" Label="1 month"/>
+            </MudMenu>
         }
 
         @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
@@ -189,10 +191,10 @@
         Snackbar.Add($"Completed: {Item?.Text}", Severity.Success);
     }
     
-    private void MarkItemAsWaiting()
+    private void MarkItemAsWaiting(int days = 3)
     {
-        ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(3)));
-        Snackbar.Add($"Snoozed for 3 days: {Item?.Text}", Severity.Info);
+        ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(days)));
+        Snackbar.Add($"Snoozed for {days} days: {Item?.Text}", Severity.Info);
     }
     
     private void MarkItemAsActionRequired()
