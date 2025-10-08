@@ -13,55 +13,56 @@
 }
 
 <div class="todo-item">
-    @switch (Item.Status)
-    {
-        case TodoItemStatus.ActionRequired:
-            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" class="status-icon"/>
-            break;
-        case TodoItemStatus.Waiting:
-            <MudIcon Icon="@Icons.Material.Filled.AccessTime" Color="Color.Info" class="status-icon"/>
-            break;
-        case TodoItemStatus.Completed:
-            <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" class="status-icon"/>
-            break;
-    }
-    @if (IsEditing)
-    {
-        <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?"/>
-    }
-    else
-    {
-        <div class="todo-text">@Item.Text</div>
-    }
-    <MudSpacer/>
-    
-    <AuthorizeView Roles="Admin">
-        <Authorized>
-            @if (IsEditing)
-            {
-                <MudSelect @bind-Value="OwnerEmail" Dense="true">
-                    <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
-                    @foreach (var email in PossibleOwnerEmails)
-                    {
-                        <MudSelectItem Value="@email">@email</MudSelectItem>
-                    }
-                </MudSelect>
-            }
-            else
-            {
-                @if (Item.OwnerEmail != null)
+    <div class="icon-and-text">
+        @switch (Item.Status)
+        {
+            case TodoItemStatus.ActionRequired:
+                <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" class="status-icon"/>
+                break;
+            case TodoItemStatus.Waiting:
+                <MudIcon Icon="@Icons.Material.Filled.AccessTime" Color="Color.Info" class="status-icon"/>
+                break;
+            case TodoItemStatus.Completed:
+                <MudIcon Icon="@Icons.Material.Filled.Done" Color="Color.Success" class="status-icon"/>
+                break;
+        }
+        @if (IsEditing)
+        {
+            <input type="text" @bind="Text" class="todo-edit-input" placeholder="What needs doing?"/>
+        }
+        else
+        {
+            <div class="todo-text">@Item.Text</div>
+        }
+    </div>
+
+    <div class="owner-and-end-buttons">
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                @if (IsEditing)
                 {
-                    <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+                    <MudSelect @bind-Value="OwnerEmail" Dense="true">
+                        <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
+                        @foreach (var email in PossibleOwnerEmails)
+                        {
+                            <MudSelectItem Value="@email">@email</MudSelectItem>
+                        }
+                    </MudSelect>
                 }
                 else
                 {
-                    <div class="todo-owner">No owner assigned</div>
+                    @if (Item.OwnerEmail != null)
+                    {
+                        <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+                    }
+                    else
+                    {
+                        <div class="todo-owner">No owner assigned</div>
+                    }
                 }
-            }
-        </Authorized>
-    </AuthorizeView>
-    
-    <div class="end-buttons">
+            </Authorized>
+        </AuthorizeView>
+        
         @if (IsEditing)
         {
             @if (Item.Group == null)

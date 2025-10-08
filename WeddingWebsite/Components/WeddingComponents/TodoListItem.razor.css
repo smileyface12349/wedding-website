@@ -5,9 +5,38 @@
     gap: 10px;
 }
 
-.end-buttons {
+.icon-and-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.owner-and-end-buttons {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 3px;
+}
+
+.todo-owner {
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+    .todo-item {
+        flex-direction: column;
+        align-items: start;
+        gap: 5px;
+    }
+
+    .todo-owner {
+        flex: 1;
+        text-align: start;
+    }
+
+    .owner-and-end-buttons {
+        width: 100%;
+    }
 }
