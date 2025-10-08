@@ -12,16 +12,13 @@
             @if (IsEditing)
             {
                 <input @bind="Name" style="margin-bottom: 3px;"/>
-                <button @onclick="SaveEdits" class="invisible-button">
-                    <MudIcon Icon="@Icons.Material.Filled.Save"/>
-                </button>
+                <MudIconButton OnClick="SaveEdits" Icon="@Icons.Material.Filled.Save" Color="Color.Success"/>
+                <MudIconButton OnClick="CancelEdits" Icon="@Icons.Material.Filled.Cancel"/>
             }
             else
             {
                 <h3>@Items.GetGroup()?.Name</h3>
-                <button @onclick="EnableEditMode" class="invisible-button">
-                    <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small"/>
-                </button>
+                <MudIconButton OnClick="EnableEditMode" Icon="@Icons.Material.Filled.Edit" Size="Size.Small"/>
             }
         </div>
     }
