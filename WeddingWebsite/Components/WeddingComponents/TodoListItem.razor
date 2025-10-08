@@ -132,7 +132,7 @@
     // Automatically enable edit mode for new items
     protected override void OnParametersSet()
     {
-        if (Item?.Text == null)
+        if (Item != null && Item.Text == null)
         {
             IsEditing = true;
             Text = "";
@@ -175,17 +175,68 @@
         StateHasChanged();
         ParentStateHasChanged?.Invoke();
     }
+    
+    /// <summary>
+    /// Only officially supports undoing status changes from ActionRequired to Waiting/Completed.
+    /// Arbitrary changes of status are permitted, but may not work properly (e.g. wait time will not be preserved).
+    /// This is primarily intended for use on the homepage, where waiting/completed tasks will disappear from view.
+    /// </summary>
+    private Action ApplyToItemWithUndoAction(Action<TodoItem> action)
+    {
+        if (Item == null) return () => { };
+        var before = Item with {};
+        ApplyToItem(action);
+        return () =>
+        {
+            if (Item.Status != before.Status)
+            {
+                switch (before.Status)
+                {
+                    case TodoItemStatus.ActionRequired:
+                        MarkItemAsActionRequired();
+                        break;
+                    case TodoItemStatus.Waiting:
+                        MarkItemAsWaiting();
+                        break;
+                    case TodoItemStatus.Completed:
+                        MarkItemAsCompleted();
+                        break;
+                }
+            }
+            Item = TodoService.GetTodoItem(Item.Id);
+            StateHasChanged();
+            ParentStateHasChanged?.Invoke();
+        };
+    }
 
     private void MarkItemAsCompleted()
     {
-        ApplyToItem(item => TodoService.MarkItemAsCompleted(item.Id));
-        Snackbar.Add($"Completed: {Item?.Text}", Severity.Success);
+        var undoAction = ApplyToItemWithUndoAction(item => TodoService.MarkItemAsCompleted(item.Id));
+        Snackbar.Add($"Completed: {Item?.Text}", Severity.Success, config =>
+        {
+            config.Action = "Undo";
+            config.ActionColor = Color.Warning;
+            config.OnClick = _ =>
+            {
+                undoAction();
+                return Task.CompletedTask;
+            };
+        });
     }
     
     private void MarkItemAsWaiting(int days = 3)
     {
-        ApplyToItem(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(days)));
-        Snackbar.Add($"Snoozed for {days} days: {Item?.Text}", Severity.Info);
+        var undoAction = ApplyToItemWithUndoAction(item => TodoService.MarkItemAsWaiting(item.Id, TimeSpan.FromDays(days)));
+        Snackbar.Add($"Snoozed for {days} days: {Item?.Text}", Severity.Info, config =>
+        {
+            config.Action = "Undo";
+            config.ActionColor = Color.Warning;
+            config.OnClick = _ =>
+            {
+                undoAction();
+                return Task.CompletedTask;
+            };
+        });
     }
     
     private void MarkItemAsActionRequired()
