@@ -41,13 +41,13 @@
         <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
         @if (!IsUserOwner())
         {
-            <button @onclick="ApplyEmailChange">Apply</button>
+            <button class="button" @onclick="ApplyEmailChange">Apply</button>
         }
         else
         {
             <AuthorizeView Roles="Owner">
                 <Authorized>
-                    <button @onclick="ApplyEmailChange">Apply</button>
+                    <button class="button" @onclick="ApplyEmailChange">Apply</button>
                 </Authorized>
             </AuthorizeView>
         }
@@ -59,7 +59,7 @@
             <label for="new-password">New Password</label>
             <span class="flex-grow"></span>
             <input type="password" @bind-value="NewPassword" id="new-password" class="mr @PasswordDiffers" placeholder="Reset their password" />
-            <button @onclick="ApplyPasswordChange">Apply</button>
+            <button class="button" @onclick="ApplyPasswordChange">Apply</button>
         </div>
     }
     
@@ -79,7 +79,7 @@
         <label for="new-guest">Add Extra Guest</label>
         <span class="flex-grow"></span>
         <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
-        <button @onclick="AddNewGuest">Add</button>
+        <button class="button" @onclick="AddNewGuest">Add</button>
     </div>
 
     <h2>Permissions</h2>
@@ -94,13 +94,13 @@
                 }
                 else
                 {
-                    <button class="mb" @onclick="DemoteUser">Demote</button>
+                    <button class="button block-button" @onclick="DemoteUser">Demote</button>
                 }
             }
             else
             {
                 <p>This user does not have any special permissions.</p>
-                <button class="mb" @onclick="PromoteUser">Promote to Admin</button>
+                <button class="button block-button" @onclick="PromoteUser">Promote to Admin</button>
             }
         </Authorized>
         <NotAuthorized>

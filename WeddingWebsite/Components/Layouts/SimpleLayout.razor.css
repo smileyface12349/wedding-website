@@ -44,7 +44,7 @@
     flex: 1;
 }
 
-::deep button, ::deep .button {
+::deep .button {
     display: inline-block;
     background: var(--primary);
     color: var(--mud-palette-text-primary);

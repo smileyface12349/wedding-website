@@ -18,10 +18,10 @@ using RsvpController = WeddingWebsite.Controllers.RsvpController;
 var builder = WebApplication.CreateBuilder(args);
 
 // Swap out SampleWeddingDetails for your own implementation.
-builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
+builder.Services.AddScoped<IWeddingDetails, RealWeddingDetails>();
 
 // If you want to, swap out DefaultConfig for your own implementation (you can inherit from DefaultConfig).
-builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
+builder.Services.AddScoped<IWebsiteConfig, CustomConfig>();
 
 // Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
 // which will automatically throw a NotImplementedException when attempting to use credentials.
