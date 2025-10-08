@@ -61,56 +61,46 @@
         </Authorized>
     </AuthorizeView>
     
-    @if (IsEditing)
-    {
-        @if (Item.Group == null)
+    <div class="end-buttons">
+        @if (IsEditing)
         {
-            <Button OnClick="Group">Add Group</Button>
-        }
+            @if (Item.Group == null)
+            {
+                <Button OnClick="Group">Add Group</Button>
+            }
 
-        <button @onclick="SaveEdits" class="invisible-button">
-            <MudIcon Icon="@Icons.Material.Filled.Save"/>
-        </button>
-        <button @onclick="Delete" class="invisible-button">
-            <MudIcon Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
-        </button>
-        <button @onclick="CancelEdits" class="invisible-button">
-            <MudIcon Icon="@Icons.Material.Filled.Cancel"/>
-        </button>
-    }
-    else
-    {
-        @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
+            <MudIconButton OnClick="SaveEdits" Icon="@Icons.Material.Filled.Save" Color="Color.Success"/>
+            <MudIconButton OnClick="Delete" Icon="@Icons.Material.Filled.Delete" Color="Color.Error"/>
+            <MudIconButton OnClick="CancelEdits" Icon="@Icons.Material.Filled.Cancel"/>
+        }
+        else
         {
-            <button @onclick="MarkItemAsActionRequired" class="invisible-button">
-                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-            </button>
-        }
+            @if (Item.Status is TodoItemStatus.Waiting or TodoItemStatus.Completed)
+            {
+                <MudIconButton OnClick="MarkItemAsActionRequired" Icon="@Icons.Material.Filled.Warning"/>
+            }
 
-        @if (Item.Status == TodoItemStatus.ActionRequired)
-        {
-            <MudMenu Icon="@Icons.Material.Filled.AccessTime">
-                <MudMenuItem OnClick="() => MarkItemAsWaiting(3)" Label="3 days"/>
-                <MudMenuItem OnClick="() => MarkItemAsWaiting(7)" Label="1 week"/>
-                <MudMenuItem OnClick="() => MarkItemAsWaiting(30)" Label="1 month"/>
-            </MudMenu>
-        }
+            @if (Item.Status == TodoItemStatus.ActionRequired)
+            {
+                <MudMenu Icon="@Icons.Material.Filled.AccessTime">
+                    <MudMenuItem OnClick="() => MarkItemAsWaiting(3)" Label="3 days"/>
+                    <MudMenuItem OnClick="() => MarkItemAsWaiting(7)" Label="1 week"/>
+                    <MudMenuItem OnClick="() => MarkItemAsWaiting(30)" Label="1 month"/>
+                </MudMenu>
+            }
 
-        @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
-        {
-            <button @onclick="MarkItemAsCompleted" class="invisible-button">
-                <MudIcon Icon="@Icons.Material.Filled.Done"/>
-            </button>
-        }
+            @if (Item.Status is TodoItemStatus.ActionRequired or TodoItemStatus.Waiting)
+            {
+                <MudIconButton OnClick="MarkItemAsCompleted" Icon="@Icons.Material.Filled.Done"/>
+            }
 
-        <AuthorizeView Roles="Admin">
-            <Authorized>
-                <button @onclick="EnableEditMode" class="invisible-button">
-                    <MudIcon Icon="@Icons.Material.Filled.Edit"/>
-                </button>
-            </Authorized>
-        </AuthorizeView>
-    }
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <MudIconButton OnClick="EnableEditMode" Icon="@Icons.Material.Filled.Edit"/>
+                </Authorized>
+            </AuthorizeView>
+        }
+    </div>
 
 </div>
 
