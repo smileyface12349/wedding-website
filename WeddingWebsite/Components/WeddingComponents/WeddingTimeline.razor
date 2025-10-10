@@ -12,7 +12,7 @@
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25" UserAttributes="@(new Dictionary<string, object?> {{"id", item.GetId()}})">
             <ItemOpposite>
-                <h3 style="color: @PrimaryColour;@CssTextShadow">@item.Time</h3>
+                <h3 style="color: @PrimaryColourAdjusted;@CssTextShadow">@item.Time</h3>
             </ItemOpposite>
             <ItemContent>
                 <TimelineItemBox Item="@item"/>
@@ -32,7 +32,7 @@
     @foreach (var item in timelineItems) {
         <MudTimelineItem Size=@item.GetDotSize() Color=Color.Primary Elevation="25">
             <ItemContent>
-                <h3 style="color: @PrimaryColour;@CssTextShadow">@item.Time</h3>
+                <h3 style="color: @PrimaryColourAdjusted;@CssTextShadow">@item.Time</h3>
                 <TimelineItemBox Item="@item"/>
             </ItemContent>
             <ItemDot>
@@ -71,9 +71,10 @@
     public SectionTheme? Theme { get; set; }
     
     private Colour PrimaryColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    private Colour PrimaryColourAdjusted => Theme?.Background.ExtraContrast == true ? PrimaryColour.Darken(0.7f) : PrimaryColour;
     
-    private string CssTextShadow => Theme is { Background: { IsDark: false, ExtraContrast: true } } ? "text-shadow: 0 0 2px rgba(0, 0, 0, 1);" : "";
-
+    private string CssTextShadow => Theme is { Background: { IsDark: false, ExtraContrast: true } } ? "text-shadow: 0 0 1px rgba(0, 0, 0, 1);" : "";
+    
     private IEnumerable<TimelineItem> timelineItems = [];
     
     protected override void OnInitialized()

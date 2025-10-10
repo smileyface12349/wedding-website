@@ -68,6 +68,13 @@ public class Colour : IBackground
     public Colour WithAlpha(byte alpha = 255) {
         return new Colour(mudColor.R, mudColor.G, mudColor.B, alpha, IsDark);
     }
+    
+    /// <summary>
+    /// Returns a copy that is darker. A factor of 1 means no change, and a factor of 0 returns pure black.
+    /// </summary>
+    public Colour Darken(float factor = 0.5f) {
+        return new Colour((byte) (mudColor.R * factor), (byte) (mudColor.G * factor), (byte) (mudColor.B * factor), true);
+    }
 
     public static Colour White => new Colour(255, 255, 255, false);
     public static Colour DarkGrey => new Colour(66, 66, 66, true);
