@@ -11,14 +11,14 @@
     <SectionHeading>Meet the Wedding Party</SectionHeading>
     <SideBySide>
         <LeftContent>
-            <MeetWeddingParty 
+            <MeetWeddingPartyPeople 
                 DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
                 IsOnLeftSide="true"
             />
         </LeftContent>
         <RightContent>
-            <MeetWeddingParty 
+            <MeetWeddingPartyPeople 
                 DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
                 IsOnLeftSide="false"
