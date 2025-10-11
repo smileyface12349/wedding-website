@@ -39,7 +39,7 @@ p {
     margin-bottom: 5px;
 }
 
-@media only screen and (max-width: 400px) {
+@container (max-width: 300px) {
     .inner-container {
         flex-direction: column;
         align-items: center;
