@@ -48,6 +48,7 @@ p {
 
     .right-content {
         padding-left: 0;
+        text-align: left;
     }
     
     .media {
