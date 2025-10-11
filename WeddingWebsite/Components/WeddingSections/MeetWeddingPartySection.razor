@@ -9,22 +9,49 @@
 
 <Section Center="true">
     <SectionHeading>Meet the Wedding Party</SectionHeading>
-    <SideBySide>
-        <LeftContent>
-            <MeetWeddingPartyPeople 
+    @if (DisplayMode is MeetWeddingPartyDisplay.Chat)
+    {
+        <SideBySide>
+            <LeftContent>
+                <MeetWeddingPartyPeople
+                    DisplayMode="DisplayMode"
+                    People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
+                    IsOnLeftSide="true"/>
+            </LeftContent>
+            <RightContent>
+                <MeetWeddingPartyPeople
+                    DisplayMode="DisplayMode"
+                    People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
+                    IsOnLeftSide="false"/>
+            </RightContent>
+        </SideBySide>
+    } else if (DisplayMode is MeetWeddingPartyDisplay.TwoRows)
+    {
+        <div class="grid two-rows">
+            <MeetWeddingPartyPeople
                 DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
-                IsOnLeftSide="true"
-            />
-        </LeftContent>
-        <RightContent>
-            <MeetWeddingPartyPeople 
+                IsOnLeftSide="true"/>
+        </div>
+
+        <div class="grid two-rows">
+            <MeetWeddingPartyPeople
                 DisplayMode="DisplayMode"
                 People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
-                IsOnLeftSide="false"
-            />
-        </RightContent>
-    </SideBySide>
+                IsOnLeftSide="false"/>
+        </div>
+    } 
+    else if (DisplayMode is MeetWeddingPartyDisplay.Grid or MeetWeddingPartyDisplay.TwoColumns)
+    {
+        <div class="grid @(DisplayMode == MeetWeddingPartyDisplay.TwoColumns ? "two-columns" : "")">
+            <MeetWeddingPartyPeople
+                DisplayMode="DisplayMode"
+                People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role) || RolesRight.Contains(p.Role))"
+                IsOnLeftSide="true"/>
+        </div>
+    } else {
+        <p>Invalid display mode: @DisplayMode.</p>
+    }
 </Section>
 
 
