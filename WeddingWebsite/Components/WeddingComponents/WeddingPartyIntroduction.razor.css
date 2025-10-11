@@ -40,7 +40,7 @@ p {
     margin-bottom: 5px;
 }
 
-@container (max-width: 300px) {
+@container (max-width: 350px) {
     .inner-container {
         flex-direction: column;
         align-items: center;
