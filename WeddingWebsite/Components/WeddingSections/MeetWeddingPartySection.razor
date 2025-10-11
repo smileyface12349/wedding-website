@@ -47,9 +47,17 @@
                 {
                     <WeddingPartyIntroduction Person="@leftEnumerator.Current"/>
                 }
+                else
+                {
+                    <div></div>
+                }
                 if (rightEnumerator.Current != null)
                 {
                     <WeddingPartyIntroduction Person="@rightEnumerator.Current"/>
+                }
+                else
+                {
+                    <div></div>
                 }
             }
         </div>
