@@ -1,19 +1,15 @@
 ﻿@using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.WebsiteConfig
 
-@inject IWebsiteConfig Config
-
-<div>
-    @foreach (var person in People) {
-        <div class="container">
-            @if (DisplayMode == MeetWeddingPartyDisplay.TwoColumns) {
-                <WeddingPartyIntroduction Person="@person"/>
-            } else {
-                <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
-            }
-        </div>
-    }
-</div>
+@foreach (var person in People) {
+    <div class="container">
+        @if (DisplayMode == MeetWeddingPartyDisplay.Chat) {
+            <WeddingPartyIntroductionChat Person="@person" IsOnLeftSide="@IsOnLeftSide"/>
+        } else {
+            <WeddingPartyIntroduction Person="@person"/>
+        }
+    </div>
+}
 
 @code {
     [Parameter]
