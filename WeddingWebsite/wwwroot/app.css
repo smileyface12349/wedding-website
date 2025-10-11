@@ -94,3 +94,7 @@ h1:focus {
 .box-shadow {
     box-shadow: 1px 1px 4px #000;
 }
+
+:root {
+    --mud-palette-lines-inputs: #888 !important;
+}
