@@ -8,7 +8,9 @@ button {
     font-size: 20px;
     border-radius: 5px;
     border-style: solid;
-    border-width: 3px;
+    border-width: 2px;
+    transition-property: box-shadow, background-color;
+    transition-duration: 0.2s;
 }
 
 .yes-button {
@@ -21,7 +23,7 @@ button {
 }
 
 button:hover {
-    opacity: 0.7;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
 }
 
 .no-button {
