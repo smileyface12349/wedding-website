@@ -2,9 +2,12 @@
 @using WeddingWebsite.Models.WebsiteConfig
 
 <div class="outlined-box @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour();@CustomCss">
-    <div class="top-content">
-        @TopContent
-    </div>
+    @if (TopContent != null)
+    {
+        <div class="top-content">
+            @TopContent
+        </div>
+    }
     <div class="outlined-box-inner">
         @ChildContent
     </div>

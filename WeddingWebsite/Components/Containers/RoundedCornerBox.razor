@@ -4,9 +4,12 @@
 @inject IWebsiteConfig Config
 
 <div class="rounded-corner-box @CssShadow @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour();@CustomCss">
-    <div class="top-content">
-        @TopContent
-    </div>
+    @if (TopContent != null)
+    {
+        <div class="top-content">
+            @TopContent
+        </div>
+    }
     <div class="rounded-corner-box-inner">
         @ChildContent
     </div>
