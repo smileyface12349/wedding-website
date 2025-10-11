@@ -12,12 +12,12 @@ button {
 }
 
 .yes-button {
-    border-color: var(--mud-palette-success);
+    border-color: var(--mud-palette-success-darken);
     margin-right: 10px;
 }
 
 .yes-button.selected {
-    background-color: var(--mud-palette-success);
+    background-color: var(--mud-palette-success-darken);
 }
 
 button:hover {
@@ -25,9 +25,9 @@ button:hover {
 }
 
 .no-button {
-    border-color: var(--mud-palette-error);
+    border-color: var(--mud-palette-error-lighten);
 }
 
 .no-button.selected {
-    background-color: var(--mud-palette-error);
+    background-color: var(--mud-palette-error-lighten);
 }
