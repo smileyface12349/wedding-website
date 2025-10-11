@@ -36,10 +36,27 @@
                 <WeddingPartyIntroduction Person="@person"/>
             }
         </div>
-    } 
-    else if (DisplayMode is MeetWeddingPartyDisplay.Grid or MeetWeddingPartyDisplay.TwoColumns)
+    } else if (DisplayMode is MeetWeddingPartyDisplay.TwoColumns)
     {
-        <div class="grid @(DisplayMode == MeetWeddingPartyDisplay.TwoColumns ? "two-columns" : "")">
+        <div class="grid two-columns">
+            @{using var leftEnumerator = WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role)).GetEnumerator();}
+            @{using var rightEnumerator = WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role)).GetEnumerator();}
+            @while (leftEnumerator.MoveNext() | rightEnumerator.MoveNext())
+            {
+                if (leftEnumerator.Current != null)
+                {
+                    <WeddingPartyIntroduction Person="@leftEnumerator.Current"/>
+                }
+                if (rightEnumerator.Current != null)
+                {
+                    <WeddingPartyIntroduction Person="@rightEnumerator.Current"/>
+                }
+            }
+        </div>
+    }
+    else if (DisplayMode is MeetWeddingPartyDisplay.Grid)
+    {
+        <div class="grid">
             @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role) || RolesRight.Contains(p.Role))) {
                 <WeddingPartyIntroduction Person="@person"/>
             }
