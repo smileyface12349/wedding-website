@@ -230,7 +230,7 @@ namespace WeddingWebsite.Components.WeddingComponents
     /// <param name="People">The list of <see cref="WeddingWebsite.Models.People.NotablePerson"/> to show.</param>
     /// <param name="IsOnLeftSide">This may affect how the component is rendered when done side-by-side.</param>
     /// <param name="DisplayMode">Whether to use the default view or the chat view.</param>
-    partial class MeetWeddingParty {}
+    partial class MeetWeddingPartyPeople {}
     
     /// <summary>
     /// Not designed to be used outside of <see cref="WeddingTimeline"/>.

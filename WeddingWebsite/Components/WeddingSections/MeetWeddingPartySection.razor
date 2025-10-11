@@ -9,22 +9,69 @@
 
 <Section Center="true">
     <SectionHeading>Meet the Wedding Party</SectionHeading>
-    <SideBySide>
-        <LeftContent>
-            <MeetWeddingParty 
-                DisplayMode="DisplayMode"
-                People="@WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))"
-                IsOnLeftSide="true"
-            />
-        </LeftContent>
-        <RightContent>
-            <MeetWeddingParty 
-                DisplayMode="DisplayMode"
-                People="@WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))"
-                IsOnLeftSide="false"
-            />
-        </RightContent>
-    </SideBySide>
+    @if (DisplayMode is MeetWeddingPartyDisplay.Chat)
+    {
+        <SideBySide>
+            <LeftContent>
+                @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))) {
+                    <WeddingPartyIntroductionChat Person="person" IsOnLeftSide="true"/>
+                }
+            </LeftContent>
+            <RightContent>
+                @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))) {
+                    <WeddingPartyIntroductionChat Person="person" IsOnLeftSide="false"/>
+                }
+            </RightContent>
+        </SideBySide>
+    } else if (DisplayMode is MeetWeddingPartyDisplay.TwoRows)
+    {
+        <div class="grid two-rows">
+            @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role))) {
+                <WeddingPartyIntroduction Person="@person"/>
+            }
+        </div>
+
+        <div class="grid two-rows">
+            @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role))) {
+                <WeddingPartyIntroduction Person="@person"/>
+            }
+        </div>
+    } else if (DisplayMode is MeetWeddingPartyDisplay.TwoColumns)
+    {
+        <div class="grid two-columns">
+            @{using var leftEnumerator = WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role)).GetEnumerator();}
+            @{using var rightEnumerator = WeddingDetails.NotablePeople.Where(p => RolesRight.Contains(p.Role)).GetEnumerator();}
+            @while (leftEnumerator.MoveNext() | rightEnumerator.MoveNext())
+            {
+                if (leftEnumerator.Current != null)
+                {
+                    <WeddingPartyIntroduction Person="@leftEnumerator.Current"/>
+                }
+                else
+                {
+                    <div></div>
+                }
+                if (rightEnumerator.Current != null)
+                {
+                    <WeddingPartyIntroduction Person="@rightEnumerator.Current"/>
+                }
+                else
+                {
+                    <div></div>
+                }
+            }
+        </div>
+    }
+    else if (DisplayMode is MeetWeddingPartyDisplay.Grid)
+    {
+        <div class="grid">
+            @foreach (var person in WeddingDetails.NotablePeople.Where(p => RolesLeft.Contains(p.Role) || RolesRight.Contains(p.Role)).OrderBy(p => !RolesLeft.Contains(p.Role))) {
+                <WeddingPartyIntroduction Person="@person"/>
+            }
+        </div>
+    } else {
+        <p>Invalid display mode: @DisplayMode.</p>
+    }
 </Section>
 
 

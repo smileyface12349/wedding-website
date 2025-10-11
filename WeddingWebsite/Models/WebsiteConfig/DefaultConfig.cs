@@ -11,7 +11,7 @@ public class DefaultConfig : IWebsiteConfig
         new Colour("#B6D7A8"),
         new Colour("#F2F1ED")
     );
-    public IEnumerable<Section> Sections { get; }
+    public IReadOnlyList<Section> Sections { get; protected set; }
     public TopButtonsConfig TopButtons { get; }
     public bool BrideFirst => false;
     public PageConfig.Account AccountConfig { get; set; }

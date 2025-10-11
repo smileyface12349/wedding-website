@@ -19,7 +19,7 @@ public interface IWebsiteConfig
     /// <summary>
     /// The sections to show on the website, and per-section config.
     /// </summary>
-    public IEnumerable<Section> Sections { get; }
+    public IReadOnlyList<Section> Sections { get; }
     
     /// <summary>
     /// The buttons to display on the top of the homepage e.g. "RSPV".

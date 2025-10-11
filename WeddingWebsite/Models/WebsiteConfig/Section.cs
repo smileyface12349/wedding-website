@@ -34,10 +34,10 @@ public abstract record Section
         SectionTheme? Theme,
         IEnumerable<Role> RolesLeft,
         IEnumerable<Role> RolesRight,
-        MeetWeddingPartyDisplay DisplayMode = MeetWeddingPartyDisplay.Default
+        MeetWeddingPartyDisplay DisplayMode = MeetWeddingPartyDisplay.TwoColumns
     ) : Section(Theme)
     {
-        public MeetWeddingParty(SectionTheme? theme = null, MeetWeddingPartyDisplay displayMode = MeetWeddingPartyDisplay.Default) 
+        public MeetWeddingParty(SectionTheme? theme = null, MeetWeddingPartyDisplay displayMode = MeetWeddingPartyDisplay.TwoColumns) 
             : this(theme, [Role.Groom, Role.BestMan, Role.Groomsman], [Role.Bride, Role.MaidOfHonour, Role.Bridesmaid], displayMode) {}
     }
     
