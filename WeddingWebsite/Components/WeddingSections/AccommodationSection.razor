@@ -11,6 +11,7 @@
     {
         <AccommodationEmphasised Hotel="hotel" />
     }
+    <AccommodationNonEmphasised Hotels="WeddingDetails.AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise)"/>
 </Section>
 
 @code {
