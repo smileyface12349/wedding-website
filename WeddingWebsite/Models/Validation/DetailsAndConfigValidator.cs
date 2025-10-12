@@ -40,6 +40,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
         
         VenueShowcase_ShouldNotHaveMoreThanTwoVenues(details, config);
+        
+        Accommodation_ShouldBeEmphasised_IfThereIsOnlyOneHotel(details);
 
         return validationIssues;
     }
@@ -365,6 +367,18 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (distinct.Count() != distinctByName.Count())
         {
             Warning("Venues are often compared by their names. You have at least two events that have venues with the same name, but some of the other data differs. If this is the same venue, please define your venue once and use the same instance for all events at the same venue. If you have two venues with the same name, then this is not currently supported and you should rename one of them.");
+        }
+    }
+    
+    /// <summary>
+    /// Without this, it shows things like "1 options" instead of just saying the name of the single option.
+    /// </summary>
+    private void Accommodation_ShouldBeEmphasised_IfThereIsOnlyOneHotel(IWeddingDetails details)
+    {
+        var hotels = details.AccommodationDetails.Hotels;
+        if (hotels.Count == 1 && !hotels.First().Emphasise)
+        {
+            Warning("You have only given one hotel, but haven't chosen to emphasise it. You probably want to set this hotel to be emphasised to make the user interface a bit more sensible.");
         }
     }
 }
