@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var hotel in AccommodationDetails.Hotels) {
+    @foreach (var hotel in Hotels) {
         <tr>
             <td>@hotel.Name</td>
             <td>@hotel.DrivingTimeFromVenueMinutes min</td>
@@ -23,5 +23,5 @@
 
 @code {
     [Parameter]
-    public required AccommodationDetails AccommodationDetails { get; set; }
+    public required IEnumerable<Hotel> Hotels { get; set; }
 }
