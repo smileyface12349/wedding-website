@@ -1,8 +1,21 @@
 ﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WebsiteElement
 
-<a class="@CssClass" href="@Url" style="background: @Colour">
+@inject IWebsiteConfig Config
+
+<a class="@CssClass @VariantClass" href="@Url" style="@Css">
     @ChildContent
 </a>
+
+@if (Variant == ButtonVariant.Outlined)
+{
+    <style>
+        .background-@Colour.GetHex().Substring(1):hover {
+            background-color: @Colour;
+        }
+    </style>
+}
 
 @code {
   
@@ -15,8 +28,14 @@
     [Parameter]
     public string CssClass { get; set; } = "";
     
+    [Parameter]
+    public ButtonVariant Variant { get; set; } = ButtonVariant.Filled;
+
+    private string Css => Variant == ButtonVariant.Filled ? "background: " + Colour : $"border-color: {Colour}; color: {Colour}";
+    private string VariantClass => Variant == ButtonVariant.Filled ? "filled" : $"outlined background-{Colour.GetHex().Substring(1)}";
+    
     [CascadingParameter]
     private SectionTheme? Theme { get; set; }
     
-    private string Colour => Theme?.Primary.ToString() ?? "var(--primary)";
+    private Colour Colour => Theme?.Primary ?? Config.Colours.Primary;
 }
