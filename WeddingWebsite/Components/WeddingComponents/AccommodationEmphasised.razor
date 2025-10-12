@@ -1,6 +1,9 @@
 ﻿@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models
+@using LinkButton = WeddingWebsite.Components.Elements.LinkButton
+
+@using WeddingWebsite.Models.WebsiteElement
 
 <Box Horizontal="true">
     <TopContent>
@@ -16,8 +19,8 @@
         <h4>Price</h4>
         <p>@Hotel.PriceString.</p>
         <div class="buttons-container">
-            <LinkButton Url="@Hotel.Link" >Visit Website</LinkButton>
-            <LinkButton Url="@Hotel.Location.GetGoogleMapsLink()">Google Maps</LinkButton>
+            <LinkButton Url="@Hotel.Link" Variant="ButtonVariant.Outlined">Visit Website</LinkButton>
+            <LinkButton Url="@Hotel.Location.GetGoogleMapsLink()" Variant="ButtonVariant.Outlined">Google Maps</LinkButton>
         </div>
     </ChildContent>
 </Box>
