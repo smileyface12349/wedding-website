@@ -24,4 +24,6 @@ public record Hotel (
             }
         }
     }
+    
+    public int DiscountedPrice => (int) Discount.CalculateDiscountedPrice(ApproximatePrice);
 }
