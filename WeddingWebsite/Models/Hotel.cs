@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models;
+﻿using WeddingWebsite.Models.WebsiteElement;
+
+namespace WeddingWebsite.Models;
 
 public record Hotel (
     string Name,
@@ -9,7 +11,8 @@ public record Hotel (
     int ApproximatePrice,
     Discount Discount,
     string Link,
-    bool Emphasise = false
+    bool Emphasise = false,
+    IWebsiteElement? Media = null
 )
 {
     public string PriceString {
@@ -21,4 +24,6 @@ public record Hotel (
             }
         }
     }
+    
+    public int DiscountedPrice => (int) Discount.CalculateDiscountedPrice(ApproximatePrice);
 }

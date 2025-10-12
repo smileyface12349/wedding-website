@@ -24,7 +24,8 @@
     
     private Task OpenDialogAsync() {
         var parameters = new DialogParameters<EventDialog> {
-            { x => x.Content,  Modal.Content }
+            { x => x.Content,  Modal.Content },
+            { x => x.Actions, Modal.Actions }
         };
     
         return DialogService.ShowAsync<EventDialog>(Modal.Title, parameters);

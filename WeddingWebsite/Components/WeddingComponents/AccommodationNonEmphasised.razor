@@ -1,0 +1,14 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models
+
+@if (!Hotels.Any()) return;
+
+<Box>
+    <h3>Other Options</h3>
+    <AccommodationList Hotels="Hotels"></AccommodationList>
+</Box>
+
+@code {
+    [Parameter]
+    public required IEnumerable<Hotel> Hotels { get; set; }
+}

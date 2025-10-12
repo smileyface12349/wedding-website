@@ -1,0 +1,31 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models
+@using LinkButton = WeddingWebsite.Components.Elements.LinkButton
+
+@using WeddingWebsite.Models.WebsiteElement
+
+<Box Horizontal="true" CustomCss="margin-bottom: 20px">
+    <TopContent>
+        <WebsiteElement Element="Hotel.Media" Cover="true" />
+    </TopContent>
+    <ChildContent>
+        <h3>@Hotel.Name</h3>
+        <p>@Hotel.Description</p>
+        <h4>Address</h4>
+        <p>@Hotel.Address.</p>
+        <h4>Distance</h4>
+        <p>@Hotel.DrivingTimeFromVenueMinutes min drive from the venue.</p>
+        <h4>Price</h4>
+        <p>@Hotel.PriceString.</p>
+        <div class="buttons-container">
+            <LinkButton Url="@Hotel.Link" Variant="ButtonVariant.Outlined">Visit Website</LinkButton>
+            <LinkButton Url="@Hotel.Location.GetGoogleMapsLink()" Variant="ButtonVariant.Outlined">Google Maps</LinkButton>
+        </div>
+    </ChildContent>
+</Box>
+
+@code {
+    [Parameter]
+    public required Hotel Hotel { get; set; }
+}

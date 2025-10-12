@@ -145,34 +145,68 @@
             AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
             null,
-            [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(AccommodationDetails))],
+            AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails).Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise))),
             @Icons.Material.Filled.Hotel,
             AccommodationDetails.Image
         );
     }
     
-    private IEnumerable<WebsiteSection> GenerateAccommodationDetails(AccommodationDetails details) {
-        IEnumerable<WebsiteSection> sections = [];
-        foreach (var hotel in details.Hotels) {
-            sections = sections.Append(new WebsiteSection(
-                (hotel.Emphasise ? "[Recommended] " : "") + hotel.Name,
+    private WeddingModal GenerateAccommodationDetails(Hotel hotel) {
+        return new WeddingModal(
+            hotel.Name,
+            (hotel.Media == null ? new List<WebsiteSection>() : [new WebsiteSection(hotel.Media)]).Concat(
+                new List<WebsiteSection>()
+                {
+                    new WebsiteSection(
+                        "",
+                        hotel.Description
+                    ),
+                    new WebsiteSection(
+                        "Address",
+                        hotel.Address + "."
+                    ),
+                    new WebsiteSection(
+                        "Distance",
+                        $"{hotel.DrivingTimeFromVenueMinutes} min drive from the venue."
+                    ),
+                    new WebsiteSection(
+                        "Price",
+                        hotel.PriceString + "."
+                    ),
+                    new WebsiteSection(
+                        "Map",
+                        "",
+                        new WebsiteGoogleMapsEmbed(hotel.Location)
+                    )
+                }
+            ),
+            hotel.Name,
+            [
+                new Models.WebsiteElement.LinkButton("Go to Website", hotel.Link)
+            ]
+        );
+    }
+
+    private WeddingModal GenerateAccommodationDetailsOther(IEnumerable<Hotel> hotels, bool someEmphasised)
+    {
+        return new WeddingModal(
+            someEmphasised ? "Other Options" : "Suggested Hotels",
+            hotels.Select(hotel => new WebsiteSection(
+                hotel.Name + " (£" + hotel.Discount.CalculateDiscountedPrice(hotel.ApproximatePrice) + ")",
                 [
+                    "",
                     hotel.Description,
-                    $"Address: {hotel.Address}",
-                    $"Price: {hotel.PriceString}",
-                    $"Distance: {hotel.DrivingTimeFromVenueMinutes} minutes",
-                    $"Link: {hotel.Link}"
+                    hotel.Address + " (" + hotel.DrivingTimeFromVenueMinutes + " min drive)."
                 ],
-                new WebsiteGoogleMapsEmbed(hotel.Location)
-            ));
-        }
-        return sections;
+                new LinkButton("Visit Website", hotel.Link)
+            ))
+        );
     }
     
     private string GenerateAccommodationShortString() {
         if (AccommodationDetails == null) throw new ArgumentNullException();
         if (!AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)) {
-            return string.Join(", ", AccommodationDetails.Hotels.Select(hotel => hotel.Name));
+            return AccommodationDetails.Hotels.Count + " options";
         } else
         {
             var emphasisedHotels = string.Join(", ", AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(hotel => hotel.Name));
@@ -207,7 +241,7 @@
         public Location? MapsLocation { get; } = mapsLocation;
         
         public Size GetDotSize() => Icon == null ? Size.Small : Size.Medium;
-        public string GetId() => Type == TimelineItemType.Accommodation ? "accommodation" : "";
+        public string GetId() => "";
     };
     
     public enum TimelineItemType

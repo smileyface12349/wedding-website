@@ -67,6 +67,11 @@ public abstract record Section
     /// A showcase of the venues. All this information is already in the timeline.
     /// </summary>
     public sealed record VenueShowcase(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
+    /// Shows accommodation details. All this information is already in the timeline.
+    /// </summary>
+    public sealed record Accommodation(SectionTheme? Theme = null) : Section(Theme);
 
     /// <summary>
     /// A simple section with images either side and some text in the middle. If you want to add more detail, please

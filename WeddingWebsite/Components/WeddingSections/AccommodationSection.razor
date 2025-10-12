@@ -1,0 +1,19 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section Id="accommodation">
+    <SectionHeading>Accommodation</SectionHeading>
+    <p class="description">@WeddingDetails.AccommodationDetails.Description</p>
+    @foreach (var hotel in WeddingDetails.AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise))
+    {
+        <AccommodationEmphasised Hotel="hotel" />
+    }
+    <AccommodationNonEmphasised Hotels="WeddingDetails.AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise)"/>
+</Section>
+
+@code {
+    
+}

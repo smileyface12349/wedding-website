@@ -40,6 +40,9 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
         
         VenueShowcase_ShouldNotHaveMoreThanTwoVenues(details, config);
+        
+        Accommodation_ShouldBeEmphasised_IfThereIsOnlyOneHotel(details);
+        Accommodation_ShouldHaveAtLeastOneHotel_IfTheSectionIsIncluded(details, config);
 
         return validationIssues;
     }
@@ -365,6 +368,32 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (distinct.Count() != distinctByName.Count())
         {
             Warning("Venues are often compared by their names. You have at least two events that have venues with the same name, but some of the other data differs. If this is the same venue, please define your venue once and use the same instance for all events at the same venue. If you have two venues with the same name, then this is not currently supported and you should rename one of them.");
+        }
+    }
+    
+    /// <summary>
+    /// Without this, it shows things like "1 options" instead of just saying the name of the single option.
+    /// </summary>
+    private void Accommodation_ShouldBeEmphasised_IfThereIsOnlyOneHotel(IWeddingDetails details)
+    {
+        var hotels = details.AccommodationDetails.Hotels;
+        if (hotels.Count == 1 && !hotels.First().Emphasise)
+        {
+            Warning("You have only given one hotel, but haven't chosen to emphasise it. You probably want to set this hotel to be emphasised to make the user interface a bit more sensible.");
+        }
+    }
+    
+    /// <summary>
+    /// It will be automatically hidden from the timeline if there aren't any hotels, but the standalone section will
+    /// just look silly.
+    /// </summary>
+    private void Accommodation_ShouldHaveAtLeastOneHotel_IfTheSectionIsIncluded(IWeddingDetails details, IWebsiteConfig config)
+    {
+        if (GetSection<Section.Accommodation>(config) == null) return;
+        var hotels = details.AccommodationDetails.Hotels;
+        if (!hotels.Any())
+        {
+            Warning("You haven't given any hotels in the accommodation section. This section will look a bit empty without any hotels. Either add some hotels, or remove this section.");
         }
     }
 }

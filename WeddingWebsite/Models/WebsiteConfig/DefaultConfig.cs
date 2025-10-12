@@ -48,6 +48,7 @@ public class DefaultConfig : IWebsiteConfig
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
+            new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];

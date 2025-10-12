@@ -1,5 +1,6 @@
 ﻿@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.WebsiteElement
+@using LinkButton = WeddingWebsite.Models.WebsiteElement.LinkButton
 <MudDialog>
     <DialogContent>
         @if (Content != null)
@@ -12,6 +13,9 @@
         }
     </DialogContent>
     <DialogActions>
+        @foreach (var action in Actions) {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" Href="@action.Link">@action.Text</MudButton>
+        }
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Close">Close</MudButton>
     </DialogActions>
 </MudDialog>
@@ -22,6 +26,9 @@
 
     [Parameter]
     public IEnumerable<WebsiteSection>? Content { get; set; }
+
+    [Parameter]
+    public IEnumerable<LinkButton> Actions { get; set; } = [];
 
     private void Close() => MudDialog?.Close(DialogResult.Ok(true));
 }
