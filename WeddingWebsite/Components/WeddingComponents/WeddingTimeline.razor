@@ -206,7 +206,7 @@
     private string GenerateAccommodationShortString() {
         if (AccommodationDetails == null) throw new ArgumentNullException();
         if (!AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)) {
-            return string.Join(", ", AccommodationDetails.Hotels.Select(hotel => hotel.Name));
+            return AccommodationDetails.Hotels.Count + " options";
         } else
         {
             var emphasisedHotels = string.Join(", ", AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(hotel => hotel.Name));
