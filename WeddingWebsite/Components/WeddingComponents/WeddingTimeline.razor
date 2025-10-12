@@ -145,7 +145,7 @@
             AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
             null,
-            AccommodationDetails.Hotels.Select(GenerateAccommodationDetails),
+            AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails).Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise))),
             @Icons.Material.Filled.Hotel,
             AccommodationDetails.Image
         );
@@ -181,6 +181,22 @@
             [
                 new Models.WebsiteElement.LinkButton("Go to Website", hotel.Link)
             ]
+        );
+    }
+
+    private WeddingModal GenerateAccommodationDetailsOther(IEnumerable<Hotel> hotels, bool someEmphasised)
+    {
+        return new WeddingModal(
+            someEmphasised ? "Other Options" : "Suggested Hotels",
+            hotels.Select(hotel => new WebsiteSection(
+                hotel.Name + " (£" + hotel.Discount.CalculateDiscountedPrice(hotel.ApproximatePrice) + ")",
+                [
+                    "",
+                    hotel.Description,
+                    hotel.Address + " (" + hotel.DrivingTimeFromVenueMinutes + " min drive)."
+                ],
+                new LinkButton("Visit Website", hotel.Link)
+            ))
         );
     }
     
