@@ -154,29 +154,32 @@
     private WeddingModal GenerateAccommodationDetails(Hotel hotel) {
         return new WeddingModal(
             hotel.Name,
-            [
-                new WebsiteSection(
-                    "",
-                    hotel.Description
-                ),
-                new WebsiteSection(
-                    "Address",
-                    hotel.Address + "."
-                ),
-                new WebsiteSection(
-                    "Distance",
-                    $"{hotel.DrivingTimeFromVenueMinutes} min drive from the venue."
-                ),
-                new WebsiteSection(
-                    "Price",
-                    hotel.PriceString + "."
-                ),
-                new WebsiteSection(
-                    "Map",
-                    "",
-                    new WebsiteGoogleMapsEmbed(hotel.Location)
-                )
-            ],
+            (hotel.Media == null ? new List<WebsiteSection>() : [new WebsiteSection(hotel.Media)]).Concat(
+                new List<WebsiteSection>()
+                {
+                    new WebsiteSection(
+                        "",
+                        hotel.Description
+                    ),
+                    new WebsiteSection(
+                        "Address",
+                        hotel.Address + "."
+                    ),
+                    new WebsiteSection(
+                        "Distance",
+                        $"{hotel.DrivingTimeFromVenueMinutes} min drive from the venue."
+                    ),
+                    new WebsiteSection(
+                        "Price",
+                        hotel.PriceString + "."
+                    ),
+                    new WebsiteSection(
+                        "Map",
+                        "",
+                        new WebsiteGoogleMapsEmbed(hotel.Location)
+                    )
+                }
+            ),
             hotel.Name,
             [
                 new Models.WebsiteElement.LinkButton("Go to Website", hotel.Link)
