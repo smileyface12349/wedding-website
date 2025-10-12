@@ -145,28 +145,43 @@
             AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
             null,
-            [new WeddingModal("Suggested Hotels", GenerateAccommodationDetails(AccommodationDetails))],
+            AccommodationDetails.Hotels.Select(GenerateAccommodationDetails),
             @Icons.Material.Filled.Hotel,
             AccommodationDetails.Image
         );
     }
     
-    private IEnumerable<WebsiteSection> GenerateAccommodationDetails(AccommodationDetails details) {
-        IEnumerable<WebsiteSection> sections = [];
-        foreach (var hotel in details.Hotels) {
-            sections = sections.Append(new WebsiteSection(
-                (hotel.Emphasise ? "[Recommended] " : "") + hotel.Name,
-                [
-                    hotel.Description,
-                    $"Address: {hotel.Address}",
-                    $"Price: {hotel.PriceString}",
-                    $"Distance: {hotel.DrivingTimeFromVenueMinutes} minutes",
-                    $"Link: {hotel.Link}"
-                ],
-                new WebsiteGoogleMapsEmbed(hotel.Location)
-            ));
-        }
-        return sections;
+    private WeddingModal GenerateAccommodationDetails(Hotel hotel) {
+        return new WeddingModal(
+            hotel.Name,
+            [
+                new WebsiteSection(
+                    "",
+                    hotel.Description
+                ),
+                new WebsiteSection(
+                    "Address",
+                    hotel.Address + "."
+                ),
+                new WebsiteSection(
+                    "Distance",
+                    $"{hotel.DrivingTimeFromVenueMinutes} min drive from the venue."
+                ),
+                new WebsiteSection(
+                    "Price",
+                    hotel.PriceString + "."
+                ),
+                new WebsiteSection(
+                    "Map",
+                    "",
+                    new WebsiteGoogleMapsEmbed(hotel.Location)
+                )
+            ],
+            hotel.Name,
+            [
+                new Models.WebsiteElement.LinkButton("Go to Website", hotel.Link)
+            ]
+        );
     }
     
     private string GenerateAccommodationShortString() {
