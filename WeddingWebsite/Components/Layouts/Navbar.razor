@@ -7,7 +7,9 @@
 </div>
 
 <div class="top-row @CssScroll" id="navbar-mobile">
-    <a href="/" class="mobile-left-link">Wedding Website</a>
+    <div class="mobile-left-link">
+        <a href="/">Wedding Website</a>
+    </div>
     <div class="burger-menu-container">
         <div class="burger-menu" onclick="burgerClicked(this)">
             <div class="bar1"></div>
@@ -49,7 +51,7 @@
 
 <style>
     .top-row, .burger-dropdown-content {
-        background-color: @Config.Colours.PrimaryBackground;
+        background-color: @(Config.Navbar.Colour ?? Config.Colours.PrimaryBackground);
     }
 </style>
 

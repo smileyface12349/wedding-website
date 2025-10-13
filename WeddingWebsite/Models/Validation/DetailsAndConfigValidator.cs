@@ -45,6 +45,13 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Accommodation_ShouldHaveAtLeastOneHotel_IfTheSectionIsIncluded(details, config);
         
         Gallery_ShouldHaveFavourites_IfTheSectionIsIncluded(details, config);
+        
+        Navbar_ShouldHaveAtLeastOneItem(config);
+        Navbar_ShouldNotHaveDuplicates(config);
+        Navbar_ShouldNotHaveAccommodation_IfThereIsNoAccommodationSection(config);
+        Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(config);
+        Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(config);
+        Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(details, config);
 
         return validationIssues;
     }
@@ -410,6 +417,82 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (!gallery.Favourites.Any())
         {
             Error("You haven't given any favourite images for the homepage gallery section. This section will look a bit empty without any favourites. Either add some favourites, or remove this section.");
+        }
+    }
+    
+    /// <summary>
+    /// Besides looking stupid, users will get stuck in the "My Account" page without this, hence flagging as error.
+    /// </summary>
+    private void Navbar_ShouldHaveAtLeastOneItem(IWebsiteConfig config) {
+        if (!config.Navbar.Items.Any()) {
+            Error("The navigation bar is empty. Please add some items to help people to navigate your website. At minimum, add a link to the homepage to avoid users getting stuck on other pages.");
+        }
+    }
+    
+    /// <summary>
+    /// Filters by link to catch accidentally adding multiple things with different text that do the same thing.
+    /// </summary>
+    private void Navbar_ShouldNotHaveDuplicates(IWebsiteConfig config) {
+        var duplicateItems = config.Navbar.Items.Select(item => item.Link).GroupBy(item => item).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateItems.Any()) {
+            Warning($"There are duplicate navbar items for {string.Join(", ", duplicateItems)} which all point to the same link. Did you accidentally add the same item twice?");
+        }
+    }
+    
+    /// <summary>
+    /// Prevent internal dead links.
+    /// </summary>
+    private void Navbar_ShouldNotHaveAccommodation_IfThereIsNoAccommodationSection(IWebsiteConfig config) {
+        var accommodationSection = GetSection<Section.Accommodation>(config);
+        if (accommodationSection == null) {
+            foreach (var item in config.Navbar.Items) {
+                if (item.Link.Contains("#accommodation", StringComparison.OrdinalIgnoreCase)) {
+                    Error($"The navbar contains an item '{item.Text}' that links to accommodation, but there is no accommodation section. Either add the accommodation section, or remove this navbar item.");
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Prevent internal dead links.
+    /// </summary>
+    private void Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(IWebsiteConfig config) {
+        var timelineSection = GetSection<Section.Timeline>(config);
+        if (timelineSection == null) {
+            foreach (var item in config.Navbar.Items) {
+                if (item.Link.Contains("#timeline", StringComparison.OrdinalIgnoreCase)) {
+                    Error($"The navbar contains an item '{item.Text}' that links to the timeline, but there is no timeline section. Either add the timeline section, or remove this navbar item.");
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Prevent internal dead links.
+    /// </summary>
+    private void Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(IWebsiteConfig config) {
+        var contactSection = GetSection<Section.Contact>(config);
+        if (contactSection == null) {
+            foreach (var item in config.Navbar.Items) {
+                if (item.Link.Contains("#contact", StringComparison.OrdinalIgnoreCase)) {
+                    Error($"The navbar contains an item '{item.Text}' that links to contact, but there is no contact section. Either add the contact section, or remove this navbar item.");
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// May have some confusion with the gallery section on the homepage.
+    /// </summary>
+    private void Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(IWeddingDetails details, IWebsiteConfig config)
+    {
+        var galleryImages = details.Gallery.Sections;
+        if (!galleryImages.Any()) {
+            foreach (var item in config.Navbar.Items) {
+                if (item.Link.Contains("/gallery", StringComparison.OrdinalIgnoreCase)) {
+                    Error($"The navbar contains an item '{item.Text}' that links to the gallery page, but there is no gallery section. Either add a section to the gallery (doesn't have to contain any images), or remove this link.");
+                }
+            }
         }
     }
 }

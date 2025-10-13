@@ -13,6 +13,7 @@ public class DefaultConfig : IWebsiteConfig
     );
     public IReadOnlyList<Section> Sections { get; protected set; }
     public TopButtonsConfig TopButtons { get; }
+    public NavbarConfig Navbar { get; }
     public bool BrideFirst => false;
     public PageConfig.Account AccountConfig { get; set; }
     public PageConfig.Registry RegistryConfig { get; set; }
@@ -59,6 +60,17 @@ public class DefaultConfig : IWebsiteConfig
                 new LinkButton("Accommodation", "#accommodation")
             ],
             yellow
+        );
+
+        Navbar = new NavbarConfig(
+            [
+                new LinkButton("Home", "/"),
+                new LinkButton("Timeline & Transport", "/#timeline"),
+                new LinkButton("Accommodation", "/#accommodation"),
+                new LinkButton("Registry", "/registry"),
+                new LinkButton("Gallery", "/gallery"),
+                new LinkButton("Contact", "/#contact")
+            ]
         );
 
         AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
