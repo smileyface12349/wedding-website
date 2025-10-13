@@ -5,8 +5,8 @@
 @inject IWebsiteConfig Config
 
 <div class="row">
-    <div class="image-container">
-        <WebsiteElement Element="@leftImage" MaxHeight="300px"/>
+    <div class="image-container animate-on-scroll-parent">
+        <WebsiteElement Element="@leftImage" MaxHeight="300px" ClassName="animate-on-scroll-child animation-fade-in-right"/>
     </div>
     <div class="text">
         @foreach (var paragraph in Backstory.Content)

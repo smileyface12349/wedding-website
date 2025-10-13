@@ -98,3 +98,69 @@ h1:focus {
 :root {
     --mud-palette-lines-inputs: #888 !important;
 }
+
+/* Animations */
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translate(0, calc(4vh + 10%));
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes fade-in-left {
+    from {
+        opacity: 0;
+        transform: translate(calc(3vw + 5%), 0);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes fade-in-right {
+    from {
+        opacity: 0;
+        transform: translate(calc(-3vw - 5%), 0);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .no-mobile-animation {
+        animation: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .fade-in-up {
+        animation-name: fade-in-up;
+        animation-duration: 0.4s;
+    }
+
+    .fade-in-left {
+        animation-name: fade-in-left;
+        animation-duration: 0.4s;
+    }
+
+    .fade-in-right {
+        animation-name: fade-in-right;
+        animation-duration: 0.4s;
+    }
+    
+    .animate-on-scroll.off-screen {
+        opacity: 0;
+    }
+}
+
+.delay-animation {
+    animation-delay: 0.2s;
+}
