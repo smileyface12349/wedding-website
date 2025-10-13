@@ -47,6 +47,13 @@
 .mobile-left-link {
     grid-area: name;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.mobile-left-link > a {
+    margin-bottom: 0 !important;
 }
 
 .burger-menu-container {
