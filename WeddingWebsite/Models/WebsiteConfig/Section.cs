@@ -78,6 +78,11 @@ public abstract record Section
     /// add a new section called "Our Story" using a timeline component instead of modifying this section.
     /// </summary>
     public sealed record HowWeMet(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
+    /// Displays a few of your favourite pictures in a carousel.
+    /// </summary>
+    public sealed record Gallery(SectionTheme? Theme = null) : Section(Theme);
 
     /// <summary>
     /// Displays to admins only (unless a non-admin has been assigned a task). Shows all tasks marked as
