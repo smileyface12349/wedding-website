@@ -1,0 +1,20 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.Gallery
+@using WeddingWebsite.Models.WeddingDetails
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    <SectionHeading>Gallery</SectionHeading>
+    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="height: @CarouselHeight; width: 100%;" AutoCycle="false" ShowArrows="true">
+        <ItemTemplate>
+            <div class="carousel-item">
+                <img src="@context.Image.Url" alt="@context.Image.AltText"/>
+            </div>
+        </ItemTemplate>
+    </MudCarousel>
+</Section>
+
+@code {
+    private string CarouselHeight => WeddingDetails.Gallery.Favourites.Any() ? "600px" : "0px";
+}
