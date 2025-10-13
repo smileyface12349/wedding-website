@@ -1,9 +1,11 @@
-﻿<a href="/">Home</a>
-<a href="/#timeline">Timeline & Transport</a>
-<a href="/#accommodation">Accommodation</a>
-<a href="/registry">Registry</a>
-<a href="/gallery">Gallery</a>
-<a href="/#contact">Contact</a>
+﻿@using WeddingWebsite.Models.WebsiteConfig
+
+@inject IWebsiteConfig Config
+
+@foreach (var item in Config.Navbar.Items)
+{
+    <a href="@item.Link">@item.Text</a>
+}
 @if (!IsMobile)
 {
     <MudSpacer/>
