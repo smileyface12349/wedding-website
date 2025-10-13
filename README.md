@@ -10,14 +10,19 @@
 - Responsive interface for all screen sizes.
 - Total separation of data and functionality makes it easy to customise the website for a different wedding, and keep private information off git.
 
-## Theming
+## Setup Instructions
 
-There are some overall colours, however most of the theming is per-section. You will pass in a `SectionTheme` to each section, containing:
-1. The background colour or image.
-2. The primary colour to use for buttons etc. on this background.
-3. What any boxes should look like. Sections do not use a particular style of box, instead you can choose between rounded and outlined boxes within the theme directly.
+1. Fork this repository.
+2. Run `dotnet restore`.
+3. Set up the database (might be `dotnet ef database update`, but that might not create it, TBD).
+4. Install .NET 9 SDK.
+5. Run the website with `dotnet run Program.cs`. This will host your website locally.
 
-## Sections
+Once you've done these essential steps in this order, you can do some other steps:
+- Customise the website (see below).
+- Use `dotnet publish` and get it working on your hosting provider. You'll want to set up a service to keep it running and use a reverse proxy like Nginx.
+
+## Sections on the Homepage
 
 The content shown on the demo screenshots is made up, and not based on a real wedding. The colours and backgrounds are all very easily customisable.
 
@@ -74,17 +79,24 @@ A tiny section to display the dress code. Doesn't have to be wrapped in a box.
 This section recommends particular people based on the type of enquiry and how urgent it is.
 
 
-## Setup Instructions
+## The Registry
 
-1. Fork this repository.
-2. Run `dotnet restore`.
-3. Set up the database (might be `dotnet ef database update`, but that might not create it, TBD).
-4. Install .NET 9 SDK.
-5. Run the website with `dotnet run Program.cs`. This will host your website locally.
+The registry feature allows you to make a list of items you want, each having as many different purchase methods as you want (including transferring the money to you). Users can then claim these items and choose how they want to purchase them. This gives you no restrictions on which items you can have, although you won't get any benefits of a normal registry like free delivery.
 
-Once you've done these essential steps in this order, you can do some other steps:
-- Customise the website (see below).
-- Use `dotnet publish` and get it working on your hosting provider. You'll want to set up a service to keep it running and use a reverse proxy.
+<img width="1043" height="840" alt="image" src="https://github.com/user-attachments/assets/472816ed-9a53-40f7-8ec0-d2ee9e955c43" />
+
+## To-Do List
+
+While you can use another service, it's easier to stay on the website. The to-do list allows you to co-ordinate tasks and keep track of what needs doing in one place. You can even assign guests to non-admin users, and tasks assigned to you will automatically appear on the homepage.
+
+<img width="768" height="691" alt="image" src="https://github.com/user-attachments/assets/9f5a8a6c-bcc5-455e-bdbd-88445a7c3790" />
+
+## Theming
+
+There are some overall colours, however most of the theming is per-section. You will pass in a `SectionTheme` to each section, containing:
+1. The background colour or image.
+2. The primary colour to use for buttons etc. on this background.
+3. What any boxes should look like. Sections do not use a particular style of box, instead you can choose between rounded and outlined boxes within the theme directly.
 
 ## Configuration
 
@@ -100,9 +112,9 @@ By default, `SampleWeddingDetails.cs` is being used. If you go into `Program.cs`
 
 The config affects how the website displays, but is completely separate from the details of the wedding. This includes which sections there are, colour scheme and other options for each section.
 
-To change the config, make a new class e.g. `CustomWebsiteConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. To change section theming, you will need to override the whole Sections attribute.
+To change the config, make a new class e.g. `CustomWebsiteConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. To change section theming, you will probably want to override the whole Sections attribute (but you can modify only particular sections in your implementation).
 
-If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference.
+If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference. If you're thinking of making a PR, get in touch early on about your design approaches and I can give you early feedback!
 
 ## Interactivity
 
@@ -141,4 +153,4 @@ Code in JavaScript directly.
 
 Feel free to use this for your own wedding website, that's what it's here for! You're also entirely welcome to cut bits out of it and use it in your own project without any attribution (although some attribution would be lovely). You may remove the footer at the bottom of the website if you want. Please note I have no legal obligations to provide support or ensure this product works, although I will do my best.
 
-Please note that commercial use is prohibited, as this project makes use of assets which do not permit commercial use. All assets (except for the sample page) are available for use, modification and distribution in non-commercial scenarios.
+Please note that commercial use is prohibited, as this project makes use of assets which do not permit commercial use. All assets (except for those given as links within sample wedding details) are available for use, modification and distribution in non-commercial scenarios.
