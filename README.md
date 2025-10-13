@@ -48,10 +48,20 @@ All in one coherent view. I find this much easier to use than having separate se
 
 Shows you a little more information about the venues. Totally optional, as the important information is already in the timeline.
 
+### Accommodation
+<img width="1076" height="743" alt="image" src="https://github.com/user-attachments/assets/8ca68e94-d464-4b7b-871f-46831cc5f61c" />
+
+Gives a bit more space for the accommodation options. Totally optional, as this information is in the timeline already (but potentially less obvious).
+
 ### Meet the Wedding Party
 <img width="1054" height="752" alt="image" src="https://github.com/user-attachments/assets/d191851f-6bd7-4a8d-87dc-fc15a7cf90f1" />
 
 For a little more information about the important people. Comes with various display modes, including chat messages if you prefer that.
+
+### Gallery
+<img width="1051" height="749" alt="image" src="https://github.com/user-attachments/assets/76be2494-02b1-4fb5-953e-6284517b5504" />
+
+There's a whole gallery page, but you can also choose a few to display on the homepage.
 
 ### Dress Code
 <img width="1084" height="365" alt="image" src="https://github.com/user-attachments/assets/495fbe87-2494-4965-98f1-8a6f7ce1defa" />
