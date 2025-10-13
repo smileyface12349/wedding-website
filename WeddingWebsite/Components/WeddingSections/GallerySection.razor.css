@@ -14,12 +14,25 @@ img {
     object-fit: contain;
 }
 
-.title-and-description {
-    transform: translate(50px, -150px);
-    align-self: start;
-    color: white;
+.carousel-item {
+    position: relative;
 }
 
 .title {
     font-size: 24px;
+    bottom: 120px;
+}
+
+.description {
+    bottom: 80px;
+}
+
+.carousel-overlay-text {
+    position: absolute;
+    left: 50px;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
 }
