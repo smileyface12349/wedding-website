@@ -8,31 +8,25 @@
 
 <Section>
     <SectionHeading>Gallery</SectionHeading>
-    <div style="position: relative">
-        <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselHeightCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex">
-            <ItemTemplate>
-                <div class="carousel-item">
-                    <img src="@context.Image.Url" alt="@context.Image.AltText"/>
-                    @if (context.Title != "")
-                    {
-                        <p class="title carousel-overlay-text">@context.Title</p>
-                    }
-                    @if (context.Description != "")
-                    {
-                        <p class="description carousel-overlay-text">@context.Description</p>
-                    }
-                </div>
-            </ItemTemplate>
-        </MudCarousel>
-        @if (CurrentItem != null)
-        {
-            @* <div class="carousel-item-overlay" style="@CarouselHeightCss"> *@
-            @*     <p class="title carousel-overlay-text">@CurrentItem.Title</p> *@
-            @*     <p class="description carousel-overlay-text">@CurrentItem.Description</p> *@
-            @* </div> *@
-        }
-    </div>
-    
+    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselHeightCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex">
+        <ItemTemplate>
+            <div class="carousel-item">
+                <img src="@context.Image.Url" alt="@context.Image.AltText"/>
+                @if (context.Title != "")
+                {
+                    <p class="title carousel-overlay-text">@context.Title</p>
+                }
+                @if (context.Description != "")
+                {
+                    <p class="description carousel-overlay-text">@context.Description</p>
+                }
+                @if (context.Credit != "")
+                {
+                    <p class="credit">@context.Credit</p>
+                }
+            </div>
+        </ItemTemplate>
+    </MudCarousel>
 </Section>
 
 @code {

@@ -36,3 +36,9 @@ img {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
+
+.credit {
+    position: absolute;
+    right: 40px;
+    bottom: 18px;
+}

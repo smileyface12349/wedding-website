@@ -7,9 +7,11 @@ namespace WeddingWebsite.Models.Gallery;
 /// </summary>
 /// <param name="Image">The image</param>
 /// <param name="Title">(Optional) Title (you can still specify description without a title)</param>
-/// <param name="Description">(Optional) Description (e.g. author credit)</param>
+/// <param name="Description">(Optional) Description</param>
+/// <param name="Credit">(Optional) E.g. "Credit: John Smith". A bit less invasive than the description.</param>
 public record BigGalleryItem(
     WebsiteImage Image,
     string Title = "", 
-    string Description = ""
+    string Description = "",
+    string Credit = ""
 );
