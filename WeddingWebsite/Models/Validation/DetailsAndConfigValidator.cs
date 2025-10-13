@@ -43,6 +43,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         
         Accommodation_ShouldBeEmphasised_IfThereIsOnlyOneHotel(details);
         Accommodation_ShouldHaveAtLeastOneHotel_IfTheSectionIsIncluded(details, config);
+        
+        Gallery_ShouldHaveFavourites_IfTheSectionIsIncluded(details, config);
 
         return validationIssues;
     }
@@ -393,7 +395,21 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         var hotels = details.AccommodationDetails.Hotels;
         if (!hotels.Any())
         {
-            Warning("You haven't given any hotels in the accommodation section. This section will look a bit empty without any hotels. Either add some hotels, or remove this section.");
+            Error("You haven't given any hotels in the accommodation section. This section will look a bit empty without any hotels. Either add some hotels, or remove this section.");
+        }
+    }
+    
+    /// <summary>
+    /// The section is automatically hidden, but it's still important to flag this to ensure the user is doing what
+    /// they want to do.
+    /// </summary>
+    private void Gallery_ShouldHaveFavourites_IfTheSectionIsIncluded(IWeddingDetails details, IWebsiteConfig config)
+    {
+        if (GetSection<Section.Gallery>(config) == null) return;
+        var gallery = details.Gallery;
+        if (!gallery.Favourites.Any())
+        {
+            Error("You haven't given any favourite images for the homepage gallery section. This section will look a bit empty without any favourites. Either add some favourites, or remove this section.");
         }
     }
 }
