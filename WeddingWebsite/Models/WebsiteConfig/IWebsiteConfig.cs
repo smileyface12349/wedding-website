@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.WebsiteElement;
+﻿using WeddingWebsite.Components.Layouts;
+using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -25,6 +26,12 @@ public interface IWebsiteConfig
     /// The buttons to display on the top of the homepage e.g. "RSPV".
     /// </summary>
     public TopButtonsConfig TopButtons { get; }
+    
+    /// <summary>
+    /// The options to display in the navbar at the top of every page. These are all aligned to the left - the ones
+    /// aligned to the right relate to account management and are not configurable.
+    /// </summary>
+    public NavbarConfig Navbar { get; }
     
     /// <summary>
     /// If false, shows "GROOM and BRIDE". If true, shows "BRIDE and GROOM".
