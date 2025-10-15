@@ -39,5 +39,11 @@ img {
 .credit {
     position: absolute;
     right: 40px;
-    bottom: 18px;
+    bottom: 15px;
+}
+
+@media only screen and (max-width: 500px) {
+    .credit {
+        right: 5px;
+    }
 }
