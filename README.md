@@ -153,4 +153,11 @@ Code in JavaScript directly.
 
 Feel free to use this for your own wedding website, that's what it's here for! You're also entirely welcome to cut bits out of it and use it in your own project without any attribution (although some attribution would be lovely). You may remove the footer at the bottom of the website if you want. Please note I have no legal obligations to provide support or ensure this product works, although I will do my best.
 
-Please note that commercial use is prohibited, as this project makes use of assets which do not permit commercial use. All assets (except for those given as links within sample wedding details) are available for use, modification and distribution in non-commercial scenarios.
+The following assets are used in the project and do **not** permit commercial use. If you want to use this code in a commercial setting, you **must** remove these assets, or purchase a license yourself:
+- [Amsterdam font](https://www.dafont.com/amsterdam.font)
+
+The following assets are AI generated. If this is a problem, please do not use these assets:
+- Bricks background `/bg/bricks.jpg`
+- Blue flowers background `/bg/blue-flowers.png`
+
+All other assets will be safe to use in commercial and non-commercial scenarios. Please be careful when pulling changes from the repo as more assets with restricted licenses may be added.
