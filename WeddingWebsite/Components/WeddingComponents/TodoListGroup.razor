@@ -84,8 +84,9 @@
     
     private void SaveEdits()
     {
-        if (Items.GetGroup() == null) return;
-        TodoService.RenameGroup(Items.GetGroup()?.Id, Name);
+        var groupId = Items.GetGroup()?.Id;
+        if (groupId == null) return;
+        TodoService.RenameGroup(groupId, Name);
         IsEditing = false;
         ParentStateHasChanged?.Invoke();
     }
