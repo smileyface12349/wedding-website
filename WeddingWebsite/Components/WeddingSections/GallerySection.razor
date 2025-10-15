@@ -31,7 +31,7 @@
 
 @code {
     private string CarouselHeight => WeddingDetails.Gallery.Favourites.Any() ? "600px" : "0px";
-    private string CarouselHeightCss => $"height: {CarouselHeight};";
+    private string CarouselHeightCss => $"height: {CarouselHeight}; max-height: 100vw;";
     
     private int CurrentIndex { get; set; } = 0;
     private BigGalleryItem? CurrentItem => WeddingDetails.Gallery.Favourites.ElementAtOrDefault(CurrentIndex);
