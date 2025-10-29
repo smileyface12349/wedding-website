@@ -1,7 +1,17 @@
 ﻿@using WeddingWebsite.Models.WebsiteElement
 
-@if (Element is WebsiteImage) {
-    <img class="website-element @ClassName" style="max-height: @MaxHeight; object-fit: @ObjectFit;@MaybeFillHeight" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
+@if (Element is WebsiteImage img) {
+    @if (img.CustomSizes.Any())
+    {
+        <picture class="website-element @ClassName">
+            @(string.Join("", img.CustomSizes.Select(size => $"<source srcset=\"{size.Src}\" media=\"(width >= {size.MinWidth}px)\">")))
+            <img class="@ClassName" src=@img.Url alt="@img.AltText" />
+        </picture>
+    }
+    else
+    {
+        <img class="website-element @ClassName" style="max-height: @MaxHeight; object-fit: @ObjectFit;@MaybeFillHeight" src=@(((WebsiteImage)Element).Url) alt=@(((WebsiteImage)Element).AltText) />
+    }
 } else if (Element is WebsiteGoogleMapsEmbed) {
     <GoogleMapsEmbed Location=@(((WebsiteGoogleMapsEmbed)Element).Location) Height="@MaxHeight" ClassName="@ClassName" />
 } else if (Element is Models.WebsiteElement.LinkButton) {
