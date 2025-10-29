@@ -224,10 +224,10 @@ public class Store : IStore
             """
                 SELECT Id
                 FROM AspNetUsers
-                WHERE Email = :email
+                WHERE NormalizedEmail = :email
             """;
         
-        command.Parameters.AddWithValue(":email", email);
+        command.Parameters.AddWithValue(":email", email.Normalize().ToUpperInvariant());
         
         using var reader = command.ExecuteReader();
         if (reader.Read())
