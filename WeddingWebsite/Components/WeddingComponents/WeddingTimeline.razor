@@ -138,6 +138,11 @@
     private TimelineItem GenerateAccommodationTimelineItem()
     {
         if (AccommodationDetails == null) throw new ArgumentNullException();
+        var modals = AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails);
+        if (AccommodationDetails.Hotels.Any(hotel => !hotel.Emphasise))
+        {
+            modals = modals.Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)));
+        }
         return new TimelineItem(
             TimelineItemType.Accommodation,
             Events.LastOrDefault()?.End.ToString() ?? "End",
@@ -145,7 +150,7 @@
             AccommodationDetails.Description ?? "If you would like to book accommodation, here are some recommendations",
             GenerateAccommodationShortString(),
             null,
-            AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails).Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise))),
+            modals,
             @Icons.Material.Filled.Hotel,
             AccommodationDetails.Image
         );
