@@ -16,7 +16,6 @@
 @inject SignInManager<Account> SignInManager
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
-@inject IdentityRedirectManager RedirectManager
 @inject IAdminService AdminService
 
 @attribute [Authorize ( Roles = "Admin") ]
@@ -120,7 +119,7 @@
             AdminService.AddGuestToAccount(user.Id, firstName, lastName);
         }
         
-        RedirectManager.RedirectToCurrentPage();
+        NavigationManager.Refresh(true);
     }
 
     private Account CreateUser()
