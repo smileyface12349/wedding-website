@@ -29,6 +29,12 @@
     </MudCarousel>
 </Section>
 
+<style>
+    .mud-carousel > .mud-carousel-swipe {
+        touch-action: auto !important;
+    }
+</style>
+
 @code {
     private string CarouselHeight => WeddingDetails.Gallery.Favourites.Any() ? "600px" : "0px";
     private string CarouselCss => $"height: {CarouselHeight}; max-height: 100vw;";
