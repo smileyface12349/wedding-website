@@ -41,13 +41,7 @@
             <Authorized>
                 @if (IsEditing)
                 {
-                    <MudSelect @bind-Value="OwnerEmail" Dense="true">
-                        <MudSelectItem Value="string.Empty">No owner</MudSelectItem>
-                        @foreach (var email in PossibleOwnerEmails)
-                        {
-                            <MudSelectItem Value="@email">@email</MudSelectItem>
-                        }
-                    </MudSelect>
+                    <MudAutocomplete @bind-Value="OwnerEmail" Dense="true" Clearable="true" SearchFunc="OwnerSearchFunction"/>
                 }
                 else
                 {
@@ -127,6 +121,13 @@
         
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
         Snackbar.Configuration.SnackbarVariant = Variant.Text;
+    }
+    
+    private async Task<IEnumerable<string>> OwnerSearchFunction(string value, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return PossibleOwnerEmails;
+        return PossibleOwnerEmails.Where(email => email.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
     // Automatically enable edit mode for new items
