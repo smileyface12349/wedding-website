@@ -4,6 +4,7 @@
     border-radius: 5px;
     padding: 2px 5px;
     font-size: 16px;
+    margin-right: 4px;
     color: var(--mud-palette-text-primary);
     display: inline-block;
 }
