@@ -134,7 +134,7 @@
         <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Actor.Email)">Done By</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour:@context.Date.Minute</MudTd>
+        <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour.ToString("D2"):@context.Date.Minute.ToString("D2")</MudTd>
         <MudTd>@context.Description</MudTd>
         <MudTd>@context.Actor.Email</MudTd>
     </RowTemplate>
