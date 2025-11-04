@@ -8,7 +8,7 @@
 
 <Section>
     <SectionHeading>Gallery</SectionHeading>
-    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselHeightCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex">
+    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselHeightCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex" EnableSwipeGesture="false">
         <ItemTemplate>
             <div class="carousel-item">
                 <img src="@context.Image.Url" alt="@context.Image.AltText"/>
