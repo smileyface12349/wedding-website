@@ -8,7 +8,7 @@
 
 <Section>
     <SectionHeading>Gallery</SectionHeading>
-    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselHeightCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex" EnableSwipeGesture="false">
+    <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex" EnableSwipeGesture="false">
         <ItemTemplate>
             <div class="carousel-item">
                 <img src="@context.Image.Url" alt="@context.Image.AltText"/>
@@ -31,7 +31,7 @@
 
 @code {
     private string CarouselHeight => WeddingDetails.Gallery.Favourites.Any() ? "600px" : "0px";
-    private string CarouselHeightCss => $"height: {CarouselHeight}; max-height: 100vw;";
+    private string CarouselCss => $"height: {CarouselHeight}; max-height: 100vw;";
     
     private int CurrentIndex { get; set; } = 0;
     private BigGalleryItem? CurrentItem => WeddingDetails.Gallery.Favourites.ElementAtOrDefault(CurrentIndex);
