@@ -138,10 +138,14 @@
     private TimelineItem GenerateAccommodationTimelineItem()
     {
         if (AccommodationDetails == null) throw new ArgumentNullException();
-        var modals = AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails);
+        var modals = AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise).Select(GenerateAccommodationDetails).ToList();
+        if (AccommodationDetails.Hotels.Count == 1)
+        {
+            modals[0] = modals[0] with { Label = "Recommended Hotel" };
+        }
         if (AccommodationDetails.Hotels.Any(hotel => !hotel.Emphasise))
         {
-            modals = modals.Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise)));
+            modals = modals.Append(GenerateAccommodationDetailsOther(AccommodationDetails.Hotels.Where(hotel => !hotel.Emphasise), AccommodationDetails.Hotels.Any(hotel => hotel.Emphasise))).ToList();
         }
         return new TimelineItem(
             TimelineItemType.Accommodation,
