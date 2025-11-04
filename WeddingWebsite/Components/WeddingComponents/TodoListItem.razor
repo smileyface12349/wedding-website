@@ -123,11 +123,11 @@
         Snackbar.Configuration.SnackbarVariant = Variant.Text;
     }
     
-    private async Task<IEnumerable<string>> OwnerSearchFunction(string value, CancellationToken token)
+    private Task<IEnumerable<string>> OwnerSearchFunction(string value, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return PossibleOwnerEmails;
-        return PossibleOwnerEmails.Where(email => email.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+            return Task.FromResult(PossibleOwnerEmails as IEnumerable<string>);
+        return Task.FromResult(PossibleOwnerEmails.Where(email => email.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
     }
 
     // Automatically enable edit mode for new items
