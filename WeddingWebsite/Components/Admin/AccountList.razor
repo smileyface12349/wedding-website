@@ -47,6 +47,11 @@
 
     private string GetRsvpSummary(AccountWithGuests account)
     {
+        if (!account.HasLoggedIn)
+        {
+            return "Not logged in";
+        }
+        
         if (!account.Guests.Any())
             return "N/A";
 

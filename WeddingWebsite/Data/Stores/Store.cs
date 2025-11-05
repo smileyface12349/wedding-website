@@ -69,16 +69,21 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText = 
             """
-                SELECT account.Id, account.Email, guest.FirstName, guest.LastName, guest.RsvpStatus
+                SELECT account.Id, account.Email, guest.FirstName, guest.LastName, guest.RsvpStatus, MAX(log.Timestamp) timestamp
                 FROM AspNetUsers account
                 LEFT JOIN Guests guest ON account.Id = guest.UserId
+                LEFT JOIN AccountLog log ON account.Id = log.AffectedUserId AND log.EventType = :loginEventType
+                GROUP BY account.Email, guest.GuestId
                 ORDER BY account.Email
             """;
+        
+        command.Parameters.AddWithValue(":loginEventType", AccountLogTypeEnumConverter.AccountLogTypeToDatabaseInteger(AccountLogType.LogIn));
         
         using var reader = command.ExecuteReader();
         var accounts = new List<AccountWithGuests>();
         string? currentAccountId = null;
         string? currentAccountEmail = null;
+        bool currentAccountHasLoggedIn = false;
         var currentGuests = new List<Guest>();
         
         while (reader.Read())
@@ -88,12 +93,13 @@ public class Store : IStore
             var guestFirstName = reader.IsDBNull(2) ? null : reader.GetString(2);
             var guestLastName = reader.IsDBNull(3) ? null : reader.GetString(3);
             var guestRsvpStatus = reader.IsDBNull(4) ? RsvpStatus.NotResponded : RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(4));
-
+            var accountLastLoginTimestamp = reader.IsDBNull(5) ? (DateTime?)null : new DateTime(reader.GetInt64(5), DateTimeKind.Utc);
+            
             if (currentAccountId != accountId)
             {
                 if (currentAccountId != null)
                 {
-                    accounts.Add(new AccountWithGuests(currentGuests)
+                    accounts.Add(new AccountWithGuests(currentGuests, currentAccountHasLoggedIn)
                     {
                         Id = currentAccountId,
                         Email = currentAccountEmail!
@@ -102,6 +108,7 @@ public class Store : IStore
                 
                 currentAccountId = accountId;
                 currentAccountEmail = accountEmail;
+                currentAccountHasLoggedIn = accountLastLoginTimestamp != null;
                 currentGuests = new List<Guest>();
             }
 
@@ -113,13 +120,13 @@ public class Store : IStore
         
         if (currentAccountId != null)
         {
-            accounts.Add(new AccountWithGuests(currentGuests)
+            accounts.Add(new AccountWithGuests(currentGuests, currentAccountHasLoggedIn)
             {
                 Id = currentAccountId,
                 Email = currentAccountEmail!
             });
         }
-
+        
         return accounts;
     }
 
