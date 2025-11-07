@@ -4,6 +4,7 @@ using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
+using WeddingWebsite.Models.Accommodation;
 
 namespace WeddingWebsite.Models.WeddingDetails;
 
@@ -265,8 +266,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
     public AccommodationDetails AccommodationDetails { get; } = new (
         "If you would like to stay until the end, we suggest staying at a nearby hotel.",
         new List<Hotel> {
-            new ("Eden Hotel",  "A beautiful hotel in the city centre, where the bride and groom will be staying", new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, 95, new Discount(15, "Quote 'Garden of Eden'"), "https://youtube.com/watch?v=dQw4w9WgXcQ", true, new WebsiteImage("https://cf.bstatic.com/xdata/images/hotel/max1024x768/40819418.jpg?k=5b61764f9e2fc3823d22a5260cf2e432f15014af29170e99f432f25a1776765a&o=&hp=1", "A luxury hotel by a beach")),
-            new("Paradise Inn", "A cheaper option if you're on a budget", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, 75, Discount.None(), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
+            new ("Eden Hotel",  "A beautiful hotel in the city centre, where the bride and groom will be staying", new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, new Price(95, new Discount(15, "Quote 'Garden of Eden'")), "https://youtube.com/watch?v=dQw4w9WgXcQ", true, new WebsiteImage("https://cf.bstatic.com/xdata/images/hotel/max1024x768/40819418.jpg?k=5b61764f9e2fc3823d22a5260cf2e432f15014af29170e99f432f25a1776765a&o=&hp=1", "A luxury hotel by a beach")),
+            new("Paradise Inn", "A cheaper option if you're on a budget", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, new Price(75), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
         },
         new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );

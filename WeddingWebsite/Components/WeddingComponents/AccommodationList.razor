@@ -1,4 +1,4 @@
-﻿@using WeddingWebsite.Models
+﻿@using WeddingWebsite.Models.Accommodation
 @using WeddingWebsite.Components.Elements
 @using LinkButton = WeddingWebsite.Components.Elements.LinkButton
 
@@ -18,7 +18,7 @@
         <tr>
             <td>@hotel.Name</td>
             <td>@hotel.DrivingTimeFromVenueMinutes min</td>
-            <td>£@hotel.DiscountedPrice</td>
+            <td>@hotel.ApproximatePrice</td>
             <td>
                 <LinkButton Url="@hotel.Link" Variant="ButtonVariant.Outlined">Visit Website</LinkButton>
             </td>

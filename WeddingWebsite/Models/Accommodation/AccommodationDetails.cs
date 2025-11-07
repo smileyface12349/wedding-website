@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models;
+namespace WeddingWebsite.Models.Accommodation;
 
 public record AccommodationDetails(
     string? Description,
