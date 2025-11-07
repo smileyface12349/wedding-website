@@ -8,22 +8,8 @@ public record Hotel (
     Location Location,
     string Address,
     int DrivingTimeFromVenueMinutes,
-    int ApproximatePrice,
-    Discount Discount,
+    Price ApproximatePrice,
     string Link,
     bool Emphasise = false,
     IWebsiteElement? Media = null
-)
-{
-    public string PriceString {
-        get {
-            if (Discount.PercentDiscount == 0) {
-                return $"£{ApproximatePrice}";
-            } else {
-                return $"Full Price: £{ApproximatePrice}, With Discount: £{Discount.CalculateDiscountedPrice(ApproximatePrice)} ({Discount.ClaimInstructions})";
-            }
-        }
-    }
-    
-    public int DiscountedPrice => (int) Discount.CalculateDiscountedPrice(ApproximatePrice);
-}
+);

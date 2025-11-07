@@ -181,7 +181,7 @@
                     ),
                     new WebsiteSection(
                         "Approximate Price",
-                        hotel.PriceString + "."
+                        hotel.ApproximatePrice + "."
                     ),
                     new WebsiteSection(
                         "Map",
@@ -202,7 +202,7 @@
         return new WeddingModal(
             someEmphasised ? "Other Options" : "Suggested Hotels",
             hotels.Select(hotel => new WebsiteSection(
-                hotel.Name + " (£" + hotel.Discount.CalculateDiscountedPrice(hotel.ApproximatePrice) + ")",
+                hotel.Name + " (£" + hotel.ApproximatePrice.DiscountedPrice + ")",
                 [
                     "",
                     hotel.Description,
