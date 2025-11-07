@@ -4,6 +4,7 @@ using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
+using WeddingWebsite.Models.Accommodation;
 
 namespace WeddingWebsite.Models.WeddingDetails;
 

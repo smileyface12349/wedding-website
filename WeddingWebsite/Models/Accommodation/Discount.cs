@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.Accommodation;
 
 public record Discount(
     int PercentDiscount,
