@@ -35,7 +35,7 @@
                 <hr/>
                 <div class="form-input">
                     <label for="email" class="form-label">Email</label>
-                    <InputText @bind-Value="Input.Email" class="login-input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
+                    <InputText type="email" @bind-Value="Input.Email" class="login-input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
                 </div>
                 @* <ValidationMessage For="() => Input.Email" class="validation-message text-danger"/> *@
                 <div class="form-input">
