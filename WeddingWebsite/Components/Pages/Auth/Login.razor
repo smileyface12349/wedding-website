@@ -30,6 +30,13 @@
         <Box>
             <h1>Log in</h1>
             <p>@errorMessage</p>
+            @if (Config.DemoMode is DemoMode.Enabled c)
+            {
+                @foreach (var message in c.LoginMessage)
+                {
+                    <p>@message</p>
+                }
+            }
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator/>
                 <hr/>

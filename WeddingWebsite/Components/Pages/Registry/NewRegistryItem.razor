@@ -3,12 +3,14 @@
 @using System.ComponentModel.DataAnnotations
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
 
 @layout SimpleLayout
 
 @inject IRegistryService RegistryService
 @inject NavigationManager NavigationManager
+@inject IWebsiteConfig Config
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -94,6 +96,11 @@
     private void OnSubmit()
     {
         if (Input.Cost == null) return;
+        if (Config.DemoMode.IsEnabled)
+        {
+            ErrorText = "Creating registry items is not permitted in demo mode.";
+            return;
+        }
         var primaryPurchaseMethod = new RegistryItemPurchaseMethod(
             Guid.NewGuid().ToString(),
             Input.Store,
