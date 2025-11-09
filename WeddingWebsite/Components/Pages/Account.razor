@@ -159,7 +159,7 @@
     
     private void ChangePassword()
     {
-        if (Config.DemoMode)
+        if (Config.DemoMode.IsEnabled)
         {
             ErrorText = "Changing password is not permitted in demo mode.";
             return;

@@ -96,7 +96,7 @@
     private void OnSubmit()
     {
         if (Input.Cost == null) return;
-        if (Config.DemoMode)
+        if (Config.DemoMode.IsEnabled)
         {
             ErrorText = "Creating registry items is not permitted in demo mode.";
             return;
