@@ -159,6 +159,12 @@
     
     private void ChangePassword()
     {
+        if (Config.DemoMode)
+        {
+            ErrorText = "Changing password is not permitted in demo mode.";
+            return;
+        }
+        
         var account = UserManager.FindByEmailAsync(Email).Result;
         if (account == null)
         {
