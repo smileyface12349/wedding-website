@@ -54,4 +54,11 @@ public interface IWebsiteConfig
     /// Enable/disable optional features (e.g. RSVP, registry). You may configure a time to auto-activate.
     /// </summary>
     public OptionalFeatures OptionalFeatures { get; }
+    
+    /// <summary>
+    /// Demo mode makes everything read-only. This is designed to showcase the functionality, without letting users
+    /// tamper with data. This means that changing passwords and RSVPing is disabled. It is also safe to make an admin
+    /// account - this may leak information, but won't let users change anything.
+    /// </summary>
+    public bool DemoMode { get; }
 }
