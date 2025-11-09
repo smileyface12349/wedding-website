@@ -1,9 +1,8 @@
 ﻿namespace WeddingWebsite.Models.WebsiteConfig;
 
-public record DemoMode(
-    bool IsEnabled = true,
-    string Message = ""
-)
+public abstract record DemoMode(bool IsEnabled)
 {
-    public static readonly DemoMode Disabled = new DemoMode(false);
+    public record Enabled(IEnumerable<string> LoginMessage) : DemoMode(true);
+
+    public record Disabled() : DemoMode(false);
 }
