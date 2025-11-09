@@ -18,7 +18,7 @@ public class DefaultConfig : IWebsiteConfig
     public PageConfig.Account AccountConfig { get; set; }
     public PageConfig.Registry RegistryConfig { get; set; }
     public PageConfig.RegistryItem RegistryItemConfig { get; set; }
-    public DemoMode DemoMode => DemoMode.Disabled;
+    public DemoMode DemoMode => new DemoMode.Disabled();
     
     // Default config will enable all optional features.
     public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
