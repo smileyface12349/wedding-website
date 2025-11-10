@@ -28,6 +28,11 @@ The content shown on the demo screenshots is made up, and not based on a real we
 
 Sections can be added to the website in any order, using as many or as few sections as you like.
 
+You can view this on the [demo site](https://wedding.joshhumphriss.com) or by expanding the section below.
+
+<details>
+<summary>View Images and Descriptions</summary>
+
 ### Top Section
 <img width="1913" height="908" alt="image" src="https://github.com/user-attachments/assets/4a0faefa-71f2-40fc-8998-c099ee92c5ad" />
 
@@ -78,6 +83,7 @@ A tiny section to display the dress code. Doesn't have to be wrapped in a box.
 
 This section recommends particular people based on the type of enquiry and how urgent it is.
 
+</details>
 
 ## The Registry
 
