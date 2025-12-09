@@ -30,12 +30,12 @@ public sealed class WeddingDetails : IWeddingDetails
         {
             new (
                 "Ceremony", 
-                TimeOnly.Parse("12:00"), 
-                TimeOnly.Parse("13:00"), 
+                TimeOnly.Parse("14:00"), 
+                TimeOnly.Parse("15:30"), 
                 "The church service in which we get married.",
                 CeremonyVenue, 
                 null,
-                new WebsiteImage("https://www.wedgewoodweddings.com/hubfs/3.0%20Feature%20Images%201000%20x%20500%20px/Blog/Lets%20Talk%20About%20Beach%20Weddings.png", "A wedding ceremony on a beach")
+                new WebsiteImage("/img/1.jpg", "A wedding ceremony on a beach")
             ),
             new (
                 "Drinks Reception", 
