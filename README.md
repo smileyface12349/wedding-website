@@ -13,10 +13,10 @@
 ## Setup Instructions
 
 1. Fork this repository.
-2. Run `dotnet restore`.
-3. Set up the database (might be `dotnet ef database update`, but that might not create it, TBD).
-4. Install .NET 9 SDK.
-5. Run the website with `dotnet run Program.cs`. This will host your website locally.
+2. Install .NET 9 SDK.
+3. Run `dotnet restore`.
+4. Install dotnet ef, then run `dotnet ef database update` to set up the database.
+5. Run the website with `dotnet run Program.cs` (in `/WeddingWebsite`). This will host your website locally.
 
 Once you've done these essential steps in this order, you can do some other steps:
 - Customise the website (see below).
@@ -27,6 +27,11 @@ Once you've done these essential steps in this order, you can do some other step
 The content shown on the demo screenshots is made up, and not based on a real wedding. The colours and backgrounds are all very easily customisable.
 
 Sections can be added to the website in any order, using as many or as few sections as you like.
+
+You can view this on the [demo site](https://wedding.joshhumphriss.com) or by expanding the section below.
+
+<details>
+<summary>View Images and Descriptions</summary>
 
 ### Top Section
 <img width="1913" height="908" alt="image" src="https://github.com/user-attachments/assets/4a0faefa-71f2-40fc-8998-c099ee92c5ad" />
@@ -78,6 +83,7 @@ A tiny section to display the dress code. Doesn't have to be wrapped in a box.
 
 This section recommends particular people based on the type of enquiry and how urgent it is.
 
+</details>
 
 ## The Registry
 
