@@ -38,7 +38,7 @@
     <div class="flex-container mb">
         <label for="email">Email</label>
         <span class="flex-grow"></span>
-        <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
+        <input @bind-value="Email" id="email" class="mr @EmailDiffers" placeholder="No email given" />
         @if (!IsUserOwner())
         {
             <button class="button" @onclick="ApplyEmailChange">Apply</button>
@@ -182,7 +182,7 @@
     private string NewGuestName { get; set; } = "";
 
     private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
-    private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
+    private string EmailDiffers => (Account is null || (Account.Email ?? "") == Email) ? "" : "input-error";
     private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
     
     private int DeletePressedCount { get; set; } = 0;
@@ -225,8 +225,7 @@
         }
 
         var oldEmail = Account.Email;
-        Account.Email = Email;
-        Account.UserName = Email;
+        Account.Email = Email == "" ? null : Email;
         var result = UserManager.UpdateAsync(Account).Result;
         if (!result.Succeeded)
         {
