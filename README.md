@@ -13,10 +13,10 @@
 ## Setup Instructions
 
 1. Fork this repository.
-2. Run `dotnet restore`.
-3. Set up the database (might be `dotnet ef database update`, but that might not create it, TBD).
-4. Install .NET 9 SDK.
-5. Run the website with `dotnet run Program.cs`. This will host your website locally.
+2. Install .NET 9 SDK.
+3. Run `dotnet restore`.
+4. Install dotnet ef, then run `dotnet ef database update` to set up the database.
+5. Run the website with `dotnet run Program.cs` (in `/WeddingWebsite`). This will host your website locally.
 
 Once you've done these essential steps in this order, you can do some other steps:
 - Customise the website (see below).
