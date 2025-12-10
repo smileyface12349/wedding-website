@@ -15,6 +15,7 @@ public static class AccountLogTypeEnumConverter
             AccountLogType.DeleteGuest => 4,
             AccountLogType.RenameGuest => 5,
             AccountLogType.AddGuest => 6,
+            AccountLogType.ChangeUserName => 7,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -35,6 +36,7 @@ public static class AccountLogTypeEnumConverter
             4 => AccountLogType.DeleteGuest,
             5 => AccountLogType.RenameGuest,
             6 => AccountLogType.AddGuest,
+            7 => AccountLogType.ChangeUserName,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }

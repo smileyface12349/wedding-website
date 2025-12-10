@@ -266,7 +266,7 @@
         else
         {
             if (LoggedInUser is null) return;
-            // TODO: Log the username change
+            AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their username from {oldUserName} to {UserName}", UserId);
             Logs = AdminService.GetAccountLogs(UserId);
         }
     }
