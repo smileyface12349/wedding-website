@@ -226,7 +226,7 @@ public class Store : IStore
         command.ExecuteNonQuery();
     }
     
-    public string? GetUserIdByEmail(string email)
+    public string? GetUserIdByUserName(string username)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
         connection.Open();
@@ -236,10 +236,10 @@ public class Store : IStore
             """
                 SELECT Id
                 FROM AspNetUsers
-                WHERE NormalizedEmail = :email
+                WHERE NormalizedUserName = :username
             """;
         
-        command.Parameters.AddWithValue(":email", email.Normalize().ToUpperInvariant());
+        command.Parameters.AddWithValue(":username", username.Normalize().ToUpperInvariant());
         
         using var reader = command.ExecuteReader();
         if (reader.Read())

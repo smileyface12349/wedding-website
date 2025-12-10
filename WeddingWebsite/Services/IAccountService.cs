@@ -17,5 +17,5 @@ public interface IAccountService
     /// <param name="affectedUserId">(Optional) Which user is affected by this action. Defaults to the logged in user.</param>
     public void Log(ClaimsPrincipal user, AccountLogType logType, string description, string? affectedUserId = null);
     
-    void Log(string actorEmail, AccountLogType logType, string description, string? affectedUserId = null);
+    void Log(string actorUserName, AccountLogType logType, string description, string? affectedUserId = null);
 }

@@ -42,9 +42,9 @@ public interface IStore
     public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description);
     
     /// <summary>
-    /// Get user id from their email address
+    /// Get user id from their username
     /// </summary>
-    public string? GetUserIdByEmail(string email);
+    public string? GetUserIdByUserName(string username);
 
     /// <summary>
     /// Get all logs affecting a particular account, regardless of who performed the action.
