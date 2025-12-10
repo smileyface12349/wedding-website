@@ -89,7 +89,7 @@ public class Store : IStore
         while (reader.Read())
         {
             var accountId = reader.GetString(0);
-            var accountEmail = reader.GetString(1);
+            var accountEmail = reader.IsDBNull(1) ? null : reader.GetString(1);
             var guestFirstName = reader.IsDBNull(2) ? null : reader.GetString(2);
             var guestLastName = reader.IsDBNull(3) ? null : reader.GetString(3);
             var guestRsvpStatus = reader.IsDBNull(4) ? RsvpStatus.NotResponded : RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(4));
@@ -102,7 +102,7 @@ public class Store : IStore
                     accounts.Add(new AccountWithGuests(currentGuests, currentAccountHasLoggedIn)
                     {
                         Id = currentAccountId,
-                        Email = currentAccountEmail!
+                        Email = currentAccountEmail,
                     });
                 }
                 
