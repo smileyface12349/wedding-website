@@ -51,6 +51,11 @@ public interface IWebsiteConfig
     public PageConfig.RegistryItem RegistryItemConfig { get; }
     
     /// <summary>
+    /// Config for the login page, including some of the text.
+    /// </summary>
+    public PageConfig.Login LoginConfig { get; }
+    
+    /// <summary>
     /// Enable/disable optional features (e.g. RSVP, registry). You may configure a time to auto-activate.
     /// </summary>
     public OptionalFeatures OptionalFeatures { get; }
@@ -60,4 +65,5 @@ public interface IWebsiteConfig
     /// tamper with data. This means that changing passwords and RSVPing is disabled.
     /// </summary>
     public DemoMode DemoMode { get; }
+    
 }

@@ -42,7 +42,7 @@
                 <hr/>
                 <div class="form-input">
                     <label for="username" class="form-label">Username</label>
-                    <InputText @bind-Value="Input.Username" class="login-input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="username"/>
+                    <InputText @bind-Value="Input.Username" class="login-input" autocomplete="username" aria-required="true" placeholder="@Config.LoginConfig.UserNamePlaceholder" id="username"/>
                 </div>
                 @* <ValidationMessage For="() => Input.Email" class="validation-message text-danger"/> *@
                 <div class="form-input">
@@ -82,7 +82,7 @@
 @code {
     private string? errorMessage;
 
-    private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    private SectionTheme ModalTheme => Config.LoginConfig.Theme ?? new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
     public required HttpContext HttpContext { get; set; }
