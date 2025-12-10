@@ -261,8 +261,8 @@ public class Store : IStore
         command.CommandText =
             """
                 SELECT log.Timestamp, 
-                       affectedUser.Id, affectedUser.Email, 
-                       actor.Id, actor.Email, 
+                       affectedUser.Id, affectedUser.UserName, 
+                       actor.Id, actor.UserName, 
                        log.EventType, log.Description
                 FROM AccountLog log
                 JOIN AspNetUsers affectedUser ON log.AffectedUserId = affectedUser.Id
@@ -279,9 +279,9 @@ public class Store : IStore
         {
             var timestampTicks = reader.GetInt64(0);
             var affectedUserId = reader.GetString(1);
-            var affectedUserEmail = reader.GetString(2);
+            var affectedUserName = reader.GetString(2);
             var actorId = reader.GetString(3);
-            var actorEmail = reader.GetString(4);
+            var actorUserName = reader.GetString(4);
             var eventTypeInt = reader.GetInt16(5);
             
             var logType = AccountLogTypeEnumConverter.DatabaseIntegerToAccountLogType(eventTypeInt);
@@ -290,8 +290,8 @@ public class Store : IStore
             
             var log = new AccountLog(
                 new DateTime(timestampTicks, DateTimeKind.Utc),
-                new Account { Id = affectedUserId, Email = affectedUserEmail },
-                new Account { Id = actorId, Email = actorEmail },
+                new Account { Id = affectedUserId, UserName = affectedUserName },
+                new Account { Id = actorId, UserName = actorUserName },
                 logType,
                 description
             );
