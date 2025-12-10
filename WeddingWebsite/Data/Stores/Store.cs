@@ -69,12 +69,12 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText = 
             """
-                SELECT account.Id, account.Email, guest.FirstName, guest.LastName, guest.RsvpStatus, MAX(log.Timestamp) timestamp
+                SELECT account.Id, account.UserName, account.Email, guest.FirstName, guest.LastName, guest.RsvpStatus, MAX(log.Timestamp) timestamp
                 FROM AspNetUsers account
                 LEFT JOIN Guests guest ON account.Id = guest.UserId
                 LEFT JOIN AccountLog log ON account.Id = log.AffectedUserId AND log.EventType = :loginEventType
-                GROUP BY account.Email, guest.GuestId
-                ORDER BY account.Email
+                GROUP BY account.UserName, guest.GuestId
+                ORDER BY account.UserName
             """;
         
         command.Parameters.AddWithValue(":loginEventType", AccountLogTypeEnumConverter.AccountLogTypeToDatabaseInteger(AccountLogType.LogIn));
@@ -82,6 +82,7 @@ public class Store : IStore
         using var reader = command.ExecuteReader();
         var accounts = new List<AccountWithGuests>();
         string? currentAccountId = null;
+        string? currentAccountUserName = null;
         string? currentAccountEmail = null;
         bool currentAccountHasLoggedIn = false;
         var currentGuests = new List<Guest>();
@@ -89,11 +90,12 @@ public class Store : IStore
         while (reader.Read())
         {
             var accountId = reader.GetString(0);
-            var accountEmail = reader.GetString(1);
-            var guestFirstName = reader.IsDBNull(2) ? null : reader.GetString(2);
-            var guestLastName = reader.IsDBNull(3) ? null : reader.GetString(3);
-            var guestRsvpStatus = reader.IsDBNull(4) ? RsvpStatus.NotResponded : RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(4));
-            var accountLastLoginTimestamp = reader.IsDBNull(5) ? (DateTime?)null : new DateTime(reader.GetInt64(5), DateTimeKind.Utc);
+            var accountUserName = reader.GetString(1);
+            var accountEmail = reader.IsDBNull(2) ? null : reader.GetString(2);
+            var guestFirstName = reader.IsDBNull(3) ? null : reader.GetString(3);
+            var guestLastName = reader.IsDBNull(4) ? null : reader.GetString(4);
+            var guestRsvpStatus = reader.IsDBNull(5) ? RsvpStatus.NotResponded : RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(5));
+            var accountLastLoginTimestamp = reader.IsDBNull(6) ? (DateTime?)null : new DateTime(reader.GetInt64(6), DateTimeKind.Utc);
             
             if (currentAccountId != accountId)
             {
@@ -102,12 +104,14 @@ public class Store : IStore
                     accounts.Add(new AccountWithGuests(currentGuests, currentAccountHasLoggedIn)
                     {
                         Id = currentAccountId,
-                        Email = currentAccountEmail!
+                        Email = currentAccountEmail,
+                        UserName = currentAccountUserName
                     });
                 }
                 
                 currentAccountId = accountId;
                 currentAccountEmail = accountEmail;
+                currentAccountUserName = accountUserName;
                 currentAccountHasLoggedIn = accountLastLoginTimestamp != null;
                 currentGuests = new List<Guest>();
             }
@@ -123,7 +127,8 @@ public class Store : IStore
             accounts.Add(new AccountWithGuests(currentGuests, currentAccountHasLoggedIn)
             {
                 Id = currentAccountId,
-                Email = currentAccountEmail!
+                Email = currentAccountEmail,
+                UserName = currentAccountUserName
             });
         }
         
@@ -221,7 +226,7 @@ public class Store : IStore
         command.ExecuteNonQuery();
     }
     
-    public string? GetUserIdByEmail(string email)
+    public string? GetUserIdByUserName(string username)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
         connection.Open();
@@ -231,10 +236,10 @@ public class Store : IStore
             """
                 SELECT Id
                 FROM AspNetUsers
-                WHERE NormalizedEmail = :email
+                WHERE NormalizedUserName = :username
             """;
         
-        command.Parameters.AddWithValue(":email", email.Normalize().ToUpperInvariant());
+        command.Parameters.AddWithValue(":username", username.Normalize().ToUpperInvariant());
         
         using var reader = command.ExecuteReader();
         if (reader.Read())
@@ -256,8 +261,8 @@ public class Store : IStore
         command.CommandText =
             """
                 SELECT log.Timestamp, 
-                       affectedUser.Id, affectedUser.Email, 
-                       actor.Id, actor.Email, 
+                       affectedUser.Id, affectedUser.UserName, 
+                       actor.Id, actor.UserName, 
                        log.EventType, log.Description
                 FROM AccountLog log
                 JOIN AspNetUsers affectedUser ON log.AffectedUserId = affectedUser.Id
@@ -274,9 +279,9 @@ public class Store : IStore
         {
             var timestampTicks = reader.GetInt64(0);
             var affectedUserId = reader.GetString(1);
-            var affectedUserEmail = reader.GetString(2);
+            var affectedUserName = reader.GetString(2);
             var actorId = reader.GetString(3);
-            var actorEmail = reader.GetString(4);
+            var actorUserName = reader.GetString(4);
             var eventTypeInt = reader.GetInt16(5);
             
             var logType = AccountLogTypeEnumConverter.DatabaseIntegerToAccountLogType(eventTypeInt);
@@ -285,8 +290,8 @@ public class Store : IStore
             
             var log = new AccountLog(
                 new DateTime(timestampTicks, DateTimeKind.Utc),
-                new Account { Id = affectedUserId, Email = affectedUserEmail },
-                new Account { Id = actorId, Email = actorEmail },
+                new Account { Id = affectedUserId, UserName = affectedUserName },
+                new Account { Id = actorId, UserName = actorUserName },
                 logType,
                 description
             );

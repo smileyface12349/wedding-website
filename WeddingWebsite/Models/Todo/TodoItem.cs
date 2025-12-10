@@ -2,7 +2,7 @@
 
 public record TodoItem(
     string Id,
-    string? OwnerEmail,
+    string? OwnerUserName,
     string? Text,
     TodoGroup? Group,
     DateTime? WaitingUntil = null,

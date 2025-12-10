@@ -89,7 +89,7 @@ public class TodoStore : ITodoStore
         cmd.CommandText = @"
             SELECT 
                 ti.Id, 
-                u.Email AS OwnerEmail, 
+                u.UserName AS OwnerUserName, 
                 ti.Text, 
                 tg.Id AS GroupId, 
                 tg.Name AS GroupName, 
@@ -105,7 +105,7 @@ public class TodoStore : ITodoStore
         if (reader.Read())
         {
             var itemId = reader.GetString(0);
-            var ownerEmail = reader.IsDBNull(1) ? null : reader.GetString(1);
+            var ownerUserName = reader.IsDBNull(1) ? null : reader.GetString(1);
             var text = reader.IsDBNull(2) ? null : reader.GetString(2);
             var groupId = reader.IsDBNull(3) ? null : reader.GetString(3);
             var groupName = reader.IsDBNull(4) ? null : reader.GetString(4);
@@ -114,7 +114,7 @@ public class TodoStore : ITodoStore
 
             TodoGroup? group = groupId != null && groupName != null ? new TodoGroup(groupId, groupName) : null;
 
-            return new TodoItem(itemId, ownerEmail, text, group, waitingUntil, completedAt);
+            return new TodoItem(itemId, ownerUserName, text, group, waitingUntil, completedAt);
         }
 
         return null;
@@ -131,7 +131,7 @@ public class TodoStore : ITodoStore
         cmd.CommandText = @"
             SELECT 
                 ti.Id, 
-                u.Email AS OwnerEmail, 
+                u.UserName AS OwnerUserName, 
                 ti.Text, 
                 tg.Id AS GroupId, 
                 tg.Name AS GroupName, 
@@ -153,7 +153,7 @@ public class TodoStore : ITodoStore
         while (reader.Read())
         {
             var itemId = reader.GetString(0);
-            var ownerEmail = reader.IsDBNull(1) ? null : reader.GetString(1);
+            var ownerUserName = reader.IsDBNull(1) ? null : reader.GetString(1);
             var text = reader.IsDBNull(2) ? null : reader.GetString(2);
             var groupId = reader.IsDBNull(3) ? null : reader.GetString(3);
             var groupName = reader.IsDBNull(4) ? null : reader.GetString(4);
@@ -162,7 +162,7 @@ public class TodoStore : ITodoStore
 
             TodoGroup? group = groupId != null && groupName != null ? new TodoGroup(groupId, groupName) : null;
 
-            items.Add(new TodoItem(itemId, ownerEmail, text, group, waitingUntil, completedAt));
+            items.Add(new TodoItem(itemId, ownerUserName, text, group, waitingUntil, completedAt));
         }
 
         return items;

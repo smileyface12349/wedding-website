@@ -74,11 +74,11 @@
     {
         var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
         var user = authState.User;
-        var email = user.Identity?.Name ?? "";
+        var userName = user.Identity?.Name ?? "";
 
-        var todoItems = TodoService.GetTodoItemsRequiringActionForGivenEmailOrNoEmail(email).ToList();
-        TodoItemsNoOwner = todoItems.Where(item => string.IsNullOrWhiteSpace(item.OwnerEmail));
-        TodoItemsAssignedToUser = todoItems.Where(item => item.OwnerEmail == email);
+        var todoItems = TodoService.GetTodoItemsRequiringActionForGivenUserNameOrNoUserName(userName).ToList();
+        TodoItemsNoOwner = todoItems.Where(item => string.IsNullOrWhiteSpace(item.OwnerUserName));
+        TodoItemsAssignedToUser = todoItems.Where(item => item.OwnerUserName == userName);
         
         StateHasChanged();
     }

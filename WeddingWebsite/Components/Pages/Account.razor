@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.IdentityModel.Tokens
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Dialogs
@@ -37,10 +38,18 @@
         <div class="account-content">
             <div class="account-details">
                 <div class="account-detail">
-                    <label for="email">E-mail Address</label>
+                    <label for="username">Username</label>
                     <MudSpacer/>
-                    <input aria-disabled="true" value="@Email" id="email" disabled/>
+                    <input aria-disabled="true" value="@UserName" id="username" disabled/>
                 </div>
+                @if (!Email.IsNullOrEmpty() && UserName != Email)
+                {
+                    <div class="account-detail">
+                        <label for="email">E-mail Address</label>
+                        <MudSpacer/>
+                        <input aria-disabled="true" value="@Email" id="email" disabled/>
+                    </div>
+                }
                 @if (ShowChangePassword)
                 {
                     @* <Box CustomCss="margin-bottom: 20px;margin-top: 20px"> *@
@@ -145,6 +154,7 @@
     }
 
     private string ErrorText { get; set; } = "";
+    private string UserName { get; set; } = "";
     private string Email { get; set; } = "";
     private bool ShowChangePassword { get; set; } = false;
     
@@ -159,7 +169,9 @@
         
         Guests = AccountService.GetOwnGuests(user);
         
-        Email = user.Identity?.Name ?? "";
+        UserName = user.Identity?.Name ?? "";
+        var account = UserManager.FindByNameAsync(UserName).Result;
+        Email = account?.Email ?? "";
     }
 
     private void EnableChangePassword()
@@ -175,7 +187,7 @@
             return;
         }
         
-        var account = UserManager.FindByEmailAsync(Email).Result;
+        var account = UserManager.FindByNameAsync(UserName).Result;
         if (account == null)
         {
             ErrorText = "Could not find your account.";
@@ -206,7 +218,7 @@
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomStart;
             Snackbar.Add("Password changed successfully.", Severity.Success, c => c.SnackbarVariant = Variant.Text);
             
-            AccountService.Log(Email, AccountLogType.ChangePassword, "User changed their password");
+            AccountService.Log(UserName, AccountLogType.ChangePassword, "User changed their password");
         }
     }
     

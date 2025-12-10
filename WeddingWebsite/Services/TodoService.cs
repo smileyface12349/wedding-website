@@ -90,21 +90,22 @@ public class TodoService(ITodoStore todoStore, IStore store) : ITodoService
         todoStore.DeleteTodoItem(itemId);
     }
     
-    public void SetItemOwnerByEmail(string itemId, string? ownerEmail)
+    public void SetItemOwnerByUserName(string itemId, string? ownerUserName)
     {
         string? ownerId = null;
-        if (ownerEmail != null)
+        if (ownerUserName != null)
         {
-            ownerId = store.GetUserIdByEmail(ownerEmail);
+            ownerId = store.GetUserIdByUserName(ownerUserName);
+            // TODO: Do TODO stuff properly, do not commit this
         }
         todoStore.SetTodoItemOwner(itemId, ownerId);
     }
     
-    public IEnumerable<TodoItem> GetTodoItemsRequiringActionForGivenEmailOrNoEmail(string email)
+    public IEnumerable<TodoItem> GetTodoItemsRequiringActionForGivenUserNameOrNoUserName(string userName)
     {
         var allItems = todoStore.GetAllTodoItems();
         return allItems
-            .Where(item => item.OwnerEmail == null || item.OwnerEmail == email)
+            .Where(item => item.OwnerUserName == null || item.OwnerUserName == userName)
             .Where(item => item.Status == TodoItemStatus.ActionRequired);
     }
 }
