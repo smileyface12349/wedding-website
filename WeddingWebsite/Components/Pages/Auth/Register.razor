@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
+@using Duende.IdentityServer.Extensions
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
@@ -39,7 +40,12 @@
                     <hr />
                     <ValidationSummary class="text-danger" role="alert" />
                     <div class="form-input-and-label">
-                        <label for="email">Email</label>
+                        <label for="email">Username (blank = use email)</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="john+tracy" id="username" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="email">Email (optional)</label>
                         <span class="flex-grow"></span>
                         <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="john@smith.com" id="email" />
                     </div>
@@ -99,10 +105,24 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+        
+        if (!Input.Email.IsNullOrEmpty())
+        {
+            var emailStore = GetEmailStore();
+            await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            if (Input.Username.IsNullOrEmpty())
+            {
+                Input.Username = Input.Email;
+            }
+        }
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        if (Input.Username.IsNullOrEmpty())
+        {
+            identityErrors = [new IdentityError { Description = "You must provide either a username or an email address." }];
+            return;
+        }
+        
+        await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -146,10 +166,12 @@
 
     private sealed class InputModel
     {
-        [Required]
+        [Display(Name = "Username")]
+        public string Username { get; set; } = "";
+        
         [EmailAddress]
         [Display(Name = "Email")]
-        public string Email { get; set; } = "";
+        public string? Email { get; set; } = null;
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
