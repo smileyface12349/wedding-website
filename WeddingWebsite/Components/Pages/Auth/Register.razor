@@ -33,7 +33,7 @@
         
         <div class="row">
             <div class="col-md-4">
-                <p>@Message</p>
+                <p class="text-danger">@Message</p>
                 <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
                     <DataAnnotationsValidator />
                     <h2>Account Details</h2>
@@ -128,6 +128,7 @@
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
+            return;
         }
         
         foreach (var guestName in new[] { Input.Guest1, Input.Guest2, Input.Guest3, Input.Guest4, Input.Guest5 })
