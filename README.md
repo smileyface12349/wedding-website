@@ -23,6 +23,14 @@ Once you've done these essential steps in this order, you can do some other step
 - Customise the website (see below).
 - Use `dotnet publish` and get it working on your hosting provider. You'll want to set up a service to keep it running and use a reverse proxy like Nginx.
 
+## Need Some Help?
+
+**Tech Support**: If you run into trouble getting it set up or customising it, please raise a GitHub issue and I'll get back to you. If you don't have much coding experience or need more help, I'm happy to set up a call and guide you through the process. I'll be happy to offer up to 3 hours for free which should be enough to do your first-time setup and get everything up and running.
+
+**Hosting**: I am happy to offer hosting on my own infrastructure for a fee. However, if you are able to get it set up on your own infrastructure then I strongly recommend opting for that option instead as if I am hosting it you will have to wait for me to review and deploy any changes to your source code.
+
+**Further Development**: If there's something you want added, pitch it to me in an issue and I'll see what I think. Depending on how much I think it will benefit others I may make it for free or I may charge an hourly rate.
+
 ## Sections on the Homepage
 
 The content shown on the demo screenshots is made up, and not based on a real wedding. The colours and backgrounds are all very easily customisable.
