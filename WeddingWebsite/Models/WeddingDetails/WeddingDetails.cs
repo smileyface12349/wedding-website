@@ -24,7 +24,7 @@ namespace WeddingWebsite.Models.WeddingDetails;
 
 public sealed class WeddingDetails : IWeddingDetails
 {
-    public SampleWeddingDetails() {
+    public WeddingDetails() {
         // Cannot access venues in static context
         Events = new List<Event>
         {
