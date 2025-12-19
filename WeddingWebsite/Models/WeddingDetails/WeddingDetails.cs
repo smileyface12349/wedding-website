@@ -38,45 +38,45 @@ public sealed class WeddingDetails : IWeddingDetails
                 new WebsiteImage("/img/1.jpg", "A wedding ceremony on a beach")
             ),
             new (
-                "Drinkskl", 
-                TimeOnly.Parse("13:30"),
-                TimeOnly.Parse("15:30"), 
-                "Join us for drinks and canapés in the garden.", 
+                "Tapas Time", 
+                TimeOnly.Parse("15:30"),
+                TimeOnly.Parse("17:30"), 
+                "Join us for tapas and drinks in the garden.", 
                 ReceptionVenue, 
                 "The Courtyard",
                 new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
                 ),
             new (
                 "Wedding Breakfast", 
-                TimeOnly.Parse("15:30"), 
+                TimeOnly.Parse("18:00"), 
                 TimeOnly.Parse("19:00"),
                 "A sit-down meal with speeches and toasts.", 
                 ReceptionVenue, 
-                "The Barn",
+                "The Hall",
                 new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), 
                 null, 
                 [
                     new WeddingModal("View Menu", [
                         new ("Starter", "Avocado and prawns"),
-                        new ("Main Course", "Roast chicken, potatoes and vegetables"),
-                        new ("Dessert", "Trio of chocolate brownie, lemon posset and creme brulee")
+                        new ("Main Course", "Burgers, skewers and potatoes"),
+                        new ("Dessert", "Cake!")
                     ])
                 ]
             ),
             new (
-                "Evening Reception", 
-                TimeOnly.Parse("19:00"),
-                TimeOnly.Parse("23:00"),
+                "Ceilydd", 
+                TimeOnly.Parse("20:00"),
+                TimeOnly.Parse("22:00"),
                 "An evening of dancing and celebration.", 
                 ReceptionVenue, 
-                "The Barn",
+                "The Chapel",
                 new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
             )
         };
         
         // Using same images as with people
         Backstory = new Backstory(
-            "It all began when SpongeBob SquarePants took a wrong turn at Jellyfish Fields and ended up in a spooky kelp forest — only to bump into Scooby-Doo chasing what he thought was a sea ghost (it was just a jellyfish wearing sunglasses). After a shared snack of Scooby Snacks and Krabby Patties, the two instantly bonded over their love of mysteries and mayonnaise. From that day on, they were inseparable — solving underwater whodunits and laughing through haunted shipwrecks. Their wedding (attended by Shaggy and Patrick as co-best men) is a celebration of friendship, snacks, and just a little bit of underwater mystery.",
+            "It all began at uni",
             GetPersonByRole(Role.Bride).Media,
             GetPersonByRole(Role.Groom).Media
         );
@@ -84,53 +84,53 @@ public sealed class WeddingDetails : IWeddingDetails
 
     public IEnumerable<NotablePerson> NotablePeople { get; } = [
         new (
-            new Name("Spongebob", "Squarepants"),
+            new Name("Jacob", "Warner"),
             Role.Groom,
             new ContactDetails(
-                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("spongebob@squarepants.com")]),
-                new ContactOptions(null, [new PhoneNumber("+441234567890")])
+                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("jacobewarmer@gmail.com")]),
+                new ContactOptions(null, [new PhoneNumber("+44 7306 889587")])
             ),
             [
-                new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
-                new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
-                new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
+                new WebsiteSection(null, "Jacob finished studying at Warwick, now serving the church for a year before discovering what the next stage in life is..."),
+                new WebsiteSection("Hobbies", "Music, Stories and Walking."),
+                new WebsiteSection("Fun Fact", "I like cheese.")
             ],
             new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null),
             "124 Conch Street, Bikini Bottom, Pacific Ocean"
         ),
         new (
-            new Name("Scooby", "Doo"),
+            new Name("Amelia", "Kinghorn"),
             Role.Bride,
             new ContactDetails(
-                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("scooby@doo.net")]),
-                new ContactOptions(null, [new PhoneNumber("+51395833759")])
+                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("akinghorn1084@gmail.com")]),
+                new ContactOptions(null, [new PhoneNumber("+44 7562 390759")])
             ),
             [
-                new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
-                new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
-                new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
+                new WebsiteSection(null, "Amelia is Amelia. She loves being herself. She's finished Maths at Warwick and is now working at Dennis Eagle as a Data Analyst mixed with something else."),
+                new WebsiteSection("Hobbies", "Walking, puzzling and napping."),
+                new WebsiteSection("Fun Fact", "IDK yet")
             ],
             new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null),
             "32 Mystery Lane, Coolsville, USA"
         ),
+        //new (
+        //    new Name("John", "Smith"),
+        //    Role.BestMan,
+        //    new ContactDetails(
+        //        new ContactOptions([ContactReason.Attendance, ContactReason.SpecificPerson], [new EmailAddress("john.smith@gmail.com"), new EmailAddress("john.alt@gmail.com")])
+        //    ),
+        //    [
+        //        new WebsiteSection(null, "John is the groom's childhood best friend. They met in primary school and have been inseparable ever since. John is known for his quick wit and sense of humor."),
+        //        new WebsiteSection("Hobbies", "Playing football, video games, and hiking."),
+        //        new WebsiteSection("Fun Fact", "John once won a local stand-up comedy competition.")
+        //    ],
+        //    new WebsiteImage("https://static.vecteezy.com/system/resources/previews/041/642/170/non_2x/ai-generated-portrait-of-handsome-smiling-young-man-with-folded-arms-isolated-free-png.png", null)
+        //),
         new (
-            new Name("John", "Smith"),
-            Role.BestMan,
-            new ContactDetails(
-                new ContactOptions([ContactReason.Attendance, ContactReason.SpecificPerson], [new EmailAddress("john.smith@gmail.com"), new EmailAddress("john.alt@gmail.com")])
-            ),
-            [
-                new WebsiteSection(null, "John is the groom's childhood best friend. They met in primary school and have been inseparable ever since. John is known for his quick wit and sense of humor."),
-                new WebsiteSection("Hobbies", "Playing football, video games, and hiking."),
-                new WebsiteSection("Fun Fact", "John once won a local stand-up comedy competition.")
-            ],
-            new WebsiteImage("https://static.vecteezy.com/system/resources/previews/041/642/170/non_2x/ai-generated-portrait-of-handsome-smiling-young-man-with-folded-arms-isolated-free-png.png", null)
-        ),
-        new (
-            new Name("Sally", "Williams"),
+            new Name("Alice", "Humphriss"),
             Role.MaidOfHonour,
             new ContactDetails(
-                new ContactOptions([ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("jane.doe@gmail.com")])
+                new ContactOptions([ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("IDK")])
             ),
             [
                 new WebsiteSection(null, "Sally is the bride's sister and best friend. They share a love for fashion and shopping. Sally is always there to lend a helping hand and offer support."),
@@ -140,7 +140,7 @@ public sealed class WeddingDetails : IWeddingDetails
             new WebsiteImage("https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-front-view-of-a-smiling-business-woman-png-image_12509704.png", null)
         ),
         new (
-            new Name("Mike", "Davis"),
+            new Name("Matthew", "Taylor"),
             Role.Groomsman,
             new ContactDetails(
                 new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("mike.davis@gmail.com")])
@@ -153,7 +153,7 @@ public sealed class WeddingDetails : IWeddingDetails
             new WebsiteImage("https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-in-shirt-smiles-and-gives-thumbs-up-to-show-approval-png-image_13146336.png", null)
         ),
         new (
-            new Name("Emily", "Johnson"),
+            new Name("Alicia", "Warner"),
             Role.Bridesmaid,
             new ContactDetails(
                 new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("emily.johnson@gmail.com")])
@@ -166,7 +166,7 @@ public sealed class WeddingDetails : IWeddingDetails
             new WebsiteImage("https://static.vecteezy.com/system/resources/thumbnails/050/817/792/small_2x/happy-smiling-business-woman-in-suit-with-hand-pointing-at-empty-space-standing-isolate-on-transparent-background-png.png", null)
         ),
         new (
-            new Name("Jane", "Butters"),
+            new Name("Isabelle", "Kinghorn"),
             Role.Bridesmaid,
             new ContactDetails(
                 new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jane.butters@gmail.com")])
@@ -179,7 +179,7 @@ public sealed class WeddingDetails : IWeddingDetails
             new WebsiteImage("https://static.vecteezy.com/system/resources/previews/009/257/276/non_2x/portrait-of-beautiful-young-asian-woman-file-png.png", null)
         ),
         new (
-            new Name("Bob", "Marley"),
+            new Name("Nathan", "Solomon"),
             Role.Groomsman,
             new ContactDetails(
                 new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("bob.marley@gmail.com")])
@@ -191,25 +191,25 @@ public sealed class WeddingDetails : IWeddingDetails
             ],
             new WebsiteImage("https://americanmigrainefoundation.org/wp-content/uploads/2022/12/GettyImages-1345864068.png", null)
         ),
-        new (
-            new Name("Jim", "Brown"),
-            Role.Photographer,
-            new ContactDetails(
-                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jim.brown@gmail.com")])
-            )
-        ),
-        new (
-            new Name("Peter", "Johnson"),
-            Role.VenueCoordinator,
-            new ContactDetails(
-                new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@gmail.com")])
-            )
-        ),
+        //new (
+        //    new Name("Jim", "Brown"),
+        //    Role.Photographer,
+        //    new ContactDetails(
+        //        new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jim.brown@gmail.com")])
+        //    )
+        //),
+        //new (
+        //    new Name("Peter", "Johnson"),
+        //    Role.VenueCoordinator,
+        //    new ContactDetails(
+        //        new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@gmail.com")])
+        //    )
+        //),
     ];
     
     private NotablePerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
 
-    public DateOnly WeddingDate { get; } = DateOnly.Parse("2028-8-14");
+    public DateOnly WeddingDate { get; } = DateOnly.Parse("2026-8-9");
         
     public Venue ReceptionVenue { get; } = new(
         "Garden of Eden", 
@@ -218,7 +218,7 @@ public sealed class WeddingDetails : IWeddingDetails
         new TravelDirections(
             [
                 new WebsiteSection(null, "We suggest arriving by foot."),
-                new WebsiteSection("Parking", "There is no parking available, except for blue badge holders.")
+                new WebsiteSection("Parking", "There is plenty of parking available, and for blue badge holders as well.")
             ],
             null,
             20
@@ -231,9 +231,9 @@ public sealed class WeddingDetails : IWeddingDetails
     );
     
     public Venue CeremonyVenue { get; } = new(
-        "St Mary's Church", 
+        "The Oval Chapel", 
         new Location(12345, 67890), 
-        "456 Holy Road, Eden, ED3 4GH",
+        "8? Highfield Oval, Harpenden AL5 4BX",
         new TravelDirections(
             [
                 new WebsiteSection(null, "We suggest arriving by car. If you do not have a car, please let us know when you RSVP and we can arrange a lift for you."),
@@ -243,7 +243,7 @@ public sealed class WeddingDetails : IWeddingDetails
             null,
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
         ),
-        "A very large church, also for all the animals, I guess.",
+        "A chapel.",
         new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton"),
         [
             new WeddingModal("Fire Safety Information", "Don't burn the place down, please.")
