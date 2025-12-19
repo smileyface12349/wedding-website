@@ -38,7 +38,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 new WebsiteImage("/img/1.jpg", "A wedding ceremony on a beach")
             ),
             new (
-                "Drinks Reception", 
+                "Drinkskl", 
                 TimeOnly.Parse("13:30"),
                 TimeOnly.Parse("15:30"), 
                 "Join us for drinks and canapés in the garden.", 
