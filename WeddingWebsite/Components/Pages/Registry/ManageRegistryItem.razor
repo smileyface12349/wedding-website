@@ -104,6 +104,16 @@
     <div>
         <button type="submit" class="button block-button">Save Changes</button>
     </div>
+    @if (deleteConfirm)
+    {
+        <p class="text-danger">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <button type="button" class="button block-button red-button" @onclick="DeleteItem">Delete Item (cannot be undone)</button>
+    }
+    else
+    {
+        <button type="button" class="button block-button red-button" @onclick="() => deleteConfirm = true">Delete Item</button>
+    }
+    
 </EditForm>
 
 
@@ -112,6 +122,8 @@
     public required string ItemId { get; set; }
     
     private EditRegistryItemModel Model { get; set; } = new();
+    
+    private bool deleteConfirm = false;
 
     protected override void OnInitialized()
     {
@@ -177,6 +189,12 @@
 
         RegistryService.UpdateItem(item);
         NavigationManager.NavigateTo($"/Registry/{ItemId}");
+    }
+    
+    private void DeleteItem()
+    {
+        RegistryService.DeleteItem(ItemId);
+        NavigationManager.NavigateTo("/Registry");
     }
     
     private sealed class EditRegistryItemModel
