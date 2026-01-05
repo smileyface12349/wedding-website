@@ -53,7 +53,7 @@
                 }
                 <h2 class="grid-heading">Other Registry Items</h2>
             }
-            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0).Where(item => !item.Hide))
+            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0))
             {
                 <div class="gift">
                     <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
@@ -70,24 +70,6 @@
                     <p class="grid-heading">There are no items matching the selected filters.</p>
                 }
             }
-            <AuthorizeView Roles="Admin">
-                <Authorized>
-                    <h2 class="grid-heading">Hidden Items (Admin Only)</h2>
-                    @if (RegistryItems.Any(item => item.Hide))
-                    {
-                        @foreach (var item in RegistryItems.Where(item => item.Hide))
-                        {
-                            <div class="gift">
-                                <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="grid-heading">There are no hidden items. If you mark an item as hidden, it won't appear in search results but it will be available to claim if people obtain the link to it.</p>
-                    }
-                </Authorized>
-            </AuthorizeView>
         </div>
         <AuthorizeView Roles="Admin">
             <Authorized>
@@ -104,7 +86,6 @@
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
     private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
         .Where(ItemMatchesFilter)
-        .Where(item => !item.Hide)
         .OrderBy(item =>
         {
             switch (CurrentSortOrder)
@@ -135,7 +116,8 @@
         "Claimed: Bring on day",
         "Claimed: Deliver to us",
         "Claimed: Pending",
-        "Claimed: Completed"
+        "Claimed: Completed",
+        "Hidden"
     ];
 
     private enum SortOrder
@@ -195,6 +177,15 @@
             return false;
         }
         if (EnabledFilters.Contains("Claimed: Completed") && item.Claims.All(c => !c.IsCompleted))
+        {
+            return false;
+        }
+        // Hidden items are only shown when the "Hidden" filter is enabled (which then shows only hidden items)
+        if (item.Hide && !EnabledFilters.Contains("Hidden"))
+        {
+            return false;
+        }
+        if (!item.Hide && EnabledFilters.Contains("Hidden"))
         {
             return false;
         }
