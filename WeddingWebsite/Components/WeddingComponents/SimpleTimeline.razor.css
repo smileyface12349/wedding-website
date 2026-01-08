@@ -1,0 +1,21 @@
+﻿.simple-timeline {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.simple-timeline-element {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.start-time {
+    font-weight: bold;
+}

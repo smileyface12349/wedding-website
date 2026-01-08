@@ -1,0 +1,23 @@
+﻿@using WeddingWebsite.Models
+@using WeddingWebsite.Components.Containers
+
+<div class="simple-timeline">
+    @foreach (var ev in Events)
+    {
+        <Box>
+            <div class="simple-timeline-element">
+                <p class="start-time">@ev.Start.ToShortTimeString()</p>
+                <p>@ev.Name</p>
+            </div>
+        
+        </Box>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required IEnumerable<Event> Events { get; set; }
+    
+    [Parameter]
+    public bool ShowTravelDirections { get; set; }
+}
