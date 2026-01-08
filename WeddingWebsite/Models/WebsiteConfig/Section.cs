@@ -25,7 +25,7 @@ public abstract record Section
     /// Unlike most sections, the heading is disabled by default. This is because it looks nice with the timeline
     /// running right to the edge of the section, and the purpose of the section is clear already.
     /// </summary>
-    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false) : Section(Theme);
+    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false, bool ShowTravelDirections = true) : Section(Theme);
     
     /// <summary>
     /// Introductions from the wedding party

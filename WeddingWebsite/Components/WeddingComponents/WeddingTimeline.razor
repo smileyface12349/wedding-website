@@ -67,6 +67,9 @@
     
     [Parameter]
     public AccommodationDetails? AccommodationDetails { get; set; }
+    
+    [Parameter]
+    public bool ShowTravelDirections { get; set; }
 
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
@@ -86,7 +89,7 @@
         foreach (var ev in Events)
         {
             // Generate a timeline item for the venue change
-            if (previousVenueName != ev.Venue.Name && ev.Venue.Directions != null) {
+            if (ShowTravelDirections && previousVenueName != ev.Venue.Name && ev.Venue.Directions != null) {
                 timelineItems = timelineItems.Append(GenerateTransportTimelineItem(ev, previousEndTime, previousVenueName));
             }
             
