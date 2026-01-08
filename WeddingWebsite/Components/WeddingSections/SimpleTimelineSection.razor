@@ -1,0 +1,15 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.WeddingComponents
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    <SectionHeading>Order of the Day</SectionHeading>
+    <SimpleTimeline Events="WeddingDetails.Events" ShowTravelDirections="ShowTravelDirections"/>
+</Section>
+
+@code {
+    [Parameter]
+    public bool ShowTravelDirections { get; set; } = false;
+}
