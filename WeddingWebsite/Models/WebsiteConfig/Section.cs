@@ -28,6 +28,13 @@ public abstract record Section
     public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false, bool ShowTravelDirections = true) : Section(Theme);
     
     /// <summary>
+    /// A very basic version of the timeline that just displays the start time of each event. Does not show travel
+    /// directions or accommodation - include these standalone sections if you need this information.
+    /// </summary>
+    /// <param name="Theme"></param>
+    public sealed record SimpleTimeline(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
     /// Introductions from the wedding party
     /// </summary>
     public sealed record MeetWeddingParty(

@@ -59,6 +59,7 @@
     <CascadingValue Value="sect.Theme">
         @if (sect is Section.Countdown) { <CountdownSection/> }
         @if (sect is Section.Timeline timeline) { <TimelineSection ShowHeading="timeline.ShowHeading" ShowTravelDirections="timeline.ShowTravelDirections"/> }
+        @if (sect is Section.SimpleTimeline) { <SimpleTimelineSection/> }
         @if (sect is Section.MeetWeddingParty party) { <MeetWeddingPartySection DisplayMode="party.DisplayMode" RolesLeft="party.RolesLeft" RolesRight="party.RolesRight"/> }
         @if (sect is Section.Contact contact) { <ContactSection ReasonsToShow="contact.ReasonsToShow" ShowUrgencyOption="contact.ShowUrgencyOption"/> }
         @if (sect is Section.DressCode dress) { <DressCodeSection WrapInBox="dress.WrapInBox" ShowContact="dress.ShowContact"/> }
