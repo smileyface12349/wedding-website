@@ -47,7 +47,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
                 ),
             new (
-                "Wedding Breakfast", 
+                "Barbeque!", 
                 TimeOnly.Parse("18:00"), 
                 TimeOnly.Parse("19:00"),
                 "A sit-down meal with speeches and toasts.", 
@@ -205,10 +205,10 @@ public sealed class WeddingDetails : IWeddingDetails
         //        new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@gmail.com")])
         //    )
         //),
-    ];
+    ]; 
     
     private NotablePerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
-
+    
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2026-8-9");
         
     public Venue ReceptionVenue { get; } = new(
@@ -281,7 +281,7 @@ public sealed class WeddingDetails : IWeddingDetails
     public Backstory Backstory { get; }
 
     public WebsiteImage MainImage { get; } 
-        = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
+        = new WebsiteImage("/img/2.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
         
     public GalleryItems Gallery { get; } = new (
         [
