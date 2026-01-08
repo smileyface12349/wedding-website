@@ -1,0 +1,20 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.WeddingDetails
+@using WeddingWebsite.Components.WeddingComponents
+
+@inject IWeddingDetails WeddingDetails
+
+<Section>
+    <SectionHeading>Directions</SectionHeading>
+    @foreach (var venue in WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList())
+    {
+        @if (venue.Directions != null)
+        {
+            <VenueDirections Venue="venue" />
+        }
+    }
+</Section>
+
+@code {
+    
+}
