@@ -58,7 +58,7 @@ public class DefaultConfig : IWebsiteConfig
         
         TopButtons = new TopButtonsConfig(
             [
-                new LinkButton("Accommodation", "#accommodation")
+                new LinkButton("Transport", "#accommodation")
             ],
             yellow
         );
@@ -66,11 +66,11 @@ public class DefaultConfig : IWebsiteConfig
         Navbar = new NavbarConfig(
             [
                 new LinkButton("Home", "/"),
-                new LinkButton("Timeline & Transport", "/#timeline"),
-                new LinkButton("Accommodation", "/#accommodation"),
+                new LinkButton("Schedule", "/#timeline"),
+                new LinkButton("Directions", "/#accommodation"),
                 new LinkButton("Registry", "/registry"),
-                new LinkButton("Gallery", "/gallery"),
-                new LinkButton("Contact", "/#contact")
+                //new LinkButton("Gallery", "/gallery"),
+                //new LinkButton("Contact", "/#contact")
             ]
         );
 

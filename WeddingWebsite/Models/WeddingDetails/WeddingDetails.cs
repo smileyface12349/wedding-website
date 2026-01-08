@@ -64,7 +64,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 ]
             ),
             new (
-                "Ceilydd", 
+                "Ceilidh", 
                 TimeOnly.Parse("20:00"),
                 TimeOnly.Parse("22:00"),
                 "An evening of dancing and celebration.", 
@@ -250,7 +250,9 @@ public sealed class WeddingDetails : IWeddingDetails
         ]
     );
     
-    public IEnumerable<Event> Events { get; } 
+
+    public IEnumerable<Event> Events { get; }
+
     
     public DressCode DressCode { get; } 
         = new DressCode(
@@ -274,7 +276,7 @@ public sealed class WeddingDetails : IWeddingDetails
     
     public IEnumerable<IContact> ExtraContacts { get; } = [
         new SharedInboxContact("Shared Inbox", [Role.Bride, Role.Groom], new ContactDetails(
-            new ContactOptions(null, [new EmailAddress("shared@wedding.com")])
+            new ContactOptions(null, [new EmailAddress("jacobandamelia.warner@gmail.com")])
         ))
     ];
 
@@ -307,5 +309,5 @@ public sealed class WeddingDetails : IWeddingDetails
     public WebsiteLink RegistryLink { get; }
         = new WebsiteLink("https://youtu.be/dQw4w9WgXcQ");
         
-    public UsersCanAddGuests UsersCanAddGuests => UsersCanAddGuests.ContactUs;
+    //public UsersCanAddGuests UsersCanAddGuests => UsersCanAddGuests.ContactUs;
 }
