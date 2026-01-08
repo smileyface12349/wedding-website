@@ -8,10 +8,13 @@
     @if (ShowHeading) {
         <SectionHeading>Order of the Day</SectionHeading>
     }
-    <WeddingTimeline Events="WeddingDetails.Events" AccommodationDetails="WeddingDetails.AccommodationDetails"/>
+    <WeddingTimeline Events="WeddingDetails.Events" AccommodationDetails="WeddingDetails.AccommodationDetails" ShowTravelDirections="ShowTravelDirections"/>
 </Section>
 
 @code {
     [Parameter]
     public bool ShowHeading { get; set; } = false;
+    
+    [Parameter]
+    public bool ShowTravelDirections { get; set; } = true;
 }
