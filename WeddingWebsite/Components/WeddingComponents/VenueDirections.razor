@@ -10,9 +10,10 @@
     </TopContent>
     <ChildContent>
         <h3>@Venue.Name</h3>
-        <p>@Venue.Directions?.Description</p>
-        <h4>Address</h4>
-        <p>@Venue.Address</p>
+        <div class="address">
+            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+            <span>@Venue.Address</span>
+        </div>
         @foreach (var sect in Venue.Directions!.Content)
         {
             <WebsiteElement Element="sect.Media" MaxHeight="300px"></WebsiteElement>
