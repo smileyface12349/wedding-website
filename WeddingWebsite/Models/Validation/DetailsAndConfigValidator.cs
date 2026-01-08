@@ -20,6 +20,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Sections_ShouldNotBeEmpty(config);
         Sections_ShouldNotHaveDuplicates(config);
         Sections_ShouldNotHaveTwoFractionalParallaxBackgrounds(config);
+        Sections_ShouldNotHaveTimelineAndSimpleTimeline(config);
         
         People_ThereIsABrideAndGroom(details);
         
@@ -299,6 +300,14 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         if (fractionalParallaxes.Count > 1)
         {
             Error($"Only one fractional parallax amount is supported per page. The homepage contains {fractionalParallaxes.Count} such values, namely {string.Join(", ", fractionalParallaxes)}. All fractional parallax sections will use the first value.");
+        }
+    }
+
+    private void Sections_ShouldNotHaveTimelineAndSimpleTimeline(IWebsiteConfig config)
+    {
+        if (GetSection<Section.Timeline>(config) != null && GetSection<Section.SimpleTimeline>(config) != null)
+        {
+            Warning("You have both a Timeline and SimpleTimeline section. Since both sections display the same information, choose the level of detail you want and remove the other section.");
         }
     }
 
