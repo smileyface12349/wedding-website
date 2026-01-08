@@ -1,5 +1,6 @@
 ﻿@using WeddingWebsite.Models
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Dialogs
 
 <div class="simple-timeline">
     @foreach (var ev in Events)
@@ -8,8 +9,12 @@
             <div class="simple-timeline-element">
                 <p class="start-time">@ev.Start.ToShortTimeString()</p>
                 <p>@ev.Name</p>
+                <MudSpacer/>
+                @foreach (var modal in ev.Modals)
+                {
+                    <ModalButton Modal="modal" />
+                }
             </div>
-        
         </Box>
     }
 </div>
