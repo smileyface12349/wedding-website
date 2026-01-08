@@ -6,13 +6,16 @@
 
 <Section>
     <SectionHeading>Directions</SectionHeading>
-    @foreach (var venue in WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList())
-    {
-        @if (venue.Directions != null)
+    <div class="directions-grid">
+        @foreach (var venue in WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList())
         {
-            <VenueDirections Venue="venue" />
+            @if (venue.Directions != null)
+            {
+                <VenueDirections Venue="venue" />
+            }
         }
-    }
+    </div>
+    
 </Section>
 
 @code {
