@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models;
+namespace WeddingWebsite.Models.Venues;
 
 public record TravelDirections(
     IEnumerable<WebsiteSection> Content,
