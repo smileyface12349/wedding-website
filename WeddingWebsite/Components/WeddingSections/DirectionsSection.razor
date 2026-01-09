@@ -4,7 +4,7 @@
 
 @inject IWeddingDetails WeddingDetails
 
-<Section>
+<Section Id="directions">
     <SectionHeading>Directions</SectionHeading>
     <div class="directions-grid">
         @foreach (var venue in WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList())
