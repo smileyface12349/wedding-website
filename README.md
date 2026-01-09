@@ -62,10 +62,20 @@ This unique timeline design conveys:
 - Accommodation details (auto-generated at the end of the timeline).
 All in one coherent view. I find this much easier to use than having separate sections for timings, travel directions and accommodation details.
 
+### Simple Timeline
+<img width="534" height="396" alt="image" src="https://github.com/user-attachments/assets/3868d870-cec3-47ec-92f1-58392f552073" />
+
+If you'd rather just have a list of events and start times.
+
 ### Venue Showcase
 <img width="1078" height="710" alt="image" src="https://github.com/user-attachments/assets/a7e92d91-d8ad-4157-b1cb-b37e142fa8b8" />
 
 Shows you a little more information about the venues. Totally optional, as the important information is already in the timeline.
+
+### Travel Directions
+<img width="1063" height="743" alt="image" src="https://github.com/user-attachments/assets/bf5fbd22-0d48-4f27-954c-58dc1c719921" />
+
+The directions are already shown in other places, but you can emphasise them here too.
 
 ### Accommodation
 <img width="1076" height="743" alt="image" src="https://github.com/user-attachments/assets/8ca68e94-d464-4b7b-871f-46831cc5f61c" />
