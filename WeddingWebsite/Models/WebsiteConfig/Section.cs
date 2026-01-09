@@ -25,7 +25,14 @@ public abstract record Section
     /// Unlike most sections, the heading is disabled by default. This is because it looks nice with the timeline
     /// running right to the edge of the section, and the purpose of the section is clear already.
     /// </summary>
-    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false) : Section(Theme);
+    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false, bool ShowTravelDirections = true) : Section(Theme);
+    
+    /// <summary>
+    /// A very basic version of the timeline that just displays the start time of each event. Does not show travel
+    /// directions or accommodation - include these standalone sections if you need this information.
+    /// </summary>
+    /// <param name="Theme"></param>
+    public sealed record SimpleTimeline(SectionTheme? Theme = null) : Section(Theme);
     
     /// <summary>
     /// Introductions from the wedding party
@@ -83,6 +90,13 @@ public abstract record Section
     /// Displays a few of your favourite pictures in a carousel.
     /// </summary>
     public sealed record Gallery(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
+    /// Displays travel directions to all venues. Note that this information is already in the timeline and the venue
+    /// showcase in the form of modals, but this section will show this content in the page directly without requiring
+    /// the user to click a button and open a modal.
+    /// </summary>
+    public sealed record TravelDirections(SectionTheme? Theme = null) : Section(Theme);
 
     /// <summary>
     /// Displays to admins only (unless a non-admin has been assigned a task). Shows all tasks marked as

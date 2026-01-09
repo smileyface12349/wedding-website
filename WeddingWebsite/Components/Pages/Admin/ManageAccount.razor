@@ -34,23 +34,30 @@
     {
         <p class="text-red">@ErrorText</p>
     }
-
+    
     <div class="flex-container mb">
-        <label for="email">Email</label>
+        <label for="username">Username</label>
         <span class="flex-grow"></span>
-        <input @bind-value="Email" id="email" class="mr @EmailDiffers" />
+        <input @bind-value="UserName" id="username" class="mr @UserNameDiffers" />
         @if (!IsUserOwner())
         {
-            <button class="button" @onclick="ApplyEmailChange">Apply</button>
+            <button class="button" @onclick="ApplyUserNameChange">Apply</button>
         }
         else
         {
             <AuthorizeView Roles="Owner">
                 <Authorized>
-                    <button class="button" @onclick="ApplyEmailChange">Apply</button>
+                    <button class="button" @onclick="ApplyUserNameChange">Apply</button>
                 </Authorized>
             </AuthorizeView>
         }
+    </div>
+
+    <div class="flex-container mb">
+        <label for="email">Email</label>
+        <span class="flex-grow"></span>
+        <input @bind-value="Email" id="email" class="mr @EmailDiffers" placeholder="No email given" />
+        <button class="button" @onclick="ApplyEmailChange">Apply</button>
     </div>
 
     @if (!IsUserOwner())
@@ -136,7 +143,7 @@
     <RowTemplate>
         <MudTd>@context.Date.Day/@context.Date.Month/@context.Date.Year @context.Date.Hour.ToString("D2"):@context.Date.Minute.ToString("D2")</MudTd>
         <MudTd>@context.Description</MudTd>
-        <MudTd>@context.Actor.Email</MudTd>
+        <MudTd>@context.Actor.UserName</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager />
@@ -177,12 +184,14 @@
     private IEnumerable<AccountLog> Logs { get; set; } = [];
 
     private string ErrorText { get; set; } = "";
+    private string UserName { get; set; } = "";
     private string Email { get; set; } = "";
     private string NewPassword { get; set; } = "";
     private string NewGuestName { get; set; } = "";
 
-    private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "";
-    private string EmailDiffers => Account is null || Account.Email == Email ? "" : "input-error";
+    private bool SomethingDiffers => EmailDiffers != "" || PasswordDiffers != "" || UserNameDiffers != "";
+    private string UserNameDiffers => (Account is null || Account.UserName == UserName) ? "" : "input-error";
+    private string EmailDiffers => (Account is null || (Account.Email ?? "") == Email) ? "" : "input-error";
     private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
     
     private int DeletePressedCount { get; set; } = 0;
@@ -195,6 +204,7 @@
         LoggedInUser = authenticationState.User;
         
         Account = await UserManager.FindByIdAsync(UserId);
+        UserName = Account?.UserName ?? "";
         Email = Account?.Email ?? "";
         
         if (Account is null)
@@ -225,8 +235,7 @@
         }
 
         var oldEmail = Account.Email;
-        Account.Email = Email;
-        Account.UserName = Email;
+        Account.Email = Email == "" ? null : Email;
         var result = UserManager.UpdateAsync(Account).Result;
         if (!result.Succeeded)
         {
@@ -236,6 +245,28 @@
         {
             if (LoggedInUser is null) return;
             AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their email from {oldEmail} to {Email}", UserId);
+            Logs = AdminService.GetAccountLogs(UserId);
+        }
+    }
+    
+    private void ApplyUserNameChange()
+    {
+        if (Account is null)
+        {
+            return;
+        }
+
+        var oldUserName = Account.UserName;
+        Account.UserName = UserName;
+        var result = UserManager.UpdateAsync(Account).Result;
+        if (!result.Succeeded)
+        {
+            ErrorText = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
+        else
+        {
+            if (LoggedInUser is null) return;
+            AccountService.Log(LoggedInUser, AccountLogType.ChangeEmail, $"Admin changed their username from {oldUserName} to {UserName}", UserId);
             Logs = AdminService.GetAccountLogs(UserId);
         }
     }

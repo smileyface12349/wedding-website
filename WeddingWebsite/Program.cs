@@ -67,7 +67,6 @@ builder.Services.AddIdentityCore<Account>(options => {
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.SignIn.RequireConfirmedAccount = false;
-    options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
 })
     .AddRoles<IdentityRole>()

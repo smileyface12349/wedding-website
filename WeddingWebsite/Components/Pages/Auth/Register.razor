@@ -2,6 +2,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
+@using Duende.IdentityServer.Extensions
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
@@ -32,14 +33,19 @@
         
         <div class="row">
             <div class="col-md-4">
-                <p>@Message</p>
+                <p class="text-danger">@Message</p>
                 <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
                     <DataAnnotationsValidator />
                     <h2>Account Details</h2>
                     <hr />
                     <ValidationSummary class="text-danger" role="alert" />
                     <div class="form-input-and-label">
-                        <label for="email">Email</label>
+                        <label for="email">Username (blank = use email)</label>
+                        <span class="flex-grow"></span>
+                        <InputText @bind-Value="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="john+tracy" id="username" />
+                    </div>
+                    <div class="form-input-and-label">
+                        <label for="email">Email (optional)</label>
                         <span class="flex-grow"></span>
                         <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="john@smith.com" id="email" />
                     </div>
@@ -99,15 +105,30 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+        
+        if (!Input.Email.IsNullOrEmpty())
+        {
+            var emailStore = GetEmailStore();
+            await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            if (Input.Username.IsNullOrEmpty())
+            {
+                Input.Username = Input.Email!;
+            }
+        }
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        if (Input.Username.IsNullOrEmpty())
+        {
+            identityErrors = [new IdentityError { Description = "You must provide either a username or an email address." }];
+            return;
+        }
+        
+        await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
+            return;
         }
         
         foreach (var guestName in new[] { Input.Guest1, Input.Guest2, Input.Guest3, Input.Guest4, Input.Guest5 })
@@ -146,10 +167,12 @@
 
     private sealed class InputModel
     {
-        [Required]
-        [EmailAddress]
+        [Display(Name = "Username")]
+        public string Username { get; set; } = "";
+        
+        [OptionalEmailAddress]
         [Display(Name = "Email")]
-        public string Email { get; set; } = "";
+        public string? Email { get; set; } = null;
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

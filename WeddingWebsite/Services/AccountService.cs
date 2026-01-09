@@ -20,12 +20,12 @@ public class AccountService(IStore store) : IAccountService
         store.AddAccountLog(affectedUser, GetUserId(user), logType, description);
     }
     
-    public void Log(string actorEmail, AccountLogType logType, string description, string? affectedUserId = null)
+    public void Log(string actorUserName, AccountLogType logType, string description, string? affectedUserId = null)
     {
-        var actorId = store.GetUserIdByEmail(actorEmail);
+        var actorId = store.GetUserIdByUserName(actorUserName);
         if (actorId == null)
         {
-            throw new InvalidOperationException("Could not find user ID for the provided email.");
+            throw new InvalidOperationException("Could not find user ID for the provided user name.");
         }
         var affectedUser = affectedUserId ?? actorId;
         store.AddAccountLog(affectedUser, actorId, logType, description);
