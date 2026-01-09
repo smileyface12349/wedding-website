@@ -4,7 +4,7 @@
 @using WeddingWebsite.Components.Dialogs
 @using WeddingWebsite.Models.WebsiteElement
 
-<Box CustomCss="height: 500px;">
+<Box CustomCss="height: 500px;" Horizontal="Horizontal">
     <TopContent>
         <WebsiteElement Element="Venue.Media" Cover="true"></WebsiteElement>
     </TopContent>
@@ -30,6 +30,9 @@
 @code {
     [Parameter]
     public required Venue Venue { get; set; }
+
+    [Parameter] 
+    public required bool Horizontal { get; set; } = false;
 
     private WeddingModal? TravelDirectionsModal => Venue.Directions == null ? null 
         : new WeddingModal("Travel Directions", Venue.Directions!.Content.Prepend(new WebsiteSection(new WebsiteGoogleMapsEmbed(Venue.Location))));

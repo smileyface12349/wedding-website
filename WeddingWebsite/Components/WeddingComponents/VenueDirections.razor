@@ -4,9 +4,9 @@
 @using WeddingWebsite.Components.Elements
 
 
-<Box>
+<Box Horizontal="OnlyOneVenue">
     <TopContent>
-        <WebsiteElement Element="Venue.Directions!.Media" Cover="true" MaxHeight="300px"></WebsiteElement>
+        <WebsiteElement Element="Venue.Directions!.Media" Cover="!OnlyOneVenue" MaxHeight="300px"></WebsiteElement>
     </TopContent>
     <ChildContent>
         <h3>@Venue.Name</h3>
@@ -35,4 +35,7 @@
 @code {
     [Parameter]
     public required Venue Venue { get; set; }
+    
+    [Parameter]
+    public bool OnlyOneVenue { get; set; } = false;
 }

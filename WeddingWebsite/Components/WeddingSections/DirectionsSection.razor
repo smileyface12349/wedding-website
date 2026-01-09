@@ -4,14 +4,14 @@
 
 @inject IWeddingDetails WeddingDetails
 
-<Section>
+<Section Id="directions">
     <SectionHeading>Directions</SectionHeading>
     <div class="directions-grid">
         @foreach (var venue in WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).ToList())
         {
             @if (venue.Directions != null)
             {
-                <VenueDirections Venue="venue" />
+                <VenueDirections Venue="venue" OnlyOneVenue="WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).Count() == 1" />
             }
         }
     </div>
