@@ -42,7 +42,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 TimeOnly.Parse("15:30"),
                 TimeOnly.Parse("17:30"), 
                 "Join us for tapas and drinks in the garden.", 
-                ReceptionVenue, 
+                CeremonyVenue, 
                 "The Courtyard",
                 new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
                 ),
@@ -51,7 +51,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 TimeOnly.Parse("18:00"), 
                 TimeOnly.Parse("19:00"),
                 "A sit-down meal with speeches and toasts.", 
-                ReceptionVenue, 
+                CeremonyVenue, 
                 "The Hall",
                 new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), 
                 null, 
@@ -68,7 +68,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 TimeOnly.Parse("20:00"),
                 TimeOnly.Parse("22:00"),
                 "An evening of dancing and celebration.", 
-                ReceptionVenue, 
+                CeremonyVenue, 
                 "The Chapel",
                 new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
             )
@@ -210,25 +210,6 @@ public sealed class WeddingDetails : IWeddingDetails
     private NotablePerson GetPersonByRole(Role role) => NotablePeople.First(p => p.Role == role);
     
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2026-8-9");
-        
-    public Venue ReceptionVenue { get; } = new(
-        "Garden of Eden", 
-        new Location(48.8584196, 2.2943747), 
-        "123 Paradise Lane, Eden, ED1 2AB",
-        new TravelDirections(
-            [
-                new WebsiteSection(null, "We suggest arriving by foot."),
-                new WebsiteSection("Parking", "There is plenty of parking available, and for blue badge holders as well.")
-            ],
-            null,
-            20
-        ),
-        "A beautiful picturesque garden for a wonderful party with the animals!",
-        new WebsiteImage("https://media.swncdn.com/via/9367-flickr-faunggs-photos.jpg", "The Garden of Eden filled with animals and Adam and Eve"),
-        [
-            new WeddingModal("View Map", "Map not yet available.")
-        ]
-    );
     
     public Venue CeremonyVenue { get; } = new(
         "The Oval Chapel", 
@@ -241,6 +222,7 @@ public sealed class WeddingDetails : IWeddingDetails
             ],
             null,
             null,
+            new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car"),
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
         ),
         "A chapel.",
@@ -266,10 +248,8 @@ public sealed class WeddingDetails : IWeddingDetails
         );
     
     public AccommodationDetails AccommodationDetails { get; } = new (
-        "If you would like to stay until the end, we suggest staying at a nearby hotel.",
+        null,
         new List<Hotel> {
-            new ("Eden Hotel",  "A beautiful hotel in the city centre, where the bride and groom will be staying", new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, new Price(95, new Discount(15, "Quote 'Garden of Eden'")), "https://youtube.com/watch?v=dQw4w9WgXcQ", true, new WebsiteImage("https://cf.bstatic.com/xdata/images/hotel/max1024x768/40819418.jpg?k=5b61764f9e2fc3823d22a5260cf2e432f15014af29170e99f432f25a1776765a&o=&hp=1", "A luxury hotel by a beach")),
-            new("Paradise Inn", "A cheaper option if you're on a budget", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, new Price(75), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
         },
         new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
     );
