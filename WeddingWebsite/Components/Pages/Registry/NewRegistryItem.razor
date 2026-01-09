@@ -40,6 +40,10 @@
     <div class="form-input-and-label">
         <label for="image-url">Image URL</label>
         <span class="flex-grow"></span>
+        @if (Input.ImageUrl != "")
+        {
+            <img width="30" height="30" src="@Input.ImageUrl" alt="Invalid image" style="object-fit: contain; margin-right: 20px;"/>
+        }
         <InputText @bind-Value="Input.ImageUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
     </div>
     <div class="form-input-and-label">

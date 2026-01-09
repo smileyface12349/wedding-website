@@ -27,7 +27,7 @@
         overflow: hidden;
     }
 
-    .horizontal .rounded-corner-box-inner {
+    .horizontal .outlined-box-inner {
         flex: 1;
     }
 }
