@@ -29,6 +29,15 @@ public sealed class WeddingDetails : IWeddingDetails
         Events = new List<Event>
         {
             new (
+                "Arrival", 
+                TimeOnly.Parse("13:30"), 
+                TimeOnly.Parse("14:00"), 
+                "To be ready to start at 2. Scroll down for directions to the venue.",
+                CeremonyVenue, 
+                null,
+                new WebsiteImage("/img/3.webp", "A wedding ceremony on a beach")
+            ),
+            new (
                 "Ceremony", 
                 TimeOnly.Parse("14:00"), 
                 TimeOnly.Parse("15:30"), 
@@ -38,7 +47,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 new WebsiteImage("/img/1.jpg", "A wedding ceremony on a beach")
             ),
             new (
-                "Tapas Time", 
+                "Tapas and outdoors time", 
                 TimeOnly.Parse("15:30"),
                 TimeOnly.Parse("17:30"), 
                 "Join us for tapas and drinks in the garden.", 
@@ -48,8 +57,8 @@ public sealed class WeddingDetails : IWeddingDetails
                 ),
             new (
                 "Barbeque!", 
-                TimeOnly.Parse("18:00"), 
-                TimeOnly.Parse("19:00"),
+                TimeOnly.Parse("17:30"), 
+                TimeOnly.Parse("20:00"),
                 "A sit-down meal with speeches and toasts.", 
                 CeremonyVenue, 
                 "The Hall",
@@ -57,16 +66,25 @@ public sealed class WeddingDetails : IWeddingDetails
                 null, 
                 [
                     new WeddingModal("View Menu", [
-                        new ("Starter", "Avocado and prawns"),
-                        new ("Main Course", "Burgers, skewers and potatoes"),
+                        new ("Sides", "Patatas bravas, dips and other things"),
+                        new ("Main Course", "Burgers and skewers"),
                         new ("Dessert", "Cake!")
                     ])
                 ]
             ),
             new (
-                "Ceilidh", 
+                "First dance and Ceilidh", 
                 TimeOnly.Parse("20:00"),
                 TimeOnly.Parse("22:00"),
+                "An evening of dancing and celebration.", 
+                CeremonyVenue, 
+                "The Chapel",
+                new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
+            ),
+            new (
+                "First dance and Ceilidh", 
+                TimeOnly.Parse("22:00"),
+                TimeOnly.Parse("00:00"),
                 "An evening of dancing and celebration.", 
                 CeremonyVenue, 
                 "The Chapel",
@@ -213,7 +231,7 @@ public sealed class WeddingDetails : IWeddingDetails
     
     public Venue CeremonyVenue { get; } = new(
         "The Oval Chapel", 
-        new Location(12345, 67890), 
+        new Location(51.825624, -0.359506), 
         "8? Highfield Oval, Harpenden AL5 4BX",
         new TravelDirections(
             [
