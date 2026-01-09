@@ -46,14 +46,14 @@ public class DefaultConfig : IWebsiteConfig
     
         Sections = [
             new Section.TodoListSummary(new SectionTheme(salmon, Colour.White, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colour.White, null)))),
-            new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
+            //new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
+            new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
             new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
-            new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
+            //new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
             new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),
-            new Section.Gallery(),
-            new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
-            new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
+            //new Section.Gallery(),
+            //new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];
         
         TopButtons = new TopButtonsConfig(
