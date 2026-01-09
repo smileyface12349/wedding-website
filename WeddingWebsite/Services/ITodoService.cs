@@ -15,6 +15,6 @@ public interface ITodoService
     void RemoveGroupFromItem(string itemId);
     void RenameGroup(string groupId, string newName);
     void DeleteItem(string itemId);
-    void SetItemOwnerByEmail(string itemId, string? ownerEmail);
-    IEnumerable<TodoItem> GetTodoItemsRequiringActionForGivenEmailOrNoEmail(string email);
+    void SetItemOwnerByUserName(string itemId, string? ownerUserName);
+    IEnumerable<TodoItem> GetTodoItemsRequiringActionForGivenUserNameOrNoUserName(string userName);
 }

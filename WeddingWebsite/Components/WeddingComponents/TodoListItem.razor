@@ -41,13 +41,13 @@
             <Authorized>
                 @if (IsEditing)
                 {
-                    <MudAutocomplete @bind-Value="OwnerEmail" Dense="true" Clearable="true" SearchFunc="OwnerSearchFunction"/>
+                    <MudAutocomplete @bind-Value="OwnerUserName" Dense="true" Clearable="true" SearchFunc="OwnerSearchFunction"/>
                 }
                 else
                 {
-                    @if (Item.OwnerEmail != null)
+                    @if (Item.OwnerUserName != null)
                     {
-                        <div class="todo-owner">Owner: @Item.OwnerEmail</div>
+                        <div class="todo-owner">Owner: @Item.OwnerUserName</div>
                     }
                     else
                     {
@@ -106,17 +106,17 @@
     [Parameter]
     public Action? ParentStateHasChanged { get; set; }
 
-    private IList<string> PossibleOwnerEmails { get; set; } = [];
+    private IList<string> PossibleOwnerUserNames { get; set; } = [];
     
     private bool IsEditing { get; set; }
     private string Text { get; set; } = "";
-    private string OwnerEmail { get; set; } = "";
+    private string OwnerUserName { get; set; } = "";
 
     protected override void OnInitialized()
     {
-        PossibleOwnerEmails = AdminService.GetAllAccounts()
-            .Where(a => a.Email != null)
-            .Select(a => a.Email!)
+        PossibleOwnerUserNames = AdminService.GetAllAccounts()
+            .Where(a => a.UserName != null)
+            .Select(a => a.UserName!)
             .ToList();
         
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
@@ -126,8 +126,8 @@
     private Task<IEnumerable<string>> OwnerSearchFunction(string value, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return Task.FromResult(PossibleOwnerEmails as IEnumerable<string>);
-        return Task.FromResult(PossibleOwnerEmails.Where(email => email.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
+            return Task.FromResult(PossibleOwnerUserNames as IEnumerable<string>);
+        return Task.FromResult(PossibleOwnerUserNames.Where(userName => userName.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
     }
 
     // Automatically enable edit mode for new items
@@ -145,14 +145,14 @@
         if (Item == null) return;
         IsEditing = true;
         Text = Item.Text ?? "";
-        OwnerEmail = Item.OwnerEmail ?? "";
+        OwnerUserName = Item.OwnerUserName ?? "";
         StateHasChanged();
     }
     
     private void SaveEdits()
     {
         ApplyToItem(item => TodoService.RenameItem(item.Id, Text));
-        ApplyToItem(item => TodoService.SetItemOwnerByEmail(item.Id, string.IsNullOrWhiteSpace(OwnerEmail) ? null : OwnerEmail));
+        ApplyToItem(item => TodoService.SetItemOwnerByUserName(item.Id, string.IsNullOrWhiteSpace(OwnerUserName) ? null : OwnerUserName));
         IsEditing = false;
         StateHasChanged();
     }
@@ -249,7 +249,7 @@
     private void Group()
     {
         ApplyToItem(item => TodoService.GroupItem(item.Id));
-        if (Text == (Item?.Text ?? "") && OwnerEmail == (Item?.OwnerEmail ?? ""))
+        if (Text == (Item?.Text ?? "") && OwnerUserName == (Item?.OwnerUserName ?? ""))
         {
             CancelEdits();
         }

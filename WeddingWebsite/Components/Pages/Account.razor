@@ -2,12 +2,15 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.IdentityModel.Tokens
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Dialogs
 @using WeddingWebsite.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Models.WeddingDetails
 @using WeddingWebsite.Services
 @using Section = WeddingWebsite.Components.Sections.Section
@@ -19,10 +22,12 @@
 @inject IWeddingDetails WeddingDetails
 @inject UserManager<Data.Account> UserManager
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 
 @rendermode InteractiveServer
 
-<MudSnackbarProvider />
+<MudSnackbarProvider/>
+<MudDialogProvider/>
 
 <PageTitle>My Account</PageTitle>
 
@@ -33,12 +38,25 @@
         <div class="account-content">
             <div class="account-details">
                 <div class="account-detail">
-                    <label for="email">E-mail Address</label>
+                    <label for="username">Username</label>
                     <MudSpacer/>
-                    <input aria-disabled="true" value="@Email" id="email" disabled/>
+                    <input aria-disabled="true" value="@UserName" id="username" disabled/>
                 </div>
+                @if (!Email.IsNullOrEmpty() && UserName != Email)
+                {
+                    <div class="account-detail">
+                        <label for="email">E-mail Address</label>
+                        <MudSpacer/>
+                        <input aria-disabled="true" value="@Email" id="email" disabled/>
+                    </div>
+                }
                 @if (ShowChangePassword)
                 {
+                    @* <Box CustomCss="margin-bottom: 20px;margin-top: 20px"> *@
+                    @*     <h2 style="margin-bottom: 10px">Security Note</h2> *@
+                    @*     <p style="text-align: left">Your password is stored securely in a way that cannot be accessed, even if the database is compromised.</p> *@
+                    @*     <p style="text-align: left;margin-bottom: 0">If you forget your password, we can reset it, but we can't see what it is.</p> *@
+                    @* </Box> *@
                     <EditForm Model="ChangePasswordInput" method="post" OnValidSubmit="ChangePassword" FormName="change-password">
                         <DataAnnotationsValidator />
                         <div class="account-detail">
@@ -56,6 +74,7 @@
                             <MudSpacer/>
                             <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="New Password" />
                         </div>
+                        <a class="password-security" @onclick="OpenPasswordDialog">Is my password safe?</a>
                         <ValidationSummary class="text-danger" role="alert"/>
                         @if (ErrorText != "")
                         {
@@ -135,6 +154,7 @@
     }
 
     private string ErrorText { get; set; } = "";
+    private string UserName { get; set; } = "";
     private string Email { get; set; } = "";
     private bool ShowChangePassword { get; set; } = false;
     
@@ -149,7 +169,9 @@
         
         Guests = AccountService.GetOwnGuests(user);
         
-        Email = user.Identity?.Name ?? "";
+        UserName = user.Identity?.Name ?? "";
+        var account = UserManager.FindByNameAsync(UserName).Result;
+        Email = account?.Email ?? "";
     }
 
     private void EnableChangePassword()
@@ -165,7 +187,7 @@
             return;
         }
         
-        var account = UserManager.FindByEmailAsync(Email).Result;
+        var account = UserManager.FindByNameAsync(UserName).Result;
         if (account == null)
         {
             ErrorText = "Could not find your account.";
@@ -196,7 +218,7 @@
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomStart;
             Snackbar.Add("Password changed successfully.", Severity.Success, c => c.SnackbarVariant = Variant.Text);
             
-            AccountService.Log(Email, AccountLogType.ChangePassword, "User changed their password");
+            AccountService.Log(UserName, AccountLogType.ChangePassword, "User changed their password");
         }
     }
     
@@ -217,5 +239,17 @@
         [Display(Name = "Confirm New Password")]
         [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmNewPassword { get; set; } = "";
+    }
+    
+    private Task OpenPasswordDialog() {
+        var parameters = new DialogParameters<EventDialog> {
+            { x => x.Content, [
+                new WebsiteSection(null, "Your password is stored securely in a way that cannot be accessed by anyone, including us. Even if someone was to break into the system, they would not be able to see what your password is."),
+                new WebsiteSection(null, "But don't worry if you forget your password - we can change it to something else for you without needing to see what it is.")
+            ] },
+            { x => x.Actions, [] }
+        };
+    
+        return DialogService.ShowAsync<EventDialog>("Is My Password Safe?", parameters);
     }
 }

@@ -1,0 +1,38 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Models.Venues
+@using WeddingWebsite.Components.Elements
+
+
+<Box>
+    <TopContent>
+        <WebsiteElement Element="Venue.Directions!.Media" Cover="true" MaxHeight="300px"></WebsiteElement>
+    </TopContent>
+    <ChildContent>
+        <h3>@Venue.Name</h3>
+        <div class="address">
+            <MudIcon Icon="@Icons.Material.Filled.LocationOn"/>
+            <span>@Venue.Address</span>
+        </div>
+        @foreach (var sect in Venue.Directions!.Content)
+        {
+            <WebsiteElement Element="sect.Media" MaxHeight="300px"></WebsiteElement>
+            <h4>@sect.Heading</h4>
+            @foreach (var para in sect.Content)
+            {
+                <p>@para</p>
+            }
+        }
+        <div style="margin-bottom: 10px"></div>
+        <div class="buttons-container">
+            <LinkButton Url="@Venue.Location.GetGoogleMapsLink()" Variant="ButtonVariant.Outlined">Google Maps</LinkButton>
+        </div>
+        <div style="margin-bottom: 5px"></div>
+    </ChildContent>
+</Box>
+
+
+@code {
+    [Parameter]
+    public required Venue Venue { get; set; }
+}

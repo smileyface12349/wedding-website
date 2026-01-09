@@ -18,6 +18,7 @@ public class DefaultConfig : IWebsiteConfig
     public PageConfig.Account AccountConfig { get; set; }
     public PageConfig.Registry RegistryConfig { get; set; }
     public PageConfig.RegistryItem RegistryItemConfig { get; set; }
+    public PageConfig.Login LoginConfig { get; set; }
     public DemoMode DemoMode => new DemoMode.Disabled();
     
     // Default config will enable all optional features.
@@ -78,5 +79,6 @@ public class DefaultConfig : IWebsiteConfig
         
         RegistryConfig = new PageConfig.Registry(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox));
         RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, whiteFilledBox));
+        LoginConfig = new PageConfig.Login(new SectionTheme(Colours.PrimaryBackground, Colours.Primary, whiteFilledBox));
     }
 }

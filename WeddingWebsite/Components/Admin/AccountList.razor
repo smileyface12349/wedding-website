@@ -15,12 +15,12 @@
         <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"/>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Email)">Email</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.UserName)">Username</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Guests.Count())">Guests</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<AccountWithGuests, object?>(x => x.Guests.Count(g => g.Rsvp == RsvpStatus.NotResponded))">RSVP</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Username">@context.UserName</MudTd>
         <MudTd DataLabel="Guests">@GetGuestNames(context)</MudTd>
         <MudTd DataLabel="RSVP">@GetRsvpSummary(context)</MudTd>
     </RowTemplate>
@@ -117,6 +117,8 @@
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
         if (account.Email != null && account.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (account.UserName != null && account.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (account.Guests.Any(guest => guest.Name.Full.Contains(searchString, StringComparison.OrdinalIgnoreCase)))
             return true;

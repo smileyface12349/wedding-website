@@ -302,6 +302,8 @@ namespace WeddingWebsite.Components.WeddingSections
     /// </summary>
     /// <param name="ShowHeading">(Optional) Whether to show the heading, instead of the timeline running right to the
     /// edge. Defaults to false.</param>
+    /// <param name="ShowTravelDirections">(Optional) Whether to include auto-generated travel directions steps.
+    /// Defaults to true.</param>
     partial class TimelineSection {}
     
     /// <summary>

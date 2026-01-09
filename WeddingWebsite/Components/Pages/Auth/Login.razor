@@ -41,8 +41,8 @@
                 <DataAnnotationsValidator/>
                 <hr/>
                 <div class="form-input">
-                    <label for="email" class="form-label">Email</label>
-                    <InputText type="email" @bind-Value="Input.Email" class="login-input" autocomplete="username" aria-required="true" placeholder="name@example.com" id="email"/>
+                    <label for="username" class="form-label">Username</label>
+                    <InputText @bind-Value="Input.Username" class="login-input" autocomplete="username" aria-required="true" placeholder="@Config.LoginConfig.UserNamePlaceholder" id="username"/>
                 </div>
                 @* <ValidationMessage For="() => Input.Email" class="validation-message text-danger"/> *@
                 <div class="form-input">
@@ -82,7 +82,7 @@
 @code {
     private string? errorMessage;
 
-    private SectionTheme ModalTheme => new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    private SectionTheme ModalTheme => Config.LoginConfig.Theme ?? new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
     public required HttpContext HttpContext { get; set; }
@@ -109,13 +109,13 @@
     {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await SignInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
-            Logger.LogInformation($"User logged in: {Input.Email}.");
+            Logger.LogInformation($"User logged in: {Input.Username}.");
             if (AccountService is not null)
             {
-                AccountService.Log(Input.Email, AccountLogType.LogIn, "User logged in");
+                AccountService.Log(Input.Username, AccountLogType.LogIn, "User logged in");
             }
             RedirectManager.RedirectTo(ReturnUrl);
         }
@@ -133,8 +133,7 @@
     private sealed class InputModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
+        public string Username { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]

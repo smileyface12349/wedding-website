@@ -221,7 +221,9 @@ public sealed class SampleWeddingDetails : IWeddingDetails
                 new WebsiteSection("Parking", "There is no parking available, except for blue badge holders.")
             ],
             null,
-            20
+            20,
+            null,
+            new WebsiteImage("https://i.pinimg.com/564x/65/80/d2/6580d2bed791e628011f75973b5c788d.jpg", "A treasure map")
         ),
         "A beautiful picturesque garden for a wonderful party with the animals!",
         new WebsiteImage("https://media.swncdn.com/via/9367-flickr-faunggs-photos.jpg", "The Garden of Eden filled with animals and Adam and Eve"),
@@ -241,7 +243,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             ],
             null,
             null,
-            new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
+            new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car"),
+            new WebsiteGoogleMapsEmbed(new Location(48.8584196, 2.2943747))
         ),
         "A very large church, also for all the animals, I guess.",
         new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton"),

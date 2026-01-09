@@ -13,14 +13,23 @@
 ## Setup Instructions
 
 1. Fork this repository.
-2. Run `dotnet restore`.
-3. Set up the database (might be `dotnet ef database update`, but that might not create it, TBD).
-4. Install .NET 9 SDK.
-5. Run the website with `dotnet run Program.cs`. This will host your website locally.
+2. Install .NET 9 SDK.
+3. Run `dotnet restore`.
+4. Install dotnet ef, then run `dotnet ef database update` to set up the database.
+5. Run the website with `dotnet run Program.cs` (in `/WeddingWebsite`). This will host your website locally.
+6. Navigate to `/account/setup` and make your owner account.
 
 Once you've done these essential steps in this order, you can do some other steps:
 - Customise the website (see below).
 - Use `dotnet publish` and get it working on your hosting provider. You'll want to set up a service to keep it running and use a reverse proxy like Nginx.
+
+## Need Some Help?
+
+**Tech Support**: If you run into trouble getting it set up or customising it, please raise a GitHub issue and I'll get back to you. If you don't have much coding experience or need more help, I'm happy to set up a call and guide you through the process. I'll be happy to offer up to 3 hours for free which should be enough to do your first-time setup and get everything up and running.
+
+**Hosting**: I am happy to offer hosting on my own infrastructure for a fee. However, if you are able to get it set up on your own infrastructure then I strongly recommend opting for that option instead as if I am hosting it you will have to wait for me to review and deploy any changes to your source code.
+
+**Further Development**: If there's something you want added, pitch it to me in an issue and I'll see what I think. Depending on how much I think it will benefit others I may make it for free or I may charge an hourly rate.
 
 ## Sections on the Homepage
 
