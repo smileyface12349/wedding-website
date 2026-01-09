@@ -11,7 +11,7 @@
         {
             @if (venue.Directions != null)
             {
-                <VenueDirections Venue="venue" />
+                <VenueDirections Venue="venue" OnlyOneVenue="WeddingDetails.Events.Select(ev => ev.Venue).DistinctBy(v => v.Name).Count() == 1" />
             }
         }
     </div>
