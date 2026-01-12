@@ -76,42 +76,42 @@ public sealed class SampleWeddingDetails : IWeddingDetails
         
         // Using same images as with people
         Backstory = new Backstory(
-            "It all began when SpongeBob SquarePants took a wrong turn at Jellyfish Fields and ended up in a spooky kelp forest — only to bump into Scooby-Doo chasing what he thought was a sea ghost (it was just a jellyfish wearing sunglasses). After a shared snack of Scooby Snacks and Krabby Patties, the two instantly bonded over their love of mysteries and mayonnaise. From that day on, they were inseparable — solving underwater whodunits and laughing through haunted shipwrecks. Their wedding (attended by Shaggy and Patrick as co-best men) is a celebration of friendship, snacks, and just a little bit of underwater mystery.",
-            GetPersonByRole(Role.Bride).Media,
-            GetPersonByRole(Role.Groom).Media
+            "Joe and Carol met at a mutual friend's birthday party in 2020. They instantly hit it off and spent the entire evening talking and laughing together. After exchanging numbers, they went on their first date a week later to a cozy little café in the city. From that moment on, they were inseparable. They bonded over their shared love of travel, adventure, and trying new foods. Over the next few years, they explored many new places together, creating unforgettable memories along the way. In 2026, Joe proposed to Carol during a romantic sunset hike, and she happily said yes. Now, they are excited to start this new chapter of their lives together as husband and wife.",
+            new WebsiteImage("https://png.pngtree.com/png-clipart/20231116/original/pngtree-beautiful-woman-person-photo-png-image_13589124.png", "A woman standing up"),
+            new WebsiteImage("https://portermetrics.com/wp-content/uploads/2022/05/serious-thoughtful-man-making-assumption-looking-right-and-thinking-1.png", "A man smiling and looking to the right.")
         );
     }
 
     public IEnumerable<NotablePerson> NotablePeople { get; } = [
         new (
-            new Name("Spongebob", "Squarepants"),
+            new Name("Joe", "Priestley"),
             Role.Groom,
             new ContactDetails(
-                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("spongebob@squarepants.com")]),
+                new ContactOptions([ContactReason.Logistics, ContactReason.Website, ContactReason.SpecificPerson], [new EmailAddress("joe.priestley@example.com")]),
                 new ContactOptions(null, [new PhoneNumber("+441234567890")])
             ),
             [
-                new WebsiteSection(null, "Spongebob is a fun-loving sea sponge who lives in a pineapple under the sea. He works as a fry cook at the Krusty Krab and loves jellyfishing in his free time."),
-                new WebsiteSection("Hobbies", "Jellyfishing, blowing bubbles, karate with Sandy, and going on adventures with Patrick."),
-                new WebsiteSection("Fun Fact", "Spongebob has a pet snail named Gary who meows like a cat.")
+                new WebsiteSection(null, "Joe is the groom and a software developer. He loves hiking, photography, and spending time with his dog."),
+                new WebsiteSection("Hobbies", "Hiking, photography, and playing guitar."),
+                new WebsiteSection("Fun Fact", "Joe once hiked the entire Appalachian Trail.")
             ],
-            new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/7/7a/SpongeBob_SquarePants_character.png", null),
-            "124 Conch Street, Bikini Bottom, Pacific Ocean"
+            new WebsiteImage("https://www.publicdomainpictures.net/pictures/200000/nahled/central-african-man.jpg", null),
+            "190 Meadowdale Close, Middlesbrough, TS2 1TJ"
         ),
         new (
-            new Name("Scooby", "Doo"),
+            new Name("Carol", "Fenwick"),
             Role.Bride,
             new ContactDetails(
-                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("scooby@doo.net")]),
+                new ContactOptions([ContactReason.DressCode, ContactReason.SpecificPerson], [new EmailAddress("carol.fenwick@example.com")]),
                 new ContactOptions(null, [new PhoneNumber("+51395833759")])
             ),
             [
-                new WebsiteSection(null, "Scooby Doo is a lovable Great Dane who solves mysteries with his best friend Shaggy and the rest of the Mystery Inc. gang. He has a big appetite and a knack for getting into hilarious situations."),
-                new WebsiteSection("Hobbies", "Eating Scooby Snacks, solving mysteries, and napping."),
-                new WebsiteSection("Fun Fact", "Scooby-Doo's name comes from the Frank Sinatra song \"Strangers in the Night\"")
+                new WebsiteSection(null, "Carol is the bride and a graphic designer. When she's not busy in another country, she loves to bake all kinds of sweet treats."),
+                new WebsiteSection("Hobbies", "Painting, traveling, and cooking."),
+                new WebsiteSection("Fun Fact", "Carol has visited over 30 countries.")
             ],
-            new WebsiteImage("https://static.wikitide.net/greatcharacterswiki/thumb/5/5c/Original_scooby_doo.png/300px-Original_scooby_doo.png", null),
-            "32 Mystery Lane, Coolsville, USA"
+            new WebsiteImage("https://spablack.com/wp-content/uploads/2022/05/meghan_030.png", null),
+            "Flat 5, The Avenue, Leeds, LS8 2DL"
         ),
         new (
             new Name("John", "Smith"),
@@ -195,14 +195,14 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             new Name("Jim", "Brown"),
             Role.Photographer,
             new ContactDetails(
-                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jim.brown@gmail.com")])
+                new ContactOptions([ContactReason.SpecificPerson], [new EmailAddress("jim.brown@example.com")])
             )
         ),
         new (
             new Name("Peter", "Johnson"),
             Role.VenueCoordinator,
             new ContactDetails(
-                new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@gmail.com")])
+                new ContactOptions([ContactReason.DietaryRequirements], [new EmailAddress("peter.johnson@example.com")])
             )
         ),
     ];
@@ -212,44 +212,47 @@ public sealed class SampleWeddingDetails : IWeddingDetails
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2028-8-14");
         
     public Venue ReceptionVenue { get; } = new(
-        "Garden of Eden", 
-        new Location(48.8584196, 2.2943747), 
-        "123 Paradise Lane, Eden, ED1 2AB",
+        "Buckingham Palace", 
+        new Location(51.501263, -0.142153), 
+        "London, SW1A 1AA",
         new TravelDirections(
             [
-                new WebsiteSection(null, "We suggest arriving by foot."),
-                new WebsiteSection("Parking", "There is no parking available, except for blue badge holders.")
+                new WebsiteSection("Walk", "We suggest walking from the church."),
+                new WebsiteSection("Accessible Parking", " If you are a blue badge holder, a parking space will be provided."),
+                new WebsiteSection("Train", "Using the tube will make your journey slower."),
+                new WebsiteSection("Taxi", "Taxis can be hailed on the street or booked in advance. Ubers can be arranged on a mobile device at the end of the service."),
             ],
+            "A quick walk down the road",
+            5,
             null,
-            20,
-            null,
-            new WebsiteImage("https://i.pinimg.com/564x/65/80/d2/6580d2bed791e628011f75973b5c788d.jpg", "A treasure map")
+            new WebsiteImage("https://www.cityam.com/wp-content/uploads/2022/05/Tube-Map-May-2022-Elizabeth-line-through-Zone-1-1.jpg?w=742", "A tube map focusing mainly on zone 1.")
         ),
-        "A beautiful picturesque garden for a wonderful party with the animals!",
-        new WebsiteImage("https://media.swncdn.com/via/9367-flickr-faunggs-photos.jpg", "The Garden of Eden filled with animals and Adam and Eve"),
+        "A large townhouse built in 1703 with many grand rooms to host our different events.",
+        new WebsiteImage("https://www.goldentours.com/travelblog/wp-content/uploads/2022/07/Blue-Drawing-Room-Buckingham-Palace-Royal-Collection-Trust-%C2%A9-Her-Majesty-Queen-Elizabeth-II-2022-1024x760.jpg", "The interior of Buckingham Palace"),
         [
             new WeddingModal("View Map", "Map not yet available.")
         ]
     );
     
     public Venue CeremonyVenue { get; } = new(
-        "St Mary's Church", 
-        new Location(12345, 67890), 
-        "456 Holy Road, Eden, ED3 4GH",
+        "Westminster Abbey", 
+        new Location(51.4994561, -0.1273097), 
+        "London, SW1P 3PA",
         new TravelDirections(
             [
-                new WebsiteSection(null, "We suggest arriving by car. If you do not have a car, please let us know when you RSVP and we can arrange a lift for you."),
-                new WebsiteSection("Parking", "Please follow the signs to car parking. Please do not park in the spaces directly outside the entrance unless you are a blue badge holder, or have been informed directly that you may park there.")
+                new WebsiteSection("Train", "We suggest arriving by tube. The church is a 3 minute walk from Westminster tube station, which is served by the circle and district lines."),
+                new WebsiteSection("Cycling", "There is no bicycle parking available at the church, so we do not suggest cycling to the wedding."),
+                new WebsiteSection("Parking", "There is no parking available, except for blue badge holders. Please contact us on the RSVP form if you require a parking space.")
             ],
-            null,
+            "A short walk from Westminster tube station",
             null,
             new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car"),
-            new WebsiteGoogleMapsEmbed(new Location(48.8584196, 2.2943747))
+            new WebsiteGoogleMapsEmbed(new Location(51.4994561, -0.1273097))
         ),
-        "A very large church, also for all the animals, I guess.",
-        new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton"),
+        "A very large church for a very large wedding! This is our favourite church as we love the incredible architecture and history of the building.",
+        new WebsiteImage("https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxLAn3Rt0dftdxXpgsfkveZh7bMzVzP9Zm10eqtXY7jc-R0pxVovGAiMwspp5ad_q_xBOk8QFNiZsIzSo3wSqTviUphKliT7ufPtmJtwXSDxeSsiEtK7qSCU_0Hup63S5mvnM8daA=s680-w680-h510", "Westminster Abbey from the outside"),
         [
-            new WeddingModal("Fire Safety Information", "Don't burn the place down, please.")
+            new WeddingModal("Fire Safety Information", "Smoking is not permitted inside the church. Green emergency exit signs will direct you to your nearest exit.")
         ]
     );
     
@@ -269,10 +272,10 @@ public sealed class SampleWeddingDetails : IWeddingDetails
     public AccommodationDetails AccommodationDetails { get; } = new (
         "If you would like to stay until the end, we suggest staying at a nearby hotel.",
         new List<Hotel> {
-            new ("Eden Hotel",  "A beautiful hotel in the city centre, where the bride and groom will be staying", new Location(1234, 5678), "789 Hotel Street, Eden, ED5 6JK", 18, new Price(95, new Discount(15, "Quote 'Garden of Eden'")), "https://youtube.com/watch?v=dQw4w9WgXcQ", true, new WebsiteImage("https://cf.bstatic.com/xdata/images/hotel/max1024x768/40819418.jpg?k=5b61764f9e2fc3823d22a5260cf2e432f15014af29170e99f432f25a1776765a&o=&hp=1", "A luxury hotel by a beach")),
-            new("Paradise Inn", "A cheaper option if you're on a budget", new Location(1234, 5678), "101 Paradise Avenue, Eden, ED7 8LM", 12, new Price(75), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
+            new ("The Rubens at the Palace",  "A beautiful 5-star hotel just a few minutes from the palace", new Location(51.4982679, -0.1435535), "39 Buckingham Palace Road, London, SW1W 0PS", 1, new Price(209, new Discount(10, "Quote 'Palace'")), "https://youtube.com/watch?v=dQw4w9WgXcQ", true, new WebsiteImage("https://prod-media.redcarnationhotels.com/media/iozjaisp/the-rubens-at-the-palace-exterior.jpg?width=768&height=732&format=jpg&quality=80&rxy=0.5789473684210527,0.9093197762021246&v=1dc7a72df2f9450", "The rubens hotel")),
+            new("The Z Hotel", "A cheaper option if you'd rather something less exciting", new Location(51.4957314, -0.1462508), "5 Lower Belgrave Street, London, SW1W 0NR", 4, new Price(63), "https://youtube.com/watch?v=dQw4w9WgXcQ"),
         },
-        new WebsiteImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2IlovA50T00WLRbsaxCZgu5i-YF1z7zI4Vg&s", "A hotel room")
+        new WebsiteImage("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/fd/4e/53/caption.jpg?w=900&h=500&s=1", "A hotel room")
     );
     
     public IEnumerable<IContact> ExtraContacts { get; } = [
@@ -284,7 +287,7 @@ public sealed class SampleWeddingDetails : IWeddingDetails
     public Backstory Backstory { get; }
 
     public WebsiteImage MainImage { get; } 
-        = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/60167718645a930edf99bede/6fb36556-54ab-4a9e-9224-be3ef81587e5/K%2BM+-+Pheasantry+Brewery+Wedding+27.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
+        = new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5e575ffdabec06285101e4d6/4c3cb02b-f6b9-40e4-a9b4-6b6d0a49b99a/engagement-fashionable-leo-carrillo-beach-malibu.jpg", "An image of the bride and groom hugging surrounded by the wedding guests taking pictures.");
         
     public GalleryItems Gallery { get; } = new (
         [
@@ -302,8 +305,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             )
         ],
         [
-            new BigGalleryItem(new WebsiteImage("https://pbs.twimg.com/media/GfagNwOWQAAFWlB?format=jpg&name=medium", null), "Credit: AI"),
-            new BigGalleryItem(new WebsiteImage("https://pbs.twimg.com/media/EbN2CI3WAAcVxXD?format=jpg&name=large", null), "", "Spongebob Scooby", "Who made this...")
+            new BigGalleryItem(new WebsiteImage("https://english-wedding.com/wp-content/uploads/2023/06/ClearlyWildPhotography-beachengagement02-scaled.jpg", null), "Credit: Clearly Wild Photography"),
+            new BigGalleryItem(new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5e575ffdabec06285101e4d6/0bcac31c-5167-4528-8a82-c635449c28c8/engagement-cinematic-silhouette-sunset-leo-carrillo-beach.JPG", null), "", "Los Angeles", "December 2017")
         ]
     );
     
