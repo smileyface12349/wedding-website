@@ -28,13 +28,13 @@ public class DefaultConfig : IWebsiteConfig
     };
 
     public DefaultConfig() {
-        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Colours.Primary, null));
-        var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
+        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.SurfaceVariant, Colours.Primary, null));
+        var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colours.SurfaceVariant, Colours.Primary, null));
 
         Sections = [
             new Section.HowWeMet(),
-            new Section.Timeline(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox), true),
-            new Section.DressCode(new SectionTheme(Colours.Surface, Colours.Primary, filledBox)),
+            new Section.Timeline(),
+            new Section.DressCode(),
             new Section.Contact()
         ];
         
