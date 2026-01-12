@@ -31,9 +31,9 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private IBackground Background => Theme == null ? Config.Colours.PrimaryBackground : Theme.Background;
+    private IBackground Background => Theme == null ? Config.Colours.SurfaceVariant : Theme.Background;
     
-    private string CssShadow => Theme is { Background.IsDark: false } ? "shadow" : "";
+    private string CssShadow => Theme is { Background.IsDark: false } || (Theme == null && !Config.Colours.SurfaceVariant.IsDark) ? "shadow" : "";
 
     private string CssHorizontal => Horizontal ? "horizontal" : "";
 }
