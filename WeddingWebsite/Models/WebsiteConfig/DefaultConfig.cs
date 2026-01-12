@@ -12,8 +12,8 @@ public class DefaultConfig : IWebsiteConfig
         new Colour("#F2F1ED")
     );
     public IReadOnlyList<Section> Sections { get; protected set; }
-    public TopButtonsConfig TopButtons { get; }
-    public NavbarConfig Navbar { get; }
+    public TopButtonsConfig TopButtons { get; protected set; }
+    public NavbarConfig Navbar { get; protected set; }
     public bool BrideFirst => false;
     public PageConfig.Account AccountConfig { get; set; }
     public PageConfig.Registry RegistryConfig { get; set; }
