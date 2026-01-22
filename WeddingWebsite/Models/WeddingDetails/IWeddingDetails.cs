@@ -1,6 +1,7 @@
 ﻿using WeddingWebsite.Models.Gallery;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Accommodation;
+using WeddingWebsite.Models.Events;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
 

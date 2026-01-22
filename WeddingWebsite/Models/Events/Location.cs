@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models;
+﻿namespace WeddingWebsite.Models.Events;
 
 /// <summary>
 /// Latitude and longitude for use in automated things like maps.
