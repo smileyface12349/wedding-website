@@ -54,6 +54,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(config);
         Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(details, config);
 
+        IgnoreValidationIssues(config);
+
         return validationIssues;
     }
     
@@ -94,8 +96,27 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         logger.LogInformation(message);
         validationIssues.Add(new ValidationIssue(ValidationIssueSeverity.Info, message));
     }
-    
-    
+
+    /// <summary>
+    /// Ignore any validation issues that the user has requested to be ignored.
+    /// </summary>
+    private void IgnoreValidationIssues(IWebsiteConfig config)
+    {
+        var ignoredIssues = 0;
+        foreach (var issue in validationIssues.ToList())
+        {
+            if (config.IgnoredValidationIssues.Contains(issue.Message))
+            {
+                ignoredIssues++;
+                validationIssues.Remove(issue);
+            }
+        }
+
+        if (ignoredIssues > 0)
+        {
+            logger.LogInformation($"Ignored {ignoredIssues} validation issues.");
+        }
+    }
     
     /// <summary>
     /// A bride and groom are required for the homepage where it displays their names
