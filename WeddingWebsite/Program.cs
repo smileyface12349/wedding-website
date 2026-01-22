@@ -4,16 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using WeddingWebsite.Components;
+using WeddingWebsite.Config.Credentials;
+using WeddingWebsite.Config.ThemeAndLayout;
+using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
 using WeddingWebsite.Data.Stores;
-using WeddingWebsite.Models.Credentials;
+using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Validation;
-using WeddingWebsite.Models.WebsiteConfig;
-using WeddingWebsite.Models.WeddingDetails;
-using WeddingWebsite.Routing;
 using WeddingWebsite.Services;
-using RsvpController = WeddingWebsite.Controllers.RsvpController;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,11 +24,10 @@ builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
 
 // Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
 // which will automatically throw a NotImplementedException when attempting to use credentials.
-builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
+builder.Services.AddScoped<ICredentials, NoCredentials>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
-builder.Services.AddScoped<RsvpController>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IRegistryService, RegistryService>();

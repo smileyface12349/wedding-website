@@ -1,6 +1,9 @@
 ﻿// Yes, this really is the best way. Docs aren't supported in .razor files, so it would need to be a code-behind file.
 // Instead of creating an extra file for each component, I thought I'd dump them all in here.
 
+using WeddingWebsite.Models.ConfigInterfaces;
+using WeddingWebsite.Models.Events;
+
 namespace WeddingWebsite.Components.Layouts
 {
     /// <summary>
@@ -113,10 +116,10 @@ namespace WeddingWebsite.Components.Elements.Countdown
 namespace WeddingWebsite.Components.Elements
 {
     /// <summary>
-    /// A mini google maps widget. Requires <see cref="WeddingWebsite.Models.Credentials.IGoogleMapsApiKey"/> to be
-    /// registered as a service. Please restrict your API key to your domain name only.
+    /// A mini google maps widget. Requires a google maps API key in <see cref="ICredentials"/>.
+    /// Please restrict your API key to your domain name only.
     /// </summary>
-    /// <param name="Location">The <see cref="WeddingWebsite.Models.Location"/>.</param>
+    /// <param name="Location">The <see cref="Models.Events.Location"/>.</param>
     /// <param name="Height">(Optional) The height, as a string with CSS units.</param>
     /// <param name="ClassName">(Optional) Class name for additional styles. Make sure ::deep is applied.</param>
     partial class GoogleMapsEmbed {}
@@ -220,7 +223,7 @@ namespace WeddingWebsite.Components.WeddingComponents
     /// Displays events as a list. See <see cref="WeddingTimeline"/> for a timeline view which also contains travel
     /// directions and accommodation details.
     /// </summary>
-    /// <param name="Events">The <see cref="WeddingWebsite.Models.Event"/>s to show.</param>
+    /// <param name="Events">The <see cref="Event"/>s to show.</param>
     partial class EventList {}
     
     /// <summary>
@@ -267,7 +270,7 @@ namespace WeddingWebsite.Components.WeddingComponents
     /// A timeline of events throughout the day, including the events and auto-generated travel directions sections.
     /// Also includes an accommodation section at the end.
     /// </summary>
-    /// <param name="Events">The <see cref="WeddingWebsite.Models.Event"/>s.</param>
+    /// <param name="Events">The <see cref="Event"/>s.</param>
     /// <param name="AccommodationDetails">(Optional) The <see cref="WeddingWebsite.Models.AccommodationDetails"/>.</param>
     partial class WeddingTimeline {}
 }

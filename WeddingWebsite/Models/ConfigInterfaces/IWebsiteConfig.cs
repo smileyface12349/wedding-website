@@ -1,7 +1,6 @@
-﻿using WeddingWebsite.Components.Layouts;
-using WeddingWebsite.Models.WebsiteElement;
+﻿using WeddingWebsite.Models.WebsiteConfig;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Models.ConfigInterfaces;
 
 /// <summary>
 /// Configuration options. None of this information should be sensitive, and it should be stuff that relates to

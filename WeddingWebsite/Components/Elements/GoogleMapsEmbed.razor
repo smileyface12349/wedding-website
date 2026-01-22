@@ -1,6 +1,6 @@
-﻿@using WeddingWebsite.Models
-@using WeddingWebsite.Models.Credentials
-@inject IGoogleMapsApiKey Credentials
+﻿@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Events
+@inject ICredentials Credentials
 <iframe
     class="@ClassName"
     width="600"

@@ -1,7 +1,6 @@
-﻿using WeddingWebsite.Models.Venues;
-using WeddingWebsite.Models.WebsiteElement;
+﻿using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models;
+namespace WeddingWebsite.Models.Events;
 
 /// <summary>
 /// Something to display in the "order of the day".

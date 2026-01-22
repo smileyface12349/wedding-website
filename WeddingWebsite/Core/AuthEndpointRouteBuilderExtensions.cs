@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using WeddingWebsite.Data;
 
-namespace WeddingWebsite.Routing;
+namespace WeddingWebsite.Core;
 
 public static class AuthEndpointRouteBuilderExtensions
 {
