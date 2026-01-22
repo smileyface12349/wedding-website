@@ -1,7 +1,8 @@
 ﻿using WeddingWebsite.Models.Theme;
+using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models.WebsiteConfig;
+namespace WeddingWebsite.Config.ThemeAndLayout;
 
 public class DefaultConfig : IWebsiteConfig
 {
