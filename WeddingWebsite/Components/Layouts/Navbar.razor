@@ -2,6 +2,7 @@
 @using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
 
 <div id="navbar-desktop" class="top-row @CssScroll">
     <NavbarContent/>
@@ -9,7 +10,7 @@
 
 <div class="top-row @CssScroll" id="navbar-mobile">
     <div class="mobile-left-link">
-        <a href="/">Wedding Website</a>
+        <a href="/">@StringProvider.WebsiteTitle</a>
     </div>
     <div class="burger-menu-container">
         <div class="burger-menu" onclick="burgerClicked(this)">

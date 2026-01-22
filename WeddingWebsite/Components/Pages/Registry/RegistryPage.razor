@@ -5,8 +5,9 @@
 @using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
 
-<PageTitle>Registry</PageTitle>
+<PageTitle>@StringProvider.Registry</PageTitle>
 
 @if (Config.OptionalFeatures.Registry.IsActive())
 {
@@ -20,7 +21,7 @@ else
             <div style="margin-top: 56px"></div>
             <CascadingValue Value="ErrorSectionTheme">
                 <Section Center="true" Padding="false">
-                    <p style="padding: 5px">The registry is @Config.OptionalFeatures.Registry.IsActiveString(). However, as an administrator, you are able to access it anyway.</p>
+                    <p style="padding: 5px">@StringProvider.RegistryInactiveDescription(Config.OptionalFeatures.Registry.IsActiveString()). However, as an administrator, you are able to access it anyway.</p>
                 </Section>
                 <Registry/>
             </CascadingValue>
@@ -28,8 +29,8 @@ else
         <NotAuthorized>
             <div style="margin-top: 100px"></div>
             <Section Center="true">
-                <SectionHeading>Registry</SectionHeading>
-                <p style="margin-top: 70px; font-size: 16px">The registry is @Config.OptionalFeatures.Registry.IsActiveString().</p>
+                <SectionHeading>@StringProvider.Registry</SectionHeading>
+                <p style="margin-top: 70px; font-size: 16px">@StringProvider.RegistryInactiveDescription(Config.OptionalFeatures.Registry.IsActiveString())</p>
             </Section>
         </NotAuthorized>
     </AuthorizeView>

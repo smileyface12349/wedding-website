@@ -3,10 +3,11 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section Padding="@ShowHeading" Id="timeline">
     @if (ShowHeading) {
-        <SectionHeading>Order of the Day</SectionHeading>
+        <SectionHeading>@StringProvider.OrderOfTheDay</SectionHeading>
     }
     <WeddingTimeline Events="WeddingDetails.Events" AccommodationDetails="WeddingDetails.AccommodationDetails" ShowTravelDirections="ShowTravelDirections"/>
 </Section>

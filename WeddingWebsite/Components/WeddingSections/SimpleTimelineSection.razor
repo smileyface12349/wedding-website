@@ -3,9 +3,10 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section>
-    <SectionHeading>Order of the Day</SectionHeading>
+    <SectionHeading>@StringProvider.OrderOfTheDay</SectionHeading>
     <SimpleTimeline Events="WeddingDetails.Events"/>
 </Section>
 

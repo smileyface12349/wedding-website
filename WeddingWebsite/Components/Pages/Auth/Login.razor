@@ -16,6 +16,7 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringProvider StringProvider
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
 
@@ -28,7 +29,7 @@
 <div class="container">
     <CascadingValue Value="ModalTheme">
         <Box>
-            <h1>Log in</h1>
+            <h1>@StringProvider.Login</h1>
             <p>@errorMessage</p>
             @if (Config.DemoMode is DemoMode.Enabled c)
             {
@@ -41,28 +42,28 @@
                 <DataAnnotationsValidator/>
                 <hr/>
                 <div class="form-input">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">@StringProvider.Username</label>
                     <InputText @bind-Value="Input.Username" class="login-input" autocomplete="username" aria-required="true" placeholder="@Config.LoginConfig.UserNamePlaceholder" id="username"/>
                 </div>
                 @* <ValidationMessage For="() => Input.Email" class="validation-message text-danger"/> *@
                 <div class="form-input">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">@StringProvider.Password</label>
                     <InputText type="password" @bind-Value="Input.Password" class="login-input" autocomplete="current-password" aria-required="true" placeholder="password" id="password"/>
                 </div>
                 @* <ValidationMessage For="() => Input.Password" class="validation-message text-danger"/> *@
                 <div class="form-input">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
-                        Remember me
+                        @StringProvider.RememberMe
                     </label>
                 </div>
                 <div class="validation-container">
                     <ValidationSummary class="text-danger" role="alert"/>
                 </div>
                 <div>
-                    <button type="submit" style="background: @ModalTheme.Primary">Log in</button>
+                    <button type="submit" style="background: @ModalTheme.Primary">@StringProvider.Login</button>
                 </div>
-                <p>Forgot your password? Contact @(WeddingDetails.LoginContactMethod?.Text ?? "one of the organisers").</p>
+                <p>@StringProvider.ForgotPasswordContact(WeddingDetails.LoginContactMethod?.Text ?? "one of the organisers")</p>
                 @* <div> *@
                 @*     <p> *@
                 @*         <a href="Account/ForgotPassword">Forgot your password?</a> *@
