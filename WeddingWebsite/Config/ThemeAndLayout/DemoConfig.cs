@@ -14,6 +14,9 @@ public class DemoConfig : DefaultConfig, IWebsiteConfig
         new Colour("#FAFAE8")
     );
     public new DemoMode DemoMode => new DemoMode.Enabled([]);
+    public new IEnumerable<string> IgnoredValidationIssues => [
+        "You have both a Timeline and SimpleTimeline section. Since both sections display the same information, choose the level of detail you want and remove the other section."
+    ];
 
     public DemoConfig() {
         var surfaceVariant = new Colour(254, 252, 231);
