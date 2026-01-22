@@ -65,4 +65,9 @@ public interface IWebsiteConfig
     /// </summary>
     public DemoMode DemoMode { get; }
     
+    /// <summary>
+    /// Manually ignore specific validation warnings that you are aware of and don't care about.
+    /// </summary>
+    public IEnumerable<String> IgnoredValidationIssues { get; }
+    
 }

@@ -22,7 +22,8 @@ public class DefaultConfig : IWebsiteConfig
     public PageConfig.RegistryItem RegistryItemConfig { get; set; }
     public PageConfig.Login LoginConfig { get; set; }
     public DemoMode DemoMode => new DemoMode.Disabled();
-    
+    public IEnumerable<string> IgnoredValidationIssues => [];
+
     // Default config will enable all optional features.
     public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
     {
