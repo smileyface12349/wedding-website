@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models.Venues;
+namespace WeddingWebsite.Models.Events;
 
 /// <summary>
 /// A venue that stuff happens in.

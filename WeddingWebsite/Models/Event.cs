@@ -1,4 +1,4 @@
-﻿using WeddingWebsite.Models.Venues;
+﻿using WeddingWebsite.Models.Events;
 using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models;

@@ -1,6 +1,6 @@
 ﻿using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models.Venues;
+namespace WeddingWebsite.Models.Events;
 
 /// <summary>
 /// Instructions for how to get somewhere. Doesn't contain the actual address or location.
