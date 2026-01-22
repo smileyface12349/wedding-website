@@ -178,6 +178,10 @@ Code in JavaScript directly.
 
 Feel free to use this for your own wedding website, that's what it's here for! You're also entirely welcome to cut bits out of it and use it in your own project without any attribution (although some attribution would be lovely). You may remove the footer at the bottom of the website if you want. Please note I have no legal obligations to provide support or ensure this product works, although I will do my best.
 
+However, if you are planning on setting up a wedding website maker business, I've added some additional restrictions. Most notably, before reaching the payment screen, customers must be explicitly prompted about the presence of this repository and how they can set up their website for free instead. Please see the license for more information.
+
+Please be very careful that some of the assets used in this project have special license restrictions. For example:
+
 The following assets are used in the project and do **not** permit commercial use. If you want to use this code in a commercial setting, you **must** remove these assets, or purchase a license yourself:
 - [Amsterdam font](https://www.dafont.com/amsterdam.font)
 
@@ -185,4 +189,4 @@ The following assets are AI generated. If this is a problem, please do not use t
 - Bricks background `/bg/bricks.jpg`
 - Blue flowers background `/bg/blue-flowers.png`
 
-All other assets will be safe to use in commercial and non-commercial scenarios. Please be careful when pulling changes from the repo as more assets with restricted licenses may be added.
+This list is not exhaustive, and it is your responsibility to check all assets (except source code).
