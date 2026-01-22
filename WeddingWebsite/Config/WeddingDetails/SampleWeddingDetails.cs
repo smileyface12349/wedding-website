@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using WeddingWebsite.Models;
+using WeddingWebsite.Models.Accommodation;
 using WeddingWebsite.Models.Gallery;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Venues;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
-using WeddingWebsite.Models.Accommodation;
+using WeddingWebsite.Models.WeddingDetails;
 
-namespace WeddingWebsite.Models.WeddingDetails;
+namespace WeddingWebsite.Config.WeddingDetails;
 
 /// <summary>
 /// This file provides a git-tracked up-to-date selection of data suitable for development.
