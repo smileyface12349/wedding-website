@@ -12,7 +12,6 @@ using WeddingWebsite.Data;
 using WeddingWebsite.Data.Stores;
 using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Validation;
-using WeddingWebsite.Routing;
 using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
