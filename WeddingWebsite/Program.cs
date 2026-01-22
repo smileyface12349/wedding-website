@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using WeddingWebsite.Components;
+using WeddingWebsite.Config.Credentials;
 using WeddingWebsite.Config.ThemeAndLayout;
 using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
