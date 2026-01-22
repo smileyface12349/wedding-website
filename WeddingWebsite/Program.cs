@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using WeddingWebsite.Components;
 using WeddingWebsite.Config.Credentials;
+using WeddingWebsite.Config.Strings;
 using WeddingWebsite.Config.ThemeAndLayout;
 using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
@@ -25,6 +26,9 @@ builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
 // Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
 // which will automatically throw a NotImplementedException when attempting to use credentials.
 builder.Services.AddScoped<ICredentials, NoCredentials>();
+
+// The wording can be changed, to different languages or just different wording.
+builder.Services.AddScoped<IStringProvider, StandardBritishEnglish>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
