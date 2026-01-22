@@ -1,11 +1,11 @@
-﻿using WeddingWebsite.Models.Gallery;
-using WeddingWebsite.Models.People;
-using WeddingWebsite.Models.Accommodation;
+﻿using WeddingWebsite.Models.Accommodation;
 using WeddingWebsite.Models.Events;
+using WeddingWebsite.Models.Gallery;
+using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
 
-namespace WeddingWebsite.Models.WeddingDetails;
+namespace WeddingWebsite.Models.ConfigInterfaces;
 
 public interface IWeddingDetails
 {

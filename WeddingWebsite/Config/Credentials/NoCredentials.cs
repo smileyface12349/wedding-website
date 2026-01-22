@@ -1,4 +1,4 @@
-﻿using WeddingWebsite.Models.Credentials;
+﻿using WeddingWebsite.Models.ConfigInterfaces;
 
 namespace WeddingWebsite.Config.Credentials;
 
