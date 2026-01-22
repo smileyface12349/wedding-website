@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.Credentials;
+﻿using WeddingWebsite.Models.Credentials;
+
+namespace WeddingWebsite.Config.Credentials;
 
 /// <summary>
 /// Default credentials file with no credentials. If you try to access something requiring an API key, a
