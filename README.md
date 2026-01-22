@@ -125,7 +125,7 @@ There are some overall colours, however most of the theming is per-section. You 
 
 ## Configuration
 
-Configuration is done in two entirely separate places.
+Configuration is done in two entirely separate places. You'll find anything designed with customisation in mind in `WeddingWebsite/Config`. Config for different aspects are split up, and your `Program.cs` file will choose exactly one file from each of these directories to form your overall config - you can change each one separately.
 
 ### Wedding Details
 
@@ -133,13 +133,17 @@ This is for all details related to the wedding. I try and stay away from impleme
 
 By default, `SampleWeddingDetails.cs` is being used. If you go into `Program.cs`, you can change `SampleWeddingDetails.cs` to your new implementation of `IWeddingDetails`
 
-### Website Config
+### Theme and Layout
 
 The config affects how the website displays, but is completely separate from the details of the wedding. This includes which sections there are, colour scheme and other options for each section.
 
 To change the config, make a new class e.g. `CustomWebsiteConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. To change section theming, you will probably want to override the whole Sections attribute (but you can modify only particular sections in your implementation).
 
 If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference. If you're thinking of making a PR, get in touch early on about your design approaches and I can give you early feedback!
+
+### Credentials
+
+Some functionality will require your own API keys. The `NoCredentials` interface is designed to fail gracefully, so you can safely leave this out for now and take another look later if you're interested in particular functionality.
 
 ## Interactivity
 
