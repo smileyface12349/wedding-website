@@ -115,8 +115,8 @@ namespace WeddingWebsite.Components.Elements.Countdown
 namespace WeddingWebsite.Components.Elements
 {
     /// <summary>
-    /// A mini google maps widget. Requires <see cref="WeddingWebsite.Models.Credentials.IGoogleMapsApiKey"/> to be
-    /// registered as a service. Please restrict your API key to your domain name only.
+    /// A mini google maps widget. Requires a google maps API key in <see cref="WeddingWebsite.Models.Credentials.ICredentials"/>.
+    /// Please restrict your API key to your domain name only.
     /// </summary>
     /// <param name="Location">The <see cref="Models.Events.Location"/>.</param>
     /// <param name="Height">(Optional) The height, as a string with CSS units.</param>

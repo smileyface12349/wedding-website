@@ -1,6 +1,6 @@
 ﻿namespace WeddingWebsite.Models.Credentials;
 
-public interface IGoogleMapsApiKey
+public interface ICredentials
 {
     public string GoogleMaps { get; }
 }
