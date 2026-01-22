@@ -10,13 +10,10 @@ using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
 using WeddingWebsite.Data.Stores;
-using WeddingWebsite.Models.Credentials;
+using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Validation;
-using WeddingWebsite.Models.WebsiteConfig;
-using WeddingWebsite.Models.WeddingDetails;
 using WeddingWebsite.Routing;
 using WeddingWebsite.Services;
-using RsvpController = WeddingWebsite.Controllers.RsvpController;
 
 var builder = WebApplication.CreateBuilder(args);
 

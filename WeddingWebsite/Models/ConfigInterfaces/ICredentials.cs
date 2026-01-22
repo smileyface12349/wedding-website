@@ -1,4 +1,4 @@
-﻿namespace WeddingWebsite.Models.Credentials;
+﻿namespace WeddingWebsite.Models.ConfigInterfaces;
 
 public interface ICredentials
 {

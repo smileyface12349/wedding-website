@@ -1,6 +1,7 @@
 ﻿// Yes, this really is the best way. Docs aren't supported in .razor files, so it would need to be a code-behind file.
 // Instead of creating an extra file for each component, I thought I'd dump them all in here.
 
+using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Events;
 
 namespace WeddingWebsite.Components.Layouts
@@ -115,7 +116,7 @@ namespace WeddingWebsite.Components.Elements.Countdown
 namespace WeddingWebsite.Components.Elements
 {
     /// <summary>
-    /// A mini google maps widget. Requires a google maps API key in <see cref="WeddingWebsite.Models.Credentials.ICredentials"/>.
+    /// A mini google maps widget. Requires a google maps API key in <see cref="ICredentials"/>.
     /// Please restrict your API key to your domain name only.
     /// </summary>
     /// <param name="Location">The <see cref="Models.Events.Location"/>.</param>
