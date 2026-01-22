@@ -27,7 +27,7 @@ builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
 
 // Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
 // which will automatically throw a NotImplementedException when attempting to use credentials.
-builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
+builder.Services.AddScoped<ICredentials, Credentials>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();

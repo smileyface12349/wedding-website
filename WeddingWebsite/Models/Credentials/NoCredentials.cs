@@ -7,7 +7,7 @@
 /// This is provided so you can get the code to compile without all the credentials.
 /// </summary>
 
-public class NoCredentials : IGoogleMapsApiKey
+public class NoCredentials : ICredentials
 {
     public string GoogleMaps => throw new NotImplementedException();
 }
