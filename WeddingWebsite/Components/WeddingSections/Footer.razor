@@ -1,6 +1,9 @@
-﻿<div class="footer">
-    <p>Created by <a href="https://joshhumphriss.com" target="_blank" rel="noopener noreferrer">Josh Humphriss <img height="18px" width="18px" src="/icons/josh-humphriss-circle.png"/></a></p>
-    <p>Source Code on <a href="https://github.com/smileyface12349/wedding-website" target="_blank" rel="noopener noreferrer">GitHub <img height="18px" width="18px" src="/icons/logos/github.svg"/></a></p>
+﻿@using WeddingWebsite.Models.ConfigInterfaces
+@inject IStringProvider StringProvider
+
+<div class="footer">
+    <p>@StringProvider.CreatedBy <a href="https://joshhumphriss.com" target="_blank" rel="noopener noreferrer">Josh Humphriss <img height="18px" width="18px" src="/icons/josh-humphriss-circle.png"/></a></p>
+    <p>@StringProvider.SourceCodeOn <a href="https://github.com/smileyface12349/wedding-website" target="_blank" rel="noopener noreferrer">@StringProvider.GitHub <img height="18px" width="18px" src="/icons/logos/github.svg"/></a></p>
 </div>
 
 @code {

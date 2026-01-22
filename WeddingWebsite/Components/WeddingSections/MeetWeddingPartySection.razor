@@ -6,9 +6,10 @@
 @using WeddingWebsite.Models.People
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section Center="true">
-    <SectionHeading>Meet the Wedding Party</SectionHeading>
+    <SectionHeading>@StringProvider.MeetTheWeddingParty</SectionHeading>
     @if (DisplayMode is MeetWeddingPartyDisplay.Chat)
     {
         <SideBySide>

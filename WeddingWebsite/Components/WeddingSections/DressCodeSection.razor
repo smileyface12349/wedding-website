@@ -6,6 +6,7 @@
 @using WeddingWebsite.Models.People
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section>
     @if (WrapInBox)
@@ -15,14 +16,14 @@
                 <WebsiteElement Element="WeddingDetails.DressCode.Media" Cover="true" MaxHeight="300px"/>
             </TopContent>
             <ChildContent>
-                <h2>Dress Code</h2>
+                <h2>@StringProvider.DressCode</h2>
                 <DressCode Dress="WeddingDetails.DressCode" Contact="Contact"/>
             </ChildContent>
         </Box>
     }
     else
     {
-        <SectionHeading>Dress Code</SectionHeading>
+        <SectionHeading>@StringProvider.DressCode</SectionHeading>
         <SideBySide HalfSpacing="10px">
             <LeftContent>
                 <div class="dress-code-no-box-image box-shadow">

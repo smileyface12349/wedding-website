@@ -1,12 +1,15 @@
 ﻿@using WeddingWebsite.Components.Interactivity
+@using WeddingWebsite.Models.ConfigInterfaces
+
+@inject IStringProvider StringProvider
 
 <div class="container">
-    <DatePart Label="Month" Value="Months"/><BigColon/>
-    <DatePart Label="Week" Value="Weeks"/><BigColon/>
-    <DatePart Label="Day" Value="Days"/><BigColon/>
-    <DatePart Label="Hour" Value="Hours"/><BigColon/>
-    <DatePart Label="Minute" Value="Minutes"/><BigColon/>
-    <DatePart Label="Second" Value="Seconds"/>
+    <DatePart Label="@StringProvider.Month" Value="Months"/><BigColon/>
+    <DatePart Label="@StringProvider.Week" Value="Weeks"/><BigColon/>
+    <DatePart Label="@StringProvider.Day" Value="Days"/><BigColon/>
+    <DatePart Label="@StringProvider.Hour" Value="Hours"/><BigColon/>
+    <DatePart Label="@StringProvider.Minute" Value="Minutes"/><BigColon/>
+    <DatePart Label="@StringProvider.Second" Value="Seconds"/>
 </div>
 
 <div id="countdown-date" style="display: none">@CountdownTo.ToString("yyyy-MM-ddTHH:mm:ss")</div>

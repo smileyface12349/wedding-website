@@ -3,9 +3,10 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section Id="accommodation">
-    <SectionHeading>Accommodation</SectionHeading>
+    <SectionHeading>@StringProvider.Accommodation</SectionHeading>
     <p class="description">@WeddingDetails.AccommodationDetails.Description</p>
     @foreach (var hotel in WeddingDetails.AccommodationDetails.Hotels.Where(hotel => hotel.Emphasise))
     {

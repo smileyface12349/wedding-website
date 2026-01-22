@@ -3,11 +3,12 @@
 @using WeddingWebsite.Models.Gallery
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 @if (!WeddingDetails.Gallery.Favourites.Any()) return;
 
 <Section>
-    <SectionHeading>Gallery</SectionHeading>
+    <SectionHeading>@StringProvider.Gallery</SectionHeading>
     <MudCarousel TData="BigGalleryItem" ItemsSource="WeddingDetails.Gallery.Favourites" Style="@CarouselCss" AutoCycle="true" ShowArrows="true" @bind-SelectedIndex="CurrentIndex" EnableSwipeGesture="false">
         <ItemTemplate>
             <div class="carousel-item">

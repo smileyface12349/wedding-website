@@ -2,6 +2,7 @@
 @using WeddingWebsite.Models.WebsiteConfig
 
 @inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
 
 @foreach (var item in Config.Navbar.Items)
 {
@@ -14,8 +15,8 @@
 <AuthorizeView Roles="Admin">
     <a href="/Admin">Admin</a>
 </AuthorizeView>
-<a href="/Account">My Account</a>
-<a href="/Account/Logout">Logout</a>
+<a href="/Account">@StringProvider.MyAccount</a>
+<a href="/Account/Logout">@StringProvider.Logout</a>
 
 @code {
     [Parameter]
