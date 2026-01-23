@@ -108,13 +108,19 @@ This section recommends particular people based on the type of enquiry and how u
 
 The registry feature allows you to make a list of items you want, each having as many different purchase methods as you want (including transferring the money to you). Users can then claim these items and choose how they want to purchase them. This gives you no restrictions on which items you can have, although you won't get any benefits of a normal registry like free delivery.
 
+<details>
+<summary>View Image</summary>
 <img width="1043" height="840" alt="image" src="https://github.com/user-attachments/assets/472816ed-9a53-40f7-8ec0-d2ee9e955c43" />
+</details>
 
 ## To-Do List
 
 While you can use another service, it's easier to stay on the website. The to-do list allows you to co-ordinate tasks and keep track of what needs doing in one place. You can even assign guests to non-admin users, and tasks assigned to you will automatically appear on the homepage.
 
+<details>
+<summary>View Image</summary>
 <img width="768" height="691" alt="image" src="https://github.com/user-attachments/assets/9f5a8a6c-bcc5-455e-bdbd-88445a7c3790" />
+</details>
 
 ## Theming
 
@@ -123,33 +129,38 @@ There are some overall colours, however most of the theming is per-section. You 
 2. The primary colour to use for buttons etc. on this background.
 3. What any boxes should look like. Sections do not use a particular style of box, instead you can choose between rounded and outlined boxes within the theme directly.
 
-## Configuration
+## Customising the Website
 
-Configuration is done in two entirely separate places. You'll find anything designed with customisation in mind in `WeddingWebsite/Config`. Config for different aspects are split up, and your `Program.cs` file will choose exactly one file from each of these directories to form your overall config - you can change each one separately.
+Configuration is done in a few separate files. All can be found in `WeddingWebsite/Config`. Each folder has multiple implementations of an interface, and `Program.cs` will determine which one is active. This lets you swap between different configurations to see what you like best.
 
 ### Wedding Details
 
-This is for all details related to the wedding. I try and stay away from implementation details in this class, it merely specifies information about the wedding and it's up to each section to choose how to render it. 
-
-By default, `SampleWeddingDetails.cs` is being used. If you go into `Program.cs`, you can change `SampleWeddingDetails.cs` to your new implementation of `IWeddingDetails`
+Anything that relates to your wedding in particular will go in here. Please note that if you don't include all of the sections then some of this content is not needed. This is something you need to do at some point, but you are welcome to use `SampleWeddingDetails` and customise the theme and layout to your liking first.
 
 ### Theme and Layout
 
-The config affects how the website displays, but is completely separate from the details of the wedding. This includes which sections there are, colour scheme and other options for each section.
+The config affects how the website displays, but not what content is within each section. There are several pre-made themes that you are welcome to choose from.
 
-To change the config, make a new class e.g. `CustomWebsiteConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. To change section theming, you will probably want to override the whole Sections attribute (but you can modify only particular sections in your implementation).
+To change the config, make a new class e.g. `CustomConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. See `DemoConfig` for an example.
 
-If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference. If you're thinking of making a PR, get in touch early on about your design approaches and I can give you early feedback!
+If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it so that other people can benefit from it. I will merge any PR that I think is a positive impact, but I would suggest reaching out in advance if you're not sure about it.
 
 ### Credentials
 
 Some functionality will require your own API keys. The `NoCredentials` interface is designed to fail gracefully, so you can safely leave this out for now and take another look later if you're interested in particular functionality.
 
+### Strings
+
+This will allow you to change the wording, or translate the website into different languages. Note that you are currently only able to customise text that your guests can see (but feel free to implement this for admin pages in a PR!).
+
 ## Interactivity
 
-Interactivity is disabled by default, so if you're adding any new pages it will be rendered on the server only and none of the buttons will work. To use interactivity, choose one of the following three render modes.
+This section is only relevant if you are developing your own pages.
 
-While you may interchange render modes on the same page, I'd recommend setting the render mode for each page and having all components on the page use the same render mode. Otherwise, you will often end up with the worst of both worlds.
+<details>
+<summary>Show Section</summary>
+
+In Blazor, there's several ways of making your website interactive that need to be thought about carefully.
 
 ### Server-Side Rendering
 
@@ -158,7 +169,7 @@ Code in C#, with everything rendered on the server. Every button press triggers 
 - Advantages: Fast page load, Secure, Code maintainability, Blazor libraries, Easy to enable.
 - Disadvantages: Slow interactivity, Connection required, Can be unstable.
 - Best for: Usages where a stable internet connection is likely and buttons either trigger privileged requests that would need to go to the server anyway, or are non-essential (e.g. admin page, homepage).
-- How to enable: Write `@rendermode InteractiveServer` at the top of the file.
+- How to enable: This is the default! If it's not, write `@rendermode InteractiveServer` at the top of the file.
 
 ### WebAssembly
 
@@ -177,6 +188,8 @@ Code in JavaScript directly.
 - Disadvantages: Very poor code maintainability. No server-side pre-rendering.
 - Best for: The odd dropdown or simple component in an otherwise static page (e.g. homepage, gallery), when it feels silly to load WebAssembly for something that can be achieved with a few lines of JavaScript.
 - How to enable: Create a scoped `.js` file with exported functions `onLoad`, `onUpdate` and `onDispose`. See `CountdownToDate` for an example. 
+
+</details>
 
 ## License
 
