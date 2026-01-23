@@ -8,10 +8,10 @@ namespace WeddingWebsite.Config.ThemeAndLayout;
 public class DefaultConfig : IWebsiteConfig
 {
     public WeddingColours Colours { get; } = new (
-        new Colour("#b9b8ff"),
-        new Colour("#d0f0ff"),
-        new Colour("#b9b8ff"),
-        new Colour("#F8F8EF")
+        new Colour(77, 204, 225),   //colours I can change
+        new Colour("#A3D5E0"),
+        new Colour("#B6D7A8"),
+        new Colour("#F2F1ED")
     );
     public IReadOnlyList<Section> Sections { get; protected set; }
     public TopButtonsConfig TopButtons { get; protected set; }
@@ -31,36 +31,58 @@ public class DefaultConfig : IWebsiteConfig
     };
 
     public DefaultConfig() {
-        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.SurfaceVariant, Colours.Primary, null));
-        var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colours.SurfaceVariant, Colours.Primary, null));
+        var surfaceVariant = new Colour(254, 252, 231);
+        
+        var purple = new Colour("#DCCCEC");
+        var coral = new Colour(239, 111, 108);
+        var salmon = new Colour(236, 129, 108, Colour.VeryDarkGrey);
+        var lightGreen = new Colour(112, 229, 130);
+        var darkGreen = new Colour(50, 150, 50);
+        var yellow = new Colour("#F9DC5C");
+        var darkPurple = new Colour(137, 108, 166);
 
+        var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
+        var whiteFilledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Colours.Primary, null));
+        var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
+        
+        //var bricks = new BackgroundImage("/bg/bricks.jpg", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
+        var bricks = new BackgroundImage("/img/4.jpeg", true, "1000px", null, 0.3, false);
+        var flowers = new BackgroundImage("/bg/blue-flowers.png", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
+    
         Sections = [
-            new Section.HowWeMet(),
-            new Section.Timeline(),
-            new Section.DressCode(),
-            new Section.Contact()
+            new Section.TodoListSummary(new SectionTheme(salmon, Colour.White, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colour.White, null)))),
+            //new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
+            new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
+            new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true, false),
+            //new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
+            //new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
+            new Section.TravelDirections(new SectionTheme(purple, Colours.Primary, filledBox)),
+            //new Section.Gallery(),
+            //new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];
         
         TopButtons = new TopButtonsConfig(
             [
-                new LinkButton("RSVP", "/rsvp")
+                new LinkButton("Directions", "#directions")
             ],
-            Colours.Secondary
+            yellow
         );
 
         Navbar = new NavbarConfig(
             [
                 new LinkButton("Home", "/"),
-                new LinkButton("Timeline & Transport", "/#timeline"),
+                new LinkButton("Schedule", "/#timeline"),
+                new LinkButton("Directions", "/#directions"),
                 new LinkButton("Registry", "/registry"),
-                new LinkButton("Gallery", "/gallery"),
-                new LinkButton("Contact", "/#contact")
+                //new LinkButton("Gallery", "/gallery"),
+                //new LinkButton("Contact", "/#contact")
             ]
         );
 
-        AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), Colours.Secondary, filledBox));
+        AccountConfig = new PageConfig.Account(new SectionTheme(Colours.PrimaryBackground.WithAlpha(150), purple, whiteFilledBox));
+        
         RegistryConfig = new PageConfig.Registry(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox));
-        RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, filledBox));
-        LoginConfig = new PageConfig.Login(new SectionTheme(Colours.PrimaryBackground, Colours.Primary, filledBox));
+        RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, whiteFilledBox));
+        LoginConfig = new PageConfig.Login(new SectionTheme(Colours.PrimaryBackground, Colours.Primary, whiteFilledBox));
     }
 }
