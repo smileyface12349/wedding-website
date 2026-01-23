@@ -31,7 +31,12 @@ Once you've done these essential steps in this order, you can do some other step
 
 **Further Development**: If there's something you want added, pitch it to me in an issue and I'll see what I think. Depending on how much I think it will benefit others I may make it for free or I may charge an hourly rate.
 
-## Sections on the Homepage
+## Pages
+
+<details>
+<summary>See what's on the website in a bit more detail</summary>
+  
+### Homepage
 
 The content shown on the demo screenshots is made up, and not based on a real wedding. The colours and backgrounds are all very easily customisable.
 
@@ -42,18 +47,18 @@ You can view this on the [demo site](https://wedding.joshhumphriss.com) or by ex
 <details>
 <summary>View Images and Descriptions</summary>
 
-### Top Section
+#### Top Section
 <img width="1913" height="908" alt="image" src="https://github.com/user-attachments/assets/4a0faefa-71f2-40fc-8998-c099ee92c5ad" />
 
 Displays a large background image and a countdown timer, with some customisable call-to-action buttons for key things that need doing currently (e.g. booking accommodation or RSVPing).
 This section is required at the top, unlike the rest which you may add in any order.
 
-### How We Met
+#### How We Met
 <img width="1164" height="493" alt="image" src="https://github.com/user-attachments/assets/d345f5f6-5b21-4c4b-9f17-2b7f67ddb6a1" />
 
 A simple paragraph to give a bit of backstory.
 
-### Timeline
+#### Timeline
 <img width="1065" height="840" alt="image" src="https://github.com/user-attachments/assets/cf98cd8b-5574-4cee-a01d-8feb78c25890" />
 
 This unique timeline design conveys:
@@ -62,49 +67,49 @@ This unique timeline design conveys:
 - Accommodation details (auto-generated at the end of the timeline).
 All in one coherent view. I find this much easier to use than having separate sections for timings, travel directions and accommodation details.
 
-### Simple Timeline
+#### Simple Timeline
 <img width="534" height="396" alt="image" src="https://github.com/user-attachments/assets/3868d870-cec3-47ec-92f1-58392f552073" />
 
 If you'd rather just have a list of events and start times.
 
-### Venue Showcase
+#### Venue Showcase
 <img width="1078" height="710" alt="image" src="https://github.com/user-attachments/assets/a7e92d91-d8ad-4157-b1cb-b37e142fa8b8" />
 
 Shows you a little more information about the venues. Totally optional, as the important information is already in the timeline.
 
-### Travel Directions
+#### Travel Directions
 <img width="1063" height="743" alt="image" src="https://github.com/user-attachments/assets/bf5fbd22-0d48-4f27-954c-58dc1c719921" />
 
 The directions are already shown in other places, but you can emphasise them here too.
 
-### Accommodation
+#### Accommodation
 <img width="1076" height="743" alt="image" src="https://github.com/user-attachments/assets/8ca68e94-d464-4b7b-871f-46831cc5f61c" />
 
 Gives a bit more space for the accommodation options. Totally optional, as this information is in the timeline already (but potentially less obvious).
 
-### Meet the Wedding Party
+#### Meet the Wedding Party
 <img width="1054" height="752" alt="image" src="https://github.com/user-attachments/assets/d191851f-6bd7-4a8d-87dc-fc15a7cf90f1" />
 
 For a little more information about the important people. Comes with various display modes, including chat messages if you prefer that.
 
-### Gallery
+#### Gallery
 <img width="1051" height="749" alt="image" src="https://github.com/user-attachments/assets/76be2494-02b1-4fb5-953e-6284517b5504" />
 
 There's a whole gallery page, but you can also choose a few to display on the homepage.
 
-### Dress Code
+#### Dress Code
 <img width="1084" height="365" alt="image" src="https://github.com/user-attachments/assets/495fbe87-2494-4965-98f1-8a6f7ce1defa" />
 
 A tiny section to display the dress code. Doesn't have to be wrapped in a box.
 
-### Contacts
+#### Contacts
 <img width="662" height="549" alt="image" src="https://github.com/user-attachments/assets/7b2bcfb9-c2d0-498c-bb1e-b40f3cc8540c" />
 
 This section recommends particular people based on the type of enquiry and how urgent it is.
 
 </details>
 
-## The Registry
+### The Registry
 
 The registry feature allows you to make a list of items you want, each having as many different purchase methods as you want (including transferring the money to you). Users can then claim these items and choose how they want to purchase them. This gives you no restrictions on which items you can have, although you won't get any benefits of a normal registry like free delivery.
 
@@ -113,13 +118,15 @@ The registry feature allows you to make a list of items you want, each having as
 <img width="1043" height="840" alt="image" src="https://github.com/user-attachments/assets/472816ed-9a53-40f7-8ec0-d2ee9e955c43" />
 </details>
 
-## To-Do List
+### To-Do List
 
 While you can use another service, it's easier to stay on the website. The to-do list allows you to co-ordinate tasks and keep track of what needs doing in one place. You can even assign guests to non-admin users, and tasks assigned to you will automatically appear on the homepage.
 
 <details>
 <summary>View Image</summary>
 <img width="768" height="691" alt="image" src="https://github.com/user-attachments/assets/9f5a8a6c-bcc5-455e-bdbd-88445a7c3790" />
+</details>
+
 </details>
 
 ## Theming
