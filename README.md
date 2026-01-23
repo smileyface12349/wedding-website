@@ -2,13 +2,16 @@
 
 ## Features
 
-- Customisable homepage with a variety of pre-built sections including location, timings of the day, accommodation and contact details.
-- Simple but robust theming support to quickly hot-swap the colours within particular sections.
-- A login system for guests to access the website, and a robust admin site to manage accounts. You may add multiple guests to a single account.
-- (RSVP system is coming soon).
-- Custom registry system allowing guests to browse items and claim them.
+- Customisable homepage with a large selection of pre-built sections to choose from.
+- Robust theming support to change the colours and styles of individual sections. A library of pre-made themes.
+- Individual accounts for all of your guests (or one account per household) so you can restrict access and collect RSVPs with confidence.
+- Fully featured admin panel to give you insights into what your guests are doing on the website and who has RSVPed.
+- Custom registry that allows items from any retailer with no fee. Individual guests claim items using their accounts.
 - Responsive interface for all screen sizes.
-- Total separation of data and functionality makes it easy to customise the website for a different wedding, and keep private information off git.
+
+Coming Soon:
+- RSVP form.
+- Lift sharing feature.
 
 ## Setup Instructions
 
