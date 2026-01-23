@@ -57,7 +57,7 @@ nunit-*.xml
 *credentials.json
 Credentials.cs
 RealWeddingDetails.cs
-# WeddingWebsite/wwwroot/img/*
+WeddingWebsite/wwwroot/img/*
 favicon.*
 app.db
 CustomConfig.cs
