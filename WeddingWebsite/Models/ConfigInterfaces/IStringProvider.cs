@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.ConfigInterfaces;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace WeddingWebsite.Models.ConfigInterfaces;
 
 /// <summary>
 /// Customise all user-facing strings, either into a different language or just different wording.
@@ -75,7 +77,7 @@ public interface IStringProvider
     string Directions { get; }
     
     string DressCode { get; }
-    string DressCodeQuestions(string name, string? contactMethod);
+    MarkupString DressCodeQuestions(string name, string? contactMethod);
     
     string HowWeMet { get; }
     
@@ -113,26 +115,26 @@ public interface IStringProvider
     string DeliveryCost(decimal cost);
     string ItemPurchased { get; }
     string ThankYouForGift { get; }
-    string QuantityPurchased(int quantity);
-    string PurchaseMethod(string purchaseMethod);
-    string DeliveryAddress(string? address);
+    MarkupString QuantityPurchased(int quantity);
+    MarkupString PurchaseMethod(string purchaseMethod);
+    MarkupString DeliveryAddress(string? address);
     string RegistryClaimedContact(string? contactMethod);
     string Notes { get; }
     string NotesDescription { get; }
     string NotesPlaceholder { get; }
     string SaveNotes { get; }
     string SelectPurchaseMethod { get; }
-    string SelectedQuantity(int quantity);
+    MarkupString SelectedQuantity(int quantity);
     string SelectPurchaseMethodDescription { get; }
     string SelectDeliveryAddress { get; }
-    string SelectedPurchaseMethod(string purchaseMethod);
+    MarkupString SelectedPurchaseMethod(string purchaseMethod);
     string SelectDeliveryAddressDescription { get; }
     string BringOnTheDay { get; }
     string ItemReadyToPurchase { get; }
-    string SelectedDeliveryAddress(string? address);
+    MarkupString SelectedDeliveryAddress(string? address);
     string ItemReadyToPurchaseDescription { get; }
     string GoToPurchasePage { get; }
-    string CustomPurchaseInstructions(string? instructions);
+    MarkupString CustomPurchaseInstructions(string? instructions);
     string MarkAsCompleted { get; }
     string UnclaimDescription { get; }
     string Unclaim { get; }
