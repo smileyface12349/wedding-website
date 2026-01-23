@@ -25,7 +25,7 @@ builder.Services.AddScoped<IWeddingDetails, WeddingDetails>();
 // Recommended - customise the theme and layout. Please create your own implementation of IWebsiteConfig. It is
 // recommended to have this also inherit from DefaultConfig. See DemoConfig for an example. If you rename the file
 // to CustomConfig, it will be ignored from git so that it is kept private.
-builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
+builder.Services.AddScoped<IWebsiteConfig, Config>();
 
 // Optional - If you would like to use any functionality that requires credentials (e.g. google maps), please create a
 // file called Credentials.cs that implements ICredentials. This will be ignored from git so that it is kept private.
