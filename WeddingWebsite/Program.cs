@@ -34,7 +34,7 @@ builder.Services.AddScoped<ICredentials, NoCredentials>();
 // Optional - If you'd like to customise the wording or translate into a different language, you can swap out for a
 // different implementation of IStringProvider. If you're only changing a few strings, you can inherit from
 // StandardBritishEnglish as is done in FriendlyBritishEnglish.
-builder.Services.AddScoped<IStringProvider, StandardBritishEnglish>();
+builder.Services.AddScoped<IStringProvider, CustomStrings>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
