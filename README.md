@@ -9,7 +9,7 @@
 - Custom registry that allows items from any retailer with no fee. Individual guests claim items using their accounts.
 - Responsive interface for all screen sizes.
 
-Coming Soon:
+Coming soon:
 - RSVP form.
 - Lift sharing feature.
 
