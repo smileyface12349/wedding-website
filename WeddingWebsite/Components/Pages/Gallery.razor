@@ -4,13 +4,14 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
-<PageTitle>Gallery</PageTitle>
+<PageTitle>@StringProvider.Gallery</PageTitle>
 
 <div style="margin-top: 50px;"></div>
 
 <Section>
-    <SectionHeading>Gallery</SectionHeading>
+    <SectionHeading>@StringProvider.Gallery</SectionHeading>
 
     @foreach (var sect in WeddingDetails.Gallery.Sections)
     {

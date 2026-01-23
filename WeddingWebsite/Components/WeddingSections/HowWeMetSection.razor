@@ -3,10 +3,11 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section Padding="false">
     <div style="padding-top: 25px;"></div>
-    <SectionHeading>How We Met</SectionHeading>
+    <SectionHeading>@StringProvider.HowWeMet</SectionHeading>
     <HowWeMet Backstory="WeddingDetails.Backstory"/>
 </Section>
 

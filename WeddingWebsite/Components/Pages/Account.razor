@@ -22,29 +22,30 @@
 @inject UserManager<Data.Account> UserManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
+@inject IStringProvider StringProvider
 
 @rendermode InteractiveServer
 
 <MudSnackbarProvider/>
 <MudDialogProvider/>
 
-<PageTitle>My Account</PageTitle>
+<PageTitle>@StringProvider.MyAccount</PageTitle>
 
 <CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
     <Section Center="true">
         <div style="margin-top: 150px"></div>
-        <SectionHeading>Your Account</SectionHeading>
+        <SectionHeading>@StringProvider.YourAccount</SectionHeading>
         <div class="account-content">
             <div class="account-details">
                 <div class="account-detail">
-                    <label for="username">Username</label>
+                    <label for="username">@StringProvider.Username</label>
                     <MudSpacer/>
                     <input aria-disabled="true" value="@UserName" id="username" disabled/>
                 </div>
                 @if (!Email.IsNullOrEmpty() && UserName != Email)
                 {
                     <div class="account-detail">
-                        <label for="email">E-mail Address</label>
+                        <label for="email">@StringProvider.EmailAddress</label>
                         <MudSpacer/>
                         <input aria-disabled="true" value="@Email" id="email" disabled/>
                     </div>
@@ -59,49 +60,49 @@
                     <EditForm Model="ChangePasswordInput" method="post" OnValidSubmit="ChangePassword" FormName="change-password">
                         <DataAnnotationsValidator />
                         <div class="account-detail">
-                            <label for="old-password">Current Password</label>
+                            <label for="old-password">@StringProvider.CurrentPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.OldPassword" id="old-password" placeholder="Old Password" />
+                            <input type="password" @bind-value="ChangePasswordInput.OldPassword" id="old-password" placeholder="@StringProvider.OldPassword" />
                         </div>
                         <div class="account-detail">
-                            <label for="new-password">New Password</label>
+                            <label for="new-password">@StringProvider.NewPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.NewPassword" id="new-password" placeholder="New Password" />
+                            <input type="password" @bind-value="ChangePasswordInput.NewPassword" id="new-password" placeholder="@StringProvider.NewPassword" />
                         </div>
                         <div class="account-detail">
-                            <label for="confirm-new-password">Confirm Password</label>
+                            <label for="confirm-new-password">@StringProvider.ConfirmPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="New Password" />
+                            <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="@StringProvider.NewPassword" />
                         </div>
-                        <a class="password-security" @onclick="OpenPasswordDialog">Is my password safe?</a>
+                        <a class="password-security" @onclick="OpenPasswordDialog">@StringProvider.IsMyPasswordSafe</a>
                         <ValidationSummary class="text-danger" role="alert"/>
                         @if (ErrorText != "")
                         {
                             <p class="text-danger">@ErrorText</p>
                         }
                         <div class="change-password-buttons">
-                            <button type="submit" style="background: @Theme?.Primary">Submit</button>
-                            <button class="cancel-button" @onclick="() => ShowChangePassword = false">Cancel</button>
+                            <button type="submit" style="background: @Theme?.Primary">@StringProvider.Submit</button>
+                            <button class="cancel-button" @onclick="() => ShowChangePassword = false">@StringProvider.Cancel</button>
                         </div>
                     </EditForm>
                 }
                 else
                 {
                     <div class="account-detail">
-                        <label for="change-password">Password</label>
+                        <label for="change-password">@StringProvider.Password</label>
                         <MudSpacer/>
-                        <a id="change-password" @onclick="EnableChangePassword">Change Password</a>
+                        <a id="change-password" @onclick="EnableChangePassword">@StringProvider.ChangePassword</a>
                     </div>
                 }
             </div>
-            <SectionHeading>Guests</SectionHeading>
+            <SectionHeading>@StringProvider.Guests</SectionHeading>
             <div class="warning-message">
                 <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                <p>RSVPs are not yet open.</p>
+                <p>@StringProvider.RsvpNotYetOpen</p>
             </div>
             @if (Guests.Count() > 1)
             {
-                <p>Your account is shared between @Guests.Count() guests. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).</p>
+                <p>@StringProvider.AccountSharedWithGuests(Guests.Count())</p>
             }
             <div class="guests-list">
                 @foreach (var guest in Guests)
@@ -110,7 +111,7 @@
                         <div class="guest">
                             <span class="guest-name">@guest.Name.Full</span>
                             <MudSpacer/>
-                            <button class="rsvp-button" disabled>RSVP</button>
+                            <button class="rsvp-button" disabled>@StringProvider.Rsvp</button>
                         </div>
                     </Box>
                     <div style="margin-bottom: 10px"></div>
@@ -119,11 +120,11 @@
 
             @if (Guests.Any())
             {
-                <p>Unfortunately, we are unable to accommodate any extra +1's.</p>
+                <p>@StringProvider.PlusOnesDescription</p>
             }
             else
             {
-                <p>Your account does not have any guests associated with it. If you think this is an error, please contact @WeddingDetails.LoginContactMethod?.Text as soon as possible.</p>
+                <p>@StringProvider.NoGuestsWarning(WeddingDetails.LoginContactMethod?.Text)</p>
             }
         </div>
     </Section>

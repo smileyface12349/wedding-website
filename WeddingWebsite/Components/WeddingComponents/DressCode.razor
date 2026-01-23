@@ -1,4 +1,7 @@
-﻿@using WeddingWebsite.Models.People
+﻿@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
+
+@inject IStringProvider StringProvider
 
 <h3>@Dress.Title</h3>
 @foreach (var sect in Dress.Content) {
@@ -11,7 +14,7 @@
 }
 @if (Contact != null)
 {
-    <p><b>Questions?</b> Contact @Contact.NameAndRole on @Contact.ContactDetails.GetAllOptions().FirstOrDefault()?.Text.</p>
+    <p>@StringProvider.DressCodeQuestions(Contact.NameAndRole,Contact.ContactDetails.GetAllOptions().FirstOrDefault()?.Text)</p>
 }
 
 @code {

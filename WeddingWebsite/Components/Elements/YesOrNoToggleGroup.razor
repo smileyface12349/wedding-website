@@ -1,6 +1,10 @@
-﻿<div class="group">
-    <button @onclick="ChangeToYes" class="yes-button @(Value ? "selected" : "")">Yes</button>
-    <button @onclick="ChangeToNo" class="no-button @(!Value ? "selected" : "")">No</button>
+﻿@using WeddingWebsite.Models.ConfigInterfaces
+
+@inject IStringProvider StringProvider
+
+<div class="group">
+    <button @onclick="ChangeToYes" class="yes-button @(Value ? "selected" : "")">@StringProvider.Yes</button>
+    <button @onclick="ChangeToNo" class="no-button @(!Value ? "selected" : "")">@StringProvider.No</button>
 </div>
 
 @code {

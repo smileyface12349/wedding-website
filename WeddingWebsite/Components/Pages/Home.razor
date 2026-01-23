@@ -11,12 +11,13 @@
 
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
 
 @layout NavbarScrollLayout
 
 <MudSnackbarProvider/>
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@StringProvider.Home</PageTitle>
 
 @((MarkupString)@WeddingDetails.MainImage.GetHtml("main-image"))
 

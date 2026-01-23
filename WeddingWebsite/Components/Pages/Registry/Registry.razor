@@ -9,24 +9,25 @@
 @inject IWebsiteConfig Config
 @inject IRegistryService RegistryService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringProvider StringProvider
 
 <CascadingValue Value="Config.RegistryConfig.Theme">
     <Section>
         <div style="margin-top: 50px;"></div>
-        <SectionHeading>Registry</SectionHeading>
+        <SectionHeading>@StringProvider.Registry</SectionHeading>
         
         <div class="description-and-filters-container">
             <div class="page-description-container">
-                <p style="margin-bottom: 10px">Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!</p>
-                <p>You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!</p>
+                <p style="margin-bottom: 10px">@StringProvider.RegistryDescription1</p>
+                <p>@StringProvider.RegistryDescription2</p>
             </div>
             <div class="sort-and-filter-container">
-                <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="Sort By">
-                    <MudSelectItem T="SortOrder" Value="SortOrder.Default">Default</MudSelectItem>
-                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">Price: Low to High</MudSelectItem>
-                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">Price: High to Low</MudSelectItem>
+                <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="@StringProvider.SortBy">
+                    <MudSelectItem T="SortOrder" Value="SortOrder.Default">@StringProvider.Default</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">@StringProvider.PriceLowToHigh</MudSelectItem>
+                    <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">@StringProvider.PriceHighToLow</MudSelectItem>
                 </MudSelect>
-                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filters">
+                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="@StringProvider.Filters">
                     @foreach (var filter in AllFilters)
                     {
                         <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
@@ -45,30 +46,30 @@
         <div class="gifts-grid">
             @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
             {
-                <h2 class="grid-heading" style="margin-top: 0">Items You've Claimed</h2>
+                <h2 class="grid-heading" style="margin-top: 0">@StringProvider.ItemsYouHaveClaimed</h2>
                 @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
                 {
                     <div class="gift">
-                        <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? "Completed" : "Pending")" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
+                        <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? StringProvider.Completed : StringProvider.Pending)" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
                     </div>
                 }
-                <h2 class="grid-heading">Other Registry Items</h2>
+                <h2 class="grid-heading">@StringProvider.OtherRegistryItems</h2>
             }
             @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0))
             {
                 <div class="gift">
-                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? "Claimed" : "Available")" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? StringProvider.Claimed : StringProvider.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
                 </div>
             }
             @if (!SortedAndFilteredItems.Any())
             {
                 @if (!RegistryItems.Any())
                 {
-                    <p class="grid-heading">The registry is currently empty.</p>
+                    <p class="grid-heading">@StringProvider.TheRegistryIsEmpty</p>
                 }
                 else
                 {
-                    <p class="grid-heading">There are no items matching the selected filters.</p>
+                    <p class="grid-heading">@StringProvider.NoItemsMatchFilters</p>
                 }
             }
         </div>

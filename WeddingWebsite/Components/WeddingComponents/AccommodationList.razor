@@ -1,26 +1,29 @@
 ﻿@using WeddingWebsite.Models.Accommodation
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.ConfigInterfaces
 @using LinkButton = WeddingWebsite.Components.Elements.LinkButton
 
 @using WeddingWebsite.Models.WebsiteElement
 
+@inject IStringProvider StringProvider
+
 <table>
     <thead>
     <tr>
-        <th>Name</th>
-        <th>Distance</th>
-        <th>Price</th>
-        <th>Link</th>
+        <th>@StringProvider.Name</th>
+        <th>@StringProvider.Distance</th>
+        <th>@StringProvider.Price</th>
+        <th>@StringProvider.Link</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var hotel in Hotels) {
         <tr>
             <td>@hotel.Name</td>
-            <td>@hotel.DrivingTimeFromVenueMinutes min</td>
+            <td>@StringProvider.NumMinutesShort(hotel.DrivingTimeFromVenueMinutes)</td>
             <td>@hotel.ApproximatePrice</td>
             <td>
-                <LinkButton Url="@hotel.Link" Variant="ButtonVariant.Outlined">Visit Website</LinkButton>
+                <LinkButton Url="@hotel.Link" Variant="ButtonVariant.Outlined">@StringProvider.VisitWebsite</LinkButton>
             </td>
         </tr>
     }
