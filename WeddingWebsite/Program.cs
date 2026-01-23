@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Required - All the information about your wedding. Please create your own implementation of IWeddingDetails.
 // See WeddingDetailsTemplate for a starting point. If you rename the file to RealWeddingDetails, it will be
 // ignored from git so that it is kept private.
-builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
+builder.Services.AddScoped<IWeddingDetails, WeddingDetails>();
 
 // Recommended - customise the theme and layout. Please create your own implementation of IWebsiteConfig. It is
 // recommended to have this also inherit from DefaultConfig. See DemoConfig for an example. If you rename the file
