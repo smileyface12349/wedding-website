@@ -32,64 +32,64 @@ public sealed class WeddingDetails : IWeddingDetails
                 "Arrival", 
                 TimeOnly.Parse("13:30"), 
                 TimeOnly.Parse("14:00"), 
-                "To be ready to start at 2. Scroll down for directions to the venue.",
+                "Travel to the Oval Chapel! Please aim to arrive at 1:30pm so that we can all be seated and start promptly at 2pm.",
                 CeremonyVenue, 
-                null,
+                "The Chapel",
                 new WebsiteImage("/img/3.webp", "A wedding ceremony on a beach")
             ),
             new (
                 "Ceremony", 
                 TimeOnly.Parse("14:00"), 
                 TimeOnly.Parse("15:30"), 
-                "The church service in which we get married.",
+                "Come and witness us officially getting married! As well as the marriage, the ceremony will also involve a time of worship, a short talk, and some prayer. At the end of the ceremony, we will gather outside for a group photo. 😄",
                 CeremonyVenue, 
                 null,
-                new WebsiteImage("/img/1.jpg", "A wedding ceremony on a beach")
+                new WebsiteImage("/img/9.jpg", "A wedding ceremony on a beach")
             ),
             new (
-                "Tapas and outdoors time", 
+                "Tapas Time", 
                 TimeOnly.Parse("15:30"),
                 TimeOnly.Parse("17:30"), 
-                "Join us for tapas and drinks in the garden.", 
+                "Enjoy some Spanish Tapas and drinks in the garden (weather permitting) as you play some garden games and get to know each other with wedding guest Bingo. Or if you fancy a bit of quiet time, you can enjoy a nice walk through the field and woods behind the Chapel.",
                 CeremonyVenue, 
-                "The Courtyard",
-                new WebsiteImage("https://www.confetti.co.uk/blog/wp-content/uploads/2013/04/alitrystan39.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
+                null,
+                new WebsiteImage("/img/10.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
                 ),
             new (
-                "Barbeque!", 
+                "BBQ and Speeches", 
                 TimeOnly.Parse("17:30"), 
                 TimeOnly.Parse("20:00"),
-                "A sit-down meal with speeches and toasts.", 
+                "We'll be having homemade burgers for dinner followed by a variety of puddings and a couple of speeches here and there. Please make us aware of any dietary requirements when you RSVP.", 
                 CeremonyVenue, 
                 "The Hall",
-                new WebsiteImage("https://wpmedia.bridebook.com/wp-content/uploads/2024/12/tTqnnv01-858154ee-97ae-4e73-ab3c-ccc28bdeb395.jpg", "A long table with guests eating food"), 
+                new WebsiteImage("/img/11.jpg", "A long table with guests eating food"), 
                 null, 
                 [
                     new WeddingModal("View Menu", [
-                        new ("Sides", "Patatas bravas, dips and other things"),
-                        new ("Main Course", "Burgers and skewers"),
+                        new ("Sides", "Patatas Bravas, Salads and Salsas"),
+                        new ("Main Course", "Homemade Burgers and Skewers - Both Meat and Vegan options available"),
                         new ("Dessert", "Cake!")
                     ])
                 ]
             ),
             new (
-                "First dance and Ceilidh", 
+                "First Dance and Ceilidh", 
                 TimeOnly.Parse("20:00"),
                 TimeOnly.Parse("22:00"),
-                "An evening of dancing and celebration.", 
+                "Join us as we end the night with a Ceilidh! It's loads of fun and easy enough that anyone can join in!", 
                 CeremonyVenue, 
                 "The Chapel",
-                new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
+                new WebsiteImage("/img/12.jpg", "Guests dancing at a wedding")
             ),
-            new (
-                "First dance and Ceilidh", 
+            /*new (
+                "Informal Ending", 
                 TimeOnly.Parse("22:00"),
-                TimeOnly.Parse("00:00"),
-                "An evening of dancing and celebration.", 
+                TimeOnly.Parse("23:59"),
+                "There are no further planned activities for the day, but feel free to stay for however much longer you so desire (preferably not past 5am).", 
                 CeremonyVenue, 
                 "The Chapel",
                 new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5f5afb7d868b466f42d4b4fb/77e1c31d-3913-4202-bd13-e5ce142a1f7f/wedding-dance-floor-playlist-20.png", "Guests dancing at a wedding")
-            )
+            )*/
         };
         
         // Using same images as with people
@@ -230,13 +230,14 @@ public sealed class WeddingDetails : IWeddingDetails
     public DateOnly WeddingDate { get; } = DateOnly.Parse("2026-8-9");
     
     public Venue CeremonyVenue { get; } = new(
-        "The Oval Chapel", 
-        new Location(51.825624, -0.359506), 
-        "8? Highfield Oval, Harpenden AL5 4BX",
+        "Highfield Oval", 
+        new Location(51.82660574703517, -0.3598443120147474),
+        "The Chapel, Highfield Oval, Harpenden AL5 4BX",
         new TravelDirections(
             [
-                new WebsiteSection(null, "We suggest arriving by car. If you do not have a car, please let us know when you RSVP and we can arrange a lift for you."),
-                new WebsiteSection("Parking", "Please follow the signs to car parking. Please do not park in the spaces directly outside the entrance unless you are a blue badge holder, or have been informed directly that you may park there.")
+                new WebsiteSection(null, "The venue is a 10 minute drive from the M1 (J10), or it is a 20 minute walk from Harpenden train station. When arriving, use the code 2810 to open the gate. The site is closed to the public on Sunday afternoons, but please be aware of the residents who live there."),
+                new WebsiteSection("Parking", "Please use the map to see where you can park. Please do not drive on the Oval itself."),
+                new WebsiteSection("Want to know more about the chapel?", "https://www.harpenden-history.org.uk/harpenden-history/buildings/other-harpenden-buildings/the_oval_harpenden"),
             ],
             null,
             null,
@@ -256,13 +257,12 @@ public sealed class WeddingDetails : IWeddingDetails
     
     public DressCode DressCode { get; } 
         = new DressCode(
-            "Cocktail", 
+            "Something Blue!", 
             [
-                new WebsiteSection(null, "Please arrive dressed in smart, polished attire perfect for an evening celebration."),
-                new WebsiteSection("Men", "A dark suit and tie or a smart blazer with dress pants are perfect for this occasion. Finish the look with polished shoes and a sleek watch."),
-                new WebsiteSection("Women", "A knee-length or midi dress, or a stylish jumpsuit, paired with elegant heels or dressy flats. Accessorize with a clutch and statement jewelry to complete your look.")
+                new WebsiteSection(null, "It would be very special to us -ok, Amelia- if you would wear an outfit with a little something (or EVERYTHING) blue :D"),
+                new WebsiteSection(null, "(Don't worry if you can't, just where whatever you want to celebrate with us!)"),
             ],
-            new WebsiteImage("https://onefabday.com/wp-content/uploads/2023/03/122-mark-donovan-photography.jpg", "An image of female wedding guests in a line.")
+            new WebsiteImage("/img/8.png", "Blue!")
         );
     
     public AccommodationDetails AccommodationDetails { get; } = new (
