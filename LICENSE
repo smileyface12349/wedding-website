@@ -2,20 +2,31 @@ SOME THIRD-PARTY ASSETS USED IN THIS PROJECT HAVE SPECIAL LICENSE
 RESTRICTIONS - PLEASE CHECK THE SECTION AT THE BOTTOM OF THE README 
 FOR MORE INFORMATION.
 
-This is free and unencumbered software released into the public domain.
+For non-commercial uses, anyone is free to copy, modify, publish, use, 
+compile, sell, or distribute this software, either in source code 
+form or as a compiled binary, for any non-commercial purpose, and by 
+any means, subject to the paragraph immediately below.
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+When distributing the source code, the original license must be kept
+intact. While this won't introduce any restrictions for you, someone
+who receives this work may choose to use it for commercial purposes
+and therefore will be bound by that section of the license.
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
+For the avoidance of doubt, there is no requirement for attribution
+on published software, only when distributing as source code.
+
+In the below section, "this repository" shall refer to the GitHub
+repository at the URL https://github.com/smileyface12349/wedding-website.
+
+For commercial uses, the above is still permitted, subject to the 
+following conditions:
+- Clear attribution is given to customers.
+- All potential customers, before paying for the service, are given a 
+  pop-up with a link to this repository. This pop-up must explain
+  what the repository is and it must state that it is possible for
+  them to set up a wedding website for free on this repository.
+  However, you may explain your derivative changes to entice
+  customers to use your product.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -24,5 +35,3 @@ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <https://unlicense.org>

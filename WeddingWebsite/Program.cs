@@ -4,32 +4,40 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using WeddingWebsite.Components;
+using WeddingWebsite.Config.Credentials;
+using WeddingWebsite.Config.Strings;
+using WeddingWebsite.Config.ThemeAndLayout;
+using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
 using WeddingWebsite.Data;
 using WeddingWebsite.Data.Stores;
-using WeddingWebsite.Models.Credentials;
+using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Validation;
-using WeddingWebsite.Models.WebsiteConfig;
-using WeddingWebsite.Models.WeddingDetails;
-using WeddingWebsite.Routing;
 using WeddingWebsite.Services;
-using RsvpController = WeddingWebsite.Controllers.RsvpController;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Swap out SampleWeddingDetails for your own implementation.
-builder.Services.AddScoped<IWeddingDetails, WeddingDetails>();
+// Required - All the information about your wedding. Please create your own implementation of IWeddingDetails.
+// See WeddingDetailsTemplate for a starting point. If you rename the file to RealWeddingDetails, it will be
+// ignored from git so that it is kept private.
+builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
 
-// If you want to, swap out DefaultConfig for your own implementation (you can inherit from DefaultConfig).
+// Recommended - customise the theme and layout. Please create your own implementation of IWebsiteConfig. It is
+// recommended to have this also inherit from DefaultConfig. See DemoConfig for an example. If you rename the file
+// to CustomConfig, it will be ignored from git so that it is kept private.
 builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
 
-// Credentials.cs is automatically gitignored. If you don't have any credentials, you can swap this to NoCredentials,
-// which will automatically throw a NotImplementedException when attempting to use credentials.
-builder.Services.AddScoped<IGoogleMapsApiKey, Credentials>();
+// Optional - If you would like to use any functionality that requires credentials (e.g. google maps), please create a
+// file called Credentials.cs that implements ICredentials. This will be ignored from git so that it is kept private.
+builder.Services.AddScoped<ICredentials, NoCredentials>();
+
+// Optional - If you'd like to customise the wording or translate into a different language, you can swap out for a
+// different implementation of IStringProvider. If you're only changing a few strings, you can inherit from
+// StandardBritishEnglish as is done in FriendlyBritishEnglish.
+builder.Services.AddScoped<IStringProvider, StandardBritishEnglish>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
-builder.Services.AddScoped<RsvpController>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IRegistryService, RegistryService>();

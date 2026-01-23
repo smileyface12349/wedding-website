@@ -1,9 +1,12 @@
 ﻿@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Accommodation
+@using WeddingWebsite.Models.ConfigInterfaces
 @using LinkButton = WeddingWebsite.Components.Elements.LinkButton
 
 @using WeddingWebsite.Models.WebsiteElement
+
+@inject IStringProvider StringProvider
 
 <Box Horizontal="true" CustomCss="margin-bottom: 20px">
     <TopContent>
@@ -12,15 +15,15 @@
     <ChildContent>
         <h3>@Hotel.Name</h3>
         <p>@Hotel.Description</p>
-        <h4>Address</h4>
+        <h4>@StringProvider.Address</h4>
         <p>@Hotel.Address.</p>
-        <h4>Distance</h4>
-        <p>@Hotel.DrivingTimeFromVenueMinutes min drive from the venue.</p>
-        <h4>Approximate Price</h4>
+        <h4>@StringProvider.Distance</h4>
+        <p>@StringProvider.DriveFromVenue(Hotel.DrivingTimeFromVenueMinutes)</p>
+        <h4>@StringProvider.ApproximatePrice</h4>
         <p>@Hotel.ApproximatePrice.</p>
         <div class="buttons-container">
-            <LinkButton Url="@Hotel.Link" Variant="ButtonVariant.Outlined">Visit Website</LinkButton>
-            <LinkButton Url="@Hotel.Location.GetGoogleMapsLink()" Variant="ButtonVariant.Outlined">Google Maps</LinkButton>
+            <LinkButton Url="@Hotel.Link" Variant="ButtonVariant.Outlined">@StringProvider.VisitWebsite</LinkButton>
+            <LinkButton Url="@Hotel.Location.GetGoogleMapsLink()" Variant="ButtonVariant.Outlined">@StringProvider.GoogleMaps</LinkButton>
         </div>
     </ChildContent>
 </Box>

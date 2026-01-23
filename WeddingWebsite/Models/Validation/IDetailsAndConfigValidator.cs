@@ -1,5 +1,5 @@
-﻿using WeddingWebsite.Models.WebsiteConfig;
-using WeddingWebsite.Models.WeddingDetails;
+﻿using WeddingWebsite.Models.ConfigInterfaces;
+using WeddingWebsite.Models.WebsiteConfig;
 
 namespace WeddingWebsite.Models.Validation;
 

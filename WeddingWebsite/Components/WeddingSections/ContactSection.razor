@@ -1,12 +1,13 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
-@using WeddingWebsite.Models.WeddingDetails
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <Section Center="true" Id="contact">
-    <SectionHeading>Contact Us</SectionHeading>
+    <SectionHeading>@StringProvider.ContactUs</SectionHeading>
     <ContactList
         Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"
         ReasonsToShow="ReasonsToShow"

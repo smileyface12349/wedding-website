@@ -2,30 +2,33 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
+@inject IStringProvider StringProvider
+
 <div class="container">
-    <h2>What is your enquiry about?</h2>
-    <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="Category of Enquiry" Variant="Variant.Outlined" Required="true">
+    <h2>@StringProvider.ContactUsEnterCategory</h2>
+    <MudSelect Class="@MudSelectClass" @bind-Value="ContactReason" Label="@StringProvider.CategoryOfEnquiry" Variant="Variant.Outlined" Required="true">
         @foreach (var reason in ReasonsToShow) {
             <MudSelectItem Value="(ContactReason?) reason">@reason.GetEnumDescription()</MudSelectItem>
         }
     </MudSelect>
 
     @if (ShowUrgencyOption) {
-        <h2>Is it urgent?</h2>
+        <h2>@StringProvider.ContactUsEnterUrgency</h2>
         <YesOrNoToggleGroup @bind-Value="IsUrgent"/>
         <p class="text-below">@ResponseTimelineString</p>
     }
     
-    <h2>Suggested contacts</h2>
+    <h2>@StringProvider.SuggestedContacts</h2>
     @if (!MatchingContacts.Any()) {
         @if (ContactReason == null) {
-            <p>Choose a category of enquiry to see contacts.</p>
+            <p>@StringProvider.NoContactsBecauseNoCategory</p>
         } else {
-            <p>No contacts found. Try a different search.</p>
+            <p>@StringProvider.NoContactsMatched</p>
         }
     }
     @foreach (var contact in MatchingContacts) {

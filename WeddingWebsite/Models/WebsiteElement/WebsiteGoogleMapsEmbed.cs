@@ -1,4 +1,6 @@
-﻿namespace WeddingWebsite.Models.WebsiteElement;
+﻿using WeddingWebsite.Models.Events;
+
+namespace WeddingWebsite.Models.WebsiteElement;
 
 public record WebsiteGoogleMapsEmbed(Location Location): IWebsiteElement
 {

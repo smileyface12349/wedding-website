@@ -62,10 +62,20 @@ This unique timeline design conveys:
 - Accommodation details (auto-generated at the end of the timeline).
 All in one coherent view. I find this much easier to use than having separate sections for timings, travel directions and accommodation details.
 
+### Simple Timeline
+<img width="534" height="396" alt="image" src="https://github.com/user-attachments/assets/3868d870-cec3-47ec-92f1-58392f552073" />
+
+If you'd rather just have a list of events and start times.
+
 ### Venue Showcase
 <img width="1078" height="710" alt="image" src="https://github.com/user-attachments/assets/a7e92d91-d8ad-4157-b1cb-b37e142fa8b8" />
 
 Shows you a little more information about the venues. Totally optional, as the important information is already in the timeline.
+
+### Travel Directions
+<img width="1063" height="743" alt="image" src="https://github.com/user-attachments/assets/bf5fbd22-0d48-4f27-954c-58dc1c719921" />
+
+The directions are already shown in other places, but you can emphasise them here too.
 
 ### Accommodation
 <img width="1076" height="743" alt="image" src="https://github.com/user-attachments/assets/8ca68e94-d464-4b7b-871f-46831cc5f61c" />
@@ -115,7 +125,7 @@ There are some overall colours, however most of the theming is per-section. You 
 
 ## Configuration
 
-Configuration is done in two entirely separate places.
+Configuration is done in two entirely separate places. You'll find anything designed with customisation in mind in `WeddingWebsite/Config`. Config for different aspects are split up, and your `Program.cs` file will choose exactly one file from each of these directories to form your overall config - you can change each one separately.
 
 ### Wedding Details
 
@@ -123,13 +133,17 @@ This is for all details related to the wedding. I try and stay away from impleme
 
 By default, `SampleWeddingDetails.cs` is being used. If you go into `Program.cs`, you can change `SampleWeddingDetails.cs` to your new implementation of `IWeddingDetails`
 
-### Website Config
+### Theme and Layout
 
 The config affects how the website displays, but is completely separate from the details of the wedding. This includes which sections there are, colour scheme and other options for each section.
 
 To change the config, make a new class e.g. `CustomWebsiteConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. To change section theming, you will probably want to override the whole Sections attribute (but you can modify only particular sections in your implementation).
 
 If you're making a new feature and you're feeling generous, hide it behind a config option and then PR it! This will allow other people to benefit from your contributions. I will try and review PRs quickly, although please note that I am unlikely to change the default behaviour in a way that is merely personal preference. If you're thinking of making a PR, get in touch early on about your design approaches and I can give you early feedback!
+
+### Credentials
+
+Some functionality will require your own API keys. The `NoCredentials` interface is designed to fail gracefully, so you can safely leave this out for now and take another look later if you're interested in particular functionality.
 
 ## Interactivity
 
@@ -168,6 +182,10 @@ Code in JavaScript directly.
 
 Feel free to use this for your own wedding website, that's what it's here for! You're also entirely welcome to cut bits out of it and use it in your own project without any attribution (although some attribution would be lovely). You may remove the footer at the bottom of the website if you want. Please note I have no legal obligations to provide support or ensure this product works, although I will do my best.
 
+However, if you are planning on setting up a wedding website maker business, I've added some additional restrictions. Most notably, before reaching the payment screen, customers must be explicitly prompted about the presence of this repository and how they can set up their website for free instead. Please see the license for more information.
+
+Please be very careful that some of the assets used in this project have special license restrictions. For example:
+
 The following assets are used in the project and do **not** permit commercial use. If you want to use this code in a commercial setting, you **must** remove these assets, or purchase a license yourself:
 - [Amsterdam font](https://www.dafont.com/amsterdam.font)
 
@@ -175,4 +193,4 @@ The following assets are AI generated. If this is a problem, please do not use t
 - Bricks background `/bg/bricks.jpg`
 - Blue flowers background `/bg/blue-flowers.png`
 
-All other assets will be safe to use in commercial and non-commercial scenarios. Please be careful when pulling changes from the repo as more assets with restricted licenses may be added.
+This list is not exhaustive, and it is your responsibility to check all assets (except source code).

@@ -1,5 +1,8 @@
 ﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
+
+@inject IStringProvider StringProvider
 
 <a href="/registry/@Item.Id">
     <Box CustomCss="height: 300px;">
@@ -15,7 +18,7 @@
             <div class="cost-and-button">
                 @if (Item.PurchaseMethods.Any())
                 {
-                    <p class="cost">£@Item.CheapestCost.ToString("0.00")</p>
+                    <p class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</p>
                 }
                 else
                 {

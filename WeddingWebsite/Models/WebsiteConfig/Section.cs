@@ -25,7 +25,7 @@ public abstract record Section
     /// Unlike most sections, the heading is disabled by default. This is because it looks nice with the timeline
     /// running right to the edge of the section, and the purpose of the section is clear already.
     /// </summary>
-    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = false, bool ShowTravelDirections = true) : Section(Theme);
+    public sealed record Timeline(SectionTheme? Theme = null, bool ShowHeading = true, bool ShowTravelDirections = true) : Section(Theme);
     
     /// <summary>
     /// A very basic version of the timeline that just displays the start time of each event. Does not show travel
@@ -67,7 +67,7 @@ public abstract record Section
     public sealed record DressCode(
         SectionTheme? Theme = null, 
         bool WrapInBox = true,
-        bool ShowContact = true
+        bool ShowContact = false
     ) : Section(Theme);
 
     /// <summary>

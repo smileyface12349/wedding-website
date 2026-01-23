@@ -3,6 +3,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Todo
 @using WeddingWebsite.Services
 
@@ -11,7 +12,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @inject ITodoService TodoService
-@inject Models.WebsiteConfig.IWebsiteConfig Config
+@inject IWebsiteConfig Config
 
 <MudSnackbarProvider/>
 
