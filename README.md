@@ -129,13 +129,6 @@ While you can use another service, it's easier to stay on the website. The to-do
 
 </details>
 
-## Theming
-
-There are some overall colours, however most of the theming is per-section. You will pass in a `SectionTheme` to each section, containing:
-1. The background colour or image.
-2. The primary colour to use for buttons etc. on this background.
-3. What any boxes should look like. Sections do not use a particular style of box, instead you can choose between rounded and outlined boxes within the theme directly.
-
 ## Customising the Website
 
 Configuration is done in a few separate files. All can be found in `WeddingWebsite/Config`. Each folder has multiple implementations of an interface, and `Program.cs` will determine which one is active. This lets you swap between different configurations to see what you like best.
@@ -146,7 +139,7 @@ Anything that relates to your wedding in particular will go in here. Please note
 
 ### Theme and Layout
 
-The config affects how the website displays, but not what content is within each section. There are several pre-made themes that you are welcome to choose from.
+The config affects how the website displays, but not what content is within each section. There are several pre-made themes that you are welcome to choose from. The main thing you can change is which sections are present and what they look like. For each section, you can individually change the colour scheme and even what the boxes look like.
 
 To change the config, make a new class e.g. `CustomConfig` that inherits from `DefaultConfig` and implements the `IWebsiteConfig` interface directly. See `DemoConfig` for an example.
 
