@@ -3,6 +3,9 @@ using WeddingWebsite.Models.ConfigInterfaces;
 
 namespace WeddingWebsite.Config.Strings;
 
+/// <summary>
+/// British English, with a formal and polite tone that aims for brevity and clarity.
+/// </summary>
 public class StandardBritishEnglish : IStringProvider
 {
     public string Month => "Month";
@@ -39,7 +42,7 @@ public class StandardBritishEnglish : IStringProvider
     public string ChangePassword => "Change Password";
     public string Guests => "Guests";
     public string RsvpNotYetOpen => "RSVPs are not yet open.";
-    public string AccountSharedWithGuests(int guestCount) =>  $"This account is shared between {guestCount} guest{(guestCount != 1 ? "s" : "")}. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).";
+    public string AccountSharedWithGuests(int guestCount) =>  $"This account is shared between {guestCount} guest{(guestCount != 1 ? "s" : "")}. Please share your login details with all of these guests.";
     public string Rsvp => "RSVP";
     public string PlusOnesDescription => "Unfortunately, we are unable to accommodate any extra +1's.";
     public string NoGuestsWarning(string? contactMethod) => $"Your account does not have any guests associated with it. If you think this is an error, please contact {contactMethod} as soon as possible.";
@@ -83,9 +86,8 @@ public class StandardBritishEnglish : IStringProvider
     public string VenueShowcase => "Venue Showcase";
     
     public string Registry => "Registry";
-    public string RegistryDescription1 =>
-        "Please do not feel under any pressure to give a gift - there is no obligation at all to do so! However, if you would like to give a gift, this page contains some suggestions of things we'd like. If you'd prefer to give something else, that's fine too!";
-    public string RegistryDescription2 => "You can click on an item to view more information about it. Once you've decided to purchase it, please claim it so that we don't get multiple people buying the same thing!";
+    public string RegistryDescription1 => "If you would like to give us a gift, this page contains some suggestions of things we'd like.";
+    public string RegistryDescription2 => "Each item will direct you to an external website where you can purchase it. To avoid duplicates, please ensure that you claim an item before making a purchase.";
     public string SortBy => "Sort By";
     public string Default => "Default";
     public string PriceLowToHigh => "Price: Low to High";
@@ -104,7 +106,7 @@ public class StandardBritishEnglish : IStringProvider
     public string BackToRegistry => "Back to Registry";
     public string QuantityClaimed(int claimed, int total) => $"Quantity Claimed: {claimed}/{total}.";
     public string PurchaseOptions => "Purchase Options";
-    public string DoNotPurchaseBeforeClaiming => "Please do not make a purchase before claiming the item first - this will reserve it so we don't get two people buying the same thing!";
+    public string DoNotPurchaseBeforeClaiming => "Please do not make a purchase before you have claimed the item.";
     public string DoNotPurchaseBeforeDetails => "Please finish selecting the details below before making a purchase.";
     public string CurrencySymbol => "£";
     public string CurrencyAmount(decimal amount)=> $"{CurrencySymbol}{amount:F2}";
@@ -116,19 +118,19 @@ public class StandardBritishEnglish : IStringProvider
     public MarkupString DeliveryAddress(string? address)  => (MarkupString) $"Delivery address: <b>{address}</b>.";
     public string RegistryClaimedContact(string? contactMethod) => $"Since this is now completed, you can no longer make any changes. If something went wrong, please contact {contactMethod}.";
     public string Notes => "Notes";
-    public string NotesDescription => "If you'd like to add any notes, you can do so in the box below. It's entirely up to you how you want to use this, if at all.";
+    public string NotesDescription => "If you'd like to leave a note, you can do so in the box below.";
     public string NotesPlaceholder => "Add a note visible to you and the website administrators (optional).";
     public string SaveNotes => "Save Notes";
     public string SelectPurchaseMethod => "Select Purchase Method";
     public MarkupString SelectedQuantity(int quantity) => (MarkupString) $"Selected quantity: <b>{quantity}</b>.";
-    public string SelectPurchaseMethodDescription => "Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.";
+    public string SelectPurchaseMethodDescription => "Please choose how you would like to purchase this item.";
     public string SelectDeliveryAddress => "Select Delivery Address";
     public MarkupString SelectedPurchaseMethod(string purchaseMethod) => (MarkupString) $"Selected purchase method: <b>{purchaseMethod}</b>.";
-    public string SelectDeliveryAddressDescription => "You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!";
+    public string SelectDeliveryAddressDescription => "Please choose how you would like to give the item to us.";
     public string BringOnTheDay => "I'll bring it on the day";
     public string ItemReadyToPurchase => "Item Ready to Purchase";
     public MarkupString SelectedDeliveryAddress(string? address) => (MarkupString) $"Selected delivery address: <b>{address}</b>.";
-    public string ItemReadyToPurchaseDescription => "Thank you for filling in those details! You're now free to complete the purchase when you're ready. Once done, please mark it as completed.";
+    public string ItemReadyToPurchaseDescription => "Thank you. You can now purchase the item. Please mark it as completed once you are done.";
     public string GoToPurchasePage => "Go to Purchase Page";
     public MarkupString CustomPurchaseInstructions(string? instructions) => (MarkupString) $"<b>Instructions:</b> {instructions}";
     public string MarkAsCompleted => "Mark as Completed (cannot be undone)";
@@ -137,8 +139,7 @@ public class StandardBritishEnglish : IStringProvider
     public string ItemClaimed => "Item Already Claimed";
     public string ItemClaimedDescription => "Sorry, this item has already been claimed by someone else.";
     public string ClaimThisItem => "Claim this Item";
-    public string ClaimThisItemDescription =>
-        "If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it.";
+    public string ClaimThisItemDescription => "If you'd like to kindly buy this item for us, please press claim. You can unclaim it later if you change your mind.";
     public string Quantity => "Quantity";
     public string Claim => "Claim";
     
