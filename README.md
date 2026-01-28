@@ -18,7 +18,7 @@ Coming soon:
 1. Fork this repository.
 2. Install .NET 9 SDK.
 3. Run `dotnet restore`.
-4. Install dotnet ef, then run `dotnet ef database update` to set up the database.
+4. Install dotnet ef, then run `dotnet ef database update` (in `/WeddingWebsite`) to set up the database.
 5. Run the website with `dotnet run Program.cs` (in `/WeddingWebsite`). This will host your website locally.
 6. Navigate to `/account/setup` and make your owner account.
 
