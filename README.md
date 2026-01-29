@@ -10,8 +10,9 @@
 - Responsive interface for all screen sizes.
 
 Coming soon:
-- RSVP form.
-- Lift sharing feature.
+- RSVP form (should be implemented very soon).
+- Lift sharing feature (allows guests to advertise spaces in their car which other guests can then book).
+- Photos upload (TBD but very likely to be implemented).
 
 ## Setup Instructions
 
