@@ -1,9 +1,11 @@
-﻿using WeddingWebsite.Models.ConfigInterfaces;
+﻿using WeddingWebsite.Models;
+using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Gallery;
 using WeddingWebsite.Models.Accommodation;
 using WeddingWebsite.Models.WebsiteElement;
 using WeddingWebsite.Models.Events;
+using WeddingWebsite.Models.WebsiteConfig;
 
 namespace WeddingWebsite.Config.WeddingDetails;
 
