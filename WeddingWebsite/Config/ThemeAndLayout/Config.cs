@@ -3,12 +3,13 @@ using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Theme;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
+using Section = WeddingWebsite.Models.WebsiteConfig.Section;
 
 namespace WeddingWebsite.Config.ThemeAndLayout;
 
 public class Config : DefaultConfig, IWebsiteConfig
 {
-    public WeddingColours Colours { get; } = new (
+    public new WeddingColours Colours { get; } = new (
         new Colour(77, 204, 225),
         new Colour("#A3D5E0"),
         new Colour("#B6D7A8"),
@@ -25,7 +26,7 @@ public class Config : DefaultConfig, IWebsiteConfig
     public new DemoMode DemoMode => new DemoMode.Disabled();
     
     // Default config will enable all optional features.
-    public OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
+    public new OptionalFeatures OptionalFeatures { get; } = new OptionalFeatures
     {
         Registry = new ActiveFeature()
     };
