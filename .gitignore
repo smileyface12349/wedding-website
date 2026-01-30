@@ -61,3 +61,4 @@ WeddingWebsite/wwwroot/img/*
 favicon.*
 app.db
 CustomConfig.cs
+CustomRsvpForm.cs
