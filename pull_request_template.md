@@ -8,9 +8,9 @@ breaking changes. Please also mention database migrations.
   Config files - Please justify why your changes to this interface (or any classes used in this interface) are necessary.
 -->
 
-## Is this change configurable?
+## If you're changing existing functionality, is this change configurable?
 <!-- Can users choose whether to use your new behaviour in IWebsiteConfig, or is this forced upon them after updating? Delete as appropriate: -->
-Configurable / Not Configurable / No Behaviour Change
+Configurable / Not Configurable / Not Applicable
 <!-- If you've answered "not configurable", please justify why your change is an objective upgrade over the previous version, and why no user would feasibly prefer the old version. -->
 
 ## Does any validation logic need adding/updating?
