@@ -64,8 +64,8 @@
     
     private ContactReason? ContactReason { get; set; }
 
-    private bool IsUrgent { get; set; } = false;
-    private ContactUrgency Urgency => IsUrgent ? ContactUrgency.Urgent : ContactUrgency.NotUrgent;
+    private bool? IsUrgent { get; set; } = false;
+    private ContactUrgency Urgency => IsUrgent == true ? ContactUrgency.Urgent : ContactUrgency.NotUrgent;
     
     private string ResponseTimelineString => Urgency == ContactUrgency.Urgent ? "We'll get back to you as soon as possible." : "We'll get back to you within 48 hours.";
     
