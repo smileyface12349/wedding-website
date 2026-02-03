@@ -1,0 +1,22 @@
+﻿@using WeddingWebsite.Models.Rsvp
+
+<MudForm>
+    @foreach (var question in Questions)
+    {
+        <div class="question">
+            <h2>@question.Title</h2>
+            <p>@question.Description</p>
+        </div>
+        
+    
+    }
+</MudForm>
+
+
+@code {
+    [Parameter]
+    public required IEnumerable<RsvpQuestion> Questions { get; set; }
+    
+    [Parameter]
+    public required bool IsAttending { get; set; }
+}
