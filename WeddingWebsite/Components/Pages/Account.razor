@@ -6,6 +6,9 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Pages.Rsvp
+@using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
@@ -96,27 +99,18 @@
                 }
             </div>
             <SectionHeading>@StringProvider.Guests</SectionHeading>
-            <div class="warning-message">
-                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                <p>@StringProvider.RsvpNotYetOpen</p>
-            </div>
+            @if (!Config.OptionalFeatures.Rsvp.IsActive())
+            {
+                <div class="warning-message">
+                    <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                    <p>@StringProvider.RsvpNotYetOpen</p>
+                </div>
+            }
             @if (Guests.Count() > 1)
             {
                 <p>@StringProvider.AccountSharedWithGuests(Guests.Count())</p>
             }
-            <div class="guests-list">
-                @foreach (var guest in Guests)
-                {
-                    <Box>
-                        <div class="guest">
-                            <span class="guest-name">@guest.Name.Full</span>
-                            <MudSpacer/>
-                            <button class="rsvp-button" disabled>@StringProvider.Rsvp</button>
-                        </div>
-                    </Box>
-                    <div style="margin-bottom: 10px"></div>
-                }
-            </div>
+            <RsvpGuestList Guests="Guests"/>
 
             @if (Guests.Any())
             {
@@ -142,7 +136,7 @@
     [SupplyParameterFromForm]
     private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
-    private IEnumerable<Guest> Guests { get; set; } = [];
+    private IEnumerable<GuestWithId> Guests { get; set; } = [];
     private SectionTheme? Theme => Config.AccountConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {

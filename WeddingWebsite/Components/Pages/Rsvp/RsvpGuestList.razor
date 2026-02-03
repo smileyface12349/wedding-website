@@ -1,0 +1,34 @@
+﻿@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.ConfigInterfaces
+
+@inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
+
+<div class="guests-list">
+    @foreach (var guest in Guests)
+    {
+        <Box>
+            <div class="guest">
+                <span class="guest-name">@guest.Name.Full</span>
+                <MudSpacer/>
+                @if (Config.OptionalFeatures.Rsvp.IsActive())
+                {
+                    var url = $"/rsvp/{guest.Id}";
+                    <LinkButton Url="@url">@StringProvider.Rsvp</LinkButton>
+                }
+                else
+                {
+                    <button class="rsvp-disabled-button button" disabled>@StringProvider.Rsvp</button>
+                }
+            </div>
+        </Box>
+        <div style="margin-bottom: 10px"></div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required IEnumerable<GuestWithId> Guests { get; set; }
+}
