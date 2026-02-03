@@ -19,8 +19,9 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText =
         @"
-            SELECT GuestId, FirstName, LastName, RsvpStatus
+            SELECT Guests.GuestId, Guests.FirstName, Guests.LastName, RsvpFormResponses.IsAttending
             FROM Guests
+            LEFT JOIN RsvpFormResponses ON Guests.GuestId = RsvpFormResponses.GuestId
             WHERE UserId = :userId
         ";
         command.Parameters.AddWithValue(":userId", userId);
@@ -32,7 +33,7 @@ public class Store : IStore
             guests.Add(new GuestWithId(
                 reader.GetString(0),
                 new Name(reader.GetString(1), reader.GetString(2)),
-                RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(3))
+                reader.IsDBNull(3) ? RsvpStatus.NotResponded : reader.GetInt16(3) == 1 ? RsvpStatus.Yes : RsvpStatus.No
             ));
         }
 
@@ -48,14 +49,13 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText =
         @"
-            INSERT INTO Guests (GuestId, UserId, FirstName, LastName, RsvpStatus)
-            VALUES (:guestId, :userId, :firstName, :lastName, :rsvpStatus)
+            INSERT INTO Guests (GuestId, UserId, FirstName, LastName)
+            VALUES (:guestId, :userId, :firstName, :lastName)
         ";
         command.Parameters.AddWithValue(":guestId", Guid.NewGuid().ToString());
         command.Parameters.AddWithValue(":userId", userId);
         command.Parameters.AddWithValue(":firstName", firstName);
         command.Parameters.AddWithValue(":lastName", lastName);
-        command.Parameters.AddWithValue(":rsvpStatus", RsvpStatusEnumConverter.RsvpStatusToDatabaseInteger(RsvpStatus.NotResponded));
 
         command.ExecuteNonQuery();
     }
@@ -69,10 +69,11 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText = 
             """
-                SELECT account.Id, account.UserName, account.Email, guest.FirstName, guest.LastName, guest.RsvpStatus, MAX(log.Timestamp) timestamp
+                SELECT account.Id, account.UserName, account.Email, guest.FirstName, guest.LastName, rsvp.IsAttending, MAX(log.Timestamp) timestamp
                 FROM AspNetUsers account
                 LEFT JOIN Guests guest ON account.Id = guest.UserId
                 LEFT JOIN AccountLog log ON account.Id = log.AffectedUserId AND log.EventType = :loginEventType
+                LEFT JOIN RsvpFormResponses rsvp ON guest.GuestId = rsvp.GuestId
                 GROUP BY account.UserName, guest.GuestId
                 ORDER BY account.UserName
             """;
@@ -94,7 +95,7 @@ public class Store : IStore
             var accountEmail = reader.IsDBNull(2) ? null : reader.GetString(2);
             var guestFirstName = reader.IsDBNull(3) ? null : reader.GetString(3);
             var guestLastName = reader.IsDBNull(4) ? null : reader.GetString(4);
-            var guestRsvpStatus = reader.IsDBNull(5) ? RsvpStatus.NotResponded : RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(5));
+            var guestRsvpStatus = reader.IsDBNull(5) ? RsvpStatus.NotResponded : reader.GetInt16(5) == 1 ? RsvpStatus.Yes : RsvpStatus.No;
             var accountLastLoginTimestamp = reader.IsDBNull(6) ? (DateTime?)null : new DateTime(reader.GetInt64(6), DateTimeKind.Utc);
             
             if (currentAccountId != accountId)
@@ -144,8 +145,9 @@ public class Store : IStore
         var command = connection.CreateCommand();
         command.CommandText =
             """
-                SELECT GuestId, FirstName, LastName, RsvpStatus
+                SELECT Guests.GuestId, Guests.FirstName, Guests.LastName, RsvpFormResponses.IsAttending
                 FROM Guests
+                LEFT JOIN RsvpFormResponses ON Guests.GuestId = RsvpFormResponses.GuestId
                 WHERE UserId = :userId
             """;
         command.Parameters.AddWithValue(":userId", userId);
@@ -157,7 +159,7 @@ public class Store : IStore
             var guestId = reader.GetString(0);
             var firstName = reader.GetString(1);
             var lastName = reader.GetString(2);
-            var rsvpStatus = RsvpStatusEnumConverter.DatabaseIntegerToRsvpStatus(reader.GetInt16(3));
+            var rsvpStatus = reader.IsDBNull(3) ? RsvpStatus.NotResponded : reader.GetInt16(3) == 1 ? RsvpStatus.Yes : RsvpStatus.No;
             guests.Add(new GuestWithId(guestId, new Name(firstName, lastName), rsvpStatus));
         }
 
