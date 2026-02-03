@@ -4,7 +4,13 @@
     @foreach (var question in Questions)
     {
         <div class="question">
-            <h2>@question.Title</h2>
+            <h2>
+                @question.Title
+                @if (question.Required)
+                {
+                    <span class="required-asterisk">*</span>
+                }
+            </h2>
             <p>@question.Description</p>
         </div>
         
