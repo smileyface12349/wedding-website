@@ -17,11 +17,31 @@
             {
                 var currentValue = Answers[text.DataColumn.Id-1];
                 <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id - 1] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+            } else if (question.QuestionType is RsvpQuestionType.Select select)
+            {
+                var currentValue = Answers[select.DataColumn.Id-1];
+                <MudRadioGroup T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id - 1] = newVal" Row="true" aria-required="@question.Required">
+                    @foreach (var option in select.Options)
+                    {
+                        <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
+                    }
+                </MudRadioGroup>
             }
         </div>
     }
 </MudForm>
 
+
+<style>
+    .mud-radio-group {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+    
+    .mud-ripple-radio {
+        margin-right: 5px;
+    }
+</style>
 
 @code {
     [Parameter]
