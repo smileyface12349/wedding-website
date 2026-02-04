@@ -1,5 +1,9 @@
 ﻿@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+
+@inject IRsvpService RsvpService
 
 <MudForm>
     @foreach (var question in Questions)
@@ -56,7 +60,25 @@
             }
         </div>
     }
+    
+    <div style="margin-bottom: 15px;"></div>
+    @if (!ConfirmSubmit)
+    {
+        <Button OnClick="FirstSubmitPress">Submit</Button>
+    }
+    else
+    {
+        <h2>Are you sure?</h2>
+        <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
+        <Button OnClick="Submit">Submit</Button>
+    }
+    
 </MudForm>
+
+@if (Success == false)
+{
+    <p class="text-red">Something went wrong.</p>
+}
 
 
 <style>
@@ -72,12 +94,17 @@
 
 @code {
     [Parameter]
+    public required string GuestId { get; set; }
+    
+    [Parameter]
     public required IEnumerable<RsvpQuestion> Questions { get; set; }
     
     [Parameter]
     public required bool IsAttending { get; set; }
     
     private IList<string?> Answers { get; set; } = [];
+    private bool ConfirmSubmit { get; set; } = false;
+    private bool? Success { get; set; } = null;
 
     protected override void OnInitialized()
     {
@@ -95,5 +122,16 @@
     private static bool StringToBool(string? value)
     {
         return value != null && value.ToLower().Contains("y");
+    }
+
+    private void FirstSubmitPress()
+    {
+        ConfirmSubmit = true;
+        StateHasChanged();
+    }
+
+    private void Submit()
+    {
+        Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
     }
 }
