@@ -13,8 +13,6 @@
             </h2>
             <p>@question.Description</p>
         </div>
-        
-    
     }
 </MudForm>
 
@@ -25,4 +23,14 @@
     
     [Parameter]
     public required bool IsAttending { get; set; }
+    
+    private IList<string?> Answers { get; set; } = [];
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i <= 20; i++)
+        {
+            Answers.Add(null);
+        }
+    }
 }
