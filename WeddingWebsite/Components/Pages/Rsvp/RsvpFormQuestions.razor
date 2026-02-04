@@ -6,7 +6,7 @@
 @inject IRsvpService RsvpService
 
 <MudForm>
-    @foreach (var question in Questions)
+    @foreach (var question in Questions.Questions)
     {
         <div class="question">
             <h2>
@@ -97,7 +97,7 @@
     public required string GuestId { get; set; }
     
     [Parameter]
-    public required IEnumerable<RsvpQuestion> Questions { get; set; }
+    public required RsvpQuestions Questions { get; set; }
     
     [Parameter]
     public required bool IsAttending { get; set; }

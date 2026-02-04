@@ -42,12 +42,12 @@
             @if (IsAttending == true)
             {
                 <p>We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.</p>
-                <RsvpFormQuestions Questions="RsvpConfig.YesFormQuestions" IsAttending="true"/>
+                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.YesQuestions" IsAttending="true"/>
             }
             else if (IsAttending == false)
             {
                 <p>That's a shame, we'll miss you!</p>
-                <RsvpFormQuestions Questions="RsvpConfig.NoFormQuestions" IsAttending="false"/>
+                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.NoQuestions" IsAttending="false"/>
             }
         </div>
         

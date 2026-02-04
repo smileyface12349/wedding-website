@@ -5,7 +5,7 @@ namespace WeddingWebsite.Config.Rsvp;
 
 public class DemoRsvpForm : IRsvpForm
 {
-    public IEnumerable<RsvpQuestion> YesFormQuestions =>
+    public RsvpQuestions YesQuestions => new RsvpQuestions(
     [
         new RsvpQuestion(
             Title: "Do you have any dietary requirements?",
@@ -43,9 +43,9 @@ public class DemoRsvpForm : IRsvpForm
             Required: false,
             QuestionType: new RsvpQuestionType.FreeText(new RsvpDataColumn(8, "Special Requests"), 200)
         )
-    ];
+    ]);
     
-    public IEnumerable<RsvpQuestion> NoFormQuestions =>
+    public RsvpQuestions NoQuestions => new RsvpQuestions(
     [
         new RsvpQuestion(
             Title: "We're sorry you can't make it! If you'd like to leave a message, you can do so below.",
@@ -53,5 +53,5 @@ public class DemoRsvpForm : IRsvpForm
             Required: false,
             QuestionType: new RsvpQuestionType.FreeText(new RsvpDataColumn(1, "Reason"), 300)
         )
-    ];
+    ]);
 }
