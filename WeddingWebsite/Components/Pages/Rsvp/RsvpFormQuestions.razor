@@ -12,6 +12,12 @@
                 }
             </h2>
             <p>@question.Description</p>
+            
+            @if (question.QuestionType is RsvpQuestionType.FreeText text)
+            {
+                var currentValue = Answers[text.DataColumn.Id-1];
+                <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id - 1] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+            }
         </div>
     }
 </MudForm>
