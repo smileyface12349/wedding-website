@@ -12,7 +12,10 @@
                     <span class="required-asterisk">*</span>
                 }
             </h2>
-            <p>@question.Description</p>
+            @if (question.Description != null)
+            {
+                <p>@question.Description</p>
+            }
             @if (question.Modals != null)
             {
                 @foreach (var modal in question.Modals)
