@@ -35,6 +35,21 @@
                         <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
                     }
                 </MudRadioGroup>
+            } else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
+            {
+                @foreach (var option in multi.Options)
+                {
+                    var currentValue = Answers[option.DataColumn.Id-1];
+                    <MudCheckBox T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id - 1] = BoolToString(newVal)">
+                        @option.Option
+                    </MudCheckBox>
+                }
+                <div style="margin-bottom: 10px"></div>
+                @if (multi.OtherField != null)
+                {
+                    var currentValue = Answers[multi.OtherField.DataColumn.Id-1];
+                    <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id - 1] = newVal" placeholder="@multi.OtherField.Placeholder" />
+                }
             }
         </div>
     }
@@ -67,5 +82,15 @@
         {
             Answers.Add(null);
         }
+    }
+
+    private static string BoolToString(bool value)
+    {
+        return value ? "Y" : "";
+    }
+
+    private static bool StringToBool(string? value)
+    {
+        return value != null && value.ToLower().Contains("y");
     }
 }
