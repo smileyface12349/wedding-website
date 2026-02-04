@@ -1,4 +1,5 @@
-﻿@using WeddingWebsite.Models.Rsvp
+﻿@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Models.Rsvp
 
 <MudForm>
     @foreach (var question in Questions)
@@ -12,6 +13,14 @@
                 }
             </h2>
             <p>@question.Description</p>
+            @if (question.Modals != null)
+            {
+                @foreach (var modal in question.Modals)
+                {
+                    <ModalButton Modal="modal"/>
+                    <div style="margin-bottom: 10px"></div>
+                }
+            }
             
             @if (question.QuestionType is RsvpQuestionType.FreeText text)
             {
