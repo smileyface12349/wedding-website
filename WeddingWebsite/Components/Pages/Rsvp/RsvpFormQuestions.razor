@@ -4,6 +4,7 @@
 @using WeddingWebsite.Services
 
 @inject IRsvpService RsvpService
+@inject NavigationManager NavigationManager
 
 <MudForm>
     @foreach (var question in Questions.Questions)
@@ -73,21 +74,25 @@
         <Button OnClick="Submit">Submit</Button>
     }
     
-    @if (ValidationIssues.Any())
+    @if (ValidationIssues.Any() || Success == false)
     {
         <ul class="validation-issues">
             @foreach (var issue in ValidationIssues)
             {
                 <li><p class="validation-issue">@issue</p></li>
             }
+            @if (Success == false)
+            {
+                <li><p class="validation-issue">Something went wrong when submitting your RSVP. Could it have already gone through?</p></li>
+            }
         </ul>
     }
     
 </MudForm>
 
-@if (Success == false)
+@if (Success == true)
 {
-    <p class="text-red">Something went wrong.</p>
+    <p>RSVP submitted!</p>
 }
 
 
@@ -154,5 +159,10 @@
             return;
         }
         Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
+        StateHasChanged();
+        if (Success == true)
+        {
+            NavigationManager.NavigateTo("/RsvpSubmitted");
+        }
     }
 }
