@@ -1,10 +1,13 @@
-﻿namespace WeddingWebsite.Data.Models;
+﻿using WeddingWebsite.Models.People;
+
+namespace WeddingWebsite.Data.Models;
 
 /// <summary>
-/// A basic record for the stored RSVP data, that makes no effort to match up questions to answers.
-/// RsvpData will have length 20.
+/// A simple record to store a guest's RSVP data. Does not make any effort to match up columns to questions.
 /// </summary>
 public record RsvpResponseData(
+    string GuestId,
+    Name GuestName,
     bool IsAttending,
-    IReadOnlyList<string?> RsvpData
+    IReadOnlyList<string?> Data
 );

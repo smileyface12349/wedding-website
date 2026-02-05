@@ -19,6 +19,11 @@ public interface IRsvpStore
     RsvpResponseData? GetRsvp(string guestId);
     
     /// <summary>
+    /// Retrieve all RSVPs. Note that this method does not make any effort to match up the data to questions.
+    /// </summary>
+    IEnumerable<RsvpResponseData> GetAllRsvps();
+    
+    /// <summary>
     /// Delete the RSVP for a given user. Should be restricted to admins only.
     /// </summary>
     void DeleteRsvp(string guestId);
