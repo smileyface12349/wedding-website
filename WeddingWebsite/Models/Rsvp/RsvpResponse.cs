@@ -9,5 +9,6 @@ public record RsvpResponse(
     string GuestId,
     Name GuestName,
     bool IsAttending,
-    IDictionary<string, string?> Data
+    IDictionary<string, string?> DataByColumn,
+    IDictionary<string, string> DataByQuestion
 );

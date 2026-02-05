@@ -22,14 +22,14 @@
             <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.GuestName.Full)">Name</MudTableSortLabel></MudTh>
             @foreach (var column in Columns)
             {
-                <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.Data[column])">@column</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.DataByColumn[column])">@column</MudTableSortLabel></MudTh>
             }
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.GuestName.Full</MudTd>
             @foreach (var column in Columns)
             {
-                <MudTd DataLabel="@column">@context.Data[column]</MudTd>
+                <MudTd DataLabel="@column">@context.DataByColumn[column]</MudTd>
             }
         </RowTemplate>
          <PagerContent>

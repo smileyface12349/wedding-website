@@ -6,4 +6,5 @@ public interface IRsvpService
 {
     bool SubmitRsvp(string guestId, bool isAttending, IReadOnlyList<string?> data);
     IEnumerable<RsvpResponse> GetAllRsvps(bool isAttending, RsvpQuestions questions);
+    RsvpResponse? GetRsvp(string guestId, RsvpQuestions yesQuestions, RsvpQuestions noQuestions);
 }
