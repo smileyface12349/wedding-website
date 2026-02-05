@@ -6,7 +6,7 @@
 @inject IAdminService AdminService
 @inject NavigationManager NavigationManager
 
-<p class="mb">Total guests: <b>@Accounts.Select(account => account.Guests.Count()).Sum()</b>. RSVPs: <b>@Accounts.Select(account => account.Guests.Count(guest => guest.Rsvp != RsvpStatus.NotResponded)).Sum()</b> responded, <b>@Accounts.Select(account => account.Guests.Count(guest => guest.Rsvp == RsvpStatus.Yes)).Sum()</b> attending.</p>
+<p class="mb">Total guests: <b>@Accounts.Select(account => account.Guests.Count()).Sum()</b>. RSVPs: <b>@Accounts.Select(account => account.Guests.Count(guest => guest.Rsvp != RsvpStatus.NotResponded)).Sum()</b> responded, <b>@Accounts.Select(account => account.Guests.Count(guest => guest.Rsvp == RsvpStatus.Yes)).Sum()</b> attending. <a href="/admin/rsvp/table">View detailed RSVP response table.</a></p>
 
 <MudTable T="AccountWithGuests" Class="mb" RowStyle="cursor: pointer" Items="@Accounts" Filter="new Func<AccountWithGuests, bool>(SearchFilter)" Hover="true" OnRowClick="RowClicked">
     <ToolBarContent>
