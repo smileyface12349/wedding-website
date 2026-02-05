@@ -14,13 +14,31 @@ public record RsvpQuestions(
     /// </summary>
     public IEnumerable<string> Validate(IReadOnlyList<string?> data)
     {
+        IEnumerable<string> issues = CheckRequiredFields(data);
+        
         if (Validator == null)
         {
-            return [];
+            return issues;
         }
         else
         {
-            return Validator(data);
+            return issues.Concat(Validator(data));
         }
+    }
+
+    private IEnumerable<string> CheckRequiredFields(IReadOnlyList<string?> data)
+    {
+        IList<string> issues = [];
+        
+        foreach (var question in Questions.Where(q => q.Required))
+        {
+            var columns = question.QuestionType.GetAllColumns().Select(column => column.Id);
+            if (columns.All(col => data[col] == null || data[col] == ""))
+            {
+                issues.Add($"Please complete this question: {question.Title}");
+            }
+        }
+
+        return issues;
     }
 }
