@@ -204,6 +204,32 @@ public class Store : IStore
         
         command.ExecuteNonQuery();
     }
+    
+    [Authorize(Roles = "Admin")]
+    public string? GetAccountIdFromGuestId(string guestId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT UserId
+                FROM Guests
+                WHERE GuestId = :guestId
+            """;
+        
+        command.Parameters.AddWithValue(":guestId", guestId);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var userId = reader.GetString(0);
+            return userId;
+        }
+        
+        return null;
+    }
 
     [Authorize]
     public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description)
