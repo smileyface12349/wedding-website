@@ -24,12 +24,12 @@
             
             @if (question.QuestionType is RsvpQuestionType.FreeText text)
             {
-                var currentValue = Answers[text.DataColumn.Id-1];
-                <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id - 1] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+                var currentValue = Answers[text.DataColumn.Id];
+                <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
             } else if (question.QuestionType is RsvpQuestionType.Select select)
             {
-                var currentValue = Answers[select.DataColumn.Id-1];
-                <MudRadioGroup T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id - 1] = newVal" Row="true" aria-required="@question.Required">
+                var currentValue = Answers[select.DataColumn.Id];
+                <MudRadioGroup T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Row="true" aria-required="@question.Required">
                     @foreach (var option in select.Options)
                     {
                         <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
@@ -39,16 +39,16 @@
             {
                 @foreach (var option in multi.Options)
                 {
-                    var currentValue = Answers[option.DataColumn.Id-1];
-                    <MudCheckBox T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id - 1] = BoolToString(newVal)">
+                    var currentValue = Answers[option.DataColumn.Id];
+                    <MudCheckBox T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = BoolToString(newVal)">
                         @option.Option
                     </MudCheckBox>
                 }
                 <div style="margin-bottom: 10px"></div>
                 @if (multi.OtherField != null)
                 {
-                    var currentValue = Answers[multi.OtherField.DataColumn.Id-1];
-                    <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id - 1] = newVal" placeholder="@multi.OtherField.Placeholder" />
+                    var currentValue = Answers[multi.OtherField.DataColumn.Id];
+                    <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" placeholder="@multi.OtherField.Placeholder" />
                 }
             }
         </div>
