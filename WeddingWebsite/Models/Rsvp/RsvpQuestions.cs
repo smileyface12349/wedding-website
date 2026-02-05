@@ -41,4 +41,18 @@ public record RsvpQuestions(
 
         return issues;
     }
+
+    public IEnumerable<RsvpDataColumn> GetAllColumns()
+    {
+        IList<RsvpDataColumn> columns = new List<RsvpDataColumn>();
+        foreach (var question in Questions)
+        {
+            foreach (var column in question.QuestionType.GetAllColumns())
+            {
+                columns.Add(column);
+            }
+        }
+
+        return columns;
+    }
 }

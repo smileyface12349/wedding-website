@@ -140,8 +140,21 @@
         return value != null && value.ToLower().Contains("y");
     }
 
+    /// <summary>
+    /// Null values are used to indicate that the question was not present on the form at the time of the submission.
+    /// If it was simply left blank, this must be replaced with empty string.
+    /// </summary>
+    private void RemoveNulls()
+    {
+        foreach (var column in Questions.GetAllColumns())
+        {
+            Answers[column.Id] ??= "";
+        }
+    }
+
     private void FirstSubmitPress()
     {
+        RemoveNulls();
         ValidationIssues = Questions.Validate(Answers.ToList());
         StateHasChanged();
         if (ValidationIssues.Any()) return;
