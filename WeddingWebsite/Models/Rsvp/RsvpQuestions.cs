@@ -12,7 +12,7 @@ public record RsvpQuestions(
     /// Validates the form on the inputs. Returns an empty list if everything is okay, and a list of error messages
     /// otherwise.
     /// </summary>
-    private IEnumerable<string> Validate(IReadOnlyList<string?> data)
+    public IEnumerable<string> Validate(IReadOnlyList<string?> data)
     {
         if (Validator == null)
         {

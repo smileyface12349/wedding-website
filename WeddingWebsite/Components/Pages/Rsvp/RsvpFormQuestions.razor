@@ -73,6 +73,16 @@
         <Button OnClick="Submit">Submit</Button>
     }
     
+    @if (ValidationIssues.Any())
+    {
+        <ul class="validation-issues">
+            @foreach (var issue in ValidationIssues)
+            {
+                <li><p class="validation-issue">@issue</p></li>
+            }
+        </ul>
+    }
+    
 </MudForm>
 
 @if (Success == false)
@@ -105,6 +115,7 @@
     private IList<string?> Answers { get; set; } = [];
     private bool ConfirmSubmit { get; set; } = false;
     private bool? Success { get; set; } = null;
+    private IEnumerable<string> ValidationIssues { get; set; } = [];
 
     protected override void OnInitialized()
     {
@@ -126,12 +137,22 @@
 
     private void FirstSubmitPress()
     {
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        StateHasChanged();
+        if (ValidationIssues.Any()) return;
         ConfirmSubmit = true;
         StateHasChanged();
     }
 
     private void Submit()
     {
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        if (ValidationIssues.Any())
+        {
+            ConfirmSubmit = false;
+            StateHasChanged();
+            return;
+        }
         Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
     }
 }
