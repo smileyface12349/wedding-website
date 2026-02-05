@@ -1,0 +1,13 @@
+﻿.page {
+    margin-top: 100px;
+    margin-left: max(5vw, 10px);
+    margin-right: max(5vw, 10px);
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}

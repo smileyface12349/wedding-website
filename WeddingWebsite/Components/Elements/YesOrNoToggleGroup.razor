@@ -3,16 +3,16 @@
 @inject IStringProvider StringProvider
 
 <div class="group">
-    <button @onclick="ChangeToYes" class="yes-button @(Value ? "selected" : "")">@StringProvider.Yes</button>
-    <button @onclick="ChangeToNo" class="no-button @(!Value ? "selected" : "")">@StringProvider.No</button>
+    <button @onclick="ChangeToYes" class="yes-button @(Value == true ? "selected" : "")">@StringProvider.Yes</button>
+    <button @onclick="ChangeToNo" class="no-button @(Value == false ? "selected" : "")">@StringProvider.No</button>
 </div>
 
 @code {
     [Parameter]
-    public bool Value { get; set; }
+    public bool? Value { get; set; }
     
     [Parameter]
-    public EventCallback<bool> ValueChanged { get; set; }
+    public EventCallback<bool?> ValueChanged { get; set; }
     
     private void ChangeToYes() {
         Value = true;

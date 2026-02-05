@@ -1,0 +1,75 @@
+﻿@page "/rsvp"
+
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
+
+@rendermode InteractiveServer
+
+<MudSnackbarProvider/>
+<MudDialogProvider/>
+
+<PageTitle>@StringProvider.Rsvp</PageTitle>
+
+<CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
+    <Section Center="true">
+        <div style="margin-top: 150px"></div>
+        <SectionHeading>@StringProvider.Rsvp</SectionHeading>
+        
+        @if (!Config.OptionalFeatures.Rsvp.IsActive())
+        {
+            <p>RSVPs are @Config.OptionalFeatures.Rsvp.IsActiveString().</p>
+        }
+        else
+        {
+            <p>Please choose which guest you would like to RSVP for.</p>
+            <RsvpGuestList Guests="Guests"/>
+        }
+        
+    </Section>
+</CascadingValue>
+
+<style>
+    body {
+        @(Theme?.Background.GetBackgroundCss() ?? Config.Colours.Surface.GetBackgroundCss()) !important;
+    }
+</style>
+
+@code {
+    [Inject]
+    public required IAccountService AccountService { get; set; }
+
+    private IEnumerable<GuestWithId> Guests { get; set; } = [];
+    private SectionTheme? Theme => Config.RsvpConfig.Theme;
+    private SectionTheme? ThemeNoBackground
+    {
+        get
+        {
+            if (Theme != null) return Theme with { Background = new NoBackground() };
+            return null;
+        }
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+
+        Guests = AccountService.GetOwnGuests(user);
+    }
+
+}

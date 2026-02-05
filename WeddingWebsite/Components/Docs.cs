@@ -135,7 +135,8 @@ namespace WeddingWebsite.Components.Elements
     partial class WebsiteElement {}
     
     /// <summary>
-    /// A green "yes" button and a red "no" button that the user can toggle between.
+    /// A green "yes" button and a red "no" button that the user can toggle between. Initial state can be null, but
+    /// once a value is selected it is not possible to return to this null state.
     /// </summary>
     /// <param name="Value">A bool. Use the two-way bind @bind-Value="your_var" to listen to updates.</param>
     partial class YesOrNoToggleGroup {}
