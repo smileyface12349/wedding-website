@@ -5,14 +5,14 @@
 /// </summary>
 public record RsvpQuestions(
     IEnumerable<RsvpQuestion> Questions,
-    Func<IReadOnlyList<string?>, IEnumerable<string>>? Validator = null
+    Func<IList<string?>, IEnumerable<string>>? Validator = null
 )
 {
     /// <summary>
     /// Validates the form on the inputs. Returns an empty list if everything is okay, and a list of error messages
     /// otherwise.
     /// </summary>
-    public IEnumerable<string> Validate(IReadOnlyList<string?> data)
+    public IEnumerable<string> Validate(IList<string?> data)
     {
         IEnumerable<string> issues = CheckRequiredFields(data);
         
@@ -26,7 +26,7 @@ public record RsvpQuestions(
         }
     }
 
-    private IEnumerable<string> CheckRequiredFields(IReadOnlyList<string?> data)
+    private IEnumerable<string> CheckRequiredFields(IList<string?> data)
     {
         IList<string> issues = [];
         
