@@ -13,6 +13,7 @@
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
 @inject IStringProvider StringProvider
 @inject NavigationManager NavigationManager
 @inject IRsvpForm RsvpConfig
@@ -34,20 +35,27 @@
     <Section>
         <div class="form">
             <h1>@StringProvider.Rsvp for @Guest.Name</h1>
-            <p>Please complete this form once per guest. Your answers will not be saved until you submit, after which you will be unable to make any changes.</p>
+            @if (ReadOnly)
+            {
+                <p>As your RSVP has been submitted, it is read-only. If you need to make any changes, please contact @WeddingDetails.LoginContactMethod?.Text and we'll try our best to accommodate them.</p>
+            }
+            else
+            {
+                <p>Please complete this form once per guest. Your answers will not be saved until you submit, after which you will be unable to make any changes.</p>
+            }
             
             <h2>Are you able to attend?</h2>
-            <YesOrNoToggleGroup @bind-Value="IsAttending"/>
+            <YesOrNoToggleGroup @bind-Value="IsAttending" ReadOnly="ReadOnly"/>
             
             @if (IsAttending == true)
             {
                 <p>We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.</p>
-                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.YesQuestions" IsAttending="true"/>
+                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.YesQuestions" IsAttending="true" ReadOnly="ReadOnly" />
             }
             else if (IsAttending == false)
             {
                 <p>That's a shame, we'll miss you!</p>
-                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.NoQuestions" IsAttending="false"/>
+                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.NoQuestions" IsAttending="false" ReadOnly="ReadOnly" />
             }
         </div>
         
@@ -68,6 +76,7 @@
     public required string GuestId { get; set; }
 
     private bool? IsAttending { get; set; }
+    private bool ReadOnly { get; set; } = false;
     
     private Guest? Guest { get; set; }
     private SectionTheme? Theme => Config.RsvpConfig.Theme;
@@ -95,11 +104,19 @@
         if (Guest == null)
         {
             NavigationManager.NavigateTo("/rsvp");
+            return;
         }
         
         if (!Config.OptionalFeatures.Rsvp.IsActive())
         {
             NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        if (Guest.Rsvp != RsvpStatus.NotResponded)
+        {
+            ReadOnly = true;
+            IsAttending = Guest.Rsvp == RsvpStatus.Yes;
         }
     }
 

@@ -33,11 +33,11 @@
             @if (question.QuestionType is RsvpQuestionType.FreeText text)
             {
                 var currentValue = Answers[text.DataColumn.Id];
-                <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+                <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
             } else if (question.QuestionType is RsvpQuestionType.Select select)
             {
                 var currentValue = Answers[select.DataColumn.Id];
-                <MudRadioGroup T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Row="true" aria-required="@question.Required">
+                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Row="true" aria-required="@question.Required">
                     @foreach (var option in select.Options)
                     {
                         <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
@@ -48,7 +48,7 @@
                 @foreach (var option in multi.Options)
                 {
                     var currentValue = Answers[option.DataColumn.Id];
-                    <MudCheckBox T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = BoolToString(newVal)">
+                    <MudCheckBox Disabled="ReadOnly" T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = BoolToString(newVal)">
                         @option.Option
                     </MudCheckBox>
                 }
@@ -56,22 +56,25 @@
                 @if (multi.OtherField != null)
                 {
                     var currentValue = Answers[multi.OtherField.DataColumn.Id];
-                    <InputText class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" placeholder="@multi.OtherField.Placeholder" />
+                    <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" placeholder="@multi.OtherField.Placeholder" />
                 }
             }
         </div>
     }
     
     <div style="margin-bottom: 15px;"></div>
-    @if (!ConfirmSubmit)
+    @if (!ReadOnly)
     {
-        <Button OnClick="FirstSubmitPress">Submit</Button>
-    }
-    else
-    {
-        <h2>Are you sure?</h2>
-        <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
-        <Button OnClick="Submit">Submit</Button>
+        @if (!ConfirmSubmit)
+        {
+            <Button OnClick="FirstSubmitPress">Submit</Button>
+        }
+        else
+        {
+            <h2>Are you sure?</h2>
+            <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
+            <Button OnClick="Submit">Submit</Button>
+        }
     }
     
     @if (ValidationIssues.Any() || Success == false)
@@ -117,6 +120,9 @@
     [Parameter]
     public required bool IsAttending { get; set; }
     
+    [Parameter]
+    public bool ReadOnly { get; set; } = false;
+    
     private IList<string?> Answers { get; set; } = [];
     private bool ConfirmSubmit { get; set; } = false;
     private bool? Success { get; set; } = null;
@@ -127,6 +133,20 @@
         for (int i = 0; i <= 20; i++)
         {
             Answers.Add(null);
+        }
+
+        if (ReadOnly)
+        {
+            // Load existing answers
+            var response = RsvpService.GetRsvpBasic(GuestId);
+            if (response == null)
+            {
+                ReadOnly = false;
+            }
+            else
+            {
+                Answers = response.Data.ToList();
+            }
         }
     }
 
