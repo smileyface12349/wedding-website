@@ -60,4 +60,9 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
         }
         return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.IsAttending, dataByColumn, dataByQuestion);
     }
+    
+    public RsvpResponseData? GetRsvpBasic(string guestId)
+    {
+        return rsvpStore.GetRsvp(guestId);
+    }
 }
