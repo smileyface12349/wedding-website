@@ -22,8 +22,12 @@ button {
     background-color: var(--mud-palette-success-darken);
 }
 
-button:hover {
+button.enabled:hover {
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+button.disabled:hover {
+    cursor: auto;
 }
 
 .no-button {
