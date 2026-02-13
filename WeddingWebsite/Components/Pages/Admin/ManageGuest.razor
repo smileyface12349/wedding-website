@@ -74,7 +74,15 @@
                 <p><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
             }
         }
-        
+        @if (HasClickedDeleteRsvp)
+        {
+            <p class="text-red">Are you sure? This will remove the RSVP response, including all the answers to the questions. This cannot be undone.</p>
+            <button @onclick="DeleteRsvp" class="button block-button red-button">Remove RSVP (click again to confirm)</button>
+        }
+        else
+        {
+            <button @onclick="ClickDeleteRsvp" class="button block-button red-button">Remove RSVP</button>
+        }
     }
 
     <h2>Delete the Guest</h2>
@@ -82,11 +90,11 @@
     @if (HasClickedDelete)
     {
         <p class="text-red">Are you sure? This cannot be undone.</p>
-        <button @onclick="DeleteGuest" class="button block-button">Delete this Guest (click again to confirm)</button>
+        <button @onclick="DeleteGuest" class="button block-button red-button">Delete this Guest (click again to confirm)</button>
     }
     else
     {
-        <button @onclick="ClickDelete" class="button block-button">Delete this Guest</button>
+        <button @onclick="ClickDelete" class="button block-button red-button">Delete this Guest</button>
     }
     <a class="button grey-button" href="/admin/account/@UserId">Back to Manage Account</a>
     
@@ -103,6 +111,7 @@
     private string ErrorText { get; set; } = "";
     private string Name { get; set; } = "";
     private bool HasClickedDelete { get; set; } = false;
+    private bool HasClickedDeleteRsvp { get; set; } = false;
     private bool RsvpByColumn { get; set; } = false;
 
     private bool SomethingDiffers => NameDiffers != "";
@@ -166,6 +175,18 @@
             AccountService.Log(LoggedInUser, AccountLogType.DeleteGuest, $"Guest deleted: {Guest?.Name.Full ?? "unknown name"}", UserId);
         }
         NavigationManager.NavigateTo($"/Admin/Account/{UserId}");
+    }
+
+    private void ClickDeleteRsvp()
+    {
+        HasClickedDeleteRsvp = true;
+    }
+    
+    private void DeleteRsvp()
+    {
+        Logger.LogInformation($"Deleting RSVP for guest {GuestId} for user {UserId}. Full data: {RsvpResponse?.ToString() ?? "null"}");
+        RsvpService.DeleteRsvp(GuestId);
+        RsvpResponse = null;
     }
 
     private void ToggleRsvpView()

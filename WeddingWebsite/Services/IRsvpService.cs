@@ -9,4 +9,5 @@ public interface IRsvpService
     IEnumerable<RsvpResponse> GetAllRsvps(bool isAttending, RsvpQuestions questions);
     RsvpResponse? GetRsvp(string guestId, RsvpQuestions yesQuestions, RsvpQuestions noQuestions);
     RsvpResponseData? GetRsvpBasic(string guestId);
+    void DeleteRsvp(string guestId);
 }

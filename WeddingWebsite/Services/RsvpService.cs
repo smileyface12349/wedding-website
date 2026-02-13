@@ -65,4 +65,9 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
     {
         return rsvpStore.GetRsvp(guestId);
     }
+    
+    public void DeleteRsvp(string guestId)
+    {
+        rsvpStore.DeleteRsvp(guestId);
+    }
 }
