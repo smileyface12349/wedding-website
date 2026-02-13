@@ -70,4 +70,10 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
     {
         rsvpStore.DeleteRsvp(guestId);
     }
+
+    public bool EditRsvp(string guestId, bool isAttending, IReadOnlyList<string?> data)
+    {
+        rsvpStore.DeleteRsvp(guestId);
+        return rsvpStore.SubmitRsvp(guestId, isAttending, data);
+    }
 }

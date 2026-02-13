@@ -10,4 +10,5 @@ public interface IRsvpService
     RsvpResponse? GetRsvp(string guestId, RsvpQuestions yesQuestions, RsvpQuestions noQuestions);
     RsvpResponseData? GetRsvpBasic(string guestId);
     void DeleteRsvp(string guestId);
+    bool EditRsvp(string guestId, bool isAttending, IReadOnlyList<string?> data);
 }

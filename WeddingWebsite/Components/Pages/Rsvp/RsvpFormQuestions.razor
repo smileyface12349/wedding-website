@@ -63,7 +63,7 @@
     }
     
     <div style="margin-bottom: 15px;"></div>
-    @if (!ReadOnly)
+    @if (!ReadOnly && !EditMode)
     {
         @if (!ConfirmSubmit)
         {
@@ -75,6 +75,9 @@
             <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
             <Button OnClick="Submit">Submit</Button>
         }
+    } else if (!ReadOnly && EditMode)
+    {
+        <Button OnClick="Submit">Save Changes</Button>
     }
     
     @if (ValidationIssues.Any() || Success == false)
@@ -122,6 +125,9 @@
     
     [Parameter]
     public bool ReadOnly { get; set; } = false;
+
+    [Parameter] 
+    public bool EditMode { get; set; } = false;
     
     private IList<string?> Answers { get; set; } = [];
     private bool ConfirmSubmit { get; set; } = false;
@@ -135,7 +141,7 @@
             Answers.Add(null);
         }
 
-        if (ReadOnly)
+        if (ReadOnly || EditMode)
         {
             // Load existing answers
             var response = RsvpService.GetRsvpBasic(GuestId);
@@ -191,11 +197,23 @@
             StateHasChanged();
             return;
         }
-        Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
-        StateHasChanged();
-        if (Success == true)
+        if (EditMode)
         {
-            NavigationManager.NavigateTo("/RsvpSubmitted");
+            Success = RsvpService.EditRsvp(GuestId, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                NavigationManager.NavigateTo("/Admin/Rsvp/Table");
+            }
+        }
+        else
+        {
+            Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                NavigationManager.NavigateTo("/RsvpSubmitted");
+            }
         }
     }
 }
