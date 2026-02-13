@@ -1,0 +1,78 @@
+﻿@page "/Admin/Rsvp/Table"
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+@using WeddingWebsite.Components.Elements
+
+@inject NavigationManager NavigationManager
+@inject IRsvpService RsvpService
+@inject IRsvpForm RsvpFormConfig
+@inject IAdminService AdminService
+
+@attribute [Authorize (Roles = "Admin")]
+
+<div class="page">
+    
+    <h1>RSVP Response Table</h1>
+    <p>Welcome to the big table containing all of the responses you have received to your RSVP form. There are separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table.</p>
+    <YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
+    
+    <MudTable T="RsvpResponse" Class="mb" Style="margin-top: 20px;" RowStyle="cursor: pointer" Items="@Responses" Hover="true" OnRowClick="RowClicked">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.GuestName.Full)">Name</MudTableSortLabel></MudTh>
+            @foreach (var column in Columns)
+            {
+                <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.DataByColumn[column])">@column</MudTableSortLabel></MudTh>
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.GuestName.Full</MudTd>
+            @foreach (var column in Columns)
+            {
+                <MudTd DataLabel="@column">@context.DataByColumn[column]</MudTd>
+            }
+        </RowTemplate>
+         <PagerContent>
+             <MudTablePager/>
+         </PagerContent>
+        
+    </MudTable>
+    
+</div>
+
+@code {
+    private bool? IsAttending { get; set; } = true;
+    private List<RsvpResponse> Responses { get; set; } = new();
+    private List<string> Columns { get; set; } = [];
+    
+    protected override void OnInitialized()
+    {
+        UpdateData();
+    }
+
+    private void UpdateData()
+    {
+        if (IsAttending != false)
+        {
+            Responses = RsvpService.GetAllRsvps(true, RsvpFormConfig.YesQuestions).ToList();
+            Columns = RsvpFormConfig.YesQuestions.GetAllColumns().Where(col => col.DisplayName != null).Select(col => col.DisplayName!).ToList();
+        }
+        else
+        {
+            Responses = RsvpService.GetAllRsvps(false, RsvpFormConfig.NoQuestions).ToList();
+            Columns = RsvpFormConfig.NoQuestions.GetAllColumns().Where(col => col.DisplayName != null).Select(col => col.DisplayName!).ToList();
+        }
+        StateHasChanged();
+    }
+    
+    private void RowClicked(TableRowClickEventArgs<RsvpResponse> args)
+    {
+        if (args.Item == null)
+        {
+            return;
+        }
+        var guestId = args.Item.GuestId;
+        var accountId = AdminService.GetAccountIdFromGuestId(guestId);
+        NavigationManager.NavigateTo($"/admin/account/{accountId}/{guestId}");
+    }
+}

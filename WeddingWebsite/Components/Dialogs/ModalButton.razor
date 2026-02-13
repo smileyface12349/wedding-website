@@ -6,7 +6,7 @@
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
 
-<button class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>
+<button type="button" class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>
 
 <style>
     .modal-background-@Colour.GetHex().Substring(1):hover {

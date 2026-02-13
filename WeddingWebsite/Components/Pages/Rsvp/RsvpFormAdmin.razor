@@ -1,0 +1,23 @@
+﻿@page "/admin/rsvp/{UserId}/{GuestId}"
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <RsvpForm GuestId="@GuestId" UserId="@UserId"/>
+    </Authorized>
+    <NotAuthorized>
+        <div style="margin-top: 100px;">
+            <p style="text-align: center;">Unauthorized.</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    [Parameter]
+    public required string GuestId { get; set; }
+    
+    [Parameter]
+    public required string UserId { get; set; }
+
+}
