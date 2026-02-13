@@ -54,7 +54,8 @@
     <h2>RSVP</h2>
     @if (RsvpResponse == null)
     {
-        <p>This user has not yet submitted an RSVP.</p>
+        <p>This user has not yet submitted an RSVP. You can complete the form on their behalf.</p>
+        <a class="button" href="/admin/rsvp/@UserId/@GuestId">Submit RSVP</a>
     }
     else
     {
