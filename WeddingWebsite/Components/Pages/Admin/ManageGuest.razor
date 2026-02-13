@@ -58,9 +58,13 @@
     }
     else
     {
+        
         @if (RsvpByColumn)
         {
-            <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Question View</Button>
+            @if (ShowRsvpToggle)
+            {
+                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Question View</Button>
+            }
             @foreach (var column in RsvpResponse.DataByColumn.Keys)
             {
                 <p><b>@column:</b> @RsvpResponse.DataByColumn[column]</p>
@@ -68,7 +72,10 @@
         }
         else
         {
-            <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Column View</Button>
+            @if (ShowRsvpToggle)
+            {
+                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Column View</Button>
+            }
             @foreach (var question in RsvpResponse.DataByQuestion.Keys)
             {
                 <p><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
@@ -104,6 +111,7 @@
 @code {
     [Parameter] public required string UserId { get; set; }
     [Parameter] public required string GuestId { get; set; }
+    [Parameter] public bool ShowRsvpToggle { get; set; } = false;
 
     private Account? Account { get; set; }
     private Guest? Guest { get; set; }
