@@ -14,12 +14,12 @@ button {
 }
 
 .yes-button {
-    border-color: var(--mud-palette-success-darken);
+    border-color: var(--mud-palette-success);
     margin-right: 10px;
 }
 
 .yes-button.selected {
-    background-color: var(--mud-palette-success-darken);
+    background-color: var(--mud-palette-success);
 }
 
 button.enabled:hover {
