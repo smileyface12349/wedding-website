@@ -8,6 +8,7 @@
 @using WeddingWebsite.Components.Dialogs
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Pages.Rsvp
+@using WeddingWebsite.Core
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
@@ -26,6 +27,7 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringProvider StringProvider
+@inject IRsvpForm RsvpForm
 
 @rendermode InteractiveServer
 
@@ -105,6 +107,24 @@
                     <MudIcon Icon="@Icons.Material.Filled.Warning"/>
                     <p>@StringProvider.RsvpNotYetOpen</p>
                 </div>
+            }
+            else if (RsvpForm.Deadline.HasValue && Guests.Any(guest => guest.RsvpStatus == RsvpStatus.NotResponded))
+            {
+                if (RsvpForm.Deadline.Value > DateTime.Now)
+                {
+                    <div class="warning-message">
+                        <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                        <p>Please RSVP by @RsvpForm.Deadline.Value.FormatDayAndMonth().</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="warning-message">
+                        <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                        <p>The RSVP deadline has now passed. Please RSVP as soon as possible.</p>
+                    </div>
+                }
+                
             }
             @if (Guests.Count() > 1)
             {
