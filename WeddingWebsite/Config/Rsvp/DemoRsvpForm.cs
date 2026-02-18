@@ -54,4 +54,6 @@ public class DemoRsvpForm : IRsvpForm
             QuestionType: new RsvpQuestionType.FreeText(new RsvpDataColumn(1, "Reason"), 300)
         )
     ]);
+
+    public DateTime? Deadline => null;
 }
