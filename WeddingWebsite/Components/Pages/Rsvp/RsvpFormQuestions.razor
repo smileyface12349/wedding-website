@@ -1,0 +1,219 @@
+﻿@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+
+@inject IRsvpService RsvpService
+@inject NavigationManager NavigationManager
+
+<MudForm>
+    @foreach (var question in Questions.Questions)
+    {
+        <div class="question">
+            <h2>
+                @question.Title
+                @if (question.Required)
+                {
+                    <span class="required-asterisk">*</span>
+                }
+            </h2>
+            @if (question.Description != null)
+            {
+                <p>@question.Description</p>
+            }
+            @if (question.Modals != null)
+            {
+                @foreach (var modal in question.Modals)
+                {
+                    <ModalButton Modal="modal"/>
+                    <div style="margin-bottom: 10px"></div>
+                }
+            }
+            
+            @if (question.QuestionType is RsvpQuestionType.FreeText text)
+            {
+                var currentValue = Answers[text.DataColumn.Id];
+                <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+            } else if (question.QuestionType is RsvpQuestionType.Select select)
+            {
+                var currentValue = Answers[select.DataColumn.Id];
+                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Row="true" aria-required="@question.Required">
+                    @foreach (var option in select.Options)
+                    {
+                        <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
+                    }
+                </MudRadioGroup>
+            } else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
+            {
+                @foreach (var option in multi.Options)
+                {
+                    var currentValue = Answers[option.DataColumn.Id];
+                    <MudCheckBox Disabled="ReadOnly" T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = BoolToString(newVal)">
+                        @option.Option
+                    </MudCheckBox>
+                }
+                <div style="margin-bottom: 10px"></div>
+                @if (multi.OtherField != null)
+                {
+                    var currentValue = Answers[multi.OtherField.DataColumn.Id];
+                    <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" placeholder="@multi.OtherField.Placeholder" />
+                }
+            }
+        </div>
+    }
+    
+    <div style="margin-bottom: 15px;"></div>
+    @if (!ReadOnly && !EditMode)
+    {
+        @if (!ConfirmSubmit)
+        {
+            <Button OnClick="FirstSubmitPress">Submit</Button>
+        }
+        else
+        {
+            <h2>Are you sure?</h2>
+            <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
+            <Button OnClick="Submit">Submit</Button>
+        }
+    } else if (!ReadOnly && EditMode)
+    {
+        <Button OnClick="Submit">Save Changes</Button>
+    }
+    
+    @if (ValidationIssues.Any() || Success == false)
+    {
+        <ul class="validation-issues">
+            @foreach (var issue in ValidationIssues)
+            {
+                <li><p class="validation-issue">@issue</p></li>
+            }
+            @if (Success == false)
+            {
+                <li><p class="validation-issue">Something went wrong when submitting your RSVP. Could it have already gone through?</p></li>
+            }
+        </ul>
+    }
+    
+</MudForm>
+
+@if (Success == true)
+{
+    <p>RSVP submitted!</p>
+}
+
+
+<style>
+    .mud-radio-group {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+    
+    .mud-ripple-radio {
+        margin-right: 5px;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public required string GuestId { get; set; }
+    
+    [Parameter]
+    public required RsvpQuestions Questions { get; set; }
+    
+    [Parameter]
+    public required bool IsAttending { get; set; }
+    
+    [Parameter]
+    public bool ReadOnly { get; set; } = false;
+
+    [Parameter] 
+    public bool EditMode { get; set; } = false;
+    
+    private IList<string?> Answers { get; set; } = [];
+    private bool ConfirmSubmit { get; set; } = false;
+    private bool? Success { get; set; } = null;
+    private IEnumerable<string> ValidationIssues { get; set; } = [];
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i <= 20; i++)
+        {
+            Answers.Add(null);
+        }
+
+        if (ReadOnly || EditMode)
+        {
+            // Load existing answers
+            var response = RsvpService.GetRsvpBasic(GuestId);
+            if (response == null)
+            {
+                ReadOnly = false;
+            }
+            else
+            {
+                Answers = response.Data.ToList();
+            }
+        }
+    }
+
+    private static string BoolToString(bool value)
+    {
+        return value ? "Y" : "";
+    }
+
+    private static bool StringToBool(string? value)
+    {
+        return value != null && value.ToLower().Contains("y");
+    }
+
+    /// <summary>
+    /// Null values are used to indicate that the question was not present on the form at the time of the submission.
+    /// If it was simply left blank, this must be replaced with empty string.
+    /// </summary>
+    private void RemoveNulls()
+    {
+        foreach (var column in Questions.GetAllColumns())
+        {
+            Answers[column.Id] ??= "";
+        }
+    }
+
+    private void FirstSubmitPress()
+    {
+        RemoveNulls();
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        StateHasChanged();
+        if (ValidationIssues.Any()) return;
+        ConfirmSubmit = true;
+        StateHasChanged();
+    }
+
+    private void Submit()
+    {
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        if (ValidationIssues.Any())
+        {
+            ConfirmSubmit = false;
+            StateHasChanged();
+            return;
+        }
+        if (EditMode)
+        {
+            Success = RsvpService.EditRsvp(GuestId, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                NavigationManager.NavigateTo("/Admin/Rsvp/Table");
+            }
+        }
+        else
+        {
+            Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                NavigationManager.NavigateTo("/RsvpSubmitted");
+            }
+        }
+    }
+}

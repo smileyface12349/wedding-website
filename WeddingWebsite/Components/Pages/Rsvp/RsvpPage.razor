@@ -1,0 +1,10 @@
+﻿@page "/rsvp/{GuestId}"
+
+<RsvpForm GuestId="@GuestId"/>
+
+@code {
+
+    [Parameter]
+    public required string GuestId { get; set; }
+
+}

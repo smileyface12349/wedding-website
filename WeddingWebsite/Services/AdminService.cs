@@ -38,6 +38,11 @@ public class AdminService(IStore store) : IAdminService
         store.DeleteGuest(guestId);
     }
     
+    public string? GetAccountIdFromGuestId(string guestId)
+    {
+        return store.GetAccountIdFromGuestId(guestId);
+    }
+    
     public IEnumerable<AccountLog> GetAccountLogs(string userId)
     {
         return store.GetAccountLogs(userId);

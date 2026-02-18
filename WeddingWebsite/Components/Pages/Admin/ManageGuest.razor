@@ -3,8 +3,11 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Data
 @using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Rsvp
 @using WeddingWebsite.Services
 
 @layout SimpleLayout
@@ -17,6 +20,8 @@
 @inject NavigationManager NavigationManager
 @inject ILogger<ManageGuest> Logger
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IRsvpService RsvpService
+@inject IRsvpForm RsvpForm
 
 <PageTitle>Manage Account</PageTitle>
 
@@ -47,18 +52,58 @@
     </div>
     
     <h2>RSVP</h2>
-    <p>This section will contain all details put on the form. It will be implemented once RSVPs have been implemented.</p>
-    
+    @if (RsvpResponse == null)
+    {
+        <p>This user has not yet submitted an RSVP. You can complete the form on their behalf.</p>
+        <a class="button" href="/admin/rsvp/@UserId/@GuestId">Submit RSVP</a>
+    }
+    else
+    {
+        
+        @if (RsvpByColumn)
+        {
+            @if (ShowRsvpToggle)
+            {
+                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Question View</Button>
+            }
+            @foreach (var column in RsvpResponse.DataByColumn.Keys)
+            {
+                <p><b>@column:</b> @RsvpResponse.DataByColumn[column]</p>
+            }
+        }
+        else
+        {
+            @if (ShowRsvpToggle)
+            {
+                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Column View</Button>
+            }
+            @foreach (var question in RsvpResponse.DataByQuestion.Keys)
+            {
+                <p><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
+            }
+        }
+        <a class="button" href="/admin/rsvp/@UserId/@GuestId">Edit RSVP</a>
+        @if (HasClickedDeleteRsvp)
+        {
+            <p class="text-red">Are you sure? This will remove the RSVP response, including all the answers to the questions. This cannot be undone.</p>
+            <button @onclick="DeleteRsvp" class="button block-button red-button">Remove RSVP (click again to confirm)</button>
+        }
+        else
+        {
+            <button @onclick="ClickDeleteRsvp" class="button block-button red-button">Remove RSVP</button>
+        }
+    }
+
     <h2>Delete the Guest</h2>
     <p>This cannot be undone. All RSVP data will be lost.</p>
     @if (HasClickedDelete)
     {
         <p class="text-red">Are you sure? This cannot be undone.</p>
-        <button @onclick="DeleteGuest" class="button block-button">Delete this Guest (click again to confirm)</button>
+        <button @onclick="DeleteGuest" class="button block-button red-button">Delete this Guest (click again to confirm)</button>
     }
     else
     {
-        <button @onclick="ClickDelete" class="button block-button">Delete this Guest</button>
+        <button @onclick="ClickDelete" class="button block-button red-button">Delete this Guest</button>
     }
     <a class="button grey-button" href="/admin/account/@UserId">Back to Manage Account</a>
     
@@ -67,13 +112,17 @@
 @code {
     [Parameter] public required string UserId { get; set; }
     [Parameter] public required string GuestId { get; set; }
+    [Parameter] public bool ShowRsvpToggle { get; set; } = false;
 
     private Account? Account { get; set; }
     private Guest? Guest { get; set; }
+    private RsvpResponse? RsvpResponse { get; set; }
 
     private string ErrorText { get; set; } = "";
     private string Name { get; set; } = "";
     private bool HasClickedDelete { get; set; } = false;
+    private bool HasClickedDeleteRsvp { get; set; } = false;
+    private bool RsvpByColumn { get; set; } = false;
 
     private bool SomethingDiffers => NameDiffers != "";
     private string NameDiffers => Account is null || Guest?.Name.Full == Name ? "" : "input-error";
@@ -102,6 +151,8 @@
         }
 
         Name = Guest.Name.Full;
+
+        RsvpResponse = RsvpService.GetRsvp(GuestId, RsvpForm.YesQuestions, RsvpForm.NoQuestions);
     }
     
     private void ApplyNameChange()
@@ -134,6 +185,24 @@
             AccountService.Log(LoggedInUser, AccountLogType.DeleteGuest, $"Guest deleted: {Guest?.Name.Full ?? "unknown name"}", UserId);
         }
         NavigationManager.NavigateTo($"/Admin/Account/{UserId}");
+    }
+
+    private void ClickDeleteRsvp()
+    {
+        HasClickedDeleteRsvp = true;
+    }
+    
+    private void DeleteRsvp()
+    {
+        Logger.LogInformation($"Deleting RSVP for guest {GuestId} for user {UserId}. Full data: {RsvpResponse?.ToString() ?? "null"}");
+        RsvpService.DeleteRsvp(GuestId);
+        RsvpResponse = null;
+    }
+
+    private void ToggleRsvpView()
+    {
+        RsvpByColumn = !RsvpByColumn;
+        StateHasChanged();
     }
 
 

@@ -3,23 +3,35 @@
 @inject IStringProvider StringProvider
 
 <div class="group">
-    <button @onclick="ChangeToYes" class="yes-button @(Value ? "selected" : "")">@StringProvider.Yes</button>
-    <button @onclick="ChangeToNo" class="no-button @(!Value ? "selected" : "")">@StringProvider.No</button>
+    @if (ReadOnly)
+    {
+        <button disabled class="yes-button disabled @(Value == true ? "selected" : "")">@StringProvider.Yes</button>
+        <button disabled class="no-button disabled @(Value == false ? "selected" : "")">@StringProvider.No</button>
+    }
+    else
+    {
+        <button @onclick="ChangeToYes" class="yes-button enabled @(Value == true ? "selected" : "")">@StringProvider.Yes</button>
+        <button @onclick="ChangeToNo" class="no-button enabled @(Value == false ? "selected" : "")">@StringProvider.No</button>
+    }
 </div>
 
 @code {
     [Parameter]
-    public bool Value { get; set; }
+    public bool? Value { get; set; }
     
     [Parameter]
-    public EventCallback<bool> ValueChanged { get; set; }
+    public EventCallback<bool?> ValueChanged { get; set; }
+
+    [Parameter] public bool ReadOnly { get; set; } = false;
     
     private void ChangeToYes() {
+        if (ReadOnly) return;
         Value = true;
         ValueChanged.InvokeAsync(Value);
     }
     
     private void ChangeToNo() {
+        if (ReadOnly) return;
         Value = false;
         ValueChanged.InvokeAsync(Value);
     }

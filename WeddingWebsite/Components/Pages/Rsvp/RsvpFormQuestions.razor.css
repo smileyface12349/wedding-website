@@ -1,0 +1,32 @@
+﻿h2 {
+    margin-bottom: 5px;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+.question {
+    margin-top: 20px;
+}
+
+.required-asterisk {
+    color: red;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+::deep .free-text-input {
+    width: 100%;
+    outline: var(--primary) solid 1px;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 4px 8px;
+    box-sizing: border-box;
+}
+
+.validation-issues {
+    margin-left: 15px;
+    color: red;
+    margin-top: 10px;
+}

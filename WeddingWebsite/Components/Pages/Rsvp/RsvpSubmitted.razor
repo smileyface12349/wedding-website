@@ -1,0 +1,59 @@
+﻿@page "/RsvpSubmitted"
+
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@attribute [Authorize]
+
+@inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
+
+@rendermode InteractiveServer
+
+<MudSnackbarProvider/>
+<MudDialogProvider/>
+
+<PageTitle>@StringProvider.Rsvp</PageTitle>
+
+<CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
+    <Section Center="true">
+        <div style="margin-top: 150px"></div>
+        <SectionHeading>@StringProvider.Rsvp</SectionHeading>
+        
+        <div class="content">
+            <p>Thank you for submitting your RSVP.</p>
+            <p class="description">If you need to change anything in your RSVP form at a later date, please contact @WeddingDetails.LoginContactMethod?.Text and we will do our best to accommodate it.</p>
+            <LinkButton Url="/rsvp">Submit Another RSVP</LinkButton>
+            <LinkButton Url="/">Back to Home</LinkButton>
+        </div>
+        
+    </Section>
+</CascadingValue>
+
+<style>
+    body {
+        @(Theme?.Background.GetBackgroundCss() ?? Config.Colours.Surface.GetBackgroundCss()) !important;
+    }
+</style>
+
+@code {
+    [Inject]
+    public required IAccountService AccountService { get; set; }
+    
+    private SectionTheme? Theme => Config.RsvpConfig.Theme;
+    private SectionTheme? ThemeNoBackground
+    {
+        get
+        {
+            if (Theme != null) return Theme with { Background = new NoBackground() };
+            return null;
+        }
+    }
+
+}

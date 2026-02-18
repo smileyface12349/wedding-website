@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<button class="@CssClass" @onclick="() => OnClick?.Invoke()" style="background: @Colour;@Margin">
+<button type="button" class="@CssClass" @onclick="() => OnClick?.Invoke()" style="background: @Colour;@Margin">
     @ChildContent
 </button>
 

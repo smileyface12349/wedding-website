@@ -49,6 +49,8 @@ public interface IWebsiteConfig
     
     public PageConfig.RegistryItem RegistryItemConfig { get; }
     
+    public PageConfig.Rsvp RsvpConfig { get; }
+    
     /// <summary>
     /// Config for the login page, including some of the text.
     /// </summary>

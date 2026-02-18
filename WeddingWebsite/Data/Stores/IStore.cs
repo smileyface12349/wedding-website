@@ -37,6 +37,11 @@ public interface IStore
     public void DeleteGuest(string guestId);
     
     /// <summary>
+    /// Finds the account ID containing this particular guest
+    /// </summary>
+    public string? GetAccountIdFromGuestId(string guestId);
+    
+    /// <summary>
     /// Add log message to an account.
     /// </summary>
     public void AddAccountLog(string affectedUserId, string actorId, AccountLogType logType, string description);
