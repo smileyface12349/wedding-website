@@ -37,3 +37,11 @@ button.disabled:hover {
 .no-button.selected {
     background-color: var(--mud-palette-error-lighten);
 }
+
+button.disabled {
+    border-color: #aaa;
+}
+
+button.disabled.selected {
+    background-color: #aaa;
+}
