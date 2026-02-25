@@ -1,10 +1,15 @@
-﻿@using WeddingWebsite.Components.Dialogs
+﻿@using System.Security.Claims
+@using WeddingWebsite.Components.Dialogs
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.Rsvp
 @using WeddingWebsite.Services
 
 @inject IRsvpService RsvpService
 @inject NavigationManager NavigationManager
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudForm>
     @foreach (var question in Questions.Questions)
@@ -114,8 +119,11 @@
 </style>
 
 @code {
+    [Parameter] 
+    public string? UserId { get; set; }
+    
     [Parameter]
-    public required string GuestId { get; set; }
+    public required GuestWithId Guest { get; set; }
     
     [Parameter]
     public required RsvpQuestions Questions { get; set; }
@@ -133,9 +141,14 @@
     private bool ConfirmSubmit { get; set; } = false;
     private bool? Success { get; set; } = null;
     private IEnumerable<string> ValidationIssues { get; set; } = [];
+    
+    private ClaimsPrincipal? LoggedInUser { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authenticationState.User;
+        
         for (int i = 0; i <= 20; i++)
         {
             Answers.Add(null);
@@ -144,7 +157,7 @@
         if (ReadOnly || EditMode)
         {
             // Load existing answers
-            var response = RsvpService.GetRsvpBasic(GuestId);
+            var response = RsvpService.GetRsvpBasic(Guest.Id);
             if (response == null)
             {
                 ReadOnly = false;
@@ -199,7 +212,7 @@
         }
         if (EditMode)
         {
-            Success = RsvpService.EditRsvp(GuestId, IsAttending, Answers.ToList());
+            Success = RsvpService.EditRsvp(Guest.Id, IsAttending, Answers.ToList());
             StateHasChanged();
             if (Success == true)
             {
@@ -208,10 +221,26 @@
         }
         else
         {
-            Success = RsvpService.SubmitRsvp(GuestId, IsAttending, Answers.ToList());
+            Success = RsvpService.SubmitRsvp(Guest.Id, IsAttending, Answers.ToList());
             StateHasChanged();
             if (Success == true)
             {
+                var yesOrNo = IsAttending ? "Yes" : "No";
+                var answersCompact = string.Join(",​", Answers.Where(a => a != null).Select(a => a!.Length < 14 ? a : a[..14]));
+                if (LoggedInUser != null)
+                {
+                    if (UserId == null)
+                    {
+                        // User submitting RSVP themselves
+                        AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"RSVP {yesOrNo} by {Guest.Name.First} [{answersCompact}]");
+                    }
+                    else
+                    {
+                        // Admin submitting RSVP on behalf of another user
+                        AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"Admin RSVP {yesOrNo} for {Guest.Name.First} [{answersCompact}]", UserId);
+                    }
+                }
+                
                 NavigationManager.NavigateTo("/RsvpSubmitted");
             }
         }

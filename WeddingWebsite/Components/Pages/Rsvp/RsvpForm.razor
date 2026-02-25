@@ -1,5 +1,6 @@
 ﻿@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
@@ -53,12 +54,12 @@
             @if (IsAttending == true)
             {
                 <p>We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.</p>
-                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.YesQuestions" IsAttending="true" ReadOnly="ReadOnly" EditMode="EditMode" />
+                <RsvpFormQuestions UserId="@UserId" Guest="@Guest" Questions="RsvpConfig.YesQuestions" IsAttending="true" ReadOnly="ReadOnly" EditMode="EditMode" />
             }
             else if (IsAttending == false)
             {
                 <p>That's a shame, we'll miss you!</p>
-                <RsvpFormQuestions GuestId="@GuestId" Questions="RsvpConfig.NoQuestions" IsAttending="false" ReadOnly="ReadOnly" EditMode="EditMode" />
+                <RsvpFormQuestions UserId="@UserId" GuestId="@GuestId" Questions="RsvpConfig.NoQuestions" IsAttending="false" ReadOnly="ReadOnly" EditMode="EditMode" />
             }
         </div>
         
@@ -85,7 +86,7 @@
     private bool ReadOnly { get; set; } = false;
     private bool EditMode { get; set; } = false;
     
-    private Guest? Guest { get; set; }
+    private GuestWithId? Guest { get; set; }
     private SectionTheme? Theme => Config.RsvpConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {
