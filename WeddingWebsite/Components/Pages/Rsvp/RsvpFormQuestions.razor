@@ -216,6 +216,12 @@
             StateHasChanged();
             if (Success == true)
             {
+                var yesOrNo = IsAttending ? "Yes" : "No";
+                var answersCompact = string.Join(",​", Answers.Where(a => a != null).Select(a => a!.Length < 14 ? a : a[..14]));
+                if (LoggedInUser != null)
+                {
+                    AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"Admin edited RSVP for {Guest.Name.First} to [{yesOrNo}: {answersCompact}]", UserId);
+                }
                 NavigationManager.NavigateTo("/Admin/Rsvp/Table");
             }
         }
