@@ -222,7 +222,7 @@
                 {
                     AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"Admin edited RSVP for {Guest.Name.First} to [{yesOrNo}: {answersCompact}]", UserId);
                 }
-                NavigationManager.NavigateTo("/Admin/Rsvp/Table");
+                NavigationManager.NavigateTo($"/Admin/Account/{UserId}/{Guest.Id}");
             }
         }
         else
