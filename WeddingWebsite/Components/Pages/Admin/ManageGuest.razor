@@ -194,8 +194,12 @@
     
     private void DeleteRsvp()
     {
-        Logger.LogInformation($"Deleting RSVP for guest {GuestId} for user {UserId}. Full data: {RsvpResponse?.ToString() ?? "null"}");
+        Logger.LogInformation($"Deleting RSVP for guest {GuestId} for user {UserId}.");
         RsvpService.DeleteRsvp(GuestId);
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.DeleteRsvp, "RSVP deleted for " + (Guest?.Name.Full ?? "unknown name"), UserId);
+        }
         RsvpResponse = null;
     }
 
