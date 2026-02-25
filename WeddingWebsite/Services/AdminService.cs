@@ -23,7 +23,7 @@ public class AdminService(IStore store) : IAdminService
         return store.GetGuestsForAccount(userId);
     }
     
-    public Guest? GetGuest(string userId, string guestId)
+    public GuestWithId? GetGuest(string userId, string guestId)
     {
         return store.GetGuestsForAccount(userId).FirstOrDefault(g => g.Id == guestId);
     }
