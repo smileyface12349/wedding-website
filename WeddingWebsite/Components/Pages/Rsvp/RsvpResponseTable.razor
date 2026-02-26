@@ -29,7 +29,14 @@
             <MudTd DataLabel="Name">@context.GuestName.Full</MudTd>
             @foreach (var column in Columns)
             {
-                <MudTd DataLabel="@column">@context.DataByColumn[column]</MudTd>
+                @if (context.DataByColumn[column] == null)
+                {
+                    <MudTd DataLabel="@column"><span class="missing-data">No Data</span></MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="@column">@context.DataByColumn[column]</MudTd>
+                }
             }
         </RowTemplate>
          <PagerContent>

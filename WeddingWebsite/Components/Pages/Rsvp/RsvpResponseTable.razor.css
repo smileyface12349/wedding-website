@@ -11,3 +11,7 @@ p {
 h1 {
     margin-bottom: 10px;
 }
+
+.missing-data {
+    color: red;
+}
