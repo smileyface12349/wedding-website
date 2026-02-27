@@ -15,3 +15,7 @@ h1 {
 .missing-data {
     color: red;
 }
+
+a {
+    cursor: pointer;
+}

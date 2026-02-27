@@ -1,4 +1,6 @@
 ﻿@page "/Admin/Rsvp/Table"
+
+@using System.Text
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Rsvp
 @using WeddingWebsite.Services
@@ -8,13 +10,14 @@
 @inject IRsvpService RsvpService
 @inject IRsvpForm RsvpFormConfig
 @inject IAdminService AdminService
+@inject IJSRuntime JS
 
 @attribute [Authorize (Roles = "Admin")]
 
 <div class="page">
     
     <h1>RSVP Response Table</h1>
-    <p>Welcome to the big table containing all of the responses you have received to your RSVP form. There are separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table.</p>
+    <p>Here's all of the responses you have received to your RSVP form, sorted into separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table. This page will allow you to sort columns and count up the number of each response, but if you'd like more options then please <a @onclick="DownloadCsv">export it to a CSV file</a> and analyse it in a tool of your choice.</p>
     <YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
     
     <MudTable T="RsvpResponse" Class="mb" Style="margin-top: 20px;" RowStyle="cursor: pointer" Items="@Responses" Hover="true" OnRowClick="RowClicked">
@@ -39,13 +42,15 @@
                 }
             }
         </RowTemplate>
-         <PagerContent>
-             <MudTablePager/>
-         </PagerContent>
+        <PagerContent>
+            <MudTablePager/>
+        </PagerContent>
         
     </MudTable>
     
 </div>
+
+<script src="/Components/Pages/Rsvp/RsvpResponseTable.razor.js"></script>
 
 @code {
     private bool? IsAttending { get; set; } = true;
@@ -81,5 +86,30 @@
         var guestId = args.Item.GuestId;
         var accountId = AdminService.GetAccountIdFromGuestId(guestId);
         NavigationManager.NavigateTo($"/admin/account/{accountId}/{guestId}");
+    }
+    
+    private async Task DownloadCsv()
+    {
+        var csvContent = GenerateCsv(Responses.Where(r => r.IsAttending == IsAttending));
+
+        // Call JavaScript function to download CSV
+        var yesOrNo = IsAttending == true ? "yes" : "no";
+        var datePart = DateTime.Now.ToString("dd_MM");
+        await JS.InvokeVoidAsync("downloadFile", $"rsvp_{yesOrNo}_{datePart}.csv", csvContent);
+    }
+
+    private string GenerateCsv(IEnumerable<RsvpResponse> responses)
+    {
+        var csv = new StringBuilder();
+        var columnHeadings = new List<string> {"Name"}.Concat(Columns);
+        csv.AppendLine(string.Join(",", columnHeadings));
+
+        foreach (var response in responses)
+        {
+            var data = new List<string> { response.GuestName.Full }.Concat(response.DataByColumn.Select(kv => kv.Value ?? "<null>"));
+            csv.AppendLine(string.Join(",", data.Select(value => $"\"{value}\"")));
+        }
+
+        return csv.ToString();
     }
 }
