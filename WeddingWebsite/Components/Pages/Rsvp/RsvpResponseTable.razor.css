@@ -19,3 +19,10 @@ h1 {
 a {
     cursor: pointer;
 }
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+}

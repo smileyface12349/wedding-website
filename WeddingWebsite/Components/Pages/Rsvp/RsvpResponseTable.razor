@@ -18,7 +18,11 @@
 <div class="page">
     
     <h1>RSVP Response Table</h1>
-    <p>Here's all of the responses you have received to your RSVP form, sorted into separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table. This page will allow you to sort columns and count up the number of each response, but if you'd like more options then please <a @onclick="DownloadCsv">export it to a CSV file</a> and analyse it in a tool of your choice.</p>
+    <p>Here's all of the responses you have received to your RSVP form, sorted into separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table.</p>
+    <div class="actions">
+        <LinkButton Url="/admin/rsvp/questions">View by Question</LinkButton>
+        <Button OnClickAsync="DownloadCsv">Download CSV</Button>
+    </div>
     <YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
     
     <MudTable T="RsvpResponse" Class="mb" Style="margin-top: 20px;" RowStyle="cursor: pointer" Items="@Responses" Hover="true" OnRowClick="RowClicked">

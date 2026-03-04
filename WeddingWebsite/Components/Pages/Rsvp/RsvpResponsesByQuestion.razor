@@ -13,6 +13,7 @@
 
 <h1>RSVP Questions</h1>
 <p>On this page, you can view a summary of the RSVP responses by question.</p>
+<LinkButton Url="/admin/rsvp/table">View by Response</LinkButton>
 <YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
 
 @foreach (var question in Questions)
