@@ -103,7 +103,8 @@ public class RsvpStore : IRsvpStore
             SELECT RsvpFormResponses.GuestId, SubmittedAt, IsAttending, Guests.FirstName, Guests.LastName, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
                    Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20
             FROM RsvpFormResponses
-            LEFT JOIN Guests on RsvpFormResponses.GuestId = Guests.GuestId";
+            LEFT JOIN Guests on RsvpFormResponses.GuestId = Guests.GuestId
+            ORDER BY SubmittedAt DESC";
 
         using var reader = selectCommand.ExecuteReader();
         while (reader.Read())
