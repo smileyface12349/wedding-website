@@ -8,6 +8,7 @@ namespace WeddingWebsite.Data.Models;
 public record RsvpResponseData(
     string GuestId,
     Name GuestName,
+    DateTime SubmittedAt,
     bool IsAttending,
     IReadOnlyList<string?> Data
 );

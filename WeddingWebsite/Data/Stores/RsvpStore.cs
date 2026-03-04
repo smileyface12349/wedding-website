@@ -28,13 +28,14 @@ public class RsvpStore : IRsvpStore
         // Insert the RSVP data
         var insertCommand = connection.CreateCommand();
         insertCommand.CommandText = @"
-            INSERT INTO RsvpFormResponses (GuestId, IsAttending, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
+            INSERT INTO RsvpFormResponses (GuestId, SubmittedAt, IsAttending, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
                                        Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20)
-            VALUES ($guestId, $isAttending, $data0, $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8, $data9, $data10,
+            VALUES ($guestId, $submittedAt, $isAttending, $data0, $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8, $data9, $data10,
                     $data11, $data12, $data13, $data14, $data15, $data16, $data17, $data18, $data19, $data20)";
         
         insertCommand.Parameters.AddWithValue("guestId", guestId);
         insertCommand.Parameters.AddWithValue("isAttending", isAttending ? 1 : 0);
+        insertCommand.Parameters.AddWithValue("submittedAt", DateTime.UtcNow);
         
         for (int i = 0; i <= 20; i++)
         {
@@ -56,7 +57,7 @@ public class RsvpStore : IRsvpStore
 
         var selectCommand = connection.CreateCommand();
         selectCommand.CommandText = @"
-            SELECT IsAttending, Guests.FirstName, Guests.LastName, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
+            SELECT SubmittedAt, IsAttending, Guests.FirstName, Guests.LastName, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
                    Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20
             FROM RsvpFormResponses
             LEFT JOIN Guests on RsvpFormResponses.GuestId = Guests.GuestId
@@ -70,14 +71,15 @@ public class RsvpStore : IRsvpStore
             return null; // No RSVP found
         }
 
-        var isAttending = reader.GetInt32(0) == 1;
-        var firstName = reader.GetString(1);
-        var lastName = reader.GetString(2);
+        var submittedAt = reader.GetDateTime(0);
+        var isAttending = reader.GetInt32(1) == 1;
+        var firstName = reader.GetString(2);
+        var lastName = reader.GetString(3);
         var rsvpData = new List<string?>();
         
         for (int i = 0; i <= 20; i++)
         {
-            if (reader.IsDBNull(i+3))
+            if (reader.IsDBNull(i+4))
             {
                 rsvpData.Add(null);
             }
@@ -87,7 +89,7 @@ public class RsvpStore : IRsvpStore
             }
         }
 
-        return new RsvpResponseData(guestId, new Name(firstName, lastName), isAttending, rsvpData);
+        return new RsvpResponseData(guestId, new Name(firstName, lastName), submittedAt, isAttending, rsvpData);
     }
 
     [Authorize(Roles = "Admin")]
@@ -98,7 +100,7 @@ public class RsvpStore : IRsvpStore
 
         var selectCommand = connection.CreateCommand();
         selectCommand.CommandText = @"
-            SELECT RsvpFormResponses.GuestId, IsAttending, Guests.FirstName, Guests.LastName, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
+            SELECT RsvpFormResponses.GuestId, SubmittedAt, IsAttending, Guests.FirstName, Guests.LastName, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
                    Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20
             FROM RsvpFormResponses
             LEFT JOIN Guests on RsvpFormResponses.GuestId = Guests.GuestId";
@@ -107,24 +109,25 @@ public class RsvpStore : IRsvpStore
         while (reader.Read())
         {
             var guestId = reader.GetString(0);
-            var isAttending = reader.GetInt32(1) == 1;
-            var firstName = reader.GetString(2);
-            var lastName = reader.GetString(3);
+            var submittedAt = reader.GetDateTime(1);
+            var isAttending = reader.GetInt32(2) == 1;
+            var firstName = reader.GetString(3);
+            var lastName = reader.GetString(4);
             var rsvpData = new List<string?>();
             
             for (int i = 0; i <= 20; i++)
             {
-                if (reader.IsDBNull(i+4))
+                if (reader.IsDBNull(i+5))
                 {
                     rsvpData.Add(null);
                 }
                 else
                 {
-                    rsvpData.Add(reader.GetString(i+4));
+                    rsvpData.Add(reader.GetString(i+5));
                 }
             }
 
-            yield return new RsvpResponseData(guestId, new Name(firstName, lastName), isAttending, rsvpData);
+            yield return new RsvpResponseData(guestId, new Name(firstName, lastName), submittedAt, isAttending, rsvpData);
         }
     }
 

@@ -8,6 +8,7 @@ namespace WeddingWebsite.Models.Rsvp;
 public record RsvpResponse(
     string GuestId,
     Name GuestName,
+    DateTime SubmittedAt,
     bool IsAttending,
     IDictionary<string, string?> DataByColumn,
     IDictionary<string, string> DataByQuestion

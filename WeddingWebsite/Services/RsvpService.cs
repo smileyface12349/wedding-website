@@ -30,7 +30,7 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
                 var value = question.QuestionType.GetAnswerString(rsvp.Data);
                 dataByQuestion[question.Title] = value;
             }
-            return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.IsAttending, dataByColumn, dataByQuestion);
+            return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.SubmittedAt, rsvp.IsAttending, dataByColumn, dataByQuestion);
         });
     }
     
@@ -58,7 +58,7 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
             }
             dataByQuestion[question.Title] = value;
         }
-        return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.IsAttending, dataByColumn, dataByQuestion);
+        return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.SubmittedAt, rsvp.IsAttending, dataByColumn, dataByQuestion);
     }
     
     public RsvpResponseData? GetRsvpBasic(string guestId)
