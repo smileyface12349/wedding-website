@@ -64,7 +64,7 @@
         {
             @if (ShowRsvpToggle)
             {
-                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Question View</Button>
+                <Button OnClick="ToggleRsvpView" CssClass="mb">Switch to Question View</Button>
             }
             <p><i>Submitted at: @RsvpResponse.SubmittedAt.ToString("g")</i></p>
             @foreach (var column in RsvpResponse.DataByColumn.Keys)
@@ -76,7 +76,7 @@
         {
             @if (ShowRsvpToggle)
             {
-                <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Column View</Button>
+                <Button OnClick="ToggleRsvpView" CssClass="mb">Switch to Column View</Button>
             }
             <p><i>Submitted at: @RsvpResponse.SubmittedAt.ToString("g")</i></p>
             @foreach (var question in RsvpResponse.DataByQuestion.Keys)

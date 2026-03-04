@@ -1,8 +1,22 @@
-﻿@using WeddingWebsite.Models.Theme
+﻿@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WebsiteElement
 
-<button type="button" class="@CssClass" @onclick="HandleClick" style="background: @Colour;@Margin">
+@inject IWebsiteConfig Config
+
+<button type="button" class="@CssClass @VariantClass" @onclick="HandleClick" style="@Css">
     @ChildContent
 </button>
+
+@if (Variant == ButtonVariant.Outlined)
+{
+    <style>
+        .background-@Colour.GetHex().Substring(1):hover {
+            background-color: @Colour;
+        }
+    </style>
+}
 
 @code {
   
@@ -19,13 +33,14 @@
     public string CssClass { get; set; } = "";
     
     [Parameter]
-    public bool AddBottomMargin { get; set; } = false;
+    public ButtonVariant Variant { get; set; } = ButtonVariant.Filled;
     
     [CascadingParameter]
     private SectionTheme? Theme { get; set; }
     
-    private string Colour => Theme?.Primary.ToString() ?? "var(--primary)";
-    private string Margin => AddBottomMargin ? "margin-bottom: 10px;" : "";
+    private Colour Colour => Theme?.Primary ?? Config.Colours.Primary;
+    private string Css => Variant == ButtonVariant.Filled ? "background: " + Colour : $"border-color: {Colour}; color: {Colour}";
+    private string VariantClass => Variant == ButtonVariant.Filled ? "filled" : $"outlined background-{Colour.GetHex().Substring(1)}";
     
     private async Task HandleClick()
     {

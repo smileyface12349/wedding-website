@@ -29,7 +29,7 @@
         <p class="description">Keep track of what needs doing on this page. In the config file, you can add the <code>TodoListSummary</code> section which will display tasks assigned to you on the homepage.</p>
     }
     
-     <Button OnClick="AddNewItem" AddBottomMargin="true">Add New Item</Button>
+     <Button OnClick="AddNewItem" CssClass="mb">Add New Item</Button>
     
     @foreach (var status in Enum.GetValues<TodoItemStatus>())
     {
