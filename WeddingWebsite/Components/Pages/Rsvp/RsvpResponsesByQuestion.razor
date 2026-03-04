@@ -28,7 +28,14 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context</MudTd>
-                <MudTd>@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
+                @if (Responses.Count == 0)
+                {
+                    <MudTd>@SummaryData[question.Title][context]</MudTd>
+                }
+                else
+                {
+                    <MudTd>@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
+                }
             </RowTemplate>
         </MudTable>
     }
