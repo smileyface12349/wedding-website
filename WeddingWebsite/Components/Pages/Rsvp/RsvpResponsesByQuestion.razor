@@ -18,10 +18,7 @@
 @foreach (var question in Questions)
 {
     <h2>@question.Title</h2>
-    @if (question.QuestionType is RsvpQuestionType.FreeText text)
-    {
-        <p><i>Please go to the RSVP table to view responses to free text questions.</i></p>
-    } else if (question.QuestionType is RsvpQuestionType.Select or RsvpQuestionType.MultiSelect)
+    @if (SummaryData.ContainsKey(question.Title))
     {
         <MudTable Items="SummaryData[question.Title].Keys">
             <HeaderContent>
@@ -33,6 +30,14 @@
                 <MudTd>@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
             </RowTemplate>
         </MudTable>
+    }
+    else if (question.QuestionType is RsvpQuestionType.FreeText)
+    {
+        <p><i>Please go to the RSVP table to view responses to free text questions.</i></p>
+    }
+    else
+    {
+        <p><i>Unsupported question type, no summary data available.</i></p>
     }
 }
 
@@ -74,7 +79,7 @@
                     data[option] = responseCounts.GetValueOrDefault(option, 0);
                 }
                 var otherCount = Responses.Count(r => !select.Options.Contains(r.DataByQuestion[question.Title]));
-                if (otherCount > 0)
+                if (otherCount > 0 || select.OtherField is { DataColumn.DisplayName: not null })
                 {
                     data["Other"] = otherCount;
                 }
@@ -88,8 +93,28 @@
                 {
                     data[option.Option] = responseCounts.GetValueOrDefault(option.Option, 0);
                 }
+                // Count "Other" responses
+                if (multi.OtherField is { DataColumn.DisplayName: not null })
+                {
+                    var otherCount = Responses.Count(r => r.DataByColumn[multi.OtherField.DataColumn.DisplayName!] != null && r.DataByColumn[multi.OtherField.DataColumn.DisplayName!] != "");
+                    if (otherCount > 0 || multi.OtherField is { DataColumn.DisplayName: not null })
+                    {
+                        data["Other"] = otherCount;
+                    }
+                }
 
                 SummaryData[question.Title] = data;
+            }
+            else if (question is { QuestionType: RsvpQuestionType.FreeText, Required: false })
+            {
+                // Compare number of blank and non-blank responses
+                var blankCount = Responses.Count(r => string.IsNullOrWhiteSpace(r.DataByQuestion[question.Title]));
+                var nonBlankCount = Responses.Count - blankCount;
+                SummaryData[question.Title] = new Dictionary<string, int>
+                {
+                    ["Answered"] = nonBlankCount,
+                    ["Left Blank"] = blankCount
+                };
             }
         }
         
