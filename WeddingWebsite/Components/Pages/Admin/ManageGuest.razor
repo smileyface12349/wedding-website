@@ -66,6 +66,7 @@
             {
                 <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Question View</Button>
             }
+            <p><i>Submitted at: @RsvpResponse.SubmittedAt.ToString("g")</i></p>
             @foreach (var column in RsvpResponse.DataByColumn.Keys)
             {
                 <p><b>@column:</b> @RsvpResponse.DataByColumn[column]</p>
@@ -77,6 +78,7 @@
             {
                 <Button OnClick="ToggleRsvpView" AddBottomMargin="true">Switch to Column View</Button>
             }
+            <p><i>Submitted at: @RsvpResponse.SubmittedAt.ToString("g")</i></p>
             @foreach (var question in RsvpResponse.DataByQuestion.Keys)
             {
                 <p><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
