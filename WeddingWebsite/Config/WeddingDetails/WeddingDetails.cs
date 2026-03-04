@@ -40,7 +40,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 "Enjoy some Spanish Tapas and drinks in the garden (weather permitting) as you play some garden games and get to know each other with wedding guest Bingo. Or if you fancy a bit of quiet time, you can enjoy a nice walk through the field and woods behind the Chapel.",
                 CeremonyVenue, 
                 null,
-                new WebsiteImage("/img/10.jpg", "Some bottles of champagne surrounded by lots of empty glasses")
+                new WebsiteImage("/img/13.jpeg", "Some bottles of champagne surrounded by lots of empty glasses")
                 ),
             new (
                 "BBQ and Speeches", 
@@ -212,7 +212,7 @@ public sealed class WeddingDetails : IWeddingDetails
 
     public WebsiteImage MainImage { get; } 
         = new WebsiteImage("/img/2.jpg", null);
-        
+
     public GalleryItems Gallery { get; } = new (
         [],
         []

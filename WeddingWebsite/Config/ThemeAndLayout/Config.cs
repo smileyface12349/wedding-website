@@ -10,9 +10,9 @@ namespace WeddingWebsite.Config.ThemeAndLayout;
 public class Config : DefaultConfig, IWebsiteConfig
 {
     public new WeddingColours Colours { get; } = new (
-        new Colour(77, 204, 225),
-        new Colour("#A3D5E0"),
-        new Colour("#B6D7A8"),
+        new Colour("#8d5519"),  //#41a4bb
+        new Colour("#3399FF"),  //#3399FF
+        new Colour("#000000"),  //#B6D7A8
         new Colour("#F2F1ED")
     );
     public new IReadOnlyList<Section> Sections { get; protected set; }
@@ -34,19 +34,19 @@ public class Config : DefaultConfig, IWebsiteConfig
     public Config() {
         var surfaceVariant = new Colour(254, 252, 231);
         
-        var purple = new Colour("#DCCCEC");
+        var purple = new Colour("#8697c0");
         var coral = new Colour(239, 111, 108);
         var salmon = new Colour(236, 129, 108, Colour.VeryDarkGrey);
         var lightGreen = new Colour(112, 229, 130);
         var darkGreen = new Colour(50, 150, 50);
-        var yellow = new Colour("#F9DC5C");
+        var yellow = new Colour("#e45d5a");
         var darkPurple = new Colour(137, 108, 166);
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
         var whiteFilledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Colours.Primary, null));
         var outlinedBox = new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Colours.Primary, null));
         
-        var bricks = new BackgroundImage("/img/4.jpeg", true, "1000px", null, 0.3, false);
+        var bricks = new BackgroundImage("/img/15.jpeg", false, "1000px", null, 0.3, false);
         var flowers = new BackgroundImage("/bg/blue-flowers.png", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
     
         Sections = [
@@ -54,16 +54,16 @@ public class Config : DefaultConfig, IWebsiteConfig
             //new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
-            new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
+            //new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             //new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
-            new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),
+            //new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),
             //new Section.Gallery(),
             //new Section.Contact(new SectionTheme(Colours.Secondary, Colours.Primary, whiteFilledBox))
         ];
         
         TopButtons = new TopButtonsConfig(
             [
-                new LinkButton("Transport", "#accommodation")
+                new LinkButton("Directions", "#accommodation")
             ],
             yellow
         );
@@ -72,7 +72,7 @@ public class Config : DefaultConfig, IWebsiteConfig
             [
                 new LinkButton("Home", "/"),
                 new LinkButton("Schedule", "/#timeline"),
-                new LinkButton("Directions", "/#accommodation"),
+                new LinkButton("Directions", "/#transport"),
                 new LinkButton("Registry", "/registry"),
                 //new LinkButton("Gallery", "/gallery"),
                 //new LinkButton("Contact", "/#contact")
