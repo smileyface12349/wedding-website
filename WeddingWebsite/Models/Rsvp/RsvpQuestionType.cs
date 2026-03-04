@@ -59,6 +59,16 @@ public abstract record RsvpQuestionType
             
             return selectedOptions.Any() ? string.Join(", ", selectedOptions) : "No options selected";
         }
+        
+        public static string BoolToString(bool value)
+        {
+            return value ? "Y" : "";
+        }
+
+        public static bool StringToBool(string? value)
+        {
+            return value != null && value.ToLower().Contains("y");
+        }
     }
 
     public abstract IEnumerable<RsvpDataColumn> GetAllColumns();

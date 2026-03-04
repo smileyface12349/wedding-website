@@ -53,7 +53,7 @@
                 @foreach (var option in multi.Options)
                 {
                     var currentValue = Answers[option.DataColumn.Id];
-                    <MudCheckBox Disabled="ReadOnly" T="bool" Color="Color.Primary" Value="StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = BoolToString(newVal)">
+                    <MudCheckBox Disabled="ReadOnly" T="bool" Color="Color.Primary" Value="RsvpQuestionType.MultiSelect.StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = RsvpQuestionType.MultiSelect.BoolToString(newVal)">
                         @option.Option
                     </MudCheckBox>
                 }
@@ -167,16 +167,6 @@
                 Answers = response.Data.ToList();
             }
         }
-    }
-
-    private static string BoolToString(bool value)
-    {
-        return value ? "Y" : "";
-    }
-
-    private static bool StringToBool(string? value)
-    {
-        return value != null && value.ToLower().Contains("y");
     }
 
     /// <summary>
