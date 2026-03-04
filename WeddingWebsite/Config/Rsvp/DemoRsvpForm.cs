@@ -56,4 +56,6 @@ public class DemoRsvpForm : IRsvpForm
     ]);
 
     public DateTime? Deadline => null;
+    
+    public bool LongAttendanceResponses => false;
 }

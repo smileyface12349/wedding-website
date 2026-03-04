@@ -19,4 +19,10 @@ public interface IRsvpForm
     /// close RSVPs, please RSVP no for any guests that have not yet RSVPed. If there is no deadline, use null.
     /// </summary>
     DateTime? Deadline { get; }
+    
+    /// <summary>
+    /// False: Options "Yes" and "No" in red and green boxes side by side. High-emphasis and visually distinct.
+    /// True: Options "Joyfully Accept" and "Regretfully Decline", styled like a normal select field. More subtle.
+    /// </summary>
+    bool LongAttendanceResponses { get; }
 }

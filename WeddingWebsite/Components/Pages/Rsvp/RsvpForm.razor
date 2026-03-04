@@ -48,8 +48,18 @@
                 <p>Please complete this form once per guest. Your answers will not be saved until you submit, after which you will be unable to make any changes.</p>
             }
             
-            <h2>Are you able to attend?</h2>
-            <YesOrNoToggleGroup @bind-Value="IsAttending" ReadOnly="ReadOnly"/>
+            <h2>Will you be able to join us at our wedding?</h2>
+            @if (RsvpConfig.LongAttendanceResponses)
+            {
+                <MudRadioGroup T="bool?" @bind-Value="IsAttending" Disabled="ReadOnly" Row="false" aria-required="true">
+                    <MudRadio T="bool?" Value="true" Color="Color.Primary">Joyfully Accept</MudRadio>
+                    <MudRadio T="bool?" Value="false" Color="Color.Primary">Regretfully Decline</MudRadio>
+                </MudRadioGroup>
+            }
+            else
+            {
+                <YesOrNoToggleGroup @bind-Value="IsAttending" ReadOnly="ReadOnly"/>
+            }
             
             @if (IsAttending == true)
             {
