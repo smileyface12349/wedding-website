@@ -1,6 +1,6 @@
 ﻿@using WeddingWebsite.Models.Theme
 
-<button type="button" class="@CssClass" @onclick="() => OnClick?.Invoke()" style="background: @Colour;@Margin">
+<button type="button" class="@CssClass" @onclick="HandleClick" style="background: @Colour;@Margin">
     @ChildContent
 </button>
 
@@ -13,6 +13,9 @@
     public Action? OnClick { get; set; }
     
     [Parameter]
+    public Func<Task>? OnClickAsync { get; set; }
+    
+    [Parameter]
     public string CssClass { get; set; } = "";
     
     [Parameter]
@@ -23,4 +26,16 @@
     
     private string Colour => Theme?.Primary.ToString() ?? "var(--primary)";
     private string Margin => AddBottomMargin ? "margin-bottom: 10px;" : "";
+    
+    private async Task HandleClick()
+    {
+        if (OnClickAsync != null)
+        {
+            await OnClickAsync.Invoke();
+        }
+        else
+        {
+            OnClick?.Invoke();
+        }
+    }
 }
