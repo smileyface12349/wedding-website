@@ -13,6 +13,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebsiteConfig Config
 @inject IStringProvider StringProvider
+@inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
 
@@ -70,6 +71,12 @@
         }
 
         Guests = AccountService.GetOwnGuests(user);
+        
+        if (Guests.Count() == 1)
+        {
+            var guest = Guests.First();
+            NavigationManager.NavigateTo($"/rsvp/{guest.Id}");
+        }
     }
 
 }
