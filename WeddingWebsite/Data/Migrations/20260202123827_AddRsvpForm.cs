@@ -15,6 +15,7 @@ namespace WeddingWebsite.Migrations
                 columns: table => new
                 {
                     GuestId = table.Column<string>(type: "TEXT", nullable: false),
+                    SubmittedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsAttending = table.Column<int>(type: "INTEGER", nullable: false),
                     Data0 = table.Column<string>(type: "TEXT", nullable: true),
                     Data1 = table.Column<string>(type: "TEXT", nullable: true),
