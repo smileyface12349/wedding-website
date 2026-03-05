@@ -1,0 +1,41 @@
+﻿@using System.Linq.Expressions
+<InputText disabled="@ReadOnly" class="free-text-input" Value="@Value" ValueExpression="() => Value" ValueChanged="newVal => UpdateValue(newVal)" maxlength="@MaxLength" aria-required="@Required" placeholder="@Placeholder" />
+@if (Value?.Length >= MaxLength && !ReadOnly)
+{
+    <p>Got more to say? Let us know separately @if (ContactMethod != null) { <span> at @ContactMethod</span> }.
+    </p>
+}
+
+@code {
+    [Parameter]
+    public string? Value { get; set; }
+    
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    
+    [Parameter] public Expression? ValueExpression { get; set; }
+    
+    [Parameter]
+    public bool ReadOnly { get; set; }
+    
+    [Parameter]
+    public string? ContactMethod { get; set; }
+    
+    [Parameter]
+    public int MaxLength { get; set; }
+    
+    [Parameter]
+    public bool Required { get; set; }
+    
+    [Parameter]
+    public string? Placeholder { get; set; }
+    
+    // Update free text response, but only if it's below the max length.
+    private void UpdateValue(string? newValue)
+    {
+        if (newValue == null || newValue.Length <= MaxLength)
+        {
+            Value = newValue;
+            ValueChanged.InvokeAsync(newValue);
+        }
+    }
+}

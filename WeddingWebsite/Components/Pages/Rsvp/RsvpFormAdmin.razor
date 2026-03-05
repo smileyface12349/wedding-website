@@ -1,5 +1,7 @@
 ﻿@page "/admin/rsvp/{UserId}/{GuestId}"
 
+@using WeddingWebsite.Components.WeddingComponents.Rsvp
+
 <AuthorizeView Roles="Admin">
     <Authorized>
         <RsvpForm GuestId="@GuestId" UserId="@UserId"/>

@@ -3,6 +3,8 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.Rsvp
 @using WeddingWebsite.Services
 
@@ -10,6 +12,7 @@
 @inject NavigationManager NavigationManager
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWeddingDetails WeddingDetails
 
 <MudForm>
     @foreach (var question in Questions.Questions)
@@ -38,7 +41,7 @@
             @if (question.QuestionType is RsvpQuestionType.FreeText text)
             {
                 var currentValue = Answers[text.DataColumn.Id];
-                <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" aria-required="@question.Required" placeholder="@text.Placeholder" />
+                <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" MaxLength="@text.MaxLength" Required="@question.Required" Placeholder="@text.Placeholder" ContactMethod="@ContactMethod" />
             } else if (question.QuestionType is RsvpQuestionType.Select select)
             {
                 var currentValue = Answers[select.DataColumn.Id];
@@ -61,7 +64,7 @@
                 @if (multi.OtherField != null)
                 {
                     var currentValue = Answers[multi.OtherField.DataColumn.Id];
-                    <InputText disabled="@ReadOnly" class="free-text-input" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" placeholder="@multi.OtherField.Placeholder" />
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" Placeholder="@multi.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="multi.OtherField.MaxLength" />
                 }
             }
         </div>
@@ -143,6 +146,7 @@
     private IEnumerable<string> ValidationIssues { get; set; } = [];
     
     private ClaimsPrincipal? LoggedInUser { get; set; }
+    private string? ContactMethod => WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text;
 
     protected override async Task OnInitializedAsync()
     {
