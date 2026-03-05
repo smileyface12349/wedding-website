@@ -14,7 +14,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<DetailsAndConfigValidator>();
     }
     
-    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
+    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config, IRsvpForm rsvp) {
         validationIssues = [];
         
         Sections_ShouldNotBeEmpty(config);
@@ -53,6 +53,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(config);
         Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(config);
         Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(details, config);
+        
+        
 
         IgnoreValidationIssues(config);
 
@@ -525,4 +527,6 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
             }
         }
     }
+    
+    
 }
