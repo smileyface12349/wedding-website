@@ -1,5 +1,6 @@
 ﻿using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Rsvp;
 using WeddingWebsite.Models.WebsiteConfig;
 
 namespace WeddingWebsite.Models.Validation;
@@ -54,7 +55,12 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(config);
         Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(details, config);
         
-        
+        Rsvp_ColumnIdsMustBeUnique(rsvp);
+        Rsvp_ColumnIdsShouldBeBetween0And20(rsvp);
+        Rsvp_QuestionTitlesShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_MultiSelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOtherFieldShouldHaveNullColumn(rsvp);
 
         IgnoreValidationIssues(config);
 
@@ -527,6 +533,75 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
             }
         }
     }
+
+    private void Rsvp_ColumnIdsShouldBeBetween0And20(IRsvpForm rsvp)
+    {
+        foreach (var column in rsvp.YesQuestions.GetAllColumns().Concat(rsvp.NoQuestions.GetAllColumns()))
+        {
+            if (column.Id is < 0 or > 20)
+            {
+                Error($"The RSVP form contains a column with id {column.Id}. Column ids must be between 0 and 20 inclusive.");
+            }
+        }
+    }
+
+    private void Rsvp_ColumnIdsMustBeUnique(IRsvpForm rsvp)
+    {
+        var columnIds = rsvp.YesQuestions.GetAllColumns().Select(column => column.Id);
+        var duplicateColumnIds = columnIds.GroupBy(id => id).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnIds.Any())
+        {
+            Error($"The RSVP yes form contains duplicate column ids: {string.Join(", ", duplicateColumnIds)}. Each column must have a unique id.");
+        }
+        columnIds = rsvp.NoQuestions.GetAllColumns().Select(column => column.Id);
+        duplicateColumnIds = columnIds.GroupBy(id => id).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnIds.Any())
+        {
+            Error($"The RSVP no form contains duplicate column ids: {string.Join(", ", duplicateColumnIds)}. Each column must have a unique id.");
+        }
+    }
     
+    private void Rsvp_QuestionTitlesShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (string.IsNullOrWhiteSpace(question.Title))
+            {
+                Error("The RSVP form contains a question with an empty title. Each question should have a non-empty title.");
+            }
+        }
+    }
     
+    private void Rsvp_SelectOptionsShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion && !selectQuestion.Options.Any())
+            {
+                Error($"The RSVP form contains a select question '{question.Title}' with no options. Each select question should have at least one option.");
+            }
+        }
+    }
+    
+    private void Rsvp_MultiSelectOptionsShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion && !multiSelectQuestion.Options.Any())
+            {
+                Error($"The RSVP form contains a multi-select question '{question.Title}' with no options. Each multi-select question should have at least one option.");
+            }
+        }
+    }
+    
+    private void Rsvp_SelectOtherFieldShouldHaveNullColumn(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion && selectQuestion.OtherField != null && selectQuestion.OtherField.DataColumn.DisplayName != null)
+            {
+                Error($"The RSVP form contains a select question '{question.Title}' that has an 'other' field with a named column. The actual data will be stored in the main column, and the other column is only used to store a yes/no on whether the other option is selected. Therefore, you probably aren't interested in viewing this information and so you should hide this column from view by setting its display name to null.");
+            }
+        }
+    }
 }
