@@ -25,7 +25,7 @@
                     <span class="required-asterisk">*</span>
                 }
             </h2>
-            @if (question.Description != null)
+            @if (!string.IsNullOrEmpty(question.Description))
             {
                 <p>@question.Description</p>
             }
