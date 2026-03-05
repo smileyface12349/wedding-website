@@ -85,7 +85,7 @@ public class RsvpStore : IRsvpStore
             }
             else
             {
-                rsvpData.Add(reader.GetString(i+3));
+                rsvpData.Add(reader.GetString(i+4));
             }
         }
 
