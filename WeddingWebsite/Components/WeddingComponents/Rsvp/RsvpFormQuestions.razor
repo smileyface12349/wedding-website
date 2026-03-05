@@ -45,12 +45,23 @@
             } else if (question.QuestionType is RsvpQuestionType.Select select)
             {
                 var currentValue = Answers[select.DataColumn.Id];
-                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Row="true" aria-required="@question.Required">
+                var otherOption = "other";
+                var isOtherSelected = select.OtherField != null && RsvpQuestionType.MultiSelect.StringToBool(Answers[select.OtherField.DataColumn.Id]);
+                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@(isOtherSelected ? otherOption : currentValue)" ValueChanged="newVal => UpdateSelectAnswer(select.DataColumn.Id, select.OtherField?.DataColumn.Id, newVal)" Row="true" aria-required="@question.Required">
                     @foreach (var option in select.Options)
                     {
                         <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
                     }
+                    @if (select.OtherField != null)
+                    {
+                        <MudRadio T="string" Value="otherOption" Color="Color.Primary">Other</MudRadio>
+                    }
                 </MudRadioGroup>
+                @if (select.OtherField != null && isOtherSelected)
+                {
+                    <div style="margin-bottom: 10px"></div>
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Placeholder="@select.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="select.OtherField.MaxLength" />
+                }
             } else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
             {
                 @foreach (var option in multi.Options)
@@ -60,9 +71,9 @@
                         @option.Option
                     </MudCheckBox>
                 }
-                <div style="margin-bottom: 10px"></div>
                 @if (multi.OtherField != null)
                 {
+                    <div style="margin-bottom: 10px"></div>
                     var currentValue = Answers[multi.OtherField.DataColumn.Id];
                     <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" Placeholder="@multi.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="multi.OtherField.MaxLength" />
                 }
@@ -243,6 +254,25 @@
                 
                 NavigationManager.NavigateTo("/RsvpSubmitted");
             }
+        }
+    }
+    
+    private void UpdateSelectAnswer(int columnId, int? otherColumnId, string newValue)
+    {
+        if (otherColumnId == null)
+        {
+            Answers[columnId] = newValue;
+            return;
+        }
+        if (newValue == "other")
+        {
+            Answers[columnId] = "";
+            Answers[otherColumnId.Value] = RsvpQuestionType.MultiSelect.BoolToString(true);
+        }
+        else
+        {
+            Answers[columnId] = newValue;
+            Answers[otherColumnId.Value] = RsvpQuestionType.MultiSelect.BoolToString(false);
         }
     }
 }
