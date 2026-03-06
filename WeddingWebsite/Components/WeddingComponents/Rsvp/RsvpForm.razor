@@ -27,7 +27,7 @@
 
 @if (!Config.OptionalFeatures.Rsvp.IsActive() || Guest == null)
 {
-    <p style="margin-top: 200px">You seem a bit lost. How about you go back to the <a href="/">homepage</a>?</p>
+    <p style="margin-top: 200px">@StringProvider.YouSeemABitLost</p>
     return;
 }
 
@@ -37,7 +37,7 @@
             <h1>@StringProvider.Rsvp for @Guest.Name</h1>
             @if (ReadOnly)
             {
-                <p>As your RSVP has been submitted, it is read-only. If you need to make any changes, please contact @WeddingDetails.LoginContactMethod?.Text and we'll try our best to accommodate them.</p>
+                <p>@StringProvider.RsvpAlreadySubmitted(WeddingDetails.LoginContactMethod?.Text)</p>
             }
             else if (EditMode)
             {
@@ -45,15 +45,15 @@
             }
             else
             {
-                <p>Please complete this form once per guest. Your answers will not be saved until you submit, after which you will be unable to make any changes.</p>
+                <p>@StringProvider.RsvpFormDescription</p>
             }
             
-            <h2>Will you be able to join us at our wedding?</h2>
+            <h2>@StringProvider.RsvpAttendanceQuestion</h2>
             @if (RsvpConfig.LongAttendanceResponses)
             {
                 <MudRadioGroup T="bool?" @bind-Value="IsAttending" Disabled="ReadOnly" Row="false" aria-required="true">
-                    <MudRadio T="bool?" Value="true" Color="Color.Primary">Joyfully Accept</MudRadio>
-                    <MudRadio T="bool?" Value="false" Color="Color.Primary">Regretfully Decline</MudRadio>
+                    <MudRadio T="bool?" Value="true" Color="Color.Primary">@StringProvider.RsvpLongYes</MudRadio>
+                    <MudRadio T="bool?" Value="false" Color="Color.Primary">@StringProvider.RsvpLongNo</MudRadio>
                 </MudRadioGroup>
             }
             else
@@ -63,12 +63,12 @@
             
             @if (IsAttending == true)
             {
-                <p>We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.</p>
+                @if (StringProvider.RsvpYesDescription != null) { <p>@StringProvider.RsvpYesDescription</p> }
                 <RsvpFormQuestions UserId="@UserId" Guest="@Guest" Questions="RsvpConfig.YesQuestions" IsAttending="true" ReadOnly="ReadOnly" EditMode="EditMode" />
             }
             else if (IsAttending == false)
             {
-                <p>That's a shame, we'll miss you!</p>
+                @if (StringProvider.RsvpNoDescription != null) { <p>@StringProvider.RsvpNoDescription</p> }
                 <RsvpFormQuestions UserId="@UserId" Guest="@Guest" Questions="RsvpConfig.NoQuestions" IsAttending="false" ReadOnly="ReadOnly" EditMode="EditMode" />
             }
         </div>

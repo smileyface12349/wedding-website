@@ -84,7 +84,29 @@ public class StandardBritishEnglish : IStringProvider
     public string OrderOfTheDay => "Order of the Day";
 
     public string VenueShowcase => "Venue Showcase";
-    
+
+    public string RsvpInactiveDescription(string description) => $"RSVPs are {description}.";
+    public string RsvpChooseGuest => "Please choose which guest you would like to RSVP for.";
+    public string ViewRsvp => "View RSVP";
+    public string RsvpThankYou => "Thank you for submitting your RSVP.";
+    public string RsvpThankYouDescription(string? contactMethod) => $"If you need to change anything in your RSVP form at a later date, please contact {contactMethod ?? "us"} and we will do our best to accommodate it.";
+    public string SubmitAnotherRsvp => "Submit Another RSVP";
+    public string BackToHome => "Back to Home";
+    public string PleaseRsvpByDeadline(string deadline) => $"Please RSVP by {deadline}.";
+    public string RsvpDeadlinePassed => "The RSVP deadline has now passed. Please RSVP as soon as possible.";
+    public MarkupString YouSeemABitLost => (MarkupString) "You seem a bit lost. Why not head back to the <a href=\"/\">homepage</a>?";
+    public string RsvpAlreadySubmitted(string? contactMethod) => $"As your RSVP has been submitted, it is read-only. If you need to make any changes, please contact {contactMethod ?? "us"} and we'll try our best to accommodate them.";
+    public string RsvpFormDescription => "Please complete this form once per guest. Your answers will not be saved until you submit, after which you will be unable to make any changes.";
+    public string RsvpAttendanceQuestion => "Will you be able to join us at our wedding?";
+    public string RsvpLongYes => "Joyfully accept";
+    public string RsvpLongNo => "Regretfully decline";
+    public string? RsvpYesDescription => null;
+    public string? RsvpNoDescription => null;
+    public string AreYouSure => "Are you sure?";
+    public string RsvpConfirmDescription => "Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.";
+    public string RsvpSomethingWentWrong => "Something went wrong when submitting your RSVP. Maybe it already went through?";
+    public string RsvpTooLong(string? contactMethod) => contactMethod == null ? "Got more to say? Let us know separately." : $"Got more to say? Let us know separately at {contactMethod}.";
+
     public string Registry => "Registry";
     public string RegistryDescription1 => "If you would like to give us a gift, this page contains some suggestions of things we'd like.";
     public string RegistryDescription2 => "Each item will direct you to an external website where you can purchase it. To avoid duplicates, please ensure that you claim an item before making a purchase.";

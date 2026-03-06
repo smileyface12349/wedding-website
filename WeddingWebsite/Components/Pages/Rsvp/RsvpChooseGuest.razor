@@ -29,11 +29,11 @@
         
         @if (!Config.OptionalFeatures.Rsvp.IsActive())
         {
-            <p>RSVPs are @Config.OptionalFeatures.Rsvp.IsActiveString().</p>
+            <p>@StringProvider.RsvpInactiveDescription(Config.OptionalFeatures.Rsvp.IsActiveString())</p>
         }
         else
         {
-            <p>Please choose which guest you would like to RSVP for.</p>
+            <p>@StringProvider.RsvpChooseGuest</p>
             <RsvpGuestList Guests="Guests"/>
         }
         

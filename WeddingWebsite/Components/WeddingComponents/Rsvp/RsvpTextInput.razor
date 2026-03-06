@@ -1,9 +1,12 @@
 ﻿@using System.Linq.Expressions
+@using WeddingWebsite.Models.ConfigInterfaces
+
+@inject IStringProvider StringProvider
+
 <InputText disabled="@ReadOnly" class="free-text-input" Value="@Value" ValueExpression="() => Value" ValueChanged="newVal => UpdateValue(newVal)" maxlength="@MaxLength" aria-required="@Required" placeholder="@Placeholder" />
 @if (Value?.Length >= MaxLength && !ReadOnly)
 {
-    <p>Got more to say? Let us know separately @if (ContactMethod != null) { <span> at @ContactMethod</span> }.
-    </p>
+    <p>@StringProvider.RsvpTooLong(ContactMethod)</p>
 }
 
 @code {

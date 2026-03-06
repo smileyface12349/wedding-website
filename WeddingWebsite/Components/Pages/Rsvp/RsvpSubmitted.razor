@@ -3,6 +3,7 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
@@ -28,13 +29,13 @@
         <SectionHeading>@StringProvider.Rsvp</SectionHeading>
         
         <div class="content">
-            <p>Thank you for submitting your RSVP.</p>
-            <p class="description">If you need to change anything in your RSVP form at a later date, please contact @WeddingDetails.LoginContactMethod?.Text and we will do our best to accommodate it.</p>
+            <p>@StringProvider.RsvpThankYou</p>
+            <p class="description">@StringProvider.RsvpThankYouDescription(WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text)</p>
             @if (MultiGuests)
             {
-                <LinkButton Url="/rsvp">Submit Another RSVP</LinkButton>
+                <LinkButton Url="/rsvp">@StringProvider.SubmitAnotherRsvp</LinkButton>
             }
-            <LinkButton Url="/">Back to Home</LinkButton>
+            <LinkButton Url="/">@StringProvider.BackToHome</LinkButton>
         </div>
         
     </Section>

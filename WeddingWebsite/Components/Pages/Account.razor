@@ -114,14 +114,14 @@
                 {
                     <div class="warning-message">
                         <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                        <p>Please RSVP by @RsvpForm.Deadline.Value.FormatDayAndMonth().</p>
+                        <p>@StringProvider.PleaseRsvpByDeadline(RsvpForm.Deadline.Value.FormatDayAndMonth())</p>
                     </div>
                 }
                 else
                 {
                     <div class="warning-message">
                         <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                        <p>The RSVP deadline has now passed. Please RSVP as soon as possible.</p>
+                        <p>@StringProvider.RsvpDeadlinePassed</p>
                     </div>
                 }
                 

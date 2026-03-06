@@ -13,6 +13,7 @@
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
 <MudForm>
     @foreach (var question in Questions.Questions)
@@ -90,9 +91,9 @@
         }
         else
         {
-            <h2>Are you sure?</h2>
-            <p>Take a moment to double check all of your answers. After submitting, you will not be able to change them yourself.</p>
-            <Button OnClick="Submit">Submit</Button>
+            <h2>@StringProvider.AreYouSure</h2>
+            <p>@StringProvider.RsvpConfirmDescription</p>
+            <Button OnClick="Submit">@StringProvider.Submit</Button>
         }
     } else if (!ReadOnly && EditMode)
     {
@@ -108,7 +109,7 @@
             }
             @if (Success == false)
             {
-                <li><p class="validation-issue">Something went wrong when submitting your RSVP. Could it have already gone through?</p></li>
+                <li><p class="validation-issue">@StringProvider.RsvpSomethingWentWrong</p></li>
             }
         </ul>
     }
