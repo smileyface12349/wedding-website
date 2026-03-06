@@ -27,7 +27,7 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
             var dataByQuestion = new Dictionary<string, string>();
             foreach (var question in questions.Questions)
             {
-                var value = question.QuestionType.GetAnswerString(rsvp.Data);
+                var value = question.QuestionType.GetAnswerString(rsvp.Data) ?? "[No Data - This question has been added after the RSVP form was submitted]";
                 dataByQuestion[question.Title] = value;
             }
             return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.SubmittedAt, rsvp.IsAttending, dataByColumn, dataByQuestion);
