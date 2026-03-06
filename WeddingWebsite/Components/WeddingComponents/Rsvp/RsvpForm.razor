@@ -1,14 +1,14 @@
-﻿@using WeddingWebsite.Components.Elements
+﻿@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Models.WebsiteElement
 @using WeddingWebsite.Services
 @using Section = WeddingWebsite.Components.Sections.Section
-
-@attribute [Authorize]
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebsiteConfig Config
@@ -17,11 +17,7 @@
 @inject NavigationManager NavigationManager
 @inject IRsvpForm RsvpConfig
 @inject IAdminService AdminService
-
-@rendermode InteractiveServer
-
-<MudSnackbarProvider/>
-<MudDialogProvider/>
+@inject IDialogService DialogService
 
 <PageTitle>@StringProvider.Rsvp</PageTitle>
 
@@ -156,5 +152,4 @@
             IsAttending = Guest.Rsvp == RsvpStatus.Yes;
         }
     }
-
 }

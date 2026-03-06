@@ -2,6 +2,10 @@
 
 @using WeddingWebsite.Components.WeddingComponents.Rsvp
 
+@attribute [Authorize]
+
+@rendermode InteractiveServer
+
 <RsvpForm GuestId="@GuestId"/>
 
 @code {
