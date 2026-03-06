@@ -21,9 +21,9 @@
 
 <PageTitle>@StringProvider.Rsvp</PageTitle>
 
-@if (!Config.OptionalFeatures.Rsvp.IsActive() || Guest == null)
+@if (Guest == null)
 {
-    <p style="margin-top: 200px">@StringProvider.YouSeemABitLost</p>
+    <p style="margin-top: 200px; text-align: center;">@StringProvider.YouSeemABitLost</p>
     return;
 }
 
@@ -130,12 +130,6 @@
         if (Guest == null)
         {
             NavigationManager.NavigateTo("/rsvp");
-            return;
-        }
-        
-        if (!Config.OptionalFeatures.Rsvp.IsActive())
-        {
-            NavigationManager.NavigateTo("/");
             return;
         }
 
