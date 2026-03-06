@@ -53,15 +53,10 @@ button:hover {
     cursor: pointer;
 }
 
-.rsvp-disabled-button, .cancel-button {
+.cancel-button {
     background: #aaa;
     border: #444;
     color: #444;
-}
-
-.rsvp-disabled-button {
-    cursor: not-allowed !important;
-    box-shadow: none !important;
 }
 
 .warning-message {

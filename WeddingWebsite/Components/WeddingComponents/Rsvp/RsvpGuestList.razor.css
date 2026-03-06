@@ -1,0 +1,29 @@
+﻿.guest {
+    display: flex;
+    align-items: center;
+}
+
+.guests-list {
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+button {
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 2px 5px;
+    box-shadow: 2px 2px 5px #aaa;
+}
+
+.rsvp-disabled-button {
+    background: #aaa;
+    border: #444;
+    color: #444;
+}
+
+.rsvp-disabled-button {
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
