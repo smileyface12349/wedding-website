@@ -47,7 +47,7 @@
             <h2>@StringProvider.RsvpAttendanceQuestion</h2>
             @if (RsvpConfig.LongAttendanceResponses)
             {
-                <MudRadioGroup T="bool?" @bind-Value="IsAttending" Disabled="ReadOnly" Row="false" aria-required="true">
+                <MudRadioGroup T="bool?" @bind-Value="IsAttending" Disabled="ReadOnly" UserAttributes="@(new Dictionary<string, object>{{"aria-required", "true"}})">
                     <MudRadio T="bool?" Value="true" Color="Color.Primary">@StringProvider.RsvpLongYes</MudRadio>
                     <MudRadio T="bool?" Value="false" Color="Color.Primary">@StringProvider.RsvpLongNo</MudRadio>
                 </MudRadioGroup>

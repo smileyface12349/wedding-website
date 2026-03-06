@@ -48,7 +48,7 @@
                 var currentValue = Answers[select.DataColumn.Id];
                 var otherOption = "other";
                 var isOtherSelected = select.OtherField != null && RsvpQuestionType.MultiSelect.StringToBool(Answers[select.OtherField.DataColumn.Id]);
-                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@(isOtherSelected ? otherOption : currentValue)" ValueChanged="newVal => UpdateSelectAnswer(select.DataColumn.Id, select.OtherField?.DataColumn.Id, newVal)" Row="true" aria-required="@question.Required">
+                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@(isOtherSelected ? otherOption : currentValue)" ValueChanged="newVal => UpdateSelectAnswer(select.DataColumn.Id, select.OtherField?.DataColumn.Id, newVal)" UserAttributes="@(question.Required ? new Dictionary<string, object>{{"aria-required", "true"}} : null)">
                     @foreach (var option in select.Options)
                     {
                         <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
