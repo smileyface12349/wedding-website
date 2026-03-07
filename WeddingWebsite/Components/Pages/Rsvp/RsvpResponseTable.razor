@@ -122,7 +122,7 @@
     
     private async Task DownloadCsv()
     {
-        var csvContent = GenerateCsv(Responses.Where(r => r.IsAttending == IsAttending));
+        var csvContent = GenerateCsv(Responses);
 
         // Call JavaScript function to download CSV
         var yesOrNo = IsAttending == true ? "yes" : "no";
