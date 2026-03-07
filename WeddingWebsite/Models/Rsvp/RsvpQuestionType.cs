@@ -19,6 +19,10 @@ public abstract record RsvpQuestionType
     {
         public override IEnumerable<RsvpDataColumn> GetAllColumns()
         {
+            if (OtherField != null)
+            {
+                return [DataColumn, OtherField.DataColumn];
+            }
             return [DataColumn];
         }
         
