@@ -14,9 +14,13 @@ public class RsvpStore : IRsvpStore
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
+        
+        // begin transaction
+        using var transaction = connection.BeginTransaction();
 
         // Check if the user has already RSVPed
         var checkCommand = connection.CreateCommand();
+        checkCommand.Transaction = transaction;
         checkCommand.CommandText = "SELECT GuestId FROM RsvpFormResponses WHERE GuestId = :guestId";
         checkCommand.Parameters.AddWithValue(":guestId", guestId);
         using var reader = checkCommand.ExecuteReader();
@@ -27,6 +31,7 @@ public class RsvpStore : IRsvpStore
 
         // Insert the RSVP data
         var insertCommand = connection.CreateCommand();
+        insertCommand.Transaction = transaction;
         insertCommand.CommandText = @"
             INSERT INTO RsvpFormResponses (GuestId, SubmittedAt, IsAttending, Data0, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,
                                        Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20)
@@ -45,6 +50,7 @@ public class RsvpStore : IRsvpStore
         }
 
         var rowsUpdated = insertCommand.ExecuteNonQuery();
+        transaction.Commit();
         return rowsUpdated == 1;
     }
 
