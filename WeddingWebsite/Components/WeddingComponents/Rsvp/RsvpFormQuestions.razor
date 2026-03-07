@@ -226,7 +226,7 @@
                 var answersCompact = string.Join(",​", Answers.Where(a => a != null).Select(a => a!.Length < 14 ? a : a[..14]));
                 if (LoggedInUser != null)
                 {
-                    AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"Admin edited RSVP for {Guest.Name.First} to [{yesOrNo}: {answersCompact}]", UserId);
+                    AccountService.Log(LoggedInUser, AccountLogType.EditRsvp, $"Admin edited RSVP for {Guest.Name.First} to [{yesOrNo}: {answersCompact}]", UserId);
                 }
                 NavigationManager.NavigateTo($"/Admin/Account/{UserId}/{Guest.Id}");
             }
