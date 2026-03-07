@@ -33,7 +33,7 @@ public record RsvpQuestions(
         foreach (var question in Questions.Where(q => q.Required))
         {
             var columns = question.QuestionType.GetAllColumns().Select(column => column.Id);
-            if (columns.All(col => data[col] == null || data[col] == ""))
+            if (columns.All(col => data.ElementAtOrDefault(col) == null || data[col] == ""))
             {
                 issues.Add($"Please complete this question: {question.Title}");
             }
