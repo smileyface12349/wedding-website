@@ -45,7 +45,6 @@ public class RsvpStore : IRsvpStore
         }
 
         var rowsUpdated = insertCommand.ExecuteNonQuery();
-        Console.WriteLine($"Rows updated: {rowsUpdated}");
         return rowsUpdated == 1;
     }
 
