@@ -209,6 +209,7 @@
 
     private void Submit()
     {
+        RemoveNulls();
         ValidationIssues = Questions.Validate(Answers.ToList());
         if (ValidationIssues.Any())
         {
