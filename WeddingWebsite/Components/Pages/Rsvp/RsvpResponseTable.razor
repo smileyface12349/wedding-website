@@ -139,10 +139,22 @@
         foreach (var response in responses)
         {
             var data = new List<string> { response.GuestName.Full }.Concat(response.DataByColumn.Select(kv => kv.Value ?? "<null>"));
-            csv.AppendLine(string.Join(",", data.Select(value => $"\"{value}\"")));
+            csv.AppendLine(string.Join(",", data.Select(value => $"\"{SanitiseCsv(value)}\"")));
         }
 
         return csv.ToString();
+    }
+
+    private string SanitiseCsv(string value)
+    {
+        // Escape formulae
+        if (value.StartsWith("=") || value.StartsWith("+") || value.StartsWith("-") || value.StartsWith("@"))
+        {
+            value = "'" + value;
+        }
+        // Escape quotes
+        value = value.Replace("\"", "\"\"");
+        return value;
     }
     
     private void ToggleColumn(string column)
