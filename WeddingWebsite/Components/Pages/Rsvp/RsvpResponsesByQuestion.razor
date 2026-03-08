@@ -27,14 +27,14 @@
                 <MudTh>Count</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context</MudTd>
+                <MudTd DataLabel="Option">@context</MudTd>
                 @if (Responses.Count == 0)
                 {
-                    <MudTd>@SummaryData[question.Title][context]</MudTd>
+                    <MudTd DataLabel="Count">@SummaryData[question.Title][context]</MudTd>
                 }
                 else
                 {
-                    <MudTd>@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
+                    <MudTd DataLabel="Count">@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
                 }
             </RowTemplate>
         </MudTable>
