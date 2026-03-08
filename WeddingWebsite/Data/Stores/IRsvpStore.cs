@@ -27,4 +27,9 @@ public interface IRsvpStore
     /// Delete the RSVP for a given user. Should be restricted to admins only.
     /// </summary>
     void DeleteRsvp(string guestId);
+    
+    /// <summary>
+    /// Edit an existing RSVP.
+    /// </summary>
+    bool EditRsvp(string guestId, bool isAttending, IReadOnlyList<string?> rsvpData);
 }

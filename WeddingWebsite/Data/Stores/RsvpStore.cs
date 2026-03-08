@@ -149,4 +149,33 @@ public class RsvpStore : IRsvpStore
 
         deleteCommand.ExecuteNonQuery();
     }
+    
+    [Authorize(Roles = "Admin")]
+    public bool EditRsvp(string guestId, bool isAttending, IReadOnlyList<string?> rsvpData)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        var updateCommand = connection.CreateCommand();
+        updateCommand.CommandText = @"
+            UPDATE RsvpFormResponses
+            SET IsAttending = $isAttending, Data0 = $data0, Data1 = $data1, Data2 = $data2, Data3 = $data3, Data4 = $data4, Data5 = $data5,
+                Data6 = $data6, Data7 = $data7, Data8 = $data8, Data9 = $data9, Data10 = $data10, Data11 = $data11, Data12 = $data12,
+                Data13 = $data13, Data14 = $data14, Data15 = $data15, Data16 = $data16, Data17 = $data17, Data18 = $data18,
+                Data19 = $data19, Data20 = $data20
+            WHERE GuestId = $guestId";
+        
+        updateCommand.Parameters.AddWithValue("guestId", guestId);
+        updateCommand.Parameters.AddWithValue("isAttending", isAttending ? 1 : 0);
+        
+        for (int i = 0; i <= 20; i++)
+        {
+            var paramName = $"data{i}";
+            var dataValue = rsvpData.ElementAtOrDefault(i);
+            updateCommand.Parameters.AddWithValue(paramName, (object?) dataValue ?? DBNull.Value);
+        }
+
+        var rowsUpdated = updateCommand.ExecuteNonQuery();
+        return rowsUpdated == 1;
+    }
 }
