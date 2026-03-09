@@ -6,6 +6,10 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.WeddingComponents.Rsvp
+@using WeddingWebsite.Core
+@using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
@@ -23,11 +27,9 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringProvider StringProvider
+@inject IRsvpForm RsvpForm
 
 @rendermode InteractiveServer
-
-<MudSnackbarProvider/>
-<MudDialogProvider/>
 
 <PageTitle>@StringProvider.MyAccount</PageTitle>
 
@@ -96,27 +98,36 @@
                 }
             </div>
             <SectionHeading>@StringProvider.Guests</SectionHeading>
-            <div class="warning-message">
-                <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                <p>@StringProvider.RsvpNotYetOpen</p>
-            </div>
+            @if (!Config.OptionalFeatures.Rsvp.IsActive())
+            {
+                <div class="warning-message">
+                    <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                    <p>@StringProvider.RsvpNotYetOpen</p>
+                </div>
+            }
+            else if (RsvpForm.Deadline.HasValue && Guests.Any(guest => guest.RsvpStatus == RsvpStatus.NotResponded))
+            {
+                if (RsvpForm.Deadline.Value > DateTime.Now)
+                {
+                    <div class="warning-message">
+                        <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                        <p>@StringProvider.PleaseRsvpByDeadline(RsvpForm.Deadline.Value.FormatDayAndMonth())</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="warning-message">
+                        <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                        <p>@StringProvider.RsvpDeadlinePassed</p>
+                    </div>
+                }
+                
+            }
             @if (Guests.Count() > 1)
             {
                 <p>@StringProvider.AccountSharedWithGuests(Guests.Count())</p>
             }
-            <div class="guests-list">
-                @foreach (var guest in Guests)
-                {
-                    <Box>
-                        <div class="guest">
-                            <span class="guest-name">@guest.Name.Full</span>
-                            <MudSpacer/>
-                            <button class="rsvp-button" disabled>@StringProvider.Rsvp</button>
-                        </div>
-                    </Box>
-                    <div style="margin-bottom: 10px"></div>
-                }
-            </div>
+            <RsvpGuestList Guests="Guests"/>
 
             @if (Guests.Any())
             {
@@ -142,7 +153,7 @@
     [SupplyParameterFromForm]
     private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
-    private IEnumerable<Guest> Guests { get; set; } = [];
+    private IEnumerable<GuestWithId> Guests { get; set; } = [];
     private SectionTheme? Theme => Config.AccountConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {

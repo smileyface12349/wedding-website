@@ -1,0 +1,77 @@
+﻿@page "/RsvpSubmitted"
+
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@attribute [Authorize]
+
+@inject IWebsiteConfig Config
+@inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@rendermode InteractiveServer
+
+<PageTitle>@StringProvider.Rsvp</PageTitle>
+
+<CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
+    <Section Center="true">
+        <div style="margin-top: 150px"></div>
+        <SectionHeading>@StringProvider.Rsvp</SectionHeading>
+        
+        <div class="content">
+            <p>@StringProvider.RsvpThankYou</p>
+            <p class="description">@StringProvider.RsvpThankYouDescription(WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text)</p>
+            @if (MultiGuests)
+            {
+                <LinkButton Url="/rsvp">@StringProvider.SubmitAnotherRsvp</LinkButton>
+            }
+            <LinkButton Url="/">@StringProvider.BackToHome</LinkButton>
+        </div>
+        
+    </Section>
+</CascadingValue>
+
+<style>
+    body {
+        @(Theme?.Background.GetBackgroundCss() ?? Config.Colours.Surface.GetBackgroundCss()) !important;
+    }
+</style>
+
+@code {
+    [Inject]
+    public required IAccountService AccountService { get; set; }
+
+    private bool MultiGuests { get; set; } = true;
+    
+    private SectionTheme? Theme => Config.RsvpConfig.Theme;
+    private SectionTheme? ThemeNoBackground
+    {
+        get
+        {
+            if (Theme != null) return Theme with { Background = new NoBackground() };
+            return null;
+        }
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // Determine how many guests are on the account
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+
+        var guests = AccountService.GetOwnGuests(user);
+        MultiGuests = guests.Count() > 1;
+    }
+
+}

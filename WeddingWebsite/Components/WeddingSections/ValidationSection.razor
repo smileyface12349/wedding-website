@@ -10,11 +10,12 @@
 @inject IDetailsAndConfigValidator Validator
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
+@inject IRsvpForm RsvpConfig
 
 @if (Environment.IsDevelopment()) {
     <CascadingValue Value="Theme">
         <Section Padding="false">
-            <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config)" />
+            <ValidationIssuesList Issues="@Validator.Validate(WeddingDetails, Config, RsvpConfig)" />
         </Section>
     </CascadingValue>
 }
