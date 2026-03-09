@@ -4,13 +4,13 @@
 
 - Customisable homepage with a large selection of pre-built sections to choose from.
 - Robust theming support to change the colours and styles of individual sections. A library of pre-made themes.
+- Fully customisable RSVP form and various tools to analyse responses (including CSV export).
 - Individual accounts for all of your guests (or one account per household) so you can restrict access and collect RSVPs with confidence.
 - Fully featured admin panel to give you insights into what your guests are doing on the website and who has RSVPed.
 - Custom registry that allows items from any retailer with no fee. Individual guests claim items using their accounts.
 - Responsive interface for all screen sizes.
 
 Coming soon:
-- RSVP form (should be implemented very soon).
 - Lift sharing feature (allows guests to advertise spaces in their car which other guests can then book).
 - Photos upload (TBD but very likely to be implemented).
 
