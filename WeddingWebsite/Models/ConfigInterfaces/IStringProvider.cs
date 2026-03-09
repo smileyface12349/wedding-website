@@ -99,6 +99,7 @@ public interface IStringProvider
     MarkupString YouSeemABitLost { get; }
     string RsvpAlreadySubmitted(string? contactMethod);
     string RsvpFormDescription { get; }
+    string RsvpFormDescriptionContact(string? contactMethod);
     string RsvpAttendanceQuestion { get; }
     string RsvpLongYes { get; }
     string RsvpLongNo { get; }

@@ -4,6 +4,7 @@
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
@@ -33,7 +34,7 @@
             <h1>@StringProvider.Rsvp for @Guest.Name</h1>
             @if (ReadOnly)
             {
-                <p>@StringProvider.RsvpAlreadySubmitted(WeddingDetails.LoginContactMethod?.Text)</p>
+                <p>@StringProvider.RsvpAlreadySubmitted(WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text)</p>
             }
             else if (EditMode)
             {
@@ -42,6 +43,10 @@
             else
             {
                 <p>@StringProvider.RsvpFormDescription</p>
+                @if (WeddingDetails.GetContactMethod(ContactReason.Attendance) != null)
+                {
+                    <p><i>@StringProvider.RsvpFormDescriptionContact(WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text)</i></p>
+                }
             }
             
             <h2>@StringProvider.RsvpAttendanceQuestion</h2>
