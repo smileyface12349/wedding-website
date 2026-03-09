@@ -81,7 +81,7 @@
             <p><i>Submitted at: @RsvpResponse.SubmittedAt.ToString("g")</i></p>
             @foreach (var question in RsvpResponse.DataByQuestion.Keys)
             {
-                <p><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
+                <p style="word-wrap: break-word"><b>@question</b> @RsvpResponse.DataByQuestion[question].</p>
             }
         }
         <a class="button" href="/admin/rsvp/@UserId/@GuestId">Edit RSVP</a>
