@@ -42,7 +42,7 @@
             @if (question.QuestionType is RsvpQuestionType.FreeText text)
             {
                 var currentValue = Answers[text.DataColumn.Id];
-                <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" MaxLength="@text.MaxLength" Required="@question.Required" Placeholder="@text.Placeholder" ContactMethod="@ContactMethod" />
+                <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" MaxLength="@text.MaxLength" Required="@question.Required" Placeholder="@text.Placeholder" ContactMethod="@ContactMethod" Lines="@text.Lines" />
             } else if (question.QuestionType is RsvpQuestionType.Select select)
             {
                 var currentValue = Answers[select.DataColumn.Id];
@@ -61,7 +61,7 @@
                 @if (select.OtherField != null && isOtherSelected)
                 {
                     <div style="margin-bottom: 10px"></div>
-                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Placeholder="@select.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@select.OtherField.MaxLength" />
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Placeholder="@select.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@select.OtherField.MaxLength" Lines="@select.OtherField.Lines" />
                 }
             } else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
             {
@@ -76,7 +76,7 @@
                 {
                     <div style="margin-bottom: 10px"></div>
                     var currentValue = Answers[multi.OtherField.DataColumn.Id];
-                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" Placeholder="@multi.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@multi.OtherField.MaxLength" />
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" Placeholder="@multi.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@multi.OtherField.MaxLength" Lines="@multi.OtherField.Lines" />
                 }
             }
         </div>
