@@ -87,17 +87,17 @@
     {
         @if (!ConfirmSubmit)
         {
-            <Button OnClick="FirstSubmitPress" CssClass="dont-fill-width">Submit</Button>
+            <Button OnClick="FirstSubmitPress" CssClass="dont-fill-width" Size="20">Submit</Button>
         }
         else
         {
             <h2>@StringProvider.AreYouSure</h2>
             <p>@StringProvider.RsvpConfirmDescription</p>
-            <Button OnClick="Submit" CssClass="dont-fill-width">@StringProvider.Submit</Button>
+            <Button OnClick="Submit" CssClass="dont-fill-width" Size="20">@StringProvider.Submit</Button>
         }
     } else if (!ReadOnly && EditMode)
     {
-        <Button OnClick="Submit" CssClass="dont-fill-width">Save Changes</Button>
+        <Button OnClick="Submit" CssClass="dont-fill-width" Size="20">Save Changes</Button>
     }
     
     @if (ValidationIssues.Any() || Success == false)

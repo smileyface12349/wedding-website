@@ -33,13 +33,17 @@
     public string CssClass { get; set; } = "";
     
     [Parameter]
+    public int Size { get; set; } = 16;
+    
+    [Parameter]
     public ButtonVariant Variant { get; set; } = ButtonVariant.Filled;
     
     [CascadingParameter]
     private SectionTheme? Theme { get; set; }
     
     private Colour Colour => Theme?.Primary ?? Config.Colours.Primary;
-    private string Css => Variant == ButtonVariant.Filled ? "background: " + Colour : $"border-color: {Colour}; color: {Colour}";
+    private string SizeCss => Size != 16 ? $"font-size: {Size}px; padding: {Size/7+1}px {Size/4+1}px" : "";
+    private string Css => Variant == ButtonVariant.Filled ? $"background: {Colour};{SizeCss}" : $"border-color: {Colour}; color: {Colour};{SizeCss}";
     private string VariantClass => Variant == ButtonVariant.Filled ? "filled" : $"outlined background-{Colour.GetHex().Substring(1)}";
     
     private async Task HandleClick()
