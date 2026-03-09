@@ -21,7 +21,8 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private Colour Colour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    private Colour RawColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    private Colour Colour => Theme is {Background.IsDark: false} ? RawColour.Darken(0.8f) : RawColour;
     
     private Task OpenDialogAsync() {
         var parameters = new DialogParameters<EventDialog> {
