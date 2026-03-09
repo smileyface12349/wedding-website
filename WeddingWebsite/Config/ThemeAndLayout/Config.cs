@@ -12,7 +12,7 @@ public class Config : DefaultConfig, IWebsiteConfig
     public new WeddingColours Colours { get; } = new (
         new Colour("#8d5519"),  //#41a4bb
         new Colour("#3399FF"),  //#3399FF
-        new Colour("#000000"),  //#B6D7A8
+        new Colour("#B6D7A8"),  //#B6D7A8
         new Colour("#F2F1ED")
     );
     public new IReadOnlyList<Section> Sections { get; protected set; }
