@@ -27,8 +27,10 @@ public abstract record RsvpQuestionType
     /// free text. Please note that the free text is stored in the main column, and the auxiliary column merely stores
     /// a boolean state indicating whether the user has selected the "Other" option or not.
     /// </summary>
-    public sealed record Select(RsvpDataColumn DataColumn, IEnumerable<String> Options, FreeText? OtherField) : RsvpQuestionType
+    public sealed record Select(RsvpDataColumn DataColumn, IEnumerable<Select.Option> Options, FreeText? OtherField = null) : RsvpQuestionType
     {
+        public Select(RsvpDataColumn DataColumn, IEnumerable<string> Options, FreeText? OtherField = null) : this(DataColumn, Options.Select(option => new Option(option)), OtherField) {}
+        
         public override IEnumerable<RsvpDataColumn> GetAllColumns()
         {
             if (OtherField != null)
@@ -38,9 +40,23 @@ public abstract record RsvpQuestionType
             return [DataColumn];
         }
         
+        /// <summary>
+        /// Outputs the user-friendly version, which then gets stored in dataByQuestion. Note that dataByColumn contains the raw data.
+        /// </summary>
         public override string? GetAnswerString(IReadOnlyList<string?> data)
         {
-            return data.ElementAtOrDefault(DataColumn.Id);
+            return Options.FirstOrDefault(option => option.Identifier == data.ElementAtOrDefault(DataColumn.Id))?.DisplayValue
+                   ?? (OtherField != null && data.ElementAtOrDefault(OtherField.DataColumn.Id) == "Y" ? data.ElementAtOrDefault(DataColumn.Id) : null);
+        }
+
+        public sealed record Option(string Identifier, string DisplayValue)
+        {
+            public Option (string value) : this(value, value) {}
+
+            public override string ToString()
+            {
+                return DisplayValue;
+            }
         }
     }
 

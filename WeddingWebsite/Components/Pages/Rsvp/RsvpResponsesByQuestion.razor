@@ -79,14 +79,15 @@
         {
             if (question.QuestionType is RsvpQuestionType.Select select)
             {
+                // Note that dataByQuestion has the display values for each option, whereas dataByColumn has the identifiers
                 var responseCounts = Responses.GroupBy(r => r.DataByQuestion[question.Title]).ToDictionary(g => g.Key, g => g.Count());
                 SummaryData[question.Title] = responseCounts;
                 var data = new Dictionary<string, int>();
                 foreach (var option in select.Options)
                 {
-                    data[option] = responseCounts.GetValueOrDefault(option, 0);
+                    data[option.DisplayValue] = responseCounts.GetValueOrDefault(option.DisplayValue, 0);
                 }
-                var otherCount = Responses.Count(r => !select.Options.Contains(r.DataByQuestion[question.Title]));
+                var otherCount = Responses.Count(r => !select.Options.Select(o => o.DisplayValue).Contains(r.DataByQuestion[question.Title]));
                 if (otherCount > 0 || select.OtherField is { DataColumn.DisplayName: not null })
                 {
                     data["Other"] = otherCount;
