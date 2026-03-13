@@ -52,7 +52,7 @@ public class DemoConfig : DefaultConfig, IWebsiteConfig
         var bricks = new BackgroundImage("/bg/bricks.jpg", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
         var flowers = new BackgroundImage("/bg/blue-flowers.png", false, "500px", new Colour(255, 255, 255, 150), 0.3, true);
         var forest = new BackgroundImage("https://www.metroparks.net/wp-content/uploads/2017/06/1080p_HBK_autumn-morning_GI.jpg", false, "100%", null, 1);
-        var flowers2 = new BackgroundImage("https://images.pexels.com/photos/355748/pexels-photo-355748.jpeg?cs=srgb&dl=pexels-pixabay-355748.jpg&fm=jpg", true, "min(100%, 1300px)", null, 0);
+        var flowers2 = new BackgroundImage("https://images.pexels.com/photos/355748/pexels-photo-355748.jpeg?cs=srgb&dl=pexels-pixabay-355748.jpg&fm=jpg", false, "min(100%, 1300px)", null, 0, false, Colours.Secondary.Darken(0.3f));
     
         Sections = [
             new Section.TodoListSummary(new SectionTheme(salmon, Colour.White, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colour.White, null)))),
