@@ -10,6 +10,5 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private bool IsDark => Theme is { Background.IsDark: true };
-    private Colour TextColour => IsDark ? Colour.White : Colour.DarkGrey;
+    private Colour TextColour => Theme?.Background.GetTextColour() ?? Colour.DarkGrey;
 }

@@ -40,7 +40,7 @@ else
     public SectionTheme? Theme { get; set; }
     
     private string CssBackground => Theme?.Background.GetBackgroundCss() ?? new NoBackground().GetBackgroundCss();
-    private string CssColorAttribute => Theme is { Background.IsDark: true } ? "color: white;" : "";
+    private string CssColorAttribute => Theme != null && Theme!.Background.GetTextColour() != Colour.DarkGrey ? $"color: {Theme?.Background.GetTextColour()};" : "";
     private bool BackgroundHasPureCssImplementation => Theme == null || Theme.Background.HasPureCssImplementation;
     private IBackground? AdvancedBackground => Theme?.Background;
 
