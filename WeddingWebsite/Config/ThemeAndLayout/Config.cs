@@ -54,6 +54,7 @@ public class Config : DefaultConfig, IWebsiteConfig
             //new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
             new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
+            new Section.TravelDirections(new SectionTheme(purple, Colours.Primary, whiteFilledBox)),
             //new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             //new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
             //new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),
@@ -63,7 +64,7 @@ public class Config : DefaultConfig, IWebsiteConfig
         
         TopButtons = new TopButtonsConfig(
             [
-                new LinkButton("Directions", "#accommodation")
+                new LinkButton("Directions", "/#directions"),
             ],
             yellow
         );
@@ -72,7 +73,7 @@ public class Config : DefaultConfig, IWebsiteConfig
             [
                 new LinkButton("Home", "/"),
                 new LinkButton("Schedule", "/#timeline"),
-                new LinkButton("Directions", "/#transport"),
+                new LinkButton("Directions", "/#directions"),
                 new LinkButton("Registry", "/registry"),
                 //new LinkButton("Gallery", "/gallery"),
                 //new LinkButton("Contact", "/#contact")
