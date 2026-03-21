@@ -45,8 +45,22 @@ public abstract record RsvpQuestionType
         /// </summary>
         public override string? GetAnswerString(IReadOnlyList<string?> data)
         {
-            return Options.FirstOrDefault(option => option.Identifier == data.ElementAtOrDefault(DataColumn.Id))?.DisplayValue
-                   ?? (OtherField != null && data.ElementAtOrDefault(OtherField.DataColumn.Id) == "Y" ? data.ElementAtOrDefault(DataColumn.Id) : null);
+            var storedValue = data.ElementAtOrDefault(DataColumn.Id);
+            
+            // Left blank
+            if (storedValue == "")
+            {
+                return "";
+            }
+            
+            // Handle "other" responses
+            if (OtherField != null && data.ElementAtOrDefault(OtherField.DataColumn.Id) == "Y")
+            {
+                return storedValue;
+            }
+            
+            // Match to a predefined option. If not, just output the raw data.
+            return Options.FirstOrDefault(option => option.Identifier == storedValue)?.DisplayValue ?? storedValue;
         }
 
         public sealed record Option(string Identifier, string DisplayValue)
