@@ -6,7 +6,7 @@
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
 
-<button class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>
+<button type="button" class="modal-background-@Colour.GetHex().Substring(1)" @onclick="OpenDialogAsync" style="border-color: @Colour; color: @Colour">@Modal.Label</button>
 
 <style>
     .modal-background-@Colour.GetHex().Substring(1):hover {
@@ -21,7 +21,8 @@
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
     
-    private Colour Colour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    private Colour RawColour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    private Colour Colour => Theme is {Background.IsDark: false} ? RawColour.Darken(0.8f) : RawColour;
     
     private Task OpenDialogAsync() {
         var parameters = new DialogParameters<EventDialog> {

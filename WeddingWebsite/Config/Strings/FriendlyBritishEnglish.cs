@@ -19,4 +19,7 @@ public class FriendlyBritishEnglish : StandardBritishEnglish, IStringProvider
     public new string SelectDeliveryAddressDescription => "You can either get it delivered to your own address and bring it on the day, or get it delivered to us beforehand - it's up to you what's easiest!";
     public new string ItemReadyToPurchaseDescription => "Thank you for filling in those details! You're now free to complete the purchase when you're ready. Once done, please mark it as completed.";
     public new string ClaimThisItemDescription => "If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it. Don't worry, this can be undone if you change your mind.";
+    
+    public new string RsvpYesDescription => "We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.";
+    public new string RsvpNoDescription => "That's a shame, we'll miss you!";
 }

@@ -18,7 +18,17 @@
             <div class="cost-and-button">
                 @if (Item.PurchaseMethods.Any())
                 {
-                    <p class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</p>
+                    @if (ButtonText is "Pending" or "Completed" && Item.MaxQuantity > 1)
+                    {
+                        <p><span class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</span> × @Item.QuantityClaimed</p>
+                    } else if (Item.MaxQuantity-Item.QuantityClaimed > 1)
+                    {
+                        <p><span class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</span> × @(Item.MaxQuantity-Item.QuantityClaimed)</p>
+                    }
+                    else
+                    {
+                        <p class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</p>
+                    }
                 }
                 else
                 {

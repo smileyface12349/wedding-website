@@ -1,5 +1,6 @@
 ﻿using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.People;
+using WeddingWebsite.Models.Rsvp;
 using WeddingWebsite.Models.WebsiteConfig;
 
 namespace WeddingWebsite.Models.Validation;
@@ -14,7 +15,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<DetailsAndConfigValidator>();
     }
     
-    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
+    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config, IRsvpForm rsvp) {
         validationIssues = [];
         
         Sections_ShouldNotBeEmpty(config);
@@ -53,6 +54,20 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(config);
         Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(config);
         Navbar_ShouldNotHaveGalleryPage_IfItIsEmpty(details, config);
+        
+        Rsvp_ColumnIdsMustBeUnique(rsvp);
+        Rsvp_ColumnIdsShouldBeBetween0And20(rsvp);
+        Rsvp_QuestionTitlesShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionsShouldNotHaveDuplicates(rsvp);
+        Rsvp_SelectOptionIdentifiersShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionDisplayValuesShouldBeNonEmpty(rsvp);
+        Rsvp_MultiSelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_MultiSelectOptionsShouldNotHaveDuplicates(rsvp);
+        Rsvp_MultiSelectOptionTextShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOtherFieldShouldHaveNullColumn(rsvp);
+        Rsvp_QuestionTitlesShouldBeUnique(rsvp);
+        Rsvp_ColumnNamesShouldBeUnique(rsvp);
 
         IgnoreValidationIssues(config);
 
@@ -523,6 +538,237 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                     Error($"The navbar contains an item '{item.Text}' that links to the gallery page, but there is no gallery section. Either add a section to the gallery (doesn't have to contain any images), or remove this link.");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Column IDs correspond to fields in the database, which only has fields 0-20. Exceeding this range is a serious error.
+    /// </summary>
+    private void Rsvp_ColumnIdsShouldBeBetween0And20(IRsvpForm rsvp)
+    {
+        foreach (var column in rsvp.YesQuestions.GetAllColumns().Concat(rsvp.NoQuestions.GetAllColumns()))
+        {
+            if (column.Id is < 0 or > 20)
+            {
+                Error($"The RSVP form contains a column with id {column.Id}. Column ids must be between 0 and 20 inclusive.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Duplicate column IDs will behave weirdly, as different fields will be competing to store and read the same data.
+    /// </summary>
+    private void Rsvp_ColumnIdsMustBeUnique(IRsvpForm rsvp)
+    {
+        var columnIds = rsvp.YesQuestions.GetAllColumns().Select(column => column.Id);
+        var duplicateColumnIds = columnIds.GroupBy(id => id).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnIds.Any())
+        {
+            Error($"The RSVP yes form contains duplicate column ids: {string.Join(", ", duplicateColumnIds)}. Each column must have a unique id.");
+        }
+        columnIds = rsvp.NoQuestions.GetAllColumns().Select(column => column.Id);
+        duplicateColumnIds = columnIds.GroupBy(id => id).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnIds.Any())
+        {
+            Error($"The RSVP no form contains duplicate column ids: {string.Join(", ", duplicateColumnIds)}. Each column must have a unique id.");
+        }
+    }
+    
+    /// <summary>
+    /// An empty question title doesn't make sense, but it doesn't strictly break anything.
+    /// </summary>
+    private void Rsvp_QuestionTitlesShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (string.IsNullOrWhiteSpace(question.Title))
+            {
+                Warning("The RSVP form contains a question with an empty title. Each question should have a non-empty title.");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Select with no options doesn't make any sense, but it doesn't strictly break anything either.
+    /// </summary>
+    private void Rsvp_SelectOptionsShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion && !selectQuestion.Options.Any())
+            {
+                Warning($"The RSVP form contains a select question '{question.Title}' with no options. Each select question should have at least one option.");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Duplicate display values is weird but will still mostly work (some of the analysis might break), whereas
+    /// duplicate identifiers will cause the form to break as it won't know which option to choose.
+    /// </summary>
+    private void Rsvp_SelectOptionsShouldNotHaveDuplicates(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                var duplicateOptions = selectQuestion.Options.GroupBy(option => option.DisplayValue).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Warning($"The RSVP form contains a select question '{question.Title}' with duplicate option display values: {string.Join(", ", duplicateOptions)}. These options will be indistinguishable to the user.");
+                }
+                duplicateOptions = selectQuestion.Options.GroupBy(option => option.Identifier).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Error($"The RSVP form contains a select question '{question.Title}' with duplicate option identifiers: {string.Join(", ", duplicateOptions)}. Every option needs a unique id for the form to behave correctly.");
+                }
+
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Empty option is indistinguishable from the user leaving the field blank.
+    /// </summary>
+    private void Rsvp_SelectOptionIdentifiersShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                foreach (var option in selectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.Identifier))
+                    {
+                        Error($"The RSVP form contains a select question '{question.Title}' with an option that has an empty identifier. Each option must have a non-empty identifier for the form to behave correctly.");
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't break anything but who wants an empty option?
+    /// </summary>
+    private void Rsvp_SelectOptionDisplayValuesShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                foreach (var option in selectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.DisplayValue))
+                    {
+                        Warning($"The RSVP form contains a select question '{question.Title}' with an option that has an empty display value. Each option should have a non-empty display value to avoid confusion for the user.");
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Multi-select with no options doesn't make any sense, but it doesn't strictly break anything either.
+    /// </summary>
+    private void Rsvp_MultiSelectOptionsShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion && !multiSelectQuestion.Options.Any())
+            {
+                Warning($"The RSVP form contains a multi-select question '{question.Title}' with no options. Each multi-select question should have at least one option.");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// This won't break the form, but it doesn't make any sense.
+    /// </summary>
+    private void Rsvp_MultiSelectOptionsShouldNotHaveDuplicates(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion)
+            {
+                var duplicateOptions = multiSelectQuestion.Options.GroupBy(option => option.Option).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Warning($"The RSVP form contains a multi-select question '{question.Title}' with duplicate option values: {string.Join(", ", duplicateOptions)}. These options will be indistinguishable to the user.");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Doesn't break anything but who wants an empty option?
+    /// </summary>
+    private void Rsvp_MultiSelectOptionTextShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion)
+            {
+                foreach (var option in multiSelectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.Option))
+                    {
+                        Warning(
+                            $"The RSVP form contains a multi-select question '{question.Title}' with an option that has an empty text value. Each option should have a non-empty text value to avoid confusion for the user.");
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// The other field doesn't store anything useful, so this should be hidden. But, it won't cause errors if shown.
+    /// </summary>
+    private void Rsvp_SelectOtherFieldShouldHaveNullColumn(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion && selectQuestion.OtherField != null && selectQuestion.OtherField.DataColumn.DisplayName != null)
+            {
+                Warning($"The RSVP form contains a select question '{question.Title}' that has an 'other' field with a named column. The actual data will be stored in the main column, and the other column is only used to store a yes/no on whether the other option is selected. Therefore, you probably aren't interested in viewing this information and so you should hide this column from view by setting its display name to null.");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// The RSVP data forms a dictionary with the question titles as keys, which will go wrong if there are duplicates.
+    /// </summary>
+    private void Rsvp_QuestionTitlesShouldBeUnique(IRsvpForm rsvp)
+    {
+        var questionTitles = rsvp.YesQuestions.Questions.Select(question => question.Title);
+        var duplicateQuestionTitles = questionTitles.GroupBy(title => title).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateQuestionTitles.Any())
+        {
+            Error($"The RSVP yes form contains duplicate question titles: {string.Join(", ", duplicateQuestionTitles)}. Some of the logic relies upon the question titles being unique.");
+        }
+        questionTitles = rsvp.NoQuestions.Questions.Select(question => question.Title);
+        duplicateQuestionTitles = questionTitles.GroupBy(title => title).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateQuestionTitles.Any())
+        {
+            Error($"The RSVP no form contains duplicate question titles: {string.Join(", ", duplicateQuestionTitles)}. Some of the logic relies upon the question titles being unique.");
+        }
+    }
+
+    /// <summary>
+    /// The RSVP data forms a dictionary with the column display names as keys, which will go wrong if there are duplicates.
+    /// </summary>
+    private void Rsvp_ColumnNamesShouldBeUnique(IRsvpForm rsvp)
+    {
+        var columnNames = rsvp.YesQuestions.GetAllColumns().Select(column => column.DisplayName).Where(name => name != null);
+        var duplicateColumnNames = columnNames.GroupBy(name => name).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnNames.Any())
+        {
+            Warning($"The RSVP yes form contains duplicate column display names: {string.Join(", ", duplicateColumnNames)}. Some of the logic relies upon the column names being unique. If you aren't interested in a column, you can set it to null.");
+        }
+        columnNames = rsvp.NoQuestions.GetAllColumns().Select(column => column.DisplayName).Where(name => name != null);
+        duplicateColumnNames = columnNames.GroupBy(name => name).Where(group => group.Count() > 1).Select(group => group.Key);
+        if (duplicateColumnNames.Any())
+        {
+            Warning($"The RSVP no form contains duplicate column display names: {string.Join(", ", duplicateColumnNames)}. Some of the logic relies upon the column names being unique. If you aren't interested in a column, you can set it to null.");
         }
     }
 }

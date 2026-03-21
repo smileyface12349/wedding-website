@@ -1,0 +1,56 @@
+﻿@using System.Linq.Expressions
+@using WeddingWebsite.Models.ConfigInterfaces
+
+@inject IStringProvider StringProvider
+
+@if (Lines == 1) 
+{
+    <InputText disabled="@ReadOnly" class="free-text-input" Value="@Value" ValueExpression="() => Value" ValueChanged="newVal => UpdateValue(newVal)" maxlength="@MaxLength" aria-required="@Required" placeholder="@Placeholder" />
+}
+else
+{
+    <InputTextArea disabled="@ReadOnly" style="@TextAreaCss" class="free-text-input" Value="@Value" ValueExpression="() => Value" ValueChanged="newVal => UpdateValue(newVal)" maxlength="@MaxLength" aria-required="@Required" placeholder="@Placeholder" />
+}
+@if (Value?.Length >= MaxLength && !ReadOnly)
+{
+    <p>@StringProvider.RsvpTooLong(ContactMethod)</p>
+}
+
+@code {
+    [Parameter]
+    public string? Value { get; set; }
+    
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    
+    [Parameter] public Expression? ValueExpression { get; set; }
+    
+    [Parameter]
+    public bool ReadOnly { get; set; }
+    
+    [Parameter]
+    public string? ContactMethod { get; set; }
+    
+    [Parameter]
+    public int MaxLength { get; set; }
+    
+    [Parameter]
+    public bool Required { get; set; }
+    
+    [Parameter]
+    public string? Placeholder { get; set; }
+    
+    [Parameter]
+    public int Lines { get; set; } = 1;
+
+    private string TextAreaCss => $"resize: none;height: {Lines * 30}px";
+    
+    // Update free text response, but only if it's below the max length.
+    private void UpdateValue(string? newValue)
+    {
+        if (newValue == null || newValue.Length <= MaxLength)
+        {
+            Value = newValue;
+            ValueChanged.InvokeAsync(newValue);
+        }
+    }
+}

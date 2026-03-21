@@ -1,0 +1,171 @@
+﻿@page "/Admin/Rsvp/Table"
+
+@using System.Text
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Core
+
+@inject NavigationManager NavigationManager
+@inject IRsvpService RsvpService
+@inject IRsvpForm RsvpFormConfig
+@inject IAdminService AdminService
+@inject IJSRuntime JS
+
+@attribute [Authorize (Roles = "Admin")]
+
+<div class="page">
+    
+    <h1>RSVP Response Table</h1>
+    <p>Here's all of the responses you have received to your RSVP form, sorted into separate tables for guests that have accepted and guests that have declined. Guests that haven't yet RSVPed won't be in either table.</p>
+    <div class="actions">
+        <LinkButton Url="/admin/rsvp/questions">View by Question</LinkButton>
+        <Button OnClickAsync="DownloadCsv">Download CSV</Button>
+    </div>
+    <YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
+    
+    <div class="customise-columns">
+        @if (ShowCustomiseColumns)
+        {
+            <h2>Filter Columns</h2>
+            <p style="margin-bottom: 5px"><i>Reduce clutter by hiding columns you aren't interested in.</i></p>
+            @foreach (var column in AllColumns)
+            {
+                <div>
+                    <MudCheckBox Value="Columns.Contains(column)" Label="@column" ValueChanged="(bool isChecked) => ToggleColumn(column)"/>
+                </div>
+            }
+            <div style="margin-bottom: 8px"></div>
+            <Button OnClick="() => { ShowCustomiseColumns = false; StateHasChanged(); }">Done</Button>
+        }
+        else
+        {
+            <Button OnClick="() => { ShowCustomiseColumns = true; StateHasChanged(); }">Filter Columns</Button>
+        }
+    </div>
+    
+    <MudTable T="RsvpResponse" Class="mb" Style="margin-top: 20px;" RowStyle="cursor: pointer" Items="@Responses" Hover="true" OnRowClick="RowClicked">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.GuestName.Full)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.SubmittedAt)">When</MudTableSortLabel></MudTh>
+            @foreach (var column in Columns)
+            {
+                <MudTh><MudTableSortLabel SortBy="new Func<RsvpResponse, object?>(x => x.DataByColumn[column])">@column</MudTableSortLabel></MudTh>
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.GuestName.Full</MudTd>
+            <MudTd DataLabel="Submission Date">@((DateTime.UtcNow-context.SubmittedAt).FormatShortDuration()) ago</MudTd>
+            @foreach (var column in Columns)
+            {
+                @if (context.DataByColumn[column] == null)
+                {
+                    <MudTd DataLabel="@column"><span class="missing-data">No Data</span></MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="@column">@context.DataByColumn[column]</MudTd>
+                }
+            }
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager/>
+        </PagerContent>
+        
+    </MudTable>
+    
+</div>
+
+<script src="/Components/Pages/Rsvp/RsvpResponseTable.razor.js"></script>
+
+@code {
+    private bool? IsAttending { get; set; } = true;
+    private List<RsvpResponse> Responses { get; set; } = new();
+    private List<string> Columns { get; set; } = [];
+    private List<string> AllColumns { get; set; } = [];
+    private bool ShowCustomiseColumns { get; set; } = false;
+    
+    protected override void OnInitialized()
+    {
+        UpdateData();
+    }
+
+    private void UpdateData()
+    {
+        if (IsAttending != false)
+        {
+            Responses = RsvpService.GetAllRsvps(true, RsvpFormConfig.YesQuestions).ToList();
+            AllColumns = RsvpFormConfig.YesQuestions.GetAllColumns().Where(col => col.DisplayName != null).Select(col => col.DisplayName!).ToList();
+        }
+        else
+        {
+            Responses = RsvpService.GetAllRsvps(false, RsvpFormConfig.NoQuestions).ToList();
+            AllColumns = RsvpFormConfig.NoQuestions.GetAllColumns().Where(col => col.DisplayName != null).Select(col => col.DisplayName!).ToList();
+        }
+
+        Columns = AllColumns.ToList();
+        ShowCustomiseColumns = false;
+        StateHasChanged();
+    }
+    
+    private void RowClicked(TableRowClickEventArgs<RsvpResponse> args)
+    {
+        if (args.Item == null)
+        {
+            return;
+        }
+        var guestId = args.Item.GuestId;
+        var accountId = AdminService.GetAccountIdFromGuestId(guestId);
+        NavigationManager.NavigateTo($"/admin/account/{accountId}/{guestId}");
+    }
+    
+    private async Task DownloadCsv()
+    {
+        var csvContent = GenerateCsv(Responses);
+
+        // Call JavaScript function to download CSV
+        var yesOrNo = IsAttending == true ? "yes" : "no";
+        var datePart = DateTime.Now.ToString("dd_MM");
+        await JS.InvokeVoidAsync("downloadFile", $"rsvp_{yesOrNo}_{datePart}.csv", csvContent);
+    }
+
+    private string GenerateCsv(IEnumerable<RsvpResponse> responses)
+    {
+        var csv = new StringBuilder();
+        var columnHeadings = new List<string> {"Name"}.Concat(Columns);
+        csv.AppendLine(string.Join(",", columnHeadings));
+
+        foreach (var response in responses)
+        {
+            var data = new List<string> { response.GuestName.Full }.Concat(response.DataByColumn.Select(kv => kv.Value ?? "<null>"));
+            csv.AppendLine(string.Join(",", data.Select(value => $"\"{SanitiseCsv(value)}\"")));
+        }
+
+        return csv.ToString();
+    }
+
+    private string SanitiseCsv(string value)
+    {
+        // Escape formulae
+        if (value.StartsWith("=") || value.StartsWith("+") || value.StartsWith("-") || value.StartsWith("@"))
+        {
+            value = "'" + value;
+        }
+        // Escape quotes
+        value = value.Replace("\"", "\"\"");
+        return value;
+    }
+    
+    private void ToggleColumn(string column)
+    {
+        if (Columns.Contains(column))
+        {
+            Columns.Remove(column);
+        }
+        else
+        {
+            Columns.Add(column);
+        }
+    }
+}

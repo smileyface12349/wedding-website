@@ -1,0 +1,133 @@
+﻿@page "/Admin/Rsvp/Questions"
+
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+
+@inject IRsvpService RsvpService
+@inject IRsvpForm RsvpFormConfig
+
+@layout SimpleLayout
+
+<h1>RSVP Questions</h1>
+<p>On this page, you can view a summary of the RSVP responses by question.</p>
+<LinkButton Url="/admin/rsvp/table">View by Response</LinkButton>
+<YesOrNoToggleGroup Value="IsAttending" ValueChanged="newVal => { IsAttending = newVal; UpdateData(); }"/>
+
+@foreach (var question in Questions)
+{
+    <h2>@question.Title</h2>
+    @if (SummaryData.ContainsKey(question.Title))
+    {
+        <MudTable Items="SummaryData[question.Title].Keys">
+            <HeaderContent>
+                <MudTh>Option</MudTh>
+                <MudTh>Count</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Option">@context</MudTd>
+                @if (Responses.Count == 0)
+                {
+                    <MudTd DataLabel="Count">@SummaryData[question.Title][context]</MudTd>
+                }
+                else
+                {
+                    <MudTd DataLabel="Count">@SummaryData[question.Title][context] (@(SummaryData[question.Title][context]*100/Responses.Count)%)</MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    }
+    else if (question.QuestionType is RsvpQuestionType.FreeText)
+    {
+        <p><i>Please go to the RSVP table to view responses to free text questions.</i></p>
+    }
+    else
+    {
+        <p><i>Unsupported question type, no summary data available.</i></p>
+    }
+}
+
+@code {
+    private bool? IsAttending { get; set; } = true;
+    private List<RsvpResponse> Responses { get; set; } = new();
+    private List<RsvpQuestion> Questions { get; set; } = [];
+    private IDictionary<string, IDictionary<string, int>> SummaryData { get; set; } = new Dictionary<string, IDictionary<string, int>>();
+    
+    protected override void OnInitialized()
+    {
+        UpdateData();
+    }
+
+    private void UpdateData()
+    {
+        if (IsAttending != false)
+        {
+            Responses = RsvpService.GetAllRsvps(true, RsvpFormConfig.YesQuestions).ToList();
+            Questions = RsvpFormConfig.YesQuestions.Questions.ToList();
+        }
+        else
+        {
+            Responses = RsvpService.GetAllRsvps(false, RsvpFormConfig.NoQuestions).ToList();
+            Questions = RsvpFormConfig.NoQuestions.Questions.ToList();
+        }
+        
+        // Build summary data
+        SummaryData = new Dictionary<string, IDictionary<string, int>>();
+        foreach (var question in Questions)
+        {
+            if (question.QuestionType is RsvpQuestionType.Select select)
+            {
+                // Note that dataByQuestion has the display values for each option, whereas dataByColumn has the identifiers
+                var responseCounts = Responses.GroupBy(r => r.DataByQuestion[question.Title]).ToDictionary(g => g.Key, g => g.Count());
+                SummaryData[question.Title] = responseCounts;
+                var data = new Dictionary<string, int>();
+                foreach (var option in select.Options)
+                {
+                    data[option.DisplayValue] = responseCounts.GetValueOrDefault(option.DisplayValue, 0);
+                }
+                var otherCount = Responses.Count(r => !select.Options.Select(o => o.DisplayValue).Contains(r.DataByQuestion[question.Title]));
+                if (otherCount > 0 || select.OtherField is { DataColumn.DisplayName: not null })
+                {
+                    data["Other"] = otherCount;
+                }
+                SummaryData[question.Title] = data;
+            }
+            else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
+            {
+                var responseCounts = Responses.SelectMany(r => multi.Options.Where(o => o.DataColumn.DisplayName != null).Where(o => RsvpQuestionType.MultiSelect.StringToBool(r.DataByColumn[o.DataColumn.DisplayName!])).Select(o => o.Option)).GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+                var data = new Dictionary<string, int>();
+                foreach (var option in multi.Options.Where(o => o.DataColumn.DisplayName != null))
+                {
+                    data[option.Option] = responseCounts.GetValueOrDefault(option.Option, 0);
+                }
+                // Count "Other" responses
+                if (multi.OtherField is { DataColumn.DisplayName: not null })
+                {
+                    var otherCount = Responses.Count(r => r.DataByColumn[multi.OtherField.DataColumn.DisplayName!] != null && r.DataByColumn[multi.OtherField.DataColumn.DisplayName!] != "");
+                    if (otherCount > 0 || multi.OtherField is { DataColumn.DisplayName: not null })
+                    {
+                        data["Other"] = otherCount;
+                    }
+                }
+
+                SummaryData[question.Title] = data;
+            }
+            else if (question is { QuestionType: RsvpQuestionType.FreeText, Required: false })
+            {
+                // Compare number of blank and non-blank responses
+                var blankCount = Responses.Count(r => string.IsNullOrWhiteSpace(r.DataByQuestion[question.Title]));
+                var nonBlankCount = Responses.Count - blankCount;
+                SummaryData[question.Title] = new Dictionary<string, int>
+                {
+                    ["Answered"] = nonBlankCount,
+                    ["Left Blank"] = blankCount
+                };
+            }
+        }
+        
+        StateHasChanged();
+    }
+    
+}

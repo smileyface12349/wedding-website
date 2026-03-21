@@ -1,0 +1,280 @@
+﻿@using System.Security.Claims
+@using WeddingWebsite.Components.Dialogs
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
+@using WeddingWebsite.Models.Rsvp
+@using WeddingWebsite.Services
+
+@inject IRsvpService RsvpService
+@inject NavigationManager NavigationManager
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
+
+<MudForm>
+    @foreach (var question in Questions.Questions)
+    {
+        <div class="question">
+            <h2>
+                @question.Title
+                @if (question.Required)
+                {
+                    <span class="required-asterisk">*</span>
+                }
+            </h2>
+            @if (!string.IsNullOrEmpty(question.Description))
+            {
+                <p>@question.Description</p>
+            }
+            @if (question.Modals != null)
+            {
+                @foreach (var modal in question.Modals)
+                {
+                    <ModalButton Modal="modal"/>
+                    <div style="margin-bottom: 10px"></div>
+                }
+            }
+            
+            @if (question.QuestionType is RsvpQuestionType.FreeText text)
+            {
+                var currentValue = Answers[text.DataColumn.Id];
+                <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[text.DataColumn.Id] = newVal" MaxLength="@text.MaxLength" Required="@question.Required" Placeholder="@text.Placeholder" ContactMethod="@ContactMethod" Lines="@text.Lines" />
+            } else if (question.QuestionType is RsvpQuestionType.Select select)
+            {
+                var currentValue = Answers[select.DataColumn.Id];
+                var otherOption = "other";
+                var isOtherSelected = select.OtherField != null && RsvpQuestionType.MultiSelect.StringToBool(Answers[select.OtherField.DataColumn.Id]);
+                <MudRadioGroup Disabled="ReadOnly" T="string" Value="@(isOtherSelected ? otherOption : currentValue)" ValueChanged="newVal => UpdateSelectAnswer(select.DataColumn.Id, select.OtherField?.DataColumn.Id, newVal)" UserAttributes="@(question.Required ? new Dictionary<string, object>{{"aria-required", "true"}} : null)">
+                    @foreach (var option in select.Options)
+                    {
+                        <MudRadio T="string" Value="option.Identifier" Color="Color.Primary">@option</MudRadio>
+                    }
+                    @if (select.OtherField != null)
+                    {
+                        <MudRadio T="string" Value="otherOption" Color="Color.Primary">Other</MudRadio>
+                    }
+                </MudRadioGroup>
+                @if (select.OtherField != null && isOtherSelected)
+                {
+                    <div style="margin-bottom: 10px"></div>
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[select.DataColumn.Id] = newVal" Placeholder="@select.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@select.OtherField.MaxLength" Lines="@select.OtherField.Lines" />
+                }
+            } else if (question.QuestionType is RsvpQuestionType.MultiSelect multi)
+            {
+                @foreach (var option in multi.Options)
+                {
+                    var currentValue = Answers[option.DataColumn.Id];
+                    <MudCheckBox Disabled="ReadOnly" T="bool" Color="Color.Primary" Value="RsvpQuestionType.MultiSelect.StringToBool(currentValue)" ValueChanged="newVal => Answers[option.DataColumn.Id] = RsvpQuestionType.MultiSelect.BoolToString(newVal)">
+                        @option.Option
+                    </MudCheckBox>
+                }
+                @if (multi.OtherField != null)
+                {
+                    <div style="margin-bottom: 10px"></div>
+                    var currentValue = Answers[multi.OtherField.DataColumn.Id];
+                    <RsvpTextInput ReadOnly="@ReadOnly" Value="@currentValue" ValueExpression="() => currentValue" ValueChanged="newVal => Answers[multi.OtherField.DataColumn.Id] = newVal" Placeholder="@multi.OtherField.Placeholder" ContactMethod="@ContactMethod" MaxLength="@multi.OtherField.MaxLength" Lines="@multi.OtherField.Lines" />
+                }
+            }
+        </div>
+    }
+    
+    <div style="margin-bottom: 15px;"></div>
+    @if (!ReadOnly && !EditMode)
+    {
+        @if (!ConfirmSubmit)
+        {
+            <Button OnClick="FirstSubmitPress" CssClass="dont-fill-width" Size="20">Submit</Button>
+        }
+        else
+        {
+            <h2>@StringProvider.AreYouSure</h2>
+            <p>@StringProvider.RsvpConfirmDescription</p>
+            <Button OnClick="Submit" CssClass="dont-fill-width" Size="20">@StringProvider.Submit</Button>
+        }
+    } else if (!ReadOnly && EditMode)
+    {
+        <Button OnClick="Submit" CssClass="dont-fill-width" Size="20">Save Changes</Button>
+    }
+    
+    @if (ValidationIssues.Any() || Success == false)
+    {
+        <ul class="validation-issues">
+            @foreach (var issue in ValidationIssues)
+            {
+                <li><p class="validation-issue">@issue</p></li>
+            }
+            @if (Success == false)
+            {
+                <li><p class="validation-issue">@StringProvider.RsvpSomethingWentWrong</p></li>
+            }
+        </ul>
+    }
+    
+</MudForm>
+
+@if (Success == true)
+{
+    <p>RSVP submitted!</p>
+}
+
+
+<style>
+    .mud-radio-group {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+    
+    .mud-ripple-radio {
+        margin-right: 5px;
+    }
+</style>
+
+@code {
+    [Parameter] 
+    public string? UserId { get; set; }
+    
+    [Parameter]
+    public required GuestWithId Guest { get; set; }
+    
+    [Parameter]
+    public required RsvpQuestions Questions { get; set; }
+    
+    [Parameter]
+    public required bool IsAttending { get; set; }
+    
+    [Parameter]
+    public bool ReadOnly { get; set; } = false;
+
+    [Parameter] 
+    public bool EditMode { get; set; } = false;
+    
+    private IList<string?> Answers { get; set; } = [];
+    private bool ConfirmSubmit { get; set; } = false;
+    private bool? Success { get; set; } = null;
+    private IEnumerable<string> ValidationIssues { get; set; } = [];
+    
+    private ClaimsPrincipal? LoggedInUser { get; set; }
+    private string? ContactMethod => WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authenticationState.User;
+        
+        for (int i = 0; i <= 20; i++)
+        {
+            Answers.Add(null);
+        }
+
+        if (ReadOnly || EditMode)
+        {
+            // Load existing answers
+            var response = RsvpService.GetRsvpBasic(Guest.Id);
+            if (response == null)
+            {
+                ReadOnly = false;
+            }
+            else
+            {
+                Answers = response.Data.ToList();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Null values are used to indicate that the question was not present on the form at the time of the submission.
+    /// If it was simply left blank, this must be replaced with empty string.
+    /// </summary>
+    private void RemoveNulls()
+    {
+        foreach (var column in Questions.GetAllColumns())
+        {
+            Answers[column.Id] ??= "";
+        }
+    }
+
+    private void FirstSubmitPress()
+    {
+        RemoveNulls();
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        StateHasChanged();
+        if (ValidationIssues.Any()) return;
+        ConfirmSubmit = true;
+        StateHasChanged();
+    }
+
+    private void Submit()
+    {
+        RemoveNulls();
+        ValidationIssues = Questions.Validate(Answers.ToList());
+        if (ValidationIssues.Any())
+        {
+            ConfirmSubmit = false;
+            StateHasChanged();
+            return;
+        }
+        if (EditMode)
+        {
+            Success = RsvpService.EditRsvp(Guest.Id, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                var yesOrNo = IsAttending ? "Yes" : "No";
+                var answersCompact = string.Join(",​", Answers.Where(a => a != null).Select(a => a!.Length < 14 ? a : a[..14]));
+                if (LoggedInUser != null)
+                {
+                    AccountService.Log(LoggedInUser, AccountLogType.EditRsvp, $"Admin edited RSVP for {Guest.Name.First} to [{yesOrNo}: {answersCompact}]", UserId);
+                }
+                NavigationManager.NavigateTo($"/Admin/Account/{UserId}/{Guest.Id}");
+            }
+        }
+        else
+        {
+            Success = RsvpService.SubmitRsvp(Guest.Id, IsAttending, Answers.ToList());
+            StateHasChanged();
+            if (Success == true)
+            {
+                var yesOrNo = IsAttending ? "Yes" : "No";
+                var answersCompact = string.Join(",​", Answers.Where(a => a != null).Select(a => a!.Length < 14 ? a : a[..14]));
+                if (LoggedInUser != null)
+                {
+                    if (UserId == null)
+                    {
+                        // User submitting RSVP themselves
+                        AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"RSVP {yesOrNo} by {Guest.Name.First} [{answersCompact}]");
+                    }
+                    else
+                    {
+                        // Admin submitting RSVP on behalf of another user
+                        AccountService.Log(LoggedInUser, AccountLogType.SubmitRsvp, $"Admin RSVP {yesOrNo} for {Guest.Name.First} [{answersCompact}]", UserId);
+                    }
+                }
+                
+                NavigationManager.NavigateTo("/RsvpSubmitted");
+            }
+        }
+    }
+    
+    private void UpdateSelectAnswer(int columnId, int? otherColumnId, string newValue)
+    {
+        if (otherColumnId == null)
+        {
+            Answers[columnId] = newValue;
+            return;
+        }
+        if (newValue == "other")
+        {
+            Answers[columnId] = "";
+            Answers[otherColumnId.Value] = RsvpQuestionType.MultiSelect.BoolToString(true);
+        }
+        else
+        {
+            Answers[columnId] = newValue;
+            Answers[otherColumnId.Value] = RsvpQuestionType.MultiSelect.BoolToString(false);
+        }
+    }
+}

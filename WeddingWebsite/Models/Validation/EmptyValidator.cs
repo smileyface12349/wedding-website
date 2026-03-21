@@ -7,7 +7,7 @@ namespace WeddingWebsite.Models.Validation;
 /// </summary>
 public class EmptyValidator: IDetailsAndConfigValidator
 {
-    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config) {
+    public IEnumerable<ValidationIssue> Validate(IWeddingDetails details, IWebsiteConfig config, IRsvpForm rsvp) {
         return [];
     }
 }

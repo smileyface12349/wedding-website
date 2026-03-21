@@ -87,6 +87,29 @@ public interface IStringProvider
     
     string VenueShowcase { get; }
     
+    string RsvpInactiveDescription(string description);
+    string RsvpChooseGuest { get; }
+    string ViewRsvp { get; }
+    string RsvpThankYou { get; }
+    string RsvpThankYouDescription(string? contactMethod);
+    string SubmitAnotherRsvp { get; }
+    string BackToHome { get; }
+    string PleaseRsvpByDeadline(string deadline);
+    string RsvpDeadlinePassed { get; }
+    MarkupString YouSeemABitLost { get; }
+    string RsvpAlreadySubmitted(string? contactMethod);
+    string RsvpFormDescription { get; }
+    string RsvpFormDescriptionContact(string? contactMethod);
+    string RsvpAttendanceQuestion { get; }
+    string RsvpLongYes { get; }
+    string RsvpLongNo { get; }
+    string? RsvpYesDescription { get; }
+    string? RsvpNoDescription { get; }
+    string AreYouSure { get; }
+    string RsvpConfirmDescription { get; }
+    string RsvpSomethingWentWrong { get; }
+    string RsvpTooLong(string? contactMethod);
+    
     string Registry { get; }
     string RegistryDescription1 { get; }
     string RegistryDescription2 { get; }

@@ -1,0 +1,12 @@
+﻿p {
+    margin-bottom: 10px;
+}
+
+.description {
+    margin-bottom: 20px;
+}
+
+.content {
+    max-width: 500px;
+    margin: auto;
+}
