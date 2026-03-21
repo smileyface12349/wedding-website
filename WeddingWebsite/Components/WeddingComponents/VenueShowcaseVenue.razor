@@ -4,7 +4,7 @@
 @using WeddingWebsite.Models.Events
 @using WeddingWebsite.Models.WebsiteElement
 
-<Box Horizontal="Horizontal">
+<Box CustomCss="@Style" Horizontal="Horizontal">
     <TopContent>
         <WebsiteElement Element="Venue.Media" Cover="true"></WebsiteElement>
     </TopContent>
@@ -36,4 +36,6 @@
 
     private WeddingModal? TravelDirectionsModal => Venue.Directions == null ? null 
         : new WeddingModal("Travel Directions", Venue.Directions!.Content.Prepend(new WebsiteSection(new WebsiteGoogleMapsEmbed(Venue.Location))));
+
+    private string Style => Horizontal ? "" : "height: 500px";
 }
