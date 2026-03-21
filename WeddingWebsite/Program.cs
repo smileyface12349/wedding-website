@@ -21,12 +21,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Required - All the information about your wedding. Please create your own implementation of IWeddingDetails.
 // See WeddingDetailsTemplate for a starting point. If you rename the file to RealWeddingDetails, it will be
 // ignored from git so that it is kept private.
-builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
+builder.Services.AddScoped<IWeddingDetails, WeddingDetails>();
 
 // Recommended - Customise the theme and layout. Please create your own implementation of IWebsiteConfig. It is
 // recommended to have this also inherit from DefaultConfig. See DemoConfig for an example. If you rename the file
 // to CustomConfig, it will be ignored from git so that it is kept private.
-builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
+builder.Services.AddScoped<IWebsiteConfig, Config>();
 
 // Recommended - Customise your RSVP form to gather the information that you need! You can safely ignore this until you
 // plan to open RSVPs. You should implement IRsvpForm - see DemoRsvpForm for an example. If you rename the file to
@@ -40,7 +40,7 @@ builder.Services.AddScoped<ICredentials, NoCredentials>();
 // Optional - If you'd like to customise the wording or translate into a different language, you can swap out for a
 // different implementation of IStringProvider. If you're only changing a few strings, you can inherit from
 // StandardBritishEnglish as is done in FriendlyBritishEnglish.
-builder.Services.AddScoped<IStringProvider, StandardBritishEnglish>();
+builder.Services.AddScoped<IStringProvider, CustomStrings>();
 
 
 builder.Services.AddScoped<IDetailsAndConfigValidator, DetailsAndConfigValidator>();
