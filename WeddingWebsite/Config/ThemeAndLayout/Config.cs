@@ -41,6 +41,7 @@ public class Config : DefaultConfig, IWebsiteConfig
         var darkGreen = new Colour(50, 150, 50);
         var yellow = new Colour("#e45d5a");
         var darkPurple = new Colour(137, 108, 166);
+        var brown = new Colour("#8d5519");
 
         var filledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, darkPurple, null));
         var whiteFilledBox = new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Colours.Primary, null));
@@ -52,9 +53,9 @@ public class Config : DefaultConfig, IWebsiteConfig
         Sections = [
             new Section.TodoListSummary(new SectionTheme(salmon, Colour.White, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colours.PrimaryBackground, Colour.White, null)))),
             //new Section.HowWeMet(new SectionTheme(purple, Colours.Primary, filledBox)),
-            new Section.DressCode(new SectionTheme(purple, Colours.Primary, filledBox), true, false),
+            new Section.DressCode(new SectionTheme(brown, Colours.Primary, whiteFilledBox), true, false),
             new Section.Timeline(new SectionTheme(bricks, Colours.Primary, outlinedBox), true),
-            new Section.TravelDirections(new SectionTheme(purple, Colours.Primary, whiteFilledBox)),
+            new Section.TravelDirections(new SectionTheme(brown, Colours.Primary, whiteFilledBox)),
             //new Section.VenueShowcase(new SectionTheme(purple, Colours.Primary, filledBox)),
             //new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
             //new Section.Accommodation(new SectionTheme(purple, Colours.Primary, filledBox)),

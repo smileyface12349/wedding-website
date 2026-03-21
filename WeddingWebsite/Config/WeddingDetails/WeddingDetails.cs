@@ -171,8 +171,8 @@ public sealed class WeddingDetails : IWeddingDetails
             ],
             null,
             null,
-            new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car"),
-            new WebsiteImage("https://www.instant-quote.co/images/cars/large/o_1ikkmciu01pgc1uko1lh71o60j0p1c.jpeg", "A wedding car")
+            new WebsiteImage("/img/17.jpg", "A wedding car"),
+            new WebsiteImage("/img/17.jpg", "A wedding car")
         ),
         "A chapel.",
         new WebsiteImage("https://upload.wikimedia.org/wikipedia/commons/a/a6/St_Mary%27s_Southampton.jpg", "St Mary's Church, Southampton"),
@@ -190,7 +190,7 @@ public sealed class WeddingDetails : IWeddingDetails
                 new WebsiteSection(null, "It would be very special to us -ok, Amelia- if you would wear an outfit with a little something (or EVERYTHING) blue :D"),
                 new WebsiteSection(null, "(Don't worry if you can't, just wear whatever you want to celebrate with us!)"),
             ],
-            new WebsiteImage("/img/8.png", "Blue!")
+            new WebsiteImage("/img/16.png", "Blue!")
         );
     
     public AccommodationDetails AccommodationDetails { get; } = new (
