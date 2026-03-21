@@ -49,7 +49,7 @@
                 }
             }
             
-            <h2>@StringProvider.RsvpAttendanceQuestion</h2>
+            <h2>@StringProvider.RsvpAttendanceQuestion<span class="required-asterisk">*</span></h2>
             @if (RsvpConfig.LongAttendanceResponses)
             {
                 <MudRadioGroup T="bool?" @bind-Value="IsAttending" Disabled="ReadOnly" UserAttributes="@(new Dictionary<string, object>{{"aria-required", "true"}})">

@@ -17,3 +17,9 @@ h2 {
 p {
     margin-top: 10px;
 }
+
+::deep .required-asterisk {
+    color: red;
+    margin-left: 5px;
+    font-weight: normal;
+}
