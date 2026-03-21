@@ -51,7 +51,7 @@
                 <MudRadioGroup Disabled="ReadOnly" T="string" Value="@(isOtherSelected ? otherOption : currentValue)" ValueChanged="newVal => UpdateSelectAnswer(select.DataColumn.Id, select.OtherField?.DataColumn.Id, newVal)" UserAttributes="@(question.Required ? new Dictionary<string, object>{{"aria-required", "true"}} : null)">
                     @foreach (var option in select.Options)
                     {
-                        <MudRadio T="string" Value="option" Color="Color.Primary">@option</MudRadio>
+                        <MudRadio T="string" Value="option.Identifier" Color="Color.Primary">@option</MudRadio>
                     }
                     @if (select.OtherField != null)
                     {

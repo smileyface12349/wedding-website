@@ -59,7 +59,12 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Rsvp_ColumnIdsShouldBeBetween0And20(rsvp);
         Rsvp_QuestionTitlesShouldBeNonEmpty(rsvp);
         Rsvp_SelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionsShouldNotHaveDuplicates(rsvp);
+        Rsvp_SelectOptionIdentifiersShouldBeNonEmpty(rsvp);
+        Rsvp_SelectOptionDisplayValuesShouldBeNonEmpty(rsvp);
         Rsvp_MultiSelectOptionsShouldBeNonEmpty(rsvp);
+        Rsvp_MultiSelectOptionsShouldNotHaveDuplicates(rsvp);
+        Rsvp_MultiSelectOptionTextShouldBeNonEmpty(rsvp);
         Rsvp_SelectOtherFieldShouldHaveNullColumn(rsvp);
         Rsvp_QuestionTitlesShouldBeUnique(rsvp);
         Rsvp_ColumnNamesShouldBeUnique(rsvp);
@@ -598,6 +603,71 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     }
     
     /// <summary>
+    /// Duplicate display values is weird but will still mostly work (some of the analysis might break), whereas
+    /// duplicate identifiers will cause the form to break as it won't know which option to choose.
+    /// </summary>
+    private void Rsvp_SelectOptionsShouldNotHaveDuplicates(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                var duplicateOptions = selectQuestion.Options.GroupBy(option => option.DisplayValue).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Warning($"The RSVP form contains a select question '{question.Title}' with duplicate option display values: {string.Join(", ", duplicateOptions)}. These options will be indistinguishable to the user.");
+                }
+                duplicateOptions = selectQuestion.Options.GroupBy(option => option.Identifier).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Error($"The RSVP form contains a select question '{question.Title}' with duplicate option identifiers: {string.Join(", ", duplicateOptions)}. Every option needs a unique id for the form to behave correctly.");
+                }
+
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Empty option is indistinguishable from the user leaving the field blank.
+    /// </summary>
+    private void Rsvp_SelectOptionIdentifiersShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                foreach (var option in selectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.Identifier))
+                    {
+                        Error($"The RSVP form contains a select question '{question.Title}' with an option that has an empty identifier. Each option must have a non-empty identifier for the form to behave correctly.");
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Doesn't break anything but who wants an empty option?
+    /// </summary>
+    private void Rsvp_SelectOptionDisplayValuesShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.Select selectQuestion)
+            {
+                foreach (var option in selectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.DisplayValue))
+                    {
+                        Warning($"The RSVP form contains a select question '{question.Title}' with an option that has an empty display value. Each option should have a non-empty display value to avoid confusion for the user.");
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary>
     /// Multi-select with no options doesn't make any sense, but it doesn't strictly break anything either.
     /// </summary>
     private void Rsvp_MultiSelectOptionsShouldBeNonEmpty(IRsvpForm rsvp)
@@ -607,6 +677,45 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
             if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion && !multiSelectQuestion.Options.Any())
             {
                 Warning($"The RSVP form contains a multi-select question '{question.Title}' with no options. Each multi-select question should have at least one option.");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// This won't break the form, but it doesn't make any sense.
+    /// </summary>
+    private void Rsvp_MultiSelectOptionsShouldNotHaveDuplicates(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion)
+            {
+                var duplicateOptions = multiSelectQuestion.Options.GroupBy(option => option.Option).Where(group => group.Count() > 1).Select(group => group.Key);
+                if (duplicateOptions.Any())
+                {
+                    Warning($"The RSVP form contains a multi-select question '{question.Title}' with duplicate option values: {string.Join(", ", duplicateOptions)}. These options will be indistinguishable to the user.");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Doesn't break anything but who wants an empty option?
+    /// </summary>
+    private void Rsvp_MultiSelectOptionTextShouldBeNonEmpty(IRsvpForm rsvp)
+    {
+        foreach (var question in rsvp.YesQuestions.Questions.Concat(rsvp.NoQuestions.Questions))
+        {
+            if (question.QuestionType is RsvpQuestionType.MultiSelect multiSelectQuestion)
+            {
+                foreach (var option in multiSelectQuestion.Options)
+                {
+                    if (string.IsNullOrWhiteSpace(option.Option))
+                    {
+                        Warning(
+                            $"The RSVP form contains a multi-select question '{question.Title}' with an option that has an empty text value. Each option should have a non-empty text value to avoid confusion for the user.");
+                    }
+                }
             }
         }
     }
