@@ -44,14 +44,6 @@
                     <MudSpacer/>
                     <input aria-disabled="true" value="@UserName" id="username" disabled/>
                 </div>
-                @if (!Email.IsNullOrEmpty() && UserName != Email)
-                {
-                    <div class="account-detail">
-                        <label for="email">@StringProvider.EmailAddress</label>
-                        <MudSpacer/>
-                        <input aria-disabled="true" value="@Email" id="email" disabled/>
-                    </div>
-                }
                 @if (ShowChangePassword)
                 {
                     @* <Box CustomCss="margin-bottom: 20px;margin-top: 20px"> *@
@@ -60,21 +52,21 @@
                     @*     <p style="text-align: left;margin-bottom: 0">If you forget your password, we can reset it, but we can't see what it is.</p> *@
                     @* </Box> *@
                     <EditForm Model="ChangePasswordInput" method="post" OnValidSubmit="ChangePassword" FormName="change-password">
-                        <DataAnnotationsValidator />
+                        <DataAnnotationsValidator/>
                         <div class="account-detail">
                             <label for="old-password">@StringProvider.CurrentPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.OldPassword" id="old-password" placeholder="@StringProvider.OldPassword" />
+                            <input type="password" @bind-value="ChangePasswordInput.OldPassword" id="old-password" placeholder="@StringProvider.OldPassword"/>
                         </div>
                         <div class="account-detail">
                             <label for="new-password">@StringProvider.NewPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.NewPassword" id="new-password" placeholder="@StringProvider.NewPassword" />
+                            <input type="password" @bind-value="ChangePasswordInput.NewPassword" id="new-password" placeholder="@StringProvider.NewPassword"/>
                         </div>
                         <div class="account-detail">
                             <label for="confirm-new-password">@StringProvider.ConfirmPassword</label>
                             <MudSpacer/>
-                            <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="@StringProvider.NewPassword" />
+                            <input type="password" @bind-value="ChangePasswordInput.ConfirmNewPassword" id="confirm-new-password" placeholder="@StringProvider.NewPassword"/>
                         </div>
                         <a class="password-security" @onclick="OpenPasswordDialog">@StringProvider.IsMyPasswordSafe</a>
                         <ValidationSummary class="text-danger" role="alert"/>
@@ -94,6 +86,49 @@
                         <label for="change-password">@StringProvider.Password</label>
                         <MudSpacer/>
                         <a id="change-password" @onclick="EnableChangePassword">@StringProvider.ChangePassword</a>
+                    </div>
+                }
+                @if (ShowContactDetails)
+                {
+                    <Box>
+                        <h2>Contact Details</h2>
+                        <div class="account-detail">
+                            <label for="email">@StringProvider.EmailAddress</label>
+                            <MudSpacer/>
+                            <input value="@Email" id="email"/>
+                        </div>
+                        <div class="account-detail">
+                            <label for="phone">Phone Number</label>
+                            <MudSpacer/>
+                            <input value="07377329534" id="phone"/>
+                        </div>
+                        <div class="account-detail">
+                            <label for="address">Address 1</label>
+                            <MudSpacer/>
+                            <input value="23 Windmill Lane" id="address"/>
+                        </div>
+                        <div class="account-detail">
+                            <label for="address">Address 2</label>
+                            <MudSpacer/>
+                            <input value="Wheatley" id="address"/>
+                        </div>
+                        <div class="account-detail">
+                            <label for="postcode">Postcode</label>
+                            <MudSpacer/>
+                            <input value="OX33 1TA" id="postcode"/>
+                        </div>
+                        <div class="change-password-buttons">
+                            <button type="submit" style="background: @Theme?.Primary">@StringProvider.Submit</button>
+                            <button class="cancel-button" @onclick="() => ShowContactDetails = false">@StringProvider.Cancel</button>
+                        </div>
+                    </Box>
+                }
+                else
+                {
+                    <div class="account-detail">
+                        <label for="change-password">Contact Details</label>
+                        <MudSpacer/>
+                        <a id="change-password" @onclick="EnableContactDetails">View & Update</a>
                     </div>
                 }
             </div>
@@ -121,7 +156,7 @@
                         <p>@StringProvider.RsvpDeadlinePassed</p>
                     </div>
                 }
-                
+
             }
             @if (Guests.Count() > 1)
             {
@@ -168,6 +203,7 @@
     private string UserName { get; set; } = "";
     private string Email { get; set; } = "";
     private bool ShowChangePassword { get; set; } = false;
+    private bool ShowContactDetails { get; set; } = false;
     
     protected override async Task OnInitializedAsync()
     {
@@ -188,6 +224,13 @@
     private void EnableChangePassword()
     {
         ShowChangePassword = true;
+        ShowContactDetails = false;
+    }
+    
+    private void EnableContactDetails()
+    {
+        ShowContactDetails = true;
+        ShowChangePassword = false;
     }
     
     private void ChangePassword()

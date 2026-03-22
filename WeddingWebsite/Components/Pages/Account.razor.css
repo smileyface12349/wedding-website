@@ -35,10 +35,11 @@ p {
 }
 
 .change-password-buttons {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 button {
@@ -71,4 +72,8 @@ button:hover {
     margin-bottom: 0;
     margin-left: 10px;
     font-size: 16px;
+}
+
+h2 {
+    margin-bottom: 10px;
 }
