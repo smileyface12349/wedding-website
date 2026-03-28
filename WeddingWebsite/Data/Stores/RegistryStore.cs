@@ -587,13 +587,16 @@ public class RegistryStore : IRegistryStore
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
 
+        // Normalize empty/whitespace instructions to NULL for consistency.
+        var instructionsToSave = string.IsNullOrWhiteSpace(newInstructions) ? null : newInstructions;
+
         var updateCmd = connection.CreateCommand();
         updateCmd.CommandText = @"
             UPDATE RegistryItemPurchaseMethods
             SET Instructions = :instructions
             WHERE AllowBringOnDay = 0 AND AllowDeliverToUs = 0;
         ";
-        updateCmd.Parameters.AddWithValue(":instructions", newInstructions);
+        updateCmd.Parameters.AddWithValue(":instructions", (object?)instructionsToSave ?? DBNull.Value);
 
         updateCmd.ExecuteNonQuery();
     }
