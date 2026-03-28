@@ -1,6 +1,7 @@
 ﻿@using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 
 @inject IStringProvider StringProvider
 
@@ -34,7 +35,7 @@
                 {
                     <p class="cost"></p>
                 }
-                <button style="background: @ButtonColour">@ButtonText</button>
+                <button style="background: @ButtonColour;color: @ButtonTextColour">@ButtonText</button>
             </div>
 
         </ChildContent>
@@ -55,4 +56,5 @@
     private SectionTheme? Theme { get; set; }
     
     private string ButtonColour => ButtonSuccess ? (Theme?.Primary.ToString() ?? "var(--primary)") : "#aaaaaa";
+    private string ButtonTextColour => ButtonSuccess ? (Theme?.Primary.GetTextColour().ToString() ?? Colour.DarkGrey.ToString()) : Colour.DarkGrey.ToString();
 }
