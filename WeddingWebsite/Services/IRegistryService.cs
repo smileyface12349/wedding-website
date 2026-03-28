@@ -17,4 +17,5 @@ public interface IRegistryService
     void MarkClaimAsCompleted(string itemId, string userId);
     void MarkClaimAsNotCompleted(string itemId, string userId);
     void SetClaimNotes(string itemId, string userId, string? notes);
+    void UpdateMoneyTransferInstructions(string instructions);
 }

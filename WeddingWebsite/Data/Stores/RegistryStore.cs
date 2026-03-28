@@ -580,4 +580,24 @@ public class RegistryStore : IRegistryStore
             throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId}");
         }
     }
+
+    [Authorize(Roles = "Admin")]
+    public void UpdateMoneyTransferInstructions(string newInstructions)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        // Normalize empty/whitespace instructions to NULL for consistency.
+        var instructionsToSave = string.IsNullOrWhiteSpace(newInstructions) ? null : newInstructions;
+
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemPurchaseMethods
+            SET Instructions = :instructions
+            WHERE AllowBringOnDay = 0 AND AllowDeliverToUs = 0;
+        ";
+        updateCmd.Parameters.AddWithValue(":instructions", (object?)instructionsToSave ?? DBNull.Value);
+
+        updateCmd.ExecuteNonQuery();
+    }
 }

@@ -1,0 +1,49 @@
+﻿@page "/Registry/Tools"
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Services
+
+@layout SimpleLayout
+
+@inject IRegistryService RegistryService
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Registry Tools</h1>
+<p>Welcome, administrator, to the registry tools page. Here are a few very specific tools which you might need to use occasionally to save yourself a lot of jumping between menus.</p>
+<p class="text-danger">All of these options should be considered destructive actions, and should be done with great care. It is not possible to undo any of these actions.</p>
+<p><i>More options may be added later. If you have any ideas for anything that could be useful, let me know!</i></p>
+
+<h2>Money Transfer Purchase Instructions</h2>
+<p>In the money transfer purchase instructions, you should say where the money should be sent to. If you want to swap out your bank details for everything at once, this tool is here for you!</p>
+<p>Note that a money transfer purchase method is defined by having "Allow bring on day" and "Allow deliver to us" both unchecked. The name is not relevant.</p>
+<p class="text-danger">Warning: All previous purchase instructions for Money Transfer will be lost.</p>
+<InputTextArea style="width: 100%;margin-bottom: 10px" @bind-Value="NewMoneyTransferInstructions" placeholder="Enter new instructions here" class="form-control" />
+@if (ConfirmUpdateMoneyTransferInstructions)
+{
+    <p class="text-danger">Are you sure you want to update the money transfer instructions for every single item? This cannot be undone.</p>
+    <button class="button" @onclick="UpdateMoneyTransferInstructions">Update</button>
+}
+else
+{
+    <button class="button" @onclick="UpdateMoneyTransferInstructions">Update</button>
+}
+
+@code {
+    private string NewMoneyTransferInstructions { get; set; } = "";
+    
+    private bool ConfirmUpdateMoneyTransferInstructions { get; set; }
+
+    private void UpdateMoneyTransferInstructions()
+    {
+        if (!ConfirmUpdateMoneyTransferInstructions)
+        {
+            ConfirmUpdateMoneyTransferInstructions = true;
+        }
+        else
+        {
+            RegistryService.UpdateMoneyTransferInstructions(NewMoneyTransferInstructions);
+            ConfirmUpdateMoneyTransferInstructions = false;
+            NewMoneyTransferInstructions = "";
+        }
+    }
+}
