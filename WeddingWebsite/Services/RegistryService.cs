@@ -35,5 +35,6 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     
     public void SetClaimNotes(string itemId, string userId, string? notes) => registryStore.SetClaimNotes(itemId, userId, notes);
     
+    [Authorize(Roles = "Admin")]
     public void UpdateMoneyTransferInstructions(string instructions) => registryStore.UpdateMoneyTransferInstructions(instructions);
 }
