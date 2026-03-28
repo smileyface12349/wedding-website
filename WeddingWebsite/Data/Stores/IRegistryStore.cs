@@ -68,4 +68,9 @@ public interface IRegistryStore
     /// Set notes for the claim. It's entirely up to the purchaser what they want to put here, if anything at all.
     /// </summary>
     void SetClaimNotes(string itemId, string userId, string? notes);
+
+    /// <summary>
+    /// Update the instructions for every "money transfer" option. A quick utility to save some time.
+    /// </summary>
+    void UpdateMoneyTransferInstructions(string newInstructions);
 }
