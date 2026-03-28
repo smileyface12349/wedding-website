@@ -30,9 +30,10 @@ public class Colour : IBackground
         IsDark = !textColour.IsDark;
     }
     
-    public Colour(string hex)
+    public Colour(string hex, bool isDark = false)
     {
         mudColor = (MudColor) hex;
+        IsDark = isDark;
     }
     
     public override string ToString() {
