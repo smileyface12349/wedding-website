@@ -34,4 +34,6 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     public void MarkClaimAsNotCompleted(string itemId, string userId) => registryStore.MarkClaimAsNotCompleted(itemId, userId);
     
     public void SetClaimNotes(string itemId, string userId, string? notes) => registryStore.SetClaimNotes(itemId, userId, notes);
+    
+    public void UpdateMoneyTransferInstructions(string instructions) => registryStore.UpdateMoneyTransferInstructions(instructions);
 }
