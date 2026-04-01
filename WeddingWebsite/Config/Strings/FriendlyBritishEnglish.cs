@@ -15,7 +15,7 @@ public class FriendlyBritishEnglish : StandardBritishEnglish, IStringProvider
     
     public new string DoNotPurchaseBeforeClaiming => "Please do not make a purchase before claiming the item first - this will reserve it so we don't get two people buying the same thing!";
     public new string NotesDescription => "If you'd like to add any notes, you can do so in the box below. It's entirely up to you how you want to use this, if at all.";
-    public new string SelectFulfillmentMethodDescription => "Thank you so much for offering to purchase this item! The next step is to choose how you would like to purchase it.";
+    public new string SelectFulfillmentMethodDescription => "Thank you so much for offering to purchase this item! The next step is to choose how you would like to give it to us.";
     public new string ItemReadyToPurchaseDescription => "Thank you for filling in those details! You're now free to complete the purchase when you're ready. Once done, please mark it as completed.";
     public new string ClaimThisItemDescription => "If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it. Don't worry, this can be undone if you change your mind.";
     
