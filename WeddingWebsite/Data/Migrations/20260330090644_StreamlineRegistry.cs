@@ -27,8 +27,8 @@ namespace WeddingWebsite.Migrations
                 @"UPDATE RegistryItemClaims
                 SET FulfillmentMethod = CASE 
                     WHEN DeliveryAddress = 'Bring it on the day' THEN 0
-                    WHEN DeliveryAddress IS NULL THEN 1
-                    ELSE 2
+                    WHEN DeliveryAddress IS NULL THEN 2
+                    ELSE 1
                 END"
             );
             
