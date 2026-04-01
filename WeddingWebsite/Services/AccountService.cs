@@ -47,4 +47,24 @@ public class AccountService(IStore store) : IAccountService
 
         return userId;
     }
+    
+    public string GetUserNameFromAccountId(string userId)
+    {
+        var userName = store.GetUserNameByUserId(userId);
+        if (userName == null)
+        {
+            throw new InvalidOperationException("Could not find user name for the provided user ID.");
+        }
+        return userName;
+    }
+    
+    public string GetAccountIdFromUserName(string userName)
+    {
+        var userId = store.GetUserIdByUserName(userName);
+        if (userId == null)
+        {
+            throw new InvalidOperationException("Could not find user ID for the provided user name.");
+        }
+        return userId;
+    }
 }

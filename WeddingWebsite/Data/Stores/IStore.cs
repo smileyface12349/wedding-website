@@ -50,6 +50,11 @@ public interface IStore
     /// Get user id from their username
     /// </summary>
     public string? GetUserIdByUserName(string username);
+    
+    /// <summary>
+    /// Get user name from their user id
+    /// </summary>
+    public string? GetUserNameByUserId(string userId);
 
     /// <summary>
     /// Get all logs affecting a particular account, regardless of who performed the action.
