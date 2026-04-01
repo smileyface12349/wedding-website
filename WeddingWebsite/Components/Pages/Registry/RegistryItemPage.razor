@@ -256,10 +256,16 @@
                             <p><b>Recipient:</b> @(claim.Recipient ?? "Not selected")</p>
                             <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
                             <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
+                            <p><b>Received At:</b> @(claim.ReceivedAt?.ToString() ?? "Not received")</p>
                             <p><b>Quantity:</b> @claim.Quantity</p>
                             <p style="margin-bottom: 5px"><b>Notes:</b> @claim.Notes</p>
-                            @if (claim.IsCompleted)
+                            @if (claim.IsReceived)
                             {
+                                <Button OnClick="() => { RegistryService.MarkClaimAsNotReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Received</Button>
+                            }
+                            else if (claim.IsCompleted)
+                            {
+                                <Button OnClick="() => { RegistryService.MarkClaimAsReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Received</Button>
                                 <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
                             }
                             else
