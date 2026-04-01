@@ -5,7 +5,7 @@ namespace WeddingWebsite.Data.Enums;
 public static class FulfillmentMethodEnumConverter
 {
     /// <summary>
-    /// Extension method to convert an RsvpStatus to an integer to go in the database.
+    /// Extension method to convert a FulfillmentMethod to an integer to go in the database.
     /// </summary>
     public static int ToDatabaseInteger(this FulfillmentMethod fulfillmentMethod)
     {
@@ -19,7 +19,7 @@ public static class FulfillmentMethodEnumConverter
     }
 
     /// <summary>
-    /// Convert an RsvpStatus to an integer to go in the database. There is also an extension method if you prefer.
+    /// Convert a FulfillmentMethod to an integer to go in the database. There is also an extension method if you prefer.
     /// </summary>
     public static int FulfillmentMethodToDatabaseInteger(FulfillmentMethod fulfillmentMethod)
     {
@@ -27,7 +27,7 @@ public static class FulfillmentMethodEnumConverter
     }
 
     /// <summary>
-    /// Convert an int from the database to an RSVP status. There is no alternative extension method.
+    /// Convert an int from the database to a FulfillmentMethod. There is no alternative extension method.
     /// </summary>
     public static FulfillmentMethod DatabaseIntegerToFulfillmentMethod(int fulfillmentMethod)
     {
