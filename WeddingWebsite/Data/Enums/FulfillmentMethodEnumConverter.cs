@@ -1,5 +1,4 @@
-﻿using WeddingWebsite.Models.Accounts;
-using WeddingWebsite.Models.Registry;
+﻿using WeddingWebsite.Models.Registry;
 
 namespace WeddingWebsite.Data.Enums;
 
