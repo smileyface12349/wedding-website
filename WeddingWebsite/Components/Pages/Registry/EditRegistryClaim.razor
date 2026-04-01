@@ -1,0 +1,152 @@
+﻿@page "/Registry/{ItemId}/Claims/{UserId}/Edit"
+
+@using System.ComponentModel.DataAnnotations
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Services
+
+@inject IRegistryService RegistryService
+@inject IAdminService AdminService
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+
+@layout SimpleLayout
+
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Edit Registry Claim</PageTitle>
+
+<h1>Manage Claim</h1>
+<p>Modify as many or as few details as you want, then press save at the bottom. Please note that this will override any edits made while this tab is left open, including fields that you are not modifying.</p>
+<p class="text-danger">Warning: No validation is applied to this form. You are responsible for ensuring the data is left in a valid state.</p>
+
+<EditForm Model="Model" class="form" OnValidSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger mb" role="alert" />
+
+    <div class="form-input-and-label">
+        <label class="form-label">Claimed By</label>
+        <span class="flex-grow"></span>
+        <MudAutocomplete @bind-Value="Model.UserName" Dense="true" Clearable="false" SearchFunc="UsernameSearchFunction"/>
+    </div>
+    <div class="form-input-and-label">
+        <label for="fulfillment-method" class="form-label">Fulfillment Method</label>
+        <span class="flex-grow"></span>
+        <InputSelect id="fulfillment-method" class="form-control" @bind-Value="Model.FulfillmentMethod">
+            <option value="">Not specified</option>
+            @foreach (var method in Enum.GetValues<FulfillmentMethod>())
+            {
+                <option value="@method">@method.ToString()</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-input-and-label">
+        <label for="recipient" class="form-label">Recipient</label>
+        <span class="flex-grow"></span>
+        <InputText id="recipient" class="form-control" @bind-Value="Model.Recipient" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="quantity" class="form-label">Quantity</label>
+        <span class="flex-grow"></span>
+        <InputNumber id="quantity" class="form-control" @bind-Value="Model.Quantity" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="notes" class="form-label">Notes</label>
+        <span class="flex-grow"></span>
+        <InputText id="notes" class="form-control" @bind-Value="Model.Notes" />
+    </div>
+
+</EditForm>
+
+<Button OnClick="OnSubmit">Save Changes</Button>
+
+@code {
+    
+    [Parameter]
+    public required string ItemId { get; set; }
+    
+    [Parameter]
+    public required string UserId { get; set; }
+    
+    private EditRegistryClaimModel Model { get; set; } = new();
+    private IList<string> AllUserNames { get; set; } = new List<string>();
+    
+    private bool deleteConfirm = false;
+    private RegistryItem? Item { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        if (Item == null)
+        {
+            NavigationManager.NavigateTo("/Registry");
+            return;
+        }
+        
+        if (!Item.Claims.Any(c => c.UserId == UserId))
+        {
+            NavigationManager.NavigateTo("/Registry");
+            return;
+        }
+        
+        var claim = Item.GetClaimByUser(UserId);
+
+        var username = AccountService.GetUserNameFromAccountId(UserId);
+        
+        AllUserNames = AdminService.GetAllAccounts()
+            .Where(a => a.UserName != null)
+            .Select(a => a.UserName!)
+            .ToList();
+
+        
+        Model = new EditRegistryClaimModel
+        {
+            UserName = username,
+            FulfillmentMethod = claim.FulfillmentMethod,
+            Recipient = claim.Recipient,
+            Quantity = claim.Quantity,
+            Notes = claim.Notes
+        };
+    }
+    
+    private Task<IEnumerable<string>> UsernameSearchFunction(string value, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Task.FromResult(AllUserNames as IEnumerable<string>);
+        return Task.FromResult(AllUserNames.Where(userName => userName.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
+    }
+    
+    private void OnSubmit()
+    {
+        var newUserId = AccountService.GetAccountIdFromUserName(Model.UserName);
+        
+        RegistryService.UpdateClaim(
+            ItemId,
+            UserId,
+            newUserId,
+            Model.FulfillmentMethod,
+            Model.Recipient,
+            Model.Quantity,
+            Model.Notes
+        );
+        
+        NavigationManager.NavigateTo($"/Registry/{ItemId}");
+    }
+    
+    private sealed class EditRegistryClaimModel
+    {
+        [Required] 
+        public string UserName { get; set; } = "";
+        
+        public FulfillmentMethod? FulfillmentMethod { get; set; }
+        
+        public string? Recipient { get; set; }
+        
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
+        public int Quantity { get; set; } = 1;
+        
+        public string? Notes { get; set; }
+    }
+}
