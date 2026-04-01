@@ -97,7 +97,8 @@ public sealed class SampleWeddingDetails : IWeddingDetails
                 new WebsiteSection("Fun Fact", "Joe once hiked the entire Appalachian Trail.")
             ],
             new WebsiteImage("https://www.publicdomainpictures.net/pictures/200000/nahled/central-african-man.jpg", null),
-            "190 Meadowdale Close, Middlesbrough, TS2 1TJ"
+            "190 Meadowdale Close, Middlesbrough, TS2 1TJ",
+            "12-34-56, 78901234"
         ),
         new (
             new Name("Carol", "Fenwick"),

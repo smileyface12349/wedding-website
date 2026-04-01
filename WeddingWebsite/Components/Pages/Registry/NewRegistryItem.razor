@@ -26,16 +26,26 @@
     <div class="form-input-and-label">
         <label for="generic-name">Generic Name</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.GenericName" class="form-control" autocomplete="username" aria-required="true" placeholder="Toaster" id="generic-name" />
+        <InputText @bind-Value="Input.GenericName" class="form-control" aria-required="true" placeholder="Toaster" id="generic-name" />
     </div>
     <div class="form-input-and-label">
         <label for="name">Name</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="Bosch Toaster 3000" id="name" />
+        <InputText @bind-Value="Input.Name" class="form-control" aria-required="true" placeholder="Bosch Toaster 3000" id="name" />
     </div>
     <div class="form-input-and-label">
         <label for="description" class="mr">Description (optional)</label>
         <InputTextArea @bind-Value="Input.Description" class="form-control flex-grow" placeholder="Describe what it is and why you want it." id="description" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="store">Store</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.Store" class="form-control" aria-required="true" placeholder="John Lewis" id="store" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="product-url">Product URL</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.ProductUrl" class="form-control" aria-required="true" placeholder="https://johnlewis.com/toaster3000" id="product-url" />
     </div>
     <div class="form-input-and-label">
         <label for="image-url">Image URL</label>
@@ -44,17 +54,12 @@
         {
             <img width="30" height="30" src="@Input.ImageUrl" alt="Invalid image" style="object-fit: contain; margin-right: 20px;"/>
         }
-        <InputText @bind-Value="Input.ImageUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
+        <InputText @bind-Value="Input.ImageUrl" class="form-control" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
     </div>
     <div class="form-input-and-label">
-        <label for="store">Store</label>
+        <label for="quantity">Max Quantity</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.Store" class="form-control" autocomplete="username" aria-required="true" placeholder="John Lewis" id="store" />
-    </div>
-    <div class="form-input-and-label">
-        <label for="product-url">Product URL</label>
-        <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.ProductUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://johnlewis.com/toaster3000" id="product-url" />
+        <InputNumber @bind-Value="Input.MaxQuantity" class="form-control" aria-required="true" placeholder="1" id="quantity" />
     </div>
     <div class="form-input-and-label">
         <label for="cost">Cost (excl. delivery)</label>
@@ -67,26 +72,25 @@
         <InputNumber @bind-Value="Input.DeliveryCost" class="form-control" aria-required="true" placeholder="4.99" id="delivery-cost" />
     </div>
     <div class="form-input-and-label">
-        <label for="purchase-instructions" class="mr">Purchase Instructions (optional)</label>
-        <InputTextArea @bind-Value="Input.PurchaseInstructions" class="form-control flex-grow" placeholder="Any special instructions for purchasing at this store." id="purchase-instructions" />
+        <label for="include-delivery-cost-in-list-price">Include Delivery Cost in List Price</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox @bind-Value="Input.IncludeDeliveryCostInMoneyTransfer" class="form-check-input" id="include-delivery-cost-in-list-price" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="allow-bring-on-day">Allow Bring On Day</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox @bind-Value="Input.AllowBringOnDay" class="form-check-input" id="allow-bring-on-day" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="allow-deliver-to-us">Allow Deliver To Us</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox @bind-Value="Input.AllowDeliverToUs" class="form-check-input" id="allow-deliver-to-us" />
     </div>
     <div class="form-input-and-label">
         <label for="allow-money-transfer">Allow Money Transfer</label>
         <span class="flex-grow"></span>
         <InputCheckbox @bind-Value="Input.AllowMoneyTransfer" class="form-check-input" id="allow-money-transfer" />
     </div>
-    @if (Input.AllowMoneyTransfer)
-    {
-        <div class="form-input-and-label">
-            <label for="include-delivery-cost-in-money-transfer">Include Delivery Cost in Money Transfer</label>
-            <span class="flex-grow"></span>
-            <InputCheckbox @bind-Value="Input.IncludeDeliveryCostInMoneyTransfer" class="form-check-input" id="include-delivery-cost-in-money-transfer" />
-        </div>
-        <div class="form-input-and-label">
-            <label for="money-transfer-purchase-instructions" class="mr">Money Transfer Purchase Instructions</label>
-            <InputTextArea @bind-Value="Input.MoneyTransferPurchaseInstructions" class="form-control flex-grow" placeholder="Please include details for where the money should be sent." id="money-transfer-purchase-instructions" />
-        </div>
-    }
     <button class="button" type="submit">Add Item</button>
 </EditForm>
 
@@ -109,45 +113,29 @@
             Guid.NewGuid().ToString(),
             Input.Store,
             Input.Cost.Value,
-            true,
-            true,
             Input.ProductUrl == "" ? null : Input.ProductUrl,
-            Input.PurchaseInstructions == "" ? null : Input.PurchaseInstructions,
             Input.DeliveryCost
         );
-        var moneyTransferPurchaseMethod = Input.AllowMoneyTransfer ? new RegistryItemPurchaseMethod(
-            Guid.NewGuid().ToString(),
-            "Money Transfer",
-            Input.IncludeDeliveryCostInMoneyTransfer ? Input.Cost.Value + Input.DeliveryCost : Input.Cost.Value,
-            false,
-            false,
-            null,
-            Input.MoneyTransferPurchaseInstructions == "" ? null : Input.MoneyTransferPurchaseInstructions,
-            0
-        ) : null;
+        
+        var listPrice = Input.IncludeDeliveryCostInMoneyTransfer ? Input.Cost.Value + Input.DeliveryCost : Input.Cost.Value;
+        
         var newItem = new RegistryItem(
             Guid.NewGuid().ToString(),
             Input.GenericName,
             Input.Name,
             Input.Description == "" ? null : Input.Description,
             Input.ImageUrl == "" ? null : Input.ImageUrl,
-            new List<RegistryItemPurchaseMethod> { primaryPurchaseMethod }.Concat(moneyTransferPurchaseMethod is not null ? new[] { moneyTransferPurchaseMethod } : Array.Empty<RegistryItemPurchaseMethod>()).ToList(),
-            []
+            listPrice,
+            new List<RegistryItemPurchaseMethod> { primaryPurchaseMethod },
+            [],
+            MaxQuantity: Input.MaxQuantity,
+            AllowBringOnDay: Input.AllowBringOnDay,
+            AllowDeliverToUs: Input.AllowDeliverToUs,
+            AllowMoneyTransfer: Input.AllowMoneyTransfer
         );
         
         RegistryService.AddItem(newItem);
         NavigationManager.NavigateTo($"/Registry/{newItem.Id}");
-    }
-    
-    protected override async Task OnInitializedAsync()
-    {
-        // Auto-fill the money transfer instructions with an existing item's instructions, if available
-        var registryItems = await RegistryService.GetAllRegistryItems();
-        var arbitraryItemWithMoneyTransfer = registryItems.FirstOrDefault(item => item.PurchaseMethods.Any(method => method is { Name: "Money Transfer", Instructions: not null }));
-        if (arbitraryItemWithMoneyTransfer != null)
-        {
-            Input.MoneyTransferPurchaseInstructions = arbitraryItemWithMoneyTransfer.PurchaseMethods.First(method => method is { Name: "Money Transfer", Instructions: not null }).Instructions!;
-        }
     }
 
     private sealed class InputModel
@@ -189,19 +177,21 @@
         [Display(Name = "Delivery Cost")]
         public decimal DeliveryCost { get; set; } = 0;
         
-        [StringLength(1000)]
-        [Display(Name = "Purchase Instructions")]
-        public string PurchaseInstructions { get; set; } = "";
+        [Required]
+        [Range(1, 1000)]
+        [Display(Name = "Max Quantity")]
+        public int MaxQuantity { get; set; } = 1;
         
+        [Display(Name = "Allow Bring On Day")]
+        public bool AllowBringOnDay { get; set; } = true;
+        
+        [Display(Name = "Allow Deliver To Us")]
+        public bool AllowDeliverToUs { get; set; } = true;
+
         [Display(Name = "Allow Money Transfer")]
         public bool AllowMoneyTransfer { get; set; } = true;
         
-        [Display(Name = "Include Delivery Cost in Money Transfer")]
+        [Display(Name = "Include Delivery Cost in List Price")]
         public bool IncludeDeliveryCostInMoneyTransfer { get; set; } = true;
-        
-        [StringLength(1000)]
-        [Display(Name = "Money Transfer Purchase Instructions")]
-        public string MoneyTransferPurchaseInstructions { get; set; } = "";
-        
     }
 }

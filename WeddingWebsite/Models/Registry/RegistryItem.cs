@@ -6,17 +6,20 @@ public record RegistryItem(
     string Name,
     string? Description,
     string? ImageUrl,
+    decimal Cost,
     IEnumerable<RegistryItemPurchaseMethod> PurchaseMethods,
     IEnumerable<RegistryItemClaim> Claims,
     int MaxQuantity = 1,
     int Priority = 0,
-    bool Hide = false
+    bool Hide = false,
+    bool AllowBringOnDay = false,
+    bool AllowDeliverToUs = false,
+    bool AllowMoneyTransfer = false
 )
 {
     public int QuantityClaimed => Claims.Sum(c => c.Quantity);
     public bool IsFullyClaimed => QuantityClaimed >= MaxQuantity;
-    public decimal CheapestCost => PurchaseMethods.Min(pm => pm.Cost);
-    
+
     public int NumClaimsByUser(string userId)
     {
         return Claims.Where(c => c.UserId == userId).Sum(c => c.Quantity);
@@ -30,12 +33,12 @@ public record RegistryItem(
         return Claims.Single(c => c.UserId == userId);
     }
 
-    /// <summary>
-    /// Gets the purchase method that the user has selected. Throws if the user hasn't selected a purchase method.
-    /// </summary>
-    public RegistryItemPurchaseMethod GetPurchaseMethodByUser(string userId)
+    public IEnumerable<FulfillmentMethod> GetAllowedFulfillmentMethods()
     {
-        var claim = GetClaimByUser(userId);
-        return PurchaseMethods.Single(pm => pm.Id == claim.PurchaseMethodId);
+        var methods = new List<FulfillmentMethod>();
+        if (AllowBringOnDay) methods.Add(FulfillmentMethod.BringOnDay);
+        if (AllowDeliverToUs) methods.Add(FulfillmentMethod.DeliverToUs);
+        if (AllowMoneyTransfer) methods.Add(FulfillmentMethod.TransferMoney);
+        return methods;
     }
 }

@@ -17,23 +17,16 @@
             <p class="generic-name">@Item.GenericName</p>
             <h2>@Item.Name</h2>
             <div class="cost-and-button">
-                @if (Item.PurchaseMethods.Any())
+                @if (ButtonText is "Pending" or "Completed" && Item.MaxQuantity > 1)
                 {
-                    @if (ButtonText is "Pending" or "Completed" && Item.MaxQuantity > 1)
-                    {
-                        <p><span class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</span> × @Item.QuantityClaimed</p>
-                    } else if (Item.MaxQuantity-Item.QuantityClaimed > 1)
-                    {
-                        <p><span class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</span> × @(Item.MaxQuantity-Item.QuantityClaimed)</p>
-                    }
-                    else
-                    {
-                        <p class="cost">@StringProvider.CurrencyAmount(Item.CheapestCost)</p>
-                    }
+                    <p><span class="cost">@StringProvider.CurrencyAmount(Item.Cost)</span> × @Item.QuantityClaimed</p>
+                } else if (Item.MaxQuantity-Item.QuantityClaimed > 1)
+                {
+                    <p><span class="cost">@StringProvider.CurrencyAmount(Item.Cost)</span> × @(Item.MaxQuantity-Item.QuantityClaimed)</p>
                 }
                 else
                 {
-                    <p class="cost"></p>
+                    <p class="cost">@StringProvider.CurrencyAmount(Item.Cost)</p>
                 }
                 <button style="background: @ButtonColour;color: @ButtonTextColour">@ButtonText</button>
             </div>

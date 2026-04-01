@@ -18,4 +18,8 @@ public interface IAccountService
     public void Log(ClaimsPrincipal user, AccountLogType logType, string description, string? affectedUserId = null);
     
     void Log(string actorUserName, AccountLogType logType, string description, string? affectedUserId = null);
+    
+    string GetUserNameFromAccountId(string userId);
+    
+    string GetAccountIdFromUserName(string userName);
 }

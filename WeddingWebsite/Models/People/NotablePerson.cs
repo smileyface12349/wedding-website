@@ -12,8 +12,9 @@ public record NotablePerson(
     ContactDetails ContactDetails,
     IEnumerable<WebsiteSection> Content,
     IWebsiteElement? Media = null,
-    string? Address = null
-) : IPerson, IContact
+    string? Address = null,
+    string? BankDetails = null
+) : IPerson, IContact, IRecipient
 {
     /// <summary>
     /// No contact details, no blurb for "meet the wedding party"

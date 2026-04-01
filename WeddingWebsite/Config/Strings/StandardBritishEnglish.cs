@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WeddingWebsite.Core;
 using WeddingWebsite.Models.ConfigInterfaces;
+using WeddingWebsite.Models.Registry;
 
 namespace WeddingWebsite.Config.Strings;
 
@@ -136,26 +138,29 @@ public class StandardBritishEnglish : IStringProvider
     public string DeliveryCost(decimal cost) => $"+{CurrencyAmount(cost)} delivery";
     public string ItemPurchased => "Item Purchased";
     public string ThankYouForGift => "Thank you so much for your gift!";
-    public MarkupString QuantityPurchased(int quantity) => (MarkupString) $"Quantity purchased: <b>{quantity}</b>.";
-    public MarkupString PurchaseMethod(string purchaseMethod) => (MarkupString) $"Purchase method: <b>{purchaseMethod}</b>.";
-    public MarkupString DeliveryAddress(string? address)  => (MarkupString) $"Delivery address: <b>{address}</b>.";
+    public MarkupString QuantityPurchased(int quantity) => (MarkupString) $"Quantity Purchased: <b>{quantity}</b>.";
+    public MarkupString FulfillmentMethod(FulfillmentMethod fulfillmentMethod) => (MarkupString) $"Gift Method: <b>{fulfillmentMethod.GetEnumDescription()}</b>.";
+    public MarkupString DeliveryAddress(string? address)  => (MarkupString) $"Delivery Address: <b>{address}</b>.";
+    public MarkupString BankDetails(string? bankDetails)  => (MarkupString) $"Bank Details: <b>{bankDetails}</b>.";
     public string RegistryClaimedContact(string? contactMethod) => $"Since this is now completed, you can no longer make any changes. If something went wrong, please contact {contactMethod}.";
     public string Notes => "Notes";
     public string NotesDescription => "If you'd like to leave a note, you can do so in the box below.";
     public string NotesPlaceholder => "Add a note visible to you and the website administrators (optional).";
     public string SaveNotes => "Save Notes";
-    public string SelectPurchaseMethod => "Select Purchase Method";
-    public MarkupString SelectedQuantity(int quantity) => (MarkupString) $"Selected quantity: <b>{quantity}</b>.";
-    public string SelectPurchaseMethodDescription => "Please choose how you would like to purchase this item.";
+    public string SelectFulfillmentMethod => "Select Gift Method";
+    public string NoFulfillmentMethodsDescription => "There are no methods available for you to give this item to us. You can still claim it, but you may not be able to purchase it yet.";
+    public MarkupString SelectedQuantity(int quantity) => (MarkupString) $"Quantity: <b>{quantity}</b>.";
+    public string SelectFulfillmentMethodDescription => "Please choose how you would like to give this item to us.";
     public string SelectDeliveryAddress => "Select Delivery Address";
-    public MarkupString SelectedPurchaseMethod(string purchaseMethod) => (MarkupString) $"Selected purchase method: <b>{purchaseMethod}</b>.";
-    public string SelectDeliveryAddressDescription => "Please choose how you would like to give the item to us.";
+    public string SelectBankDetails => "Select Bank Details";
+    public MarkupString SelectedFulfillmentMethod(FulfillmentMethod? fulfillmentMethod) => (MarkupString) $"Gift Method: <b>{fulfillmentMethod?.GetEnumDescription()}</b>.";
+    public string SelectDeliveryAddressDescription => "Please choose which address you would like to send it to.";
+    public string SelectBankDetailsDescription => "Please choose which bank account you would like to send the money to.";
     public string BringOnTheDay => "I'll bring it on the day";
     public string ItemReadyToPurchase => "Item Ready to Purchase";
-    public MarkupString SelectedDeliveryAddress(string? address) => (MarkupString) $"Selected delivery address: <b>{address}</b>.";
+    public MarkupString SelectedDeliveryAddress(string? address) => (MarkupString) $"Delivery Address: <b>{address}</b>.";
+    public MarkupString SelectedBankDetails(string? bankDetails) => (MarkupString) $"Bank Details: <b>{bankDetails}</b>.";
     public string ItemReadyToPurchaseDescription => "Thank you. You can now purchase the item. Please mark it as completed once you are done.";
-    public string GoToPurchasePage => "Go to Purchase Page";
-    public MarkupString CustomPurchaseInstructions(string? instructions) => (MarkupString) $"<b>Instructions:</b> {instructions}";
     public string MarkAsCompleted => "Mark as Completed (cannot be undone)";
     public string UnclaimDescription => "If you've changed your mind and you'd no longer like to buy this item, please unclaim it to make it available to others.";
     public string Unclaim => "Unclaim";

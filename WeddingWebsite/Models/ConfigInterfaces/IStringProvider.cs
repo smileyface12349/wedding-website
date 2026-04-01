@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WeddingWebsite.Models.Registry;
 
 namespace WeddingWebsite.Models.ConfigInterfaces;
 
@@ -139,25 +140,27 @@ public interface IStringProvider
     string ItemPurchased { get; }
     string ThankYouForGift { get; }
     MarkupString QuantityPurchased(int quantity);
-    MarkupString PurchaseMethod(string purchaseMethod);
+    MarkupString FulfillmentMethod(FulfillmentMethod fulfillmentMethod);
     MarkupString DeliveryAddress(string? address);
+    MarkupString BankDetails(string? bankDetails);
     string RegistryClaimedContact(string? contactMethod);
     string Notes { get; }
     string NotesDescription { get; }
     string NotesPlaceholder { get; }
     string SaveNotes { get; }
-    string SelectPurchaseMethod { get; }
+    string SelectFulfillmentMethod { get; }
+    string NoFulfillmentMethodsDescription { get; }
     MarkupString SelectedQuantity(int quantity);
-    string SelectPurchaseMethodDescription { get; }
+    string SelectFulfillmentMethodDescription { get; }
     string SelectDeliveryAddress { get; }
-    MarkupString SelectedPurchaseMethod(string purchaseMethod);
+    string SelectBankDetails { get; }
+    MarkupString SelectedFulfillmentMethod(FulfillmentMethod? fulfillmentMethod);
     string SelectDeliveryAddressDescription { get; }
-    string BringOnTheDay { get; }
+    string SelectBankDetailsDescription { get; }
     string ItemReadyToPurchase { get; }
     MarkupString SelectedDeliveryAddress(string? address);
+    MarkupString SelectedBankDetails(string? bankDetails);
     string ItemReadyToPurchaseDescription { get; }
-    string GoToPurchasePage { get; }
-    MarkupString CustomPurchaseInstructions(string? instructions);
     string MarkAsCompleted { get; }
     string UnclaimDescription { get; }
     string Unclaim { get; }

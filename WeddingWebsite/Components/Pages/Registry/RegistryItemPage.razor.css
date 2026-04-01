@@ -55,14 +55,6 @@ h2 {
     margin-top: 10px;
 }
 
-.choose-purchase-option {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    margin-top: 10px;
-    margin-bottom: 10px;
-    gap: 10px;
-}
-
 a {
     cursor: pointer;
 }
@@ -75,4 +67,9 @@ textarea {
 
 .quantity-selector {
     margin-bottom: 10px;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 8px;
 }

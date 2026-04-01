@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using WeddingWebsite.Data.Enums;
 using WeddingWebsite.Models.Registry;
 
 namespace WeddingWebsite.Data.Stores;
@@ -20,8 +21,8 @@ public class RegistryStore : IRegistryStore
         var cmd = connection.CreateCommand();
         cmd.Transaction = transaction;
         cmd.CommandText = @"
-            INSERT INTO RegistryItems (Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide)
-            VALUES (:id, :genericName, :name, :description, :imageUrl, :maxQuantity, :priority, :hide);
+            INSERT INTO RegistryItems (Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide, Cost, AllowDeliverToUs, AllowBringOnDay, AllowMoneyTransfer)
+            VALUES (:id, :genericName, :name, :description, :imageUrl, :maxQuantity, :priority, :hide, :cost, :allowDeliverToUs, :allowBringOnDay, :allowMoneyTransfer);
         ";
         cmd.Parameters.AddWithValue(":id", item.Id);
         cmd.Parameters.AddWithValue(":genericName", item.GenericName);
@@ -31,6 +32,10 @@ public class RegistryStore : IRegistryStore
         cmd.Parameters.AddWithValue(":maxQuantity", item.MaxQuantity);
         cmd.Parameters.AddWithValue(":priority", item.Priority);
         cmd.Parameters.AddWithValue(":hide", item.Hide ? 1 : 0);
+        cmd.Parameters.AddWithValue(":cost", item.Cost);
+        cmd.Parameters.AddWithValue(":allowDeliverToUs", item.AllowDeliverToUs ? 1 : 0);
+        cmd.Parameters.AddWithValue(":allowBringOnDay", item.AllowBringOnDay ? 1 : 0);
+        cmd.Parameters.AddWithValue(":allowMoneyTransfer", item.AllowMoneyTransfer ? 1 : 0);
 
         cmd.ExecuteNonQuery();
 
@@ -48,18 +53,15 @@ public class RegistryStore : IRegistryStore
             methodCmd.Transaction = transaction;
             methodCmd.CommandText = @"
                 INSERT INTO RegistryItemPurchaseMethods
-                (Id, ItemId, Name, Cost, AllowBringOnDay, AllowDeliverToUs, Url, Instructions, DeliveryCost)
+                (Id, ItemId, Name, Cost, Url, DeliveryCost)
                 VALUES
-                (:id, :itemId, :name, :cost, :allowBringOnDay, :allowDeliverToUs, :url, :instructions, :deliveryCost);
+                (:id, :itemId, :name, :cost, :url, :deliveryCost);
             ";
             methodCmd.Parameters.AddWithValue(":id", method.Id);
             methodCmd.Parameters.AddWithValue(":itemId", registryItem.Id);
             methodCmd.Parameters.AddWithValue(":name", method.Name);
             methodCmd.Parameters.AddWithValue(":cost", method.Cost);
-            methodCmd.Parameters.AddWithValue(":allowBringOnDay", method.AllowBringOnDay ? 1 : 0);
-            methodCmd.Parameters.AddWithValue(":allowDeliverToUs", method.AllowDeliverToUs ? 1 : 0);
             methodCmd.Parameters.AddWithValue(":url", method.Url ?? (object)DBNull.Value);
-            methodCmd.Parameters.AddWithValue(":instructions", method.Instructions ?? (object)DBNull.Value);
             methodCmd.Parameters.AddWithValue(":deliveryCost", method.DeliveryCost);
 
             methodCmd.ExecuteNonQuery();
@@ -83,7 +85,11 @@ public class RegistryStore : IRegistryStore
                 ImageUrl = :imageUrl,
                 MaxQuantity = :maxQuantity,
                 Priority = :priority,
-                Hide = :hide
+                Hide = :hide,
+                Cost = :cost,
+                AllowDeliverToUs = :allowDeliverToUs,
+                AllowBringOnDay = :allowBringOnDay,
+                AllowMoneyTransfer = :allowMoneyTransfer
             WHERE Id = :id;
         ";
         cmd.Parameters.AddWithValue(":id", item.Id);
@@ -94,6 +100,10 @@ public class RegistryStore : IRegistryStore
         cmd.Parameters.AddWithValue(":maxQuantity", item.MaxQuantity);
         cmd.Parameters.AddWithValue(":priority", item.Priority);
         cmd.Parameters.AddWithValue(":hide", item.Hide ? 1 : 0);
+        cmd.Parameters.AddWithValue(":cost", item.Cost);
+        cmd.Parameters.AddWithValue(":allowDeliverToUs", item.AllowDeliverToUs ? 1 : 0);
+        cmd.Parameters.AddWithValue(":allowBringOnDay", item.AllowBringOnDay ? 1 : 0);
+        cmd.Parameters.AddWithValue(":allowMoneyTransfer", item.AllowMoneyTransfer ? 1 : 0);
 
         var rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected == 0)
@@ -129,10 +139,7 @@ public class RegistryStore : IRegistryStore
                     UPDATE RegistryItemPurchaseMethods
                     SET Name = :name,
                         Cost = :cost,
-                        AllowBringOnDay = :allowBringOnDay,
-                        AllowDeliverToUs = :allowDeliverToUs,
                         Url = :url,
-                        Instructions = :instructions,
                         DeliveryCost = :deliveryCost
                     WHERE Id = :id AND ItemId = :itemId;
                 ";
@@ -140,10 +147,7 @@ public class RegistryStore : IRegistryStore
                 updateCmd.Parameters.AddWithValue(":itemId", item.Id);
                 updateCmd.Parameters.AddWithValue(":name", method.Name);
                 updateCmd.Parameters.AddWithValue(":cost", method.Cost);
-                updateCmd.Parameters.AddWithValue(":allowBringOnDay", method.AllowBringOnDay ? 1 : 0);
-                updateCmd.Parameters.AddWithValue(":allowDeliverToUs", method.AllowDeliverToUs ? 1 : 0);
                 updateCmd.Parameters.AddWithValue(":url", method.Url ?? (object)DBNull.Value);
-                updateCmd.Parameters.AddWithValue(":instructions", method.Instructions ?? (object)DBNull.Value);
                 updateCmd.Parameters.AddWithValue(":deliveryCost", method.DeliveryCost);
                 updateCmd.ExecuteNonQuery();
             }
@@ -154,18 +158,15 @@ public class RegistryStore : IRegistryStore
                 insertCmd.Transaction = transaction;
                 insertCmd.CommandText = @"
                     INSERT INTO RegistryItemPurchaseMethods
-                    (Id, ItemId, Name, Cost, AllowBringOnDay, AllowDeliverToUs, Url, Instructions, DeliveryCost)
+                    (Id, ItemId, Name, Cost, Url, DeliveryCost)
                     VALUES
-                    (:id, :itemId, :name, :cost, :allowBringOnDay, :allowDeliverToUs, :url, :instructions, :deliveryCost);
+                    (:id, :itemId, :name, :cost, :url, :deliveryCost);
                 ";
                 insertCmd.Parameters.AddWithValue(":id", method.Id);
                 insertCmd.Parameters.AddWithValue(":itemId", item.Id);
                 insertCmd.Parameters.AddWithValue(":name", method.Name);
                 insertCmd.Parameters.AddWithValue(":cost", method.Cost);
-                insertCmd.Parameters.AddWithValue(":allowBringOnDay", method.AllowBringOnDay ? 1 : 0);
-                insertCmd.Parameters.AddWithValue(":allowDeliverToUs", method.AllowDeliverToUs ? 1 : 0);
                 insertCmd.Parameters.AddWithValue(":url", method.Url ?? (object)DBNull.Value);
-                insertCmd.Parameters.AddWithValue(":instructions", method.Instructions ?? (object)DBNull.Value);
                 insertCmd.Parameters.AddWithValue(":deliveryCost", method.DeliveryCost);
                 insertCmd.ExecuteNonQuery();
             }
@@ -218,7 +219,7 @@ public class RegistryStore : IRegistryStore
 
         var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-            SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide
+            SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide, Cost, AllowBringOnDay, AllowDeliverToUs, AllowMoneyTransfer
             FROM RegistryItems
             WHERE Id = :id;
         ";
@@ -238,6 +239,10 @@ public class RegistryStore : IRegistryStore
         var maxQuantity = reader.GetInt32(5);
         var priority = reader.GetInt32(6);
         var hide = reader.GetBoolean(7);
+        var cost = reader.GetDecimal(8);
+        var allowBringOnDay = reader.GetBoolean(9);
+        var allowDeliverToUs = reader.GetBoolean(10);
+        var allowMoneyTransfer = reader.GetBoolean(11);
 
         var purchaseMethods = GetPurchaseMethodsForItem(id, connection);
         var claims = GetClaimsForItem(id, connection);
@@ -248,11 +253,15 @@ public class RegistryStore : IRegistryStore
             name,
             description,
             imageUrl,
+            cost,
             purchaseMethods,
             claims,
             maxQuantity,
             priority,
-            hide
+            hide,
+            allowBringOnDay,
+            allowDeliverToUs,
+            allowMoneyTransfer
         );
     }
 
@@ -262,7 +271,7 @@ public class RegistryStore : IRegistryStore
 
         var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-            SELECT Id, Name, Cost, AllowBringOnDay, AllowDeliverToUs, Url, Instructions, DeliveryCost
+            SELECT Id, Name, Cost, Url, DeliveryCost
             FROM RegistryItemPurchaseMethods
             WHERE ItemId = :itemId;
         ";
@@ -275,11 +284,8 @@ public class RegistryStore : IRegistryStore
                 reader.GetString(0),
                 reader.GetString(1),
                 reader.GetDecimal(2),
-                reader.GetBoolean(3),
-                reader.GetBoolean(4),
-                reader.IsDBNull(5) ? null : reader.GetString(5),
-                reader.IsDBNull(6) ? null : reader.GetString(6),
-                reader.GetDecimal(7)
+                reader.IsDBNull(3) ? null : reader.GetString(3),
+                reader.GetDecimal(4)
             );
             methods.Add(method);
         }
@@ -293,7 +299,7 @@ public class RegistryStore : IRegistryStore
 
         var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-            SELECT ItemId, ClaimedBy, PurchaseMethodId, DeliveryAddress, ClaimedAt, CompletedAt, Quantity, Notes
+            SELECT ItemId, ClaimedBy, FulfillmentMethod, Recipient, ClaimedAt, CompletedAt, ReceivedAt, Quantity, Notes
             FROM RegistryItemClaims
             WHERE ItemId = :itemId;
         ";
@@ -305,12 +311,13 @@ public class RegistryStore : IRegistryStore
             var claim = new RegistryItemClaim(
                 reader.GetString(0),
                 reader.GetString(1),
-                reader.IsDBNull(2) ? null : reader.GetString(2),
+                reader.IsDBNull(2) ? null : FulfillmentMethodEnumConverter.DatabaseIntegerToFulfillmentMethod(reader.GetInt32(2)),
                 reader.IsDBNull(3) ? null : reader.GetString(3),
                 new DateTime(reader.GetInt64(4), DateTimeKind.Utc),
                 reader.IsDBNull(5) ? null : new DateTime(reader.GetInt64(5), DateTimeKind.Utc),
-                reader.GetInt32(6),
-                reader.IsDBNull(7) ? null : reader.GetString(7)
+                reader.IsDBNull(6) ? null : new DateTime(reader.GetInt64(6), DateTimeKind.Utc),
+                reader.GetInt32(7),
+                reader.IsDBNull(8) ? null : reader.GetString(8)
             );
             claims.Add(claim);
         }
@@ -327,7 +334,7 @@ public class RegistryStore : IRegistryStore
 
         var cmd = connection.CreateCommand();
         cmd.CommandText = @"
-            SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide
+            SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide, Cost, AllowDeliverToUs, AllowBringOnDay, AllowMoneyTransfer
             FROM RegistryItems
             " + (includeHidden ? "" : "WHERE Hide = 0 ") + @"
             ORDER BY Priority DESC, Name ASC;
@@ -344,6 +351,10 @@ public class RegistryStore : IRegistryStore
             var maxQuantity = reader.GetInt32(5);
             var priority = reader.GetInt32(6);
             var hide = reader.GetBoolean(7);
+            var cost = reader.GetDecimal(8);
+            var allowDeliverToUs = reader.GetBoolean(9);
+            var allowBringOnDay = reader.GetBoolean(10);
+            var allowMoneyTransfer = reader.GetBoolean(11);
 
             var purchaseMethods = GetPurchaseMethodsForItem(id, connection);
             var claims = GetClaimsForItem(id, connection);
@@ -354,11 +365,15 @@ public class RegistryStore : IRegistryStore
                 name,
                 description,
                 imageUrl,
+                cost,
                 purchaseMethods,
                 claims,
                 maxQuantity,
                 priority,
-                hide
+                hide,
+                AllowBringOnDay: allowBringOnDay,
+                AllowDeliverToUs: allowDeliverToUs,
+                AllowMoneyTransfer: allowMoneyTransfer
             );
             items.Add(item);
         }
@@ -413,9 +428,9 @@ public class RegistryStore : IRegistryStore
         claimCmd.Transaction = transaction;
         claimCmd.CommandText = @"
             INSERT INTO RegistryItemClaims
-            (ItemId, ClaimedBy, PurchaseMethodId, DeliveryAddress, ClaimedAt, CompletedAt, Quantity, Notes)
+            (ItemId, ClaimedBy, FulfillmentMethod, Recipient, ClaimedAt, CompletedAt, ReceivedAt, Quantity, Notes)
             VALUES
-            (:itemId, :claimedBy, NULL, NULL, :claimedAt, NULL, :quantity, NULL);
+            (:itemId, :claimedBy, NULL, NULL, :claimedAt, NULL, NULL, :quantity, NULL);
         ";
         claimCmd.Parameters.AddWithValue(":itemId", itemId);
         claimCmd.Parameters.AddWithValue(":claimedBy", userId);
@@ -472,7 +487,7 @@ public class RegistryStore : IRegistryStore
         return rowsAffected == 1;
     }
     
-    public void ChoosePurchaseMethod(string itemId, string userId, string? purchaseMethodId)
+    public void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -480,10 +495,10 @@ public class RegistryStore : IRegistryStore
         var updateCmd = connection.CreateCommand();
         updateCmd.CommandText = @"
             UPDATE RegistryItemClaims
-            SET PurchaseMethodId = :purchaseMethodId
+            SET FulfillmentMethod = :fulfillmentMethod, Recipient = NULL
             WHERE ItemId = :itemId AND ClaimedBy = :claimedBy;
         ";
-        updateCmd.Parameters.AddWithValue(":purchaseMethodId", purchaseMethodId ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":fulfillmentMethod", fulfillmentMethod?.ToDatabaseInteger() ?? (object)DBNull.Value);
         updateCmd.Parameters.AddWithValue(":itemId", itemId);
         updateCmd.Parameters.AddWithValue(":claimedBy", userId);
 
@@ -494,7 +509,7 @@ public class RegistryStore : IRegistryStore
         }
     }
 
-    public void ChooseDeliveryAddress(string itemId, string userId, string? address)
+    public void ChooseRecipient(string itemId, string userId, string? recipient)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -502,10 +517,10 @@ public class RegistryStore : IRegistryStore
         var updateCmd = connection.CreateCommand();
         updateCmd.CommandText = @"
             UPDATE RegistryItemClaims
-            SET DeliveryAddress = :address
+            SET Recipient = :recipient
             WHERE ItemId = :itemId AND ClaimedBy = :claimedBy;
         ";
-        updateCmd.Parameters.AddWithValue(":address", address ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":recipient", recipient ?? (object)DBNull.Value);
         updateCmd.Parameters.AddWithValue(":itemId", itemId);
         updateCmd.Parameters.AddWithValue(":claimedBy", userId);
         var rowsAffected = updateCmd.ExecuteNonQuery();
@@ -559,6 +574,50 @@ public class RegistryStore : IRegistryStore
         }
     }
 
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsReceived(string itemId, string userId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET ReceivedAt = :receivedAt
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NULL AND CompletedAt IS NOT NULL;
+        ";
+        updateCmd.Parameters.AddWithValue(":receivedAt", DateTime.UtcNow.Ticks);
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":claimedBy", userId);
+        
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)        {
+            throw new InvalidOperationException($"No completed claim found for item ID {itemId} by user {userId} that is not already marked as received");
+        }
+    }
+
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsNotReceived(string itemId, string userId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET ReceivedAt = NULL
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NOT NULL;
+        ";
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":claimedBy", userId);
+        
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)
+        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId} that is currently marked as received");
+        }
+    }
+
     public void SetClaimNotes(string itemId, string userId, string? notes)
     {
         using var connection = new SqliteConnection(ConnectionString);
@@ -580,24 +639,35 @@ public class RegistryStore : IRegistryStore
             throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId}");
         }
     }
-
+    
     [Authorize(Roles = "Admin")]
-    public void UpdateMoneyTransferInstructions(string newInstructions)
+    public void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? newFulfillmentMethod, string? newRecipient, int newQuantity, string? newNotes)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
 
-        // Normalize empty/whitespace instructions to NULL for consistency.
-        var instructionsToSave = string.IsNullOrWhiteSpace(newInstructions) ? null : newInstructions;
-
         var updateCmd = connection.CreateCommand();
         updateCmd.CommandText = @"
-            UPDATE RegistryItemPurchaseMethods
-            SET Instructions = :instructions
-            WHERE AllowBringOnDay = 0 AND AllowDeliverToUs = 0;
+            UPDATE RegistryItemClaims
+            SET ClaimedBy = :newUserId,
+                FulfillmentMethod = :newFulfillmentMethod,
+                Recipient = :newRecipient,
+                Notes = :newNotes,
+                Quantity = :newQuantity
+            WHERE ItemId = :itemId AND ClaimedBy = :oldUserId;
         ";
-        updateCmd.Parameters.AddWithValue(":instructions", (object?)instructionsToSave ?? DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newUserId", newUserId);
+        updateCmd.Parameters.AddWithValue(":newFulfillmentMethod", newFulfillmentMethod?.ToDatabaseInteger() ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newRecipient", newRecipient ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newNotes", newNotes ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newQuantity", newQuantity);
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":oldUserId", oldUserId);
 
-        updateCmd.ExecuteNonQuery();
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)
+        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {oldUserId}");
+        }
     }
 }

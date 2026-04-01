@@ -24,17 +24,23 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     
     public bool UnclaimRegistryItem(string itemId, string userId) => registryStore.UnclaimRegistryItem(itemId, userId);
     
-    public void ChoosePurchaseMethod(string itemId, string userId, string? purchaseMethodId) => registryStore.ChoosePurchaseMethod(itemId, userId, purchaseMethodId);
+    public void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod) => registryStore.ChooseFulfillmentMethod(itemId, userId, fulfillmentMethod);
     
-    public void ChooseDeliveryAddress(string itemId, string userId, string? address) => registryStore.ChooseDeliveryAddress(itemId, userId, address);
+    public void ChooseRecipient(string itemId, string userId, string? recipient) => registryStore.ChooseRecipient(itemId, userId, recipient);
     
     public void MarkClaimAsCompleted(string itemId, string userId) => registryStore.MarkClaimAsCompleted(itemId, userId);
     
     [Authorize(Roles = "Admin")]
     public void MarkClaimAsNotCompleted(string itemId, string userId) => registryStore.MarkClaimAsNotCompleted(itemId, userId);
     
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsReceived(string itemId, string userId) => registryStore.MarkClaimAsReceived(itemId, userId);
+    
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsNotReceived(string itemId, string userId) => registryStore.MarkClaimAsNotReceived(itemId, userId);
+    
     public void SetClaimNotes(string itemId, string userId, string? notes) => registryStore.SetClaimNotes(itemId, userId, notes);
     
     [Authorize(Roles = "Admin")]
-    public void UpdateMoneyTransferInstructions(string instructions) => registryStore.UpdateMoneyTransferInstructions(instructions);
+    public void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? fulfillmentMethod, string? recipient, int quantity, string? notes) => registryStore.UpdateClaim(itemId, oldUserId, newUserId, fulfillmentMethod, recipient, quantity, notes);
 }

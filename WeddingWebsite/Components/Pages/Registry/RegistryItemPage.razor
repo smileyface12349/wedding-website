@@ -5,6 +5,7 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Core
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
@@ -46,8 +47,8 @@
                 <h2>@StringProvider.PurchaseOptions</h2>
                 @if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
                 {
-                    if (Item.GetClaimByUser(UserId).PurchaseMethodId == null
-                        || ((Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay) && Item.GetClaimByUser(UserId).DeliveryAddress == null))
+                    if (Item.GetClaimByUser(UserId).FulfillmentMethod == null
+                        || (Item.GetClaimByUser(UserId).FulfillmentMethod != FulfillmentMethod.BringOnDay && Item.GetClaimByUser(UserId).Recipient == null))
                     {
                         <p class="text-danger claim-item-description">@StringProvider.DoNotPurchaseBeforeDetails</p>
                     }
@@ -91,20 +92,28 @@
                             </Box>
                         </div>
                     }
-                    
                 }
+                
+                @* Claimed and Completed *@
                 @if (UserId != null && Item.NumClaimsByUser(UserId) > 0 && Item.GetClaimByUser(UserId).IsCompleted)
                 {
+                    var claim = Item.GetClaimByUser(UserId);
                     <h2>@StringProvider.ItemPurchased</h2>
                     <p class="claim-item-description">@StringProvider.ThankYouForGift</p>
                     @if (Item.MaxQuantity > 1)
                     {
-                        <p>@StringProvider.QuantityPurchased(Item.GetClaimByUser(UserId).Quantity)</p>
+                        <p>@StringProvider.QuantityPurchased(claim.Quantity)</p>
                     }
-                    <p>@StringProvider.PurchaseMethod(Item.GetPurchaseMethodByUser(UserId).Name)</p>
-                    @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                    @if (claim.FulfillmentMethod != null)
                     {
-                        <p>@StringProvider.DeliveryAddress(Item.GetClaimByUser(UserId).DeliveryAddress)</p>
+                        <p>@StringProvider.FulfillmentMethod(claim.FulfillmentMethod.Value)</p>
+                    }
+                    @if (claim.FulfillmentMethod == FulfillmentMethod.DeliverToUs)
+                    {
+                        <p>@StringProvider.DeliveryAddress(Item.GetClaimByUser(UserId).Recipient)</p>
+                    } else if (claim.FulfillmentMethod == FulfillmentMethod.TransferMoney)
+                    {
+                        <p>@StringProvider.BankDetails(claim.Recipient)</p>
                     }
                     <p style="margin-top: 10px">@StringProvider.RegistryClaimedContact(WeddingDetails.LoginContactMethod?.Text)</p>
                     <h2>@StringProvider.Notes</h2>
@@ -115,78 +124,102 @@
                         <p class="text-danger claim-item-description">@StringProvider.YouHaveUnsavedChanges</p>
                         <Button OnClick="SaveNotes">@StringProvider.SaveNotes</Button>
                     }
+                    
+                // Claimed but not yet completed
                 } else if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
                 {
-                    @if (Item.GetClaimByUser(UserId).PurchaseMethodId == null)
+                    var claim = Item.GetClaimByUser(UserId);
+                    
+                    // Step 1: Select purchase method
+                    @if (claim.FulfillmentMethod == null)
                     {
-                        <h2>@StringProvider.SelectPurchaseMethod</h2>
+                        <h2>@StringProvider.SelectFulfillmentMethod</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p class="claim-item-description">@StringProvider.SelectedQuantity(Item.GetClaimByUser(UserId).Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
+                            <p class="claim-item-description">@StringProvider.SelectedQuantity(claim.Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
                         }
-                        <p>@StringProvider.SelectPurchaseMethodDescription</p>
-                        <div class="choose-purchase-option">
-                            @foreach (var method in Item.PurchaseMethods)
+                        @if (Item.GetAllowedFulfillmentMethods().Any())
+                        {
+                            <p class="claim-item-description">@StringProvider.SelectFulfillmentMethodDescription</p>
+                            @foreach (var method in Item.GetAllowedFulfillmentMethods())
                             {
-                                <a class="choose-purchase-option-method" @onclick="() => ChoosePurchaseMethod(method.Id)">
+                                <a class="purchase-option" @onclick="() => ChooseFulfillmentMethod(method)">
                                     <Box>
-                                        <p class="purchase-option-name">@method.Name</p>
+                                        <p class="purchase-option-name">@method.GetEnumDescription()</p>
                                     </Box>
                                 </a>
                             }
-                        </div>
+                        }
+                        else
+                        {
+                            <p class="claim-item-description">@StringProvider.NoFulfillmentMethodsDescription</p>
+                        }
                     }
-                    else if (Item.GetClaimByUser(UserId).DeliveryAddress == null && (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay || Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs))
+                    
+                    // Step 2: Select delivery address or bank details if required
+                    else if (claim.FulfillmentMethod is FulfillmentMethod.DeliverToUs or FulfillmentMethod.TransferMoney && claim.Recipient == null)
                     {
-                        <h2>@StringProvider.SelectDeliveryAddress</h2>
+                        <h2>@(claim.FulfillmentMethod == FulfillmentMethod.DeliverToUs ? StringProvider.SelectDeliveryAddress : StringProvider.SelectBankDetails)</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p>@StringProvider.SelectedQuantity(Item.GetClaimByUser(UserId).Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
+                            <p>@StringProvider.SelectedQuantity(claim.Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
                         }
-                        <p class="claim-item-description">@StringProvider.SelectedPurchaseMethod(Item.GetPurchaseMethodByUser(UserId).Name) <a @onclick="() => ChoosePurchaseMethod(null)">[@StringProvider.Undo]</a></p>
-                        <p class="claim-item-description">@StringProvider.SelectDeliveryAddressDescription</p>
-                        @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs)
+
+                        <p class="claim-item-description">@StringProvider.SelectedFulfillmentMethod(claim.FulfillmentMethod) <a @onclick="() => ChooseFulfillmentMethod(null)">[@StringProvider.Undo]</a></p>
+                        @if (claim.FulfillmentMethod == FulfillmentMethod.DeliverToUs)
                         {
+                            <p class="claim-item-description">@StringProvider.SelectDeliveryAddressDescription</p>
                             @foreach (var address in DeliveryAddresses)
                             {
-                                <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(address)">
+                                <a class="purchase-option" @onclick="() => ChooseRecipient(address)">
                                     <Box>
                                         <p class="purchase-option-name">@address</p>
                                     </Box>
                                 </a>
                             }
                         }
-                        @if (Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                        else if (claim.FulfillmentMethod == FulfillmentMethod.TransferMoney)
                         {
-                            <a class="purchase-option" @onclick="() => ChooseDeliveryAddress(DeliveryAddressBringOnDay)">
-                                <Box>
-                                    <p class="purchase-option-name">@StringProvider.BringOnTheDay</p>
-                                </Box>
-                            </a>
+                            <p class="claim-item-description">@StringProvider.SelectBankDetailsDescription</p>
+                            @foreach (var account in BankAccounts)
+                            {
+                                <a class="purchase-option" @onclick="() => ChooseRecipient(account)">
+                                    <Box>
+                                        <p class="purchase-option-name">@account</p>
+                                    </Box>
+                                </a>
+                            }
                         }
                     }
-                    else if (!Item.GetClaimByUser(UserId).IsCompleted)
+
+                    // Step 3: Ready to purchase, need to mark as completed after purchase
+                    else if (!claim.IsCompleted)
                     {
                         <h2>@StringProvider.ItemReadyToPurchase</h2>
                         @if (Item.MaxQuantity > 1)
                         {
-                            <p>@StringProvider.SelectedQuantity(Item.GetClaimByUser(UserId).Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
+                            <p>@StringProvider.SelectedQuantity(claim.Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
                         }
-                        <p>@StringProvider.SelectedPurchaseMethod(Item.GetPurchaseMethodByUser(UserId).Name) <a @onclick="() => {ChoosePurchaseMethod(null);ChooseDeliveryAddress(null);}">[@StringProvider.Undo]</a></p>
-                        @if (Item.GetPurchaseMethodByUser(UserId).AllowDeliverToUs || Item.GetPurchaseMethodByUser(UserId).AllowBringOnDay)
+                        <p>@StringProvider.SelectedFulfillmentMethod(claim.FulfillmentMethod) <a @onclick="() => {ChooseFulfillmentMethod(null);ChooseRecipient(null);}">[@StringProvider.Undo]</a></p>
+                        @if (claim.FulfillmentMethod == FulfillmentMethod.DeliverToUs)
                         {
-                            <p>@StringProvider.SelectedDeliveryAddress(Item.GetClaimByUser(UserId).DeliveryAddress) <a @onclick="() => ChooseDeliveryAddress(null)">[@StringProvider.Undo]</a></p>
+                            <p>@StringProvider.SelectedDeliveryAddress(claim.Recipient) 
+                                @if (DeliveryAddresses.Count() >= 2)
+                                {
+                                    <a @onclick="() => ChooseRecipient(null)"> [@StringProvider.Undo]</a>
+                                }
+                            </p>
+                        } 
+                        else if (claim.FulfillmentMethod == FulfillmentMethod.TransferMoney)
+                        {
+                            <p>@StringProvider.SelectedBankDetails(claim.Recipient) 
+                                @if (BankAccounts.Count() >= 2)
+                                {
+                                    <a @onclick="() => ChooseRecipient(null)"> [@StringProvider.Undo]</a>
+                                }
+                            </p>
                         }
                         <p style="margin-top: 10px" class="claim-item-description">@StringProvider.ItemReadyToPurchaseDescription</p>
-
-                        @if (!Item.GetPurchaseMethodByUser(UserId).Url.IsNullOrEmpty())
-                        {
-                            <LinkButton Url="@Item.GetPurchaseMethodByUser(UserId).Url">@StringProvider.GoToPurchasePage</LinkButton>
-                        }
-                        @if (!Item.GetPurchaseMethodByUser(UserId).Instructions.IsNullOrEmpty())
-                        {
-                            <p>@StringProvider.CustomPurchaseInstructions(Item.GetPurchaseMethodByUser(UserId).Instructions)</p>
-                        }
                         <div style="margin-bottom: 10px"></div>
                         <Button OnClick="MarkCompleted">@StringProvider.MarkAsCompleted</Button>
                     }
@@ -227,23 +260,33 @@
                 {
                     @foreach (var claim in Item.Claims)
                     {
+                        var editUrl = $"/registry/{Item.Id}/claims/{claim.UserId}/edit";
                         <Box>
                             <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a></p>
-                            <p><b>Purchase Method:</b> @(claim.PurchaseMethodId != null ? Item.GetPurchaseMethodByUser(claim.UserId).Name : "Not selected")</p>
-                            <p><b>Delivery Address:</b> @(claim.DeliveryAddress ?? "Not selected")</p>
+                            <p><b>Fulfillment Method:</b> @(claim.FulfillmentMethod != null ? claim.FulfillmentMethod?.GetEnumDescription() : "Not selected")</p>
+                            <p><b>Recipient:</b> @(claim.Recipient ?? "Not selected")</p>
                             <p><b>Claimed At:</b> @claim.ClaimedAt.ToString()</p>
                             <p><b>Completed At:</b> @(claim.CompletedAt?.ToString() ?? "Not completed")</p>
+                            <p><b>Received At:</b> @(claim.ReceivedAt?.ToString() ?? "Not received")</p>
                             <p><b>Quantity:</b> @claim.Quantity</p>
                             <p style="margin-bottom: 5px"><b>Notes:</b> @claim.Notes</p>
-                            @if (claim.IsCompleted)
-                            {
-                                <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
-                            }
-                            else
-                            {
-                                <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
-                                <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
-                            }
+                            <div class="buttons-container">
+                                @if (claim.IsReceived)
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsNotReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Received</Button>
+                                }
+                                else if (claim.IsCompleted)
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Received</Button>
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
+                                }
+                                else
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
+                                    <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
+                                }
+                                <LinkButton Url=@editUrl>Edit</LinkButton>
+                            </div>
                         </Box>
                     }
                 }
@@ -272,7 +315,7 @@
     private string? SelectedQuantity { get; set; } = "1";
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
-    public static string DeliveryAddressBringOnDay => "Bring it on the day";
+    private IEnumerable<string> BankAccounts => WeddingDetails.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name.LegalFull + ", " + p.BankDetails!);
 
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";
@@ -357,7 +400,7 @@
         StateHasChanged();
     }
     
-    private void ChoosePurchaseMethod(string? methodId)
+    private void ChooseFulfillmentMethod(FulfillmentMethod? fulfillmentMethod)
     {
         if (Item == null) return;
         if (UserId == null)
@@ -366,13 +409,33 @@
             StateHasChanged();
             return;
         }
-        RegistryService.ChoosePurchaseMethod(Item.Id, UserId, methodId);
+        RegistryService.ChooseFulfillmentMethod(Item.Id, UserId, fulfillmentMethod);
+        
+        // Autofill recipient if there is only one option.
+        if (fulfillmentMethod == FulfillmentMethod.DeliverToUs && DeliveryAddresses.Count() == 1)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, DeliveryAddresses.Single());
+        }
+        else if (fulfillmentMethod == FulfillmentMethod.TransferMoney && BankAccounts.Count() == 1)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, BankAccounts.Single());
+        }
+        
+        // If there aren't any options, fill something in so that it progresses. Providing recipients is recommended.
+        if (fulfillmentMethod == FulfillmentMethod.DeliverToUs && DeliveryAddresses.Count() == 0)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, "Please ask");
+        }
+        else if (fulfillmentMethod == FulfillmentMethod.TransferMoney && BankAccounts.Count() == 0)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, "Please ask");
+        }
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
     }
 
-    private void ChooseDeliveryAddress(string? address)
+    private void ChooseRecipient(string? recipient)
     {
         if (Item == null) return;
         if (UserId == null)
@@ -381,7 +444,7 @@
             StateHasChanged();
             return;
         }
-        RegistryService.ChooseDeliveryAddress(Item.Id, UserId, address);
+        RegistryService.ChooseRecipient(Item.Id, UserId, recipient);
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
@@ -399,18 +462,17 @@
         
         // Check that the purchase method is selected
         var claim = Item.GetClaimByUser(UserId);
-        if (claim.PurchaseMethodId == null)
+        if (claim.FulfillmentMethod == null)
         {
-            ErrorText = "Failed to mark as completed - please select a purchase method first.";
+            ErrorText = "Failed to mark as completed - please select a method to receive the gift first.";
             StateHasChanged();
             return;
         }
         
         // Check that the delivery address is selected if required
-        var method = Item.GetPurchaseMethodByUser(UserId);
-        if ((method.AllowDeliverToUs || method.AllowBringOnDay) && claim.DeliveryAddress == null)
+        if (claim.FulfillmentMethod is FulfillmentMethod.DeliverToUs or FulfillmentMethod.TransferMoney && claim.Recipient == null)
         {
-            ErrorText = "Failed to mark as completed - please select a delivery address first.";
+            ErrorText = "Failed to mark as completed - please select a recipient first.";
             StateHasChanged();
             return;
         }

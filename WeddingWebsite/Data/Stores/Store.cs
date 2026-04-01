@@ -254,6 +254,7 @@ public class Store : IStore
         command.ExecuteNonQuery();
     }
     
+    [Authorize]
     public string? GetUserIdByUserName(string username)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
@@ -274,6 +275,32 @@ public class Store : IStore
         {
             var userId = reader.GetString(0);
             return userId;
+        }
+        
+        return null;
+    }
+    
+    [Authorize]
+    public string? GetUserNameByUserId(string userId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT UserName
+                FROM AspNetUsers
+                WHERE Id = :userId
+            """;
+        
+        command.Parameters.AddWithValue(":userId", userId);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var userName = reader.GetString(0);
+            return userName;
         }
         
         return null;
