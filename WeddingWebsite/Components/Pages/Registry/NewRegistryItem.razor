@@ -26,16 +26,26 @@
     <div class="form-input-and-label">
         <label for="generic-name">Generic Name</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.GenericName" class="form-control" autocomplete="username" aria-required="true" placeholder="Toaster" id="generic-name" />
+        <InputText @bind-Value="Input.GenericName" class="form-control" aria-required="true" placeholder="Toaster" id="generic-name" />
     </div>
     <div class="form-input-and-label">
         <label for="name">Name</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="Bosch Toaster 3000" id="name" />
+        <InputText @bind-Value="Input.Name" class="form-control" aria-required="true" placeholder="Bosch Toaster 3000" id="name" />
     </div>
     <div class="form-input-and-label">
         <label for="description" class="mr">Description (optional)</label>
         <InputTextArea @bind-Value="Input.Description" class="form-control flex-grow" placeholder="Describe what it is and why you want it." id="description" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="store">Store</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.Store" class="form-control" aria-required="true" placeholder="John Lewis" id="store" />
+    </div>
+    <div class="form-input-and-label">
+        <label for="product-url">Product URL</label>
+        <span class="flex-grow"></span>
+        <InputText @bind-Value="Input.ProductUrl" class="form-control" aria-required="true" placeholder="https://johnlewis.com/toaster3000" id="product-url" />
     </div>
     <div class="form-input-and-label">
         <label for="image-url">Image URL</label>
@@ -44,17 +54,12 @@
         {
             <img width="30" height="30" src="@Input.ImageUrl" alt="Invalid image" style="object-fit: contain; margin-right: 20px;"/>
         }
-        <InputText @bind-Value="Input.ImageUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
+        <InputText @bind-Value="Input.ImageUrl" class="form-control" aria-required="true" placeholder="https://example.com/image.jpg" id="image-url" />
     </div>
     <div class="form-input-and-label">
-        <label for="store">Store</label>
+        <label for="quantity">Max Quantity</label>
         <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.Store" class="form-control" autocomplete="username" aria-required="true" placeholder="John Lewis" id="store" />
-    </div>
-    <div class="form-input-and-label">
-        <label for="product-url">Product URL</label>
-        <span class="flex-grow"></span>
-        <InputText @bind-Value="Input.ProductUrl" class="form-control" autocomplete="username" aria-required="true" placeholder="https://johnlewis.com/toaster3000" id="product-url" />
+        <InputNumber @bind-Value="Input.MaxQuantity" class="form-control" aria-required="true" placeholder="1" id="quantity" />
     </div>
     <div class="form-input-and-label">
         <label for="cost">Cost (excl. delivery)</label>
@@ -123,6 +128,7 @@
             listPrice,
             new List<RegistryItemPurchaseMethod> { primaryPurchaseMethod },
             [],
+            MaxQuantity: Input.MaxQuantity,
             AllowBringOnDay: Input.AllowBringOnDay,
             AllowDeliverToUs: Input.AllowDeliverToUs,
             AllowMoneyTransfer: Input.AllowMoneyTransfer
@@ -170,6 +176,11 @@
         [Range(0, 100.00)]
         [Display(Name = "Delivery Cost")]
         public decimal DeliveryCost { get; set; } = 0;
+        
+        [Required]
+        [Range(1, 1000)]
+        [Display(Name = "Max Quantity")]
+        public int MaxQuantity { get; set; } = 1;
         
         [Display(Name = "Allow Bring On Day")]
         public bool AllowBringOnDay { get; set; } = true;
