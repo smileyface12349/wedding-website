@@ -63,3 +63,4 @@ favicon.*
 app.db
 CustomConfig.cs
 CustomRsvpForm.cs
+CustomStrings.cs
