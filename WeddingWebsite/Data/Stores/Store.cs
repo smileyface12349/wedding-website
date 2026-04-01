@@ -254,7 +254,7 @@ public class Store : IStore
         command.ExecuteNonQuery();
     }
     
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public string? GetUserIdByUserName(string username)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
@@ -280,7 +280,7 @@ public class Store : IStore
         return null;
     }
     
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public string? GetUserNameByUserId(string userId)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
