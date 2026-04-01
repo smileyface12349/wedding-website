@@ -138,14 +138,21 @@
                         {
                             <p class="claim-item-description">@StringProvider.SelectedQuantity(claim.Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
                         }
-                        <p class="claim-item-description">@StringProvider.SelectFulfillmentMethodDescription</p>
-                        @foreach (var method in Item.GetAllowedFulfillmentMethods())
+                        @if (Item.GetAllowedFulfillmentMethods().Any())
                         {
-                            <a class="purchase-option" @onclick="() => ChooseFulfillmentMethod(method)">
-                                <Box>
-                                    <p class="purchase-option-name">@method.GetEnumDescription()</p>
-                                </Box>
-                            </a>
+                            <p class="claim-item-description">@StringProvider.SelectFulfillmentMethodDescription</p>
+                            @foreach (var method in Item.GetAllowedFulfillmentMethods())
+                            {
+                                <a class="purchase-option" @onclick="() => ChooseFulfillmentMethod(method)">
+                                    <Box>
+                                        <p class="purchase-option-name">@method.GetEnumDescription()</p>
+                                    </Box>
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <p class="claim-item-description">@StringProvider.NoFulfillmentMethodsDescription</p>
                         }
                     }
                     

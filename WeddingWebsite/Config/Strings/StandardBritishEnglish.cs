@@ -139,7 +139,7 @@ public class StandardBritishEnglish : IStringProvider
     public string ItemPurchased => "Item Purchased";
     public string ThankYouForGift => "Thank you so much for your gift!";
     public MarkupString QuantityPurchased(int quantity) => (MarkupString) $"Quantity purchased: <b>{quantity}</b>.";
-    public MarkupString FulfillmentMethod(FulfillmentMethod fulfillmentMethod) => (MarkupString) $"Receive method: <b>{fulfillmentMethod.GetEnumDescription()}</b>.";
+    public MarkupString FulfillmentMethod(FulfillmentMethod fulfillmentMethod) => (MarkupString) $"Gift method: <b>{fulfillmentMethod.GetEnumDescription()}</b>.";
     public MarkupString DeliveryAddress(string? address)  => (MarkupString) $"Delivery address: <b>{address}</b>.";
     public MarkupString BankDetails(string? bankDetails)  => (MarkupString) $"Bank details: <b>{bankDetails}</b>.";
     public string RegistryClaimedContact(string? contactMethod) => $"Since this is now completed, you can no longer make any changes. If something went wrong, please contact {contactMethod}.";
@@ -147,12 +147,13 @@ public class StandardBritishEnglish : IStringProvider
     public string NotesDescription => "If you'd like to leave a note, you can do so in the box below.";
     public string NotesPlaceholder => "Add a note visible to you and the website administrators (optional).";
     public string SaveNotes => "Save Notes";
-    public string SelectFulfillmentMethod => "Select Fulfillment Method";
+    public string SelectFulfillmentMethod => "Select Gift Method";
+    public string NoFulfillmentMethodsDescription => "There are no methods available for you to give this item to us. You can still claim it, but you may not be able to purchase it yet.";
     public MarkupString SelectedQuantity(int quantity) => (MarkupString) $"Selected quantity: <b>{quantity}</b>.";
     public string SelectFulfillmentMethodDescription => "Please choose how you would like to give this item to us.";
     public string SelectDeliveryAddress => "Select Delivery Address";
     public string SelectBankDetails => "Select Bank Details";
-    public MarkupString SelectedFulfillmentMethod(FulfillmentMethod? fulfillmentMethod) => (MarkupString) $"Selected receive method: <b>{fulfillmentMethod?.GetEnumDescription()}</b>.";
+    public MarkupString SelectedFulfillmentMethod(FulfillmentMethod? fulfillmentMethod) => (MarkupString) $"Selected gift method: <b>{fulfillmentMethod?.GetEnumDescription()}</b>.";
     public string SelectDeliveryAddressDescription => "Please choose which address you would like to send it to.";
     public string SelectBankDetailsDescription => "Please choose which bank account you would like to send the money to.";
     public string BringOnTheDay => "I'll bring it on the day";

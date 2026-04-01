@@ -149,6 +149,7 @@ public interface IStringProvider
     string NotesPlaceholder { get; }
     string SaveNotes { get; }
     string SelectFulfillmentMethod { get; }
+    string NoFulfillmentMethodsDescription { get; }
     MarkupString SelectedQuantity(int quantity);
     string SelectFulfillmentMethodDescription { get; }
     string SelectDeliveryAddress { get; }
