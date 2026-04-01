@@ -410,6 +410,16 @@
         {
             RegistryService.ChooseRecipient(Item.Id, UserId, BankAccounts.Single());
         }
+        
+        // If there aren't any options, fill something in so that it progresses. Providing recipients is recommended.
+        if (fulfillmentMethod == FulfillmentMethod.DeliverToUs && DeliveryAddresses.Count() == 0)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, "Please ask");
+        }
+        else if (fulfillmentMethod == FulfillmentMethod.TransferMoney && BankAccounts.Count() == 0)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, "Please ask");
+        }
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
