@@ -68,3 +68,8 @@ textarea {
 .quantity-selector {
     margin-bottom: 10px;
 }
+
+.buttons-container {
+    display: flex;
+    gap: 8px;
+}

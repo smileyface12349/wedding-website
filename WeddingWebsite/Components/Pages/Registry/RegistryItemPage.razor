@@ -250,6 +250,7 @@
                 {
                     @foreach (var claim in Item.Claims)
                     {
+                        var editUrl = $"/registry/{Item.Id}/claims/{claim.UserId}/edit";
                         <Box>
                             <p><b>User ID:</b> <a href="/admin/account/@claim.UserId">@claim.UserId</a></p>
                             <p><b>Fulfillment Method:</b> @(claim.FulfillmentMethod != null ? claim.FulfillmentMethod?.GetEnumDescription() : "Not selected")</p>
@@ -259,20 +260,23 @@
                             <p><b>Received At:</b> @(claim.ReceivedAt?.ToString() ?? "Not received")</p>
                             <p><b>Quantity:</b> @claim.Quantity</p>
                             <p style="margin-bottom: 5px"><b>Notes:</b> @claim.Notes</p>
-                            @if (claim.IsReceived)
-                            {
-                                <Button OnClick="() => { RegistryService.MarkClaimAsNotReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Received</Button>
-                            }
-                            else if (claim.IsCompleted)
-                            {
-                                <Button OnClick="() => { RegistryService.MarkClaimAsReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Received</Button>
-                                <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
-                            }
-                            else
-                            {
-                                <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
-                                <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
-                            }
+                            <div class="buttons-container">
+                                @if (claim.IsReceived)
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsNotReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Received</Button>
+                                }
+                                else if (claim.IsCompleted)
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsReceived(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Received</Button>
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsNotCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Unmark as Completed</Button>
+                                }
+                                else
+                                {
+                                    <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
+                                    <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
+                                }
+                                <LinkButton Url=@editUrl>Edit</LinkButton>
+                            </div>
                         </Box>
                     }
                 }
