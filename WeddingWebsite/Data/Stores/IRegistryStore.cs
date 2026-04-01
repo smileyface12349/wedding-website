@@ -76,4 +76,9 @@ public interface IRegistryStore
     /// Set notes for the claim. It's entirely up to the purchaser what they want to put here, if anything at all.
     /// </summary>
     void SetClaimNotes(string itemId, string userId, string? notes);
+    
+    /// <summary>
+    /// Update an existing claim. For admins only - user flow is done through more restrictive methods.
+    /// </summary>
+    void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? newFulfillmentMethod, string? newRecipient, int newQuantity, string? newNotes);
 }

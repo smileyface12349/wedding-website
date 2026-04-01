@@ -639,4 +639,35 @@ public class RegistryStore : IRegistryStore
             throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId}");
         }
     }
+    
+    [Authorize(Roles = "Admin")]
+    public void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? newFulfillmentMethod, string? newRecipient, int newQuantity, string? newNotes)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET ClaimedBy = :newUserId,
+                FulfillmentMethod = :newFulfillmentMethod,
+                Recipient = :newRecipient,
+                Notes = :newNotes,
+                Quantity = :newQuantity
+            WHERE ItemId = :itemId AND ClaimedBy = :oldUserId;
+        ";
+        updateCmd.Parameters.AddWithValue(":newUserId", newUserId);
+        updateCmd.Parameters.AddWithValue(":newFulfillmentMethod", newFulfillmentMethod?.ToDatabaseInteger() ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newRecipient", newRecipient ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newNotes", newNotes ?? (object)DBNull.Value);
+        updateCmd.Parameters.AddWithValue(":newQuantity", newQuantity);
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":oldUserId", oldUserId);
+
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)
+        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {oldUserId}");
+        }
+    }
 }
