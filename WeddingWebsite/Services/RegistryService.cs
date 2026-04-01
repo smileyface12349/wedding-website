@@ -40,4 +40,7 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     public void MarkClaimAsNotReceived(string itemId, string userId) => registryStore.MarkClaimAsNotReceived(itemId, userId);
     
     public void SetClaimNotes(string itemId, string userId, string? notes) => registryStore.SetClaimNotes(itemId, userId, notes);
+    
+    [Authorize(Roles = "Admin")]
+    public void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? fulfillmentMethod, string? recipient, int quantity, string? notes) => registryStore.UpdateClaim(itemId, oldUserId, newUserId, fulfillmentMethod, recipient, quantity, notes);
 }

@@ -19,4 +19,5 @@ public interface IRegistryService
     void MarkClaimAsReceived(string itemId, string userId);
     void MarkClaimAsNotReceived(string itemId, string userId);
     void SetClaimNotes(string itemId, string userId, string? notes);
+    void UpdateClaim(string itemId, string oldUserId, string newUserId, FulfillmentMethod? fulfillmentMethod, string? recipient, int quantity, string? notes);
 }
