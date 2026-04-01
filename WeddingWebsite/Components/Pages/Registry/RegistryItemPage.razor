@@ -203,11 +203,21 @@
                         <p>@StringProvider.SelectedFulfillmentMethod(claim.FulfillmentMethod) <a @onclick="() => {ChooseFulfillmentMethod(null);ChooseRecipient(null);}">[@StringProvider.Undo]</a></p>
                         @if (claim.FulfillmentMethod == FulfillmentMethod.DeliverToUs)
                         {
-                            <p>@StringProvider.SelectedDeliveryAddress(claim.Recipient) <a @onclick="() => ChooseRecipient(null)">[@StringProvider.Undo]</a></p>
+                            <p>@StringProvider.SelectedDeliveryAddress(claim.Recipient) 
+                                @if (DeliveryAddresses.Count() >= 2)
+                                {
+                                    <a @onclick="() => ChooseRecipient(null)"> [@StringProvider.Undo]</a>
+                                }
+                            </p>
                         } 
                         else if (claim.FulfillmentMethod == FulfillmentMethod.TransferMoney)
                         {
-                            <p>@StringProvider.SelectedBankDetails(claim.Recipient) <a @onclick="() => ChooseRecipient(null)">[@StringProvider.Undo]</a></p>
+                            <p>@StringProvider.SelectedBankDetails(claim.Recipient) 
+                                @if (BankAccounts.Count() >= 2)
+                                {
+                                    <a @onclick="() => ChooseRecipient(null)"> [@StringProvider.Undo]</a>
+                                }
+                            </p>
                         }
                         <p style="margin-top: 10px" class="claim-item-description">@StringProvider.ItemReadyToPurchaseDescription</p>
                         <div style="margin-bottom: 10px"></div>
