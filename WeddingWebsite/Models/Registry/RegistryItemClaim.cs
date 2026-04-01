@@ -3,10 +3,11 @@
 public record RegistryItemClaim(
     string ItemId,
     string UserId,
-    string? PurchaseMethodId,
-    string? DeliveryAddress,
+    FulfillmentMethod? FulfillmentMethod,
+    string? Recipient,
     DateTime ClaimedAt,
     DateTime? CompletedAt,
+    DateTime? ReceivedAt,
     int Quantity,
     string? Notes
 )
