@@ -288,7 +288,7 @@
     private string? SelectedQuantity { get; set; } = "1";
     
     private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
-    private IEnumerable<string> BankAccounts => WeddingDetails.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name + ", " + p.BankDetails!);
+    private IEnumerable<string> BankAccounts => WeddingDetails.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name.LegalFull + ", " + p.BankDetails!);
 
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";
