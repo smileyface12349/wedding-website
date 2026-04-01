@@ -41,6 +41,26 @@
         <InputText id="image-url" class="form-control" @bind-Value="Model.ImageUrl" />
     </div>
     <div class="form-input-and-label">
+        <label for="cost" class="form-label">List Price</label>
+        <span class="flex-grow"></span>
+        <InputNumber id="cost" class="form-control" @bind-Value="Model.Cost" />
+    </div>
+    <div class="form-input-and-label">
+        <label class="form-label">Allow Bring On Day</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox class="form-check-input" @bind-Value="Model.AllowBringOnDay" />
+    </div>
+    <div class="form-input-and-label">
+        <label class="form-label">Allow Deliver To Us</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox class="form-check-input" @bind-Value="Model.AllowDeliverToUs" />
+    </div>
+    <div class="form-input-and-label">
+        <label class="form-label">Allow Money Transfer</label>
+        <span class="flex-grow"></span>
+        <InputCheckbox class="form-check-input" @bind-Value="Model.AllowMoneyTransfer" />
+    </div>
+    <div class="form-input-and-label">
         <label for="quantity" class="form-label">Max Quantity</label>
         <span class="flex-grow"></span>
         <InputNumber id="quantity" class="form-control" @bind-Value="Model.Quantity" />
@@ -77,26 +97,11 @@
             <div class="form-input-and-label">
                 <label class="form-label">Delivery Cost</label>
                 <span class="flex-grow"></span>
-                <InputNumber class="form-control" @bind-Value="method.Shipping" />
-            </div>
-            <div class="form-input-and-label">
-                <label class="form-label">Allow Bring On Day</label>
-                <span class="flex-grow"></span>
-                <InputCheckbox class="form-check-input" @bind-Value="method.AllowBringOnDay" />
-            </div>
-            <div class="form-input-and-label">
-                <label class="form-label">Allow Deliver To Us</label>
-                <span class="flex-grow"></span>
-                <InputCheckbox class="form-check-input" @bind-Value="method.AllowDeliverToUs" />
-            </div>
-            <div class="form-input-and-label">
-                <label class="form-label mr">Instructions</label>
-                <InputTextArea class="form-control flex-grow" @bind-Value="method.Instructions" placeholder="Optional extra instructions to show when purchasing" />
+                <InputNumber class="form-control" @bind-Value="method.DeliveryCost" />
             </div>
             @if (Model.PurchaseMethods.Count > 1)
             {
-                <p>Warning: Check that nobody has already selected this purchase method before deleting it.</p>
-                <button type="button" class="red-button block-button" @onclick="() => Model.PurchaseMethods.Remove(method)">Remove Method</button>
+                <button type="button" class="red-button block-button button" @onclick="() => Model.PurchaseMethods.Remove(method)">Remove Method</button>
             }
         </Box>
     }
@@ -152,16 +157,17 @@
             Quantity = Item.MaxQuantity,
             Priority = Item.Priority,
             Hide = Item.Hide,
+            AllowBringOnDay = Item.AllowBringOnDay,
+            AllowDeliverToUs = Item.AllowDeliverToUs,
+            AllowMoneyTransfer = Item.AllowMoneyTransfer,
+            Cost = Item.Cost,
             PurchaseMethods = Item.PurchaseMethods.Select(pm => new EditRegistryItemModel.PurchaseMethodModel
             {
                 Id = pm.Id,
                 Name = pm.Name,
                 Url = pm.Url ?? "",
                 Cost = pm.Cost,
-                Shipping = pm.DeliveryCost,
-                AllowBringOnDay = pm.AllowBringOnDay,
-                AllowDeliverToUs = pm.AllowDeliverToUs,
-                Instructions = pm.Instructions ?? ""
+                DeliveryCost = pm.DeliveryCost,
             }).ToList()
         };
     }
@@ -184,15 +190,16 @@
             MaxQuantity = Model.Quantity,
             Priority = Model.Priority,
             Hide = Model.Hide,
+            AllowBringOnDay = Model.AllowBringOnDay,
+            AllowDeliverToUs = Model.AllowDeliverToUs,
+            AllowMoneyTransfer = Model.AllowMoneyTransfer,
+            Cost = Model.Cost,
             PurchaseMethods = Model.PurchaseMethods.Select(pm => new RegistryItemPurchaseMethod(
                 Id: pm.Id,
                 Name: pm.Name,
                 Url: pm.Url == "" ? null : pm.Url,
                 Cost: pm.Cost ?? 0,
-                DeliveryCost: pm.Shipping,
-                AllowBringOnDay: pm.AllowBringOnDay,
-                AllowDeliverToUs: pm.AllowDeliverToUs,
-                Instructions: pm.Instructions == "" ? null : pm.Instructions
+                DeliveryCost: pm.DeliveryCost
             )).ToList()
         };
 
@@ -232,6 +239,10 @@
         public string ImageUrl { get; set; } = "";
         
         [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Cost must be positive")]
+        public decimal Cost { get; set; }
+        
+        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
         public int Quantity { get; set; } = 1;
         
@@ -239,6 +250,12 @@
         public int Priority { get; set; }
 
         public bool Hide { get; set; }
+        
+        public bool AllowBringOnDay { get; set; } = true;
+        
+        public bool AllowDeliverToUs { get; set; } = true;
+        
+        public bool AllowMoneyTransfer { get; set; } = true;
 
         public List<PurchaseMethodModel> PurchaseMethods { get; set; } = new();
 
@@ -259,16 +276,7 @@
 
             [Required]
             [Range(0, double.MaxValue, ErrorMessage = "Delivery cost cannot be negative")]
-            public decimal Shipping { get; set; } = 0;
-            
-            public string? Notes { get; set; }
-            
-            public bool AllowBringOnDay { get; set; } = true;
-            
-            public bool AllowDeliverToUs { get; set; } = true;
-            
-            public string Instructions { get; set; } = "";
-            
+            public decimal DeliveryCost { get; set; } = 0;
         }
     }
 }
