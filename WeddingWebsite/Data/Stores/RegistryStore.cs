@@ -495,7 +495,7 @@ public class RegistryStore : IRegistryStore
         var updateCmd = connection.CreateCommand();
         updateCmd.CommandText = @"
             UPDATE RegistryItemClaims
-            SET FulfillmentMethod = :fulfillmentMethod
+            SET FulfillmentMethod = :fulfillmentMethod, Recipient = NULL
             WHERE ItemId = :itemId AND ClaimedBy = :claimedBy;
         ";
         updateCmd.Parameters.AddWithValue(":fulfillmentMethod", fulfillmentMethod?.ToDatabaseInteger() ?? (object)DBNull.Value);
