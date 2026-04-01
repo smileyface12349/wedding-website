@@ -400,6 +400,16 @@
             return;
         }
         RegistryService.ChooseFulfillmentMethod(Item.Id, UserId, fulfillmentMethod);
+        
+        // Autofill recipient if there is only one option.
+        if (fulfillmentMethod == FulfillmentMethod.DeliverToUs && DeliveryAddresses.Count() == 1)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, DeliveryAddresses.Single());
+        }
+        else if (fulfillmentMethod == FulfillmentMethod.TransferMoney && BankAccounts.Count() == 1)
+        {
+            RegistryService.ChooseRecipient(Item.Id, UserId, BankAccounts.Single());
+        }
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
