@@ -12,10 +12,9 @@ public interface IRegistryService
     Task<IEnumerable<RegistryItem>> GetAllRegistryItems(bool includeHidden = false);
     bool ClaimRegistryItem(string itemId, string userId, int quantity = 1);
     bool UnclaimRegistryItem(string itemId, string userId);
-    void ChoosePurchaseMethod(string itemId, string userId, string? purchaseMethodId);
-    void ChooseDeliveryAddress(string itemId, string userId, string? address);
+    void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod);
+    void ChooseRecipient(string itemId, string userId, string? recipient);
     void MarkClaimAsCompleted(string itemId, string userId);
     void MarkClaimAsNotCompleted(string itemId, string userId);
     void SetClaimNotes(string itemId, string userId, string? notes);
-    void UpdateMoneyTransferInstructions(string instructions);
 }
