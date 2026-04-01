@@ -43,16 +43,14 @@ public interface IRegistryStore
     bool UnclaimRegistryItem(string itemId, string userId);
     
     /// <summary>
-    /// Choose a purchase method for this claim. Throws if no such claim exists. This is a prerequisite for marking
-    /// the claim as completed.
+    /// Choose a fulfillment method (i.e. bring on day, deliver to us, or money transfer)
     /// </summary>
-    void ChoosePurchaseMethod(string itemId, string userId, string? purchaseMethodId);
+    void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod);
     
     /// <summary>
-    /// Choose a delivery address. This is required if the purchase method allows bringing to venue or delivery to us.
-    /// If the purchase method does not allow either, this doesn't need to be called before marking as completed.
+    /// Choose a recipient. Used for delivery address or bank details.
     /// </summary>
-    void ChooseDeliveryAddress(string itemId, string userId, string? address);
+    void ChooseRecipient(string itemId, string userId, string? recipient);
     
     /// <summary>
     /// Marks the claim as completed. Completed claims cannot be deleted. Only admins can 'uncomplete' claims.
@@ -68,9 +66,4 @@ public interface IRegistryStore
     /// Set notes for the claim. It's entirely up to the purchaser what they want to put here, if anything at all.
     /// </summary>
     void SetClaimNotes(string itemId, string userId, string? notes);
-
-    /// <summary>
-    /// Update the instructions for every "money transfer" option. A quick utility to save some time.
-    /// </summary>
-    void UpdateMoneyTransferInstructions(string newInstructions);
 }
