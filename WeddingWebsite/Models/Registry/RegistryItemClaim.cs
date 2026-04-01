@@ -13,4 +13,5 @@ public record RegistryItemClaim(
 )
 {
     public bool IsCompleted => CompletedAt != null;
+    public bool IsReceived => ReceivedAt != null;
 }
