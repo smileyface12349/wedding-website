@@ -63,6 +63,16 @@ public interface IRegistryStore
     void MarkClaimAsNotCompleted(string itemId, string userId);
     
     /// <summary>
+    /// Marks it as received, which is visible to admins only and can only be done by admins.
+    /// </summary>
+    void MarkClaimAsReceived(string itemId, string userId);
+    
+    /// <summary>
+    /// Undo marking it as received, because everyone can make mistakes, even admins.
+    /// </summary>
+    void MarkClaimAsNotReceived(string itemId, string userId);
+    
+    /// <summary>
     /// Set notes for the claim. It's entirely up to the purchaser what they want to put here, if anything at all.
     /// </summary>
     void SetClaimNotes(string itemId, string userId, string? notes);

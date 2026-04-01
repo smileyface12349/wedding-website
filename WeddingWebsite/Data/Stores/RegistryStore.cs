@@ -574,6 +574,50 @@ public class RegistryStore : IRegistryStore
         }
     }
 
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsReceived(string itemId, string userId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET ReceivedAt = :receivedAt
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NULL;
+        ";
+        updateCmd.Parameters.AddWithValue(":receivedAt", DateTime.UtcNow.Ticks);
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":claimedBy", userId);
+        
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId} that is not already marked as received");
+        }
+    }
+
+    [Authorize(Roles = "Admin")]
+    public void MarkClaimAsNotReceived(string itemId, string userId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE RegistryItemClaims
+            SET ReceivedAt = NULL
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NOT NULL;
+        ";
+        updateCmd.Parameters.AddWithValue(":itemId", itemId);
+        updateCmd.Parameters.AddWithValue(":claimedBy", userId);
+        
+        var rowsAffected = updateCmd.ExecuteNonQuery();
+        if (rowsAffected == 0)
+        {
+            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId} that is currently marked as received");
+        }
+    }
+
     public void SetClaimNotes(string itemId, string userId, string? notes)
     {
         using var connection = new SqliteConnection(ConnectionString);
