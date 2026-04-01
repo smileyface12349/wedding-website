@@ -32,4 +32,13 @@ public record RegistryItem(
     {
         return Claims.Single(c => c.UserId == userId);
     }
+
+    public IEnumerable<FulfillmentMethod> GetAllowedFulfillmentMethods()
+    {
+        var methods = new List<FulfillmentMethod>();
+        if (AllowBringOnDay) methods.Add(FulfillmentMethod.BringOnDay);
+        if (AllowDeliverToUs) methods.Add(FulfillmentMethod.DeliverToUs);
+        if (AllowMoneyTransfer) methods.Add(FulfillmentMethod.TransferMoney);
+        return methods;
+    }
 }

@@ -139,7 +139,7 @@
                             <p class="claim-item-description">@StringProvider.SelectedQuantity(claim.Quantity) <a @onclick="RemoveClaim">[@StringProvider.Undo]</a></p>
                         }
                         <p class="claim-item-description">@StringProvider.SelectFulfillmentMethodDescription</p>
-                        @foreach (var method in new List<FulfillmentMethod> {FulfillmentMethod.BringOnDay, FulfillmentMethod.DeliverToUs, FulfillmentMethod.TransferMoney})
+                        @foreach (var method in Item.GetAllowedFulfillmentMethods())
                         {
                             <a class="purchase-option" @onclick="() => ChooseFulfillmentMethod(method)">
                                 <Box>
