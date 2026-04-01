@@ -2,6 +2,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
 @using RegistryItem = WeddingWebsite.Models.Registry.RegistryItem
@@ -96,9 +97,9 @@
                 case SortOrder.Default:
                     return -item.Priority;
                 case SortOrder.PriceLowToHigh:
-                    return item.CheapestCost;
+                    return item.Cost;
                 case SortOrder.PriceHighToLow:
-                    return -item.CheapestCost;
+                    return -item.Cost;
                 default:
                     return 0;
             }
@@ -158,20 +159,20 @@
         {
             return false;
         }
-        if (EnabledFilters.Contains("Can bring on day") && item.PurchaseMethods.All(pm => !pm.AllowBringOnDay))
+        if (EnabledFilters.Contains("Can bring on day") && !item.AllowBringOnDay)
         {
             return false;
         }
-        if (EnabledFilters.Contains("Can transfer money") && item.PurchaseMethods.All(pm => pm.AllowBringOnDay || pm.AllowDeliverToUs))
+        if (EnabledFilters.Contains("Can transfer money") && !item.AllowMoneyTransfer)
         {
             return false;
         }
         // Admin exclusive filters
-        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.DeliveryAddress != RegistryItemPage.DeliveryAddressBringOnDay))
+        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.BringOnDay))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.DeliveryAddress == RegistryItemPage.DeliveryAddressBringOnDay))
+        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.DeliverToUs))
         {
             return false;
         }
