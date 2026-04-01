@@ -313,9 +313,9 @@ public class RegistryStore : IRegistryStore
                 reader.GetString(1),
                 reader.IsDBNull(2) ? null : FulfillmentMethodEnumConverter.DatabaseIntegerToFulfillmentMethod(reader.GetInt32(2)),
                 reader.IsDBNull(3) ? null : reader.GetString(3),
-                new DateTime(reader.GetInt64(4)),
-                reader.IsDBNull(5) ? null : new DateTime(reader.GetInt64(5)),
-                reader.IsDBNull(6) ? null : new DateTime(reader.GetInt64(6)),
+                new DateTime(reader.GetInt64(4), DateTimeKind.Utc),
+                reader.IsDBNull(5) ? null : new DateTime(reader.GetInt64(5), DateTimeKind.Utc),
+                reader.IsDBNull(6) ? null : new DateTime(reader.GetInt64(6), DateTimeKind.Utc),
                 reader.GetInt32(7),
                 reader.IsDBNull(8) ? null : reader.GetString(8)
             );
