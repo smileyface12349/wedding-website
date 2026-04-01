@@ -29,7 +29,7 @@ namespace WeddingWebsite.Migrations
                     WHEN DeliveryAddress = 'Bring it on the day' THEN 0
                     WHEN DeliveryAddress IS NULL THEN 2
                     ELSE 1
-                END"
+                END;"
             );
             
             // RegistryItemClaims: Rename DeliveryAddress to Recipient.
@@ -77,12 +77,12 @@ namespace WeddingWebsite.Migrations
             );
             migrationBuilder.Sql(
                 @"INSERT INTO NewRegistryItemClaims (ItemId, FulfillmentMethod, ClaimedBy, Recipient, ClaimedAt, CompletedAt, Quantity, Notes)
-                SELECT ItemId, FulfillmentMethod, ClaimedBy, Recipient, ClaimedAt, CompletedAt, Quantity, Notes FROM RegistryItemClaims"
+                SELECT ItemId, FulfillmentMethod, ClaimedBy, Recipient, ClaimedAt, CompletedAt, Quantity, Notes FROM RegistryItemClaims;"
             );
             migrationBuilder.Sql(
                 @"UPDATE NewRegistryItemClaims
                 SET Recipient = NULL
-                WHERE FulfillmentMethod = 0"
+                WHERE FulfillmentMethod = 0;"
             );
             migrationBuilder.DropTable(
                 name: "RegistryItemClaims"
@@ -128,13 +128,13 @@ namespace WeddingWebsite.Migrations
                 SET Cost = (SELECT MIN(Cost + DeliveryCost) FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = RegistryItems.Id),
                     AllowDeliverToUs = (SELECT MAX(AllowDeliverToUs) FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = RegistryItems.Id),
                     AllowBringOnDay = (SELECT MAX(AllowBringOnDay) FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = RegistryItems.Id),
-                    AllowMoneyTransfer = (SELECT MAX(CASE WHEN AllowDeliverToUs = 0 AND AllowBringOnDay = 0 THEN 1 ELSE 0 END) FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = RegistryItems.Id)"
+                    AllowMoneyTransfer = (SELECT MAX(CASE WHEN AllowDeliverToUs = 0 AND AllowBringOnDay = 0 THEN 1 ELSE 0 END) FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = RegistryItems.Id);"
             );
             
             // Remove "money transfer" purchase methods - these are built-in now.
             migrationBuilder.Sql(
                 @"DELETE FROM RegistryItemPurchaseMethods
-                WHERE AllowBringOnDay = 0 AND AllowDeliverToUs = 0 AND Url IS NULL AND Name = 'Money Transfer'"
+                WHERE AllowBringOnDay = 0 AND AllowDeliverToUs = 0 AND Url IS NULL AND Name = 'Money Transfer';"
             );
             
             // RegistryItemPurchaseMethods: Remove columns AllowDeliverToUs, AllowBringOnDay, Instructions.
@@ -165,7 +165,7 @@ namespace WeddingWebsite.Migrations
             migrationBuilder.Sql(
                 @"INSERT INTO NewRegistryItemPurchaseMethods (Id, ItemId, Name, Url, Cost, DeliveryCost)
                 SELECT Id, ItemId, Name, Url, Cost, DeliveryCost
-                FROM RegistryItemPurchaseMethods"
+                FROM RegistryItemPurchaseMethods;"
             );
             
             migrationBuilder.DropTable(
@@ -203,7 +203,7 @@ namespace WeddingWebsite.Migrations
                 });
             migrationBuilder.Sql(
                 @"INSERT INTO OldRegistryItems (Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide)
-                SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide FROM RegistryItems"
+                SELECT Id, GenericName, Name, Description, ImageUrl, MaxQuantity, Priority, Hide FROM RegistryItems;"
             );
             
             // ----------------------------
@@ -248,14 +248,14 @@ namespace WeddingWebsite.Migrations
                       0, -- will recover later
                       0, -- will recover later
                       NULL
-                  FROM RegistryItemPurchaseMethods"
+                  FROM RegistryItemPurchaseMethods;"
             );
             
             // Recover AllowDeliverToUs and AllowBringOnDay using the settings for the item as a whole.
             migrationBuilder.Sql(
                 @"UPDATE OldRegistryItemPurchaseMethods
                 SET AllowDeliverToUs = (SELECT MAX(AllowDeliverToUs) FROM RegistryItems WHERE RegistryItems.Id = OldRegistryItemPurchaseMethods.ItemId),
-                    AllowBringOnDay = (SELECT MAX(AllowBringOnDay) FROM RegistryItems WHERE RegistryItems.Id = OldRegistryItemPurchaseMethods.ItemId)"
+                    AllowBringOnDay = (SELECT MAX(AllowBringOnDay) FROM RegistryItems WHERE RegistryItems.Id = OldRegistryItemPurchaseMethods.ItemId);"
             );
 
             migrationBuilder.DropTable(name: "RegistryItemPurchaseMethods");
@@ -279,7 +279,7 @@ namespace WeddingWebsite.Migrations
                       0,
                       NULL
                   FROM RegistryItems
-                  WHERE AllowMoneyTransfer = 1"
+                  WHERE AllowMoneyTransfer = 1;"
             );
 
             // ----------------------------
@@ -334,21 +334,21 @@ namespace WeddingWebsite.Migrations
                       CompletedAt,
                       Quantity,
                       Notes
-                  FROM RegistryItemClaims"
+                  FROM RegistryItemClaims;"
             );
             
             // If FulfillmentMethod is money transfer, set the purchase method to the id of the newly added money transfer purchase method
             migrationBuilder.Sql(
                 @"UPDATE OldRegistryItemClaims
                 SET PurchaseMethod = (SELECT Id FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = OldRegistryItemClaims.ItemId AND Name = 'Money Transfer' LIMIT 1)
-                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) = 2"
+                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) = 2;"
             );
             
             // If FulfillmentMethod is deliver to us or bring on day, set the purchase method to the id of the first non-money transfer purchase method for the item
             migrationBuilder.Sql(
                 @"UPDATE OldRegistryItemClaims
                 SET PurchaseMethod = (SELECT Id FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = OldRegistryItemClaims.ItemId AND Name != 'Money Transfer' LIMIT 1)
-                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) IN (0, 1)"
+                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) IN (0, 1);"
             );
             
             migrationBuilder.DropTable(name: "RegistryItemClaims");
