@@ -122,7 +122,10 @@
             Input.ImageUrl == "" ? null : Input.ImageUrl,
             listPrice,
             new List<RegistryItemPurchaseMethod> { primaryPurchaseMethod },
-            []
+            [],
+            AllowBringOnDay: Input.AllowBringOnDay,
+            AllowDeliverToUs: Input.AllowDeliverToUs,
+            AllowMoneyTransfer: Input.AllowMoneyTransfer
         );
         
         RegistryService.AddItem(newItem);
