@@ -16,5 +16,7 @@ public interface IRegistryService
     void ChooseRecipient(string itemId, string userId, string? recipient);
     void MarkClaimAsCompleted(string itemId, string userId);
     void MarkClaimAsNotCompleted(string itemId, string userId);
+    void MarkClaimAsReceived(string itemId, string userId);
+    void MarkClaimAsNotReceived(string itemId, string userId);
     void SetClaimNotes(string itemId, string userId, string? notes);
 }
