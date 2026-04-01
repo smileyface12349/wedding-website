@@ -341,14 +341,14 @@ namespace WeddingWebsite.Migrations
             migrationBuilder.Sql(
                 @"UPDATE OldRegistryItemClaims
                 SET PurchaseMethod = (SELECT Id FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = OldRegistryItemClaims.ItemId AND Name = 'Money Transfer' LIMIT 1)
-                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId) = 2"
+                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) = 2"
             );
             
             // If FulfillmentMethod is deliver to us or bring on day, set the purchase method to the id of the first non-money transfer purchase method for the item
             migrationBuilder.Sql(
                 @"UPDATE OldRegistryItemClaims
                 SET PurchaseMethod = (SELECT Id FROM RegistryItemPurchaseMethods WHERE RegistryItemPurchaseMethods.ItemId = OldRegistryItemClaims.ItemId AND Name != 'Money Transfer' LIMIT 1)
-                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId) IN (0, 1)"
+                WHERE (SELECT FulfillmentMethod FROM RegistryItemClaims WHERE OldRegistryItemClaims.ItemId = RegistryItemClaims.ItemId AND OldRegistryItemClaims.ClaimedBy = RegistryItemClaims.ClaimedBy) IN (0, 1)"
             );
             
             migrationBuilder.DropTable(name: "RegistryItemClaims");
