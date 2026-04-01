@@ -584,7 +584,7 @@ public class RegistryStore : IRegistryStore
         updateCmd.CommandText = @"
             UPDATE RegistryItemClaims
             SET ReceivedAt = :receivedAt
-            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NULL;
+            WHERE ItemId = :itemId AND ClaimedBy = :claimedBy AND ReceivedAt IS NULL AND CompletedAt IS NOT NULL;
         ";
         updateCmd.Parameters.AddWithValue(":receivedAt", DateTime.UtcNow.Ticks);
         updateCmd.Parameters.AddWithValue(":itemId", itemId);
@@ -592,7 +592,7 @@ public class RegistryStore : IRegistryStore
         
         var rowsAffected = updateCmd.ExecuteNonQuery();
         if (rowsAffected == 0)        {
-            throw new InvalidOperationException($"No claim found for item ID {itemId} by user {userId} that is not already marked as received");
+            throw new InvalidOperationException($"No completed claim found for item ID {itemId} by user {userId} that is not already marked as received");
         }
     }
 
