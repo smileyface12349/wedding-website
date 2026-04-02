@@ -522,7 +522,13 @@
     private void AdminUnclaim(RegistryItemClaim claim)
     {
         if (Item == null) return;
-        RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId);
+        var result = RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId);
+        if (!result)
+        {
+            ErrorText = "Sorry, we were unable to remove this claim. Please try again later.";
+            StateHasChanged();
+            return;
+        }
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
         
