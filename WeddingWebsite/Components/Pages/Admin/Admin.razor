@@ -10,18 +10,14 @@
 
 <h1>Admin Page</h1>
 
-<p>Welcome to the admin page. This page is not accessible to non-admin users.</p>
+<div class="links-container">
+    <p>Links:</p>
+    <a href="/account/register" role="button" class="button">Add New Account</a>
+    <a href="/todo" role="button" class="button">Go to To-Do List</a>
+</div>
 
-<h2>Register a new user</h2>
-<p>Only admins can create new accounts.</p>
-<a href="/account/register" role="button" class="button">Register</a>
-
-<h2>To-Do List</h2>
-<p>Keep track of what needs doing without leaving the website, and get reminded about unfinished tasks on the homepage.</p>
-<a href="/todo" role="button" class="button">Go to To-Do List</a>
-
-<h2>Manage user accounts</h2>
-<p>These are all the accounts registered on the website. Click on an account to view more information or update details.</p>
+<h2>User Accounts</h2>
+<p>In this section you can view all of the accounts and update details.</p>
 <AccountList/>
 
 <a class="button grey-button" href="/">Back to Home</a>
