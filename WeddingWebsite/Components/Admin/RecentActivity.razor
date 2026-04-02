@@ -1,0 +1,81 @@
+@using WeddingWebsite.Core
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Services
+
+@inject IAdminService AdminService
+@inject NavigationManager NavigationManager
+
+<MudTable T="AccountLog" Class="mb" RowStyle="cursor: pointer" Items="@Logs" Filter="new Func<AccountLog, bool>(TypeFilter)" Hover="true" OnRowClick="RowClicked" RowsPerPage="5">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Recent Activity</MudText>
+        <MudSpacer />
+        <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="Filter by Type">
+            @foreach (var filter in AllFilters)
+            {
+                <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+            }
+        </MudSelect>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Date)">When</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.AffectedUser.UserName)">Affected User</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<AccountLog, object?>(x => x.Description)">Description</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="When">@((DateTime.UtcNow - context.Date).FormatShortDuration()) ago</MudTd>
+        <MudTd DataLabel="Affected User">@context.AffectedUser.UserName</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+</MudTable>
+
+@code {
+    private IEnumerable<AccountLog> Logs { get; set; } = [];
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in" };
+    private string EnabledFiltersString { get; set; } = "";
+    private readonly string[] AllFilters =
+    [
+        "Log in",
+        "Account details",
+        "RSVP",
+        "Registry"
+    ];
+    
+    private void RowClicked(TableRowClickEventArgs<AccountLog> args)
+    {
+        if (args.Item == null)
+        {
+            return;
+        }
+        var accountId = args.Item.AffectedUser.Id;
+        NavigationManager.NavigateTo($"/admin/account/{accountId}");
+    }
+
+    protected override void OnInitialized()
+    {
+        Logs = AdminService.GetAllAccountLogs();
+    }
+    
+    private bool TypeFilter(AccountLog log)
+    {
+        var loginTypes = new List<AccountLogType> { AccountLogType.LogIn };
+        var accountDetailsTypes = new List<AccountLogType> { AccountLogType.ChangePassword, AccountLogType.ChangeUserName, AccountLogType.ChangeEmail, AccountLogType.ChangePermissions, AccountLogType.DeleteGuest, AccountLogType.AddGuest, AccountLogType.RenameGuest };
+        var rsvpTypes = new List<AccountLogType> { AccountLogType.SubmitRsvp, AccountLogType.DeleteRsvp, AccountLogType.EditRsvp };
+        var registryTypes = new List<AccountLogType> { AccountLogType.ClaimRegistryItem, AccountLogType.UnclaimRegistryItem, AccountLogType.CompleteRegistryItem };
+        
+        if (!EnabledFilters.Contains("Log in") && loginTypes.Contains(log.LogType))
+            return false;
+        if (!EnabledFilters.Contains("Account details") && accountDetailsTypes.Contains(log.LogType))
+            return false;
+        if (!EnabledFilters.Contains("RSVP") && rsvpTypes.Contains(log.LogType))
+            return false;
+        if (!EnabledFilters.Contains("Registry") && registryTypes.Contains(log.LogType))
+            return false;
+        
+        return true;
+    }
+
+}
