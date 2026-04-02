@@ -1,6 +1,7 @@
 ﻿.links-container {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     margin-bottom: 10px;
