@@ -1,6 +1,7 @@
 ﻿@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 
-<span class="container @CssShadow" style="background-color: @Background">
+<span class="container @CssShadow" style="background-color: @Background;color: @TextColour">
     <span class="value" id="value-@Label">@Value</span>
     <span class="label">@(Value == 1 ? Label : Plural)</span>
 </span>
@@ -25,6 +26,7 @@
     public SectionTheme? Theme { get; set; }
     
     private string Background => Theme?.BoxStyle?.InnerTheme.Background.ToString() ?? "var(--primary)";
+    private string TextColour => Theme?.BoxStyle?.InnerTheme.Background.GetTextColour().ToString() ?? Colour.DarkGrey.ToString();
     private string CssShadow => Theme is { BoxStyle.InnerTheme.Background.IsDark: false } ? "box-shadow" : "";
 
     protected override void OnInitialized() {
