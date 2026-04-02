@@ -323,11 +323,11 @@
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";
 
-    protected override void OnInitialized() 
+    protected override async Task OnInitializedAsync()
     {
         Item = RegistryService.GetRegistryItemById(ItemId);
         
-        var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         LoggedInUser = authState.User;
         if (LoggedInUser.Identity is { IsAuthenticated: true })
         {
