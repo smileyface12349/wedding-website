@@ -60,4 +60,9 @@ public interface IStore
     /// Get all logs affecting a particular account, regardless of who performed the action.
     /// </summary>
     public IEnumerable<AccountLog> GetAccountLogs(string userId);
+    
+    /// <summary>
+    /// Get all account logs (most recent first).
+    /// </summary>
+    public IEnumerable<AccountLog> GetAllAccountLogs(int limit = 100);
 }
