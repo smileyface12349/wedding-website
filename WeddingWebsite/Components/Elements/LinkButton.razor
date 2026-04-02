@@ -32,7 +32,7 @@
     [Parameter]
     public ButtonVariant Variant { get; set; } = ButtonVariant.Filled;
 
-    private string Css => Variant == ButtonVariant.Filled ? "background: " + Colour : $"border-color: {Colour}; color: {Colour}";
+    private string Css => Variant == ButtonVariant.Filled ? $"background: {Colour};color: {Colour.GetTextColour()}" : $"border-color: {Colour}; color: {Colour}";
     private string VariantClass => Variant == ButtonVariant.Filled ? "filled" : $"outlined background-{Colour.GetHex().Substring(1)}";
     
     [CascadingParameter]
