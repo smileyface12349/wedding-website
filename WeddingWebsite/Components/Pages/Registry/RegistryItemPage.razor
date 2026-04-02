@@ -6,6 +6,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
@@ -15,6 +16,7 @@
 @inject IRegistryService RegistryService
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
+@inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
 
@@ -282,8 +284,8 @@
                                 }
                                 else
                                 {
-                                    <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
-                                    <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
+                                    <Button OnClick="() => { AdminMarkAsCompleted(claim); }">Mark as Completed</Button>
+                                    <Button OnClick="() => { AdminUnclaim(claim); }">Remove Claim (cannot be undone)</Button>
                                 }
                                 <LinkButton Url=@editUrl>Edit</LinkButton>
                             </div>
@@ -309,6 +311,7 @@
     
     private RegistryItem? Item { get; set; }
     private string? UserId { get; set; }
+    private ClaimsPrincipal? LoggedInUser { get; set; }
     
     private string ErrorText { get; set; } = "";
     private string Notes { get; set; } = "";
@@ -320,15 +323,15 @@
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";
 
-    protected override void OnInitialized() 
+    protected override async Task OnInitializedAsync()
     {
         Item = RegistryService.GetRegistryItemById(ItemId);
         
-        var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
-        var user = authState.User;
-        if (user.Identity != null && user.Identity.IsAuthenticated)
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authState.User;
+        if (LoggedInUser.Identity is { IsAuthenticated: true })
         {
-            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            UserId = LoggedInUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         if (Item != null && UserId != null && Item.NumClaimsByUser(UserId) > 0)
@@ -374,11 +377,18 @@
         if (!result)
         {
             ErrorText = "Sorry, this item has already been claimed by someone else.";
+            StateHasChanged();
+            return;
         }
 
         ErrorText = "";
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ClaimRegistryItem, "Claimed registry item: " + Item?.GenericName);
+        }
     }
     
     private void RemoveClaim()
@@ -394,10 +404,17 @@
         if (!result)
         {
             ErrorText = "Sorry, we were unable to remove your claim. Please try again later.";
+            StateHasChanged();
+            return;
         }
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.UnclaimRegistryItem, "Unclaimed registry item: " + Item?.GenericName);
+        }
     }
     
     private void ChooseFulfillmentMethod(FulfillmentMethod? fulfillmentMethod)
@@ -480,6 +497,11 @@
         RegistryService.MarkClaimAsCompleted(Item.Id, UserId);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.CompleteRegistryItem, "Completed registry item: " + Item?.GenericName);
+        }
     }
     
     private void SaveNotes()
@@ -495,5 +517,37 @@
         RegistryService.SetClaimNotes(Item.Id, UserId, Notes == "" ? null : Notes);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+    }
+    
+    private void AdminUnclaim(RegistryItemClaim claim)
+    {
+        if (Item == null) return;
+        var result = RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId);
+        if (!result)
+        {
+            ErrorText = "Sorry, we were unable to remove this claim. Please try again later.";
+            StateHasChanged();
+            return;
+        }
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.UnclaimRegistryItem, $"Admin unclaimed registry item: {Item?.GenericName}", claim.UserId);
+        }
+    }
+    
+    private void AdminMarkAsCompleted(RegistryItemClaim claim)
+    {
+        if (Item == null) return;
+        RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId);
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.CompleteRegistryItem, $"Admin marked as completed: {Item?.GenericName}", claim.UserId);
+        }
     }
 }
