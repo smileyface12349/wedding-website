@@ -356,4 +356,55 @@ public class Store : IStore
 
         return logs;
     }
+    
+    [Authorize(Roles = "Admin")]
+    public IEnumerable<AccountLog> GetAllAccountLogs(int limit = 100)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT log.Timestamp, 
+                       affectedUser.Id, affectedUser.UserName, 
+                       actor.Id, actor.UserName, 
+                       log.EventType, log.Description
+                FROM AccountLog log
+                JOIN AspNetUsers affectedUser ON log.AffectedUserId = affectedUser.Id
+                JOIN AspNetUsers actor ON log.ActorId = actor.Id
+                ORDER BY log.Timestamp DESC
+                LIMIT :limit
+            """;
+        
+        command.Parameters.AddWithValue(":limit", limit);
+        
+        using var reader = command.ExecuteReader();
+        var logs = new List<AccountLog>();
+        while (reader.Read())
+        {
+            var timestampTicks = reader.GetInt64(0);
+            var affectedUserId = reader.GetString(1);
+            var affectedUserName = reader.GetString(2);
+            var actorId = reader.GetString(3);
+            var actorUserName = reader.GetString(4);
+            var eventTypeInt = reader.GetInt16(5);
+            
+            var logType = AccountLogTypeEnumConverter.DatabaseIntegerToAccountLogType(eventTypeInt);
+            
+            var description = reader.IsDBNull(6) ? logType.GetEnumDescription() : reader.GetString(6);
+            
+            var log = new AccountLog(
+                new DateTime(timestampTicks, DateTimeKind.Utc),
+                new Account { Id = affectedUserId, UserName = affectedUserName },
+                new Account { Id = actorId, UserName = actorUserName },
+                logType,
+                description
+            );
+            
+            logs.Add(log);
+        }
+
+        return logs;
+    }
 }
