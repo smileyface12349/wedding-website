@@ -284,8 +284,8 @@
                                 }
                                 else
                                 {
-                                    <Button OnClick="() => { RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Mark as Completed</Button>
-                                    <Button OnClick="() => { RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId); Item = RegistryService.GetRegistryItemById(ItemId); StateHasChanged(); }">Remove Claim (cannot be undone)</Button>
+                                    <Button OnClick="() => { AdminMarkAsCompleted(claim); }">Mark as Completed</Button>
+                                    <Button OnClick="() => { AdminUnclaim(claim); }">Remove Claim (cannot be undone)</Button>
                                 }
                                 <LinkButton Url=@editUrl>Edit</LinkButton>
                             </div>
@@ -513,5 +513,31 @@
         RegistryService.SetClaimNotes(Item.Id, UserId, Notes == "" ? null : Notes);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+    }
+    
+    private void AdminUnclaim(RegistryItemClaim claim)
+    {
+        if (Item == null) return;
+        RegistryService.UnclaimRegistryItem(Item.Id, claim.UserId);
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.UnclaimRegistryItem, $"Admin unclaimed registry item: {Item?.GenericName}", claim.UserId);
+        }
+    }
+    
+    private void AdminMarkAsCompleted(RegistryItemClaim claim)
+    {
+        if (Item == null) return;
+        RegistryService.MarkClaimAsCompleted(Item.Id, claim.UserId);
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.CompleteRegistryItem, $"Admin marked as completed: {Item?.GenericName}", claim.UserId);
+        }
     }
 }
