@@ -13,4 +13,5 @@ public interface IAdminService
     void DeleteGuest(string guestId);
     string? GetAccountIdFromGuestId(string guestId);
     IEnumerable<AccountLog> GetAccountLogs(string userId);
+    IEnumerable<AccountLog> GetAllAccountLogs(int limit = 100);
 }

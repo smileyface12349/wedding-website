@@ -47,4 +47,9 @@ public class AdminService(IStore store) : IAdminService
     {
         return store.GetAccountLogs(userId);
     }
+
+    public IEnumerable<AccountLog> GetAllAccountLogs(int limit = 100)
+    {
+        return store.GetAllAccountLogs(limit);
+    }
 }
