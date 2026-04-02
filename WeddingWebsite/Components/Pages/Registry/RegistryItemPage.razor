@@ -404,6 +404,8 @@
         if (!result)
         {
             ErrorText = "Sorry, we were unable to remove your claim. Please try again later.";
+            StateHasChanged();
+            return;
         }
 
         Item = RegistryService.GetRegistryItemById(ItemId);
