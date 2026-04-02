@@ -35,5 +35,14 @@ public enum AccountLogType
     DeleteRsvp,
     
     [Description("Edit RSVP")]
-    EditRsvp
+    EditRsvp,
+    
+    [Description("Claim registry item")]
+    ClaimRegistryItem,
+    
+    [Description("Unclaim registry item")]
+    UnclaimRegistryItem,
+    
+    [Description("Complete registry item")]
+    CompleteRegistryItem
 }

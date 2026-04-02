@@ -19,6 +19,9 @@ public static class AccountLogTypeEnumConverter
             AccountLogType.SubmitRsvp => 8,
             AccountLogType.DeleteRsvp => 9,
             AccountLogType.EditRsvp => 10,
+            AccountLogType.ClaimRegistryItem => 11,
+            AccountLogType.UnclaimRegistryItem => 12,
+            AccountLogType.CompleteRegistryItem => 13,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -43,6 +46,9 @@ public static class AccountLogTypeEnumConverter
             8 => AccountLogType.SubmitRsvp,
             9 => AccountLogType.DeleteRsvp,
             10 => AccountLogType.EditRsvp,
+            11 => AccountLogType.ClaimRegistryItem,
+            12 => AccountLogType.UnclaimRegistryItem,
+            13 => AccountLogType.CompleteRegistryItem,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
