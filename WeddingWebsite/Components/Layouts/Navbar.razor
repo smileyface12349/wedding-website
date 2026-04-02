@@ -53,12 +53,26 @@
 
 <style>
     .top-row, .burger-dropdown-content {
-        background-color: @(Config.Navbar.Colour ?? Config.Colours.PrimaryBackground);
+        background-color: @BackgroundColour.ToString();
     }
 </style>
 
+@if (BackgroundColour.IsDark)
+{
+    <style>
+        .top-row.scrolled a, .burger-dropdown-content a {
+            color: #cccccc;
+        }
+        .scrolled .bar1, .scrolled .bar2, .scrolled .bar3 {
+            background-color: #cccccc !important;
+        }
+    </style>
+}
+
 @code {
     [Parameter] public bool Scroll { get; set; } = false;
+    
+    private Colour BackgroundColour => Config.Navbar.Colour ?? Config.Colours.PrimaryBackground;
     
     private string CssScroll => Scroll ? "top-row-scroll-background" : "scrolled";
 }
