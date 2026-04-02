@@ -26,7 +26,7 @@
     public SectionTheme? Theme { get; set; }
     
     private string Background => Theme?.BoxStyle?.InnerTheme.Background.ToString() ?? "var(--primary)";
-    private string TextColour => Theme?.BoxStyle?.InnerTheme.Background.GetTextColour().ToString() ?? Colour.DarkGrey.ToString();
+    private string TextColour => (Theme?.BoxStyle?.InnerTheme.Background.GetTextColour() ?? Colour.DarkGrey).ToString();
     private string CssShadow => Theme is { BoxStyle.InnerTheme.Background.IsDark: false } ? "box-shadow" : "";
 
     protected override void OnInitialized() {
