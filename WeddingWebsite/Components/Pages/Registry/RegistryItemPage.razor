@@ -377,6 +377,8 @@
         if (!result)
         {
             ErrorText = "Sorry, this item has already been claimed by someone else.";
+            StateHasChanged();
+            return;
         }
 
         ErrorText = "";
