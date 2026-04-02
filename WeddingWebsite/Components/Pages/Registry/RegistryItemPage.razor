@@ -6,6 +6,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
@@ -15,6 +16,7 @@
 @inject IRegistryService RegistryService
 @inject IWeddingDetails WeddingDetails
 @inject IWebsiteConfig Config
+@inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
 
@@ -309,6 +311,7 @@
     
     private RegistryItem? Item { get; set; }
     private string? UserId { get; set; }
+    private ClaimsPrincipal? LoggedInUser { get; set; }
     
     private string ErrorText { get; set; } = "";
     private string Notes { get; set; } = "";
@@ -325,10 +328,10 @@
         Item = RegistryService.GetRegistryItemById(ItemId);
         
         var authState = AuthStateProvider.GetAuthenticationStateAsync().Result;
-        var user = authState.User;
-        if (user.Identity != null && user.Identity.IsAuthenticated)
+        LoggedInUser = authState.User;
+        if (LoggedInUser.Identity is { IsAuthenticated: true })
         {
-            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            UserId = LoggedInUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         if (Item != null && UserId != null && Item.NumClaimsByUser(UserId) > 0)
@@ -379,6 +382,11 @@
         ErrorText = "";
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ClaimRegistryItem, "Claimed registry item: " + Item?.GenericName);
+        }
     }
     
     private void RemoveClaim()
@@ -398,6 +406,11 @@
 
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.UnclaimRegistryItem, "Unclaimed registry item: " + Item?.GenericName);
+        }
     }
     
     private void ChooseFulfillmentMethod(FulfillmentMethod? fulfillmentMethod)
@@ -480,6 +493,11 @@
         RegistryService.MarkClaimAsCompleted(Item.Id, UserId);
         Item = RegistryService.GetRegistryItemById(ItemId);
         StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.CompleteRegistryItem, "Completed registry item: " + Item?.GenericName);
+        }
     }
     
     private void SaveNotes()
