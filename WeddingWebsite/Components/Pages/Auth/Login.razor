@@ -61,7 +61,7 @@
                     <ValidationSummary class="text-danger" role="alert"/>
                 </div>
                 <div>
-                    <button type="submit" style="background: @ModalTheme.Primary">@StringProvider.Login</button>
+                    <button type="submit" style="background: @ModalTheme.Primary;color: @ModalTheme.Primary.GetTextColour()">@StringProvider.Login</button>
                 </div>
                 <p>@StringProvider.ForgotPasswordContact(WeddingDetails.LoginContactMethod?.Text ?? "one of the organisers")</p>
                 @* <div> *@
