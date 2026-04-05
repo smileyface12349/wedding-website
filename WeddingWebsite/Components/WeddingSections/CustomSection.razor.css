@@ -1,0 +1,35 @@
+﻿h2 {
+    text-align: center;
+}
+
+p {
+    text-align: justify;
+    text-align-last: center;
+}
+
+@media only screen and (min-width: 700px) {
+    p {
+        font-size: 16px;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+}
+
+h2 {
+    margin-bottom: 15px;
+    margin-top: 25px;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+.element-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

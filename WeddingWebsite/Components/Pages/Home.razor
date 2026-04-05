@@ -68,6 +68,7 @@
         @if (sect is Section.Gallery) { <GallerySection/> }
         @if (sect is Section.TravelDirections) { <DirectionsSection/> }
         @if (sect is Section.TodoListSummary) { <TodoSummarySection/> }
+        @if (sect is Section.Custom custom) { <CustomSection Heading="@custom.Heading" Content="custom.Content"/> }
     </CascadingValue>
 }
 
