@@ -1,5 +1,6 @@
 ﻿using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.Theme;
+using WeddingWebsite.Models.WebsiteElement;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -103,4 +104,10 @@ public abstract record Section
     /// "Action Required", either assigned to the particular user or ones that are assigned to nobody.
     /// </summary>
     public sealed record TodoListSummary(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
+    /// A section with fully custom content. Does not use IWeddingDetails in any way. Only supports WebsiteSection
+    /// elements, and generally discouraged for normal use.
+    /// </summary>
+    public sealed record Custom(string Heading, IEnumerable<WebsiteSection> Content, SectionTheme? Theme = null) : Section(Theme);
 }
