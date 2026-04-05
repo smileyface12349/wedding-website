@@ -6,7 +6,10 @@
     <SectionHeading>@Heading</SectionHeading>
     @foreach (var sect in Content)
     {
-        <h2>@sect.Heading</h2>
+        @if (sect.Heading != null)
+        {
+            <h2>@sect.Heading</h2>
+        }
         @if (sect.Media != null)
         {
             <div class="element-container">
