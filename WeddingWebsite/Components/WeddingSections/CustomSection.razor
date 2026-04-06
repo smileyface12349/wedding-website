@@ -1,0 +1,33 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.WebsiteElement
+
+<Section>
+    <SectionHeading>@Heading</SectionHeading>
+    @foreach (var sect in Content)
+    {
+        @if (sect.Heading != null)
+        {
+            <h2>@sect.Heading</h2>
+        }
+        @if (sect.Media != null)
+        {
+            <div class="element-container">
+                <WebsiteElement Element="sect.Media" />
+            </div>
+        }
+        @foreach (var para in sect.Content)
+        {
+            <p>@para</p>
+        }
+    }
+    
+</Section>
+
+@code {
+    [Parameter]
+    public required string Heading { get; set; }
+    
+    [Parameter]
+    public required IEnumerable<WebsiteSection> Content { get; set; }
+}
