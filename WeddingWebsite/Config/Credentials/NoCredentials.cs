@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.ConfigInterfaces;
+﻿using WeddingWebsite.Core.Emails;
+using WeddingWebsite.Models.ConfigInterfaces;
 
 namespace WeddingWebsite.Config.Credentials;
 
@@ -10,4 +11,5 @@ namespace WeddingWebsite.Config.Credentials;
 public class NoCredentials : ICredentials
 {
     public string GoogleMaps => "";
+    public EmailConfiguration EmailConfiguration => new EmailConfiguration();
 }
