@@ -10,6 +10,7 @@ using WeddingWebsite.Config.Strings;
 using WeddingWebsite.Config.ThemeAndLayout;
 using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Core;
+using WeddingWebsite.Core.Emails;
 using WeddingWebsite.Data;
 using WeddingWebsite.Data.Stores;
 using WeddingWebsite.Models.ConfigInterfaces;
@@ -53,6 +54,7 @@ builder.Services.AddScoped<IStore, Store>();
 builder.Services.AddScoped<IRsvpStore, RsvpStore>();
 builder.Services.AddScoped<IRegistryStore, RegistryStore>();
 builder.Services.AddScoped<ITodoStore, TodoStore>();
+builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
