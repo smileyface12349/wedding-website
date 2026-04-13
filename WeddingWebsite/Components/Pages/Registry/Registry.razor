@@ -155,11 +155,10 @@
         {
             EnabledFilters = (await ProtectedSessionStorage.GetAsync<IEnumerable<string>>("RegistryEnabledFilters")).Value ?? new HashSet<string> { "Unclaimed" };
             EnabledFiltersString = string.Join(",", EnabledFilters);
-            var sortOrderResult = await ProtectedSessionStorage.GetAsync<int>("RegistrySortOrder");
-            var sortOrderInt = sortOrderResult.Value;
-            if (Enum.IsDefined(typeof(SortOrder), sortOrderInt))
+            var sortOrderResult = await ProtectedSessionStorage.GetAsync<SortOrder>("RegistrySortOrder");
+            if (sortOrderResult.Success && Enum.IsDefined(typeof(SortOrder), sortOrderResult.Value))
             {
-                CurrentSortOrder = (SortOrder) sortOrderInt;
+                CurrentSortOrder = sortOrderResult.Value;
             }
             StateHasChanged();
         }
