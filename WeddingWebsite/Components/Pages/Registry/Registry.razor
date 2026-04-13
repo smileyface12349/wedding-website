@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
@@ -11,6 +12,7 @@
 @inject IRegistryService RegistryService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringProvider StringProvider
+@inject ProtectedSessionStorage ProtectedSessionStorage
 
 <CascadingValue Value="Config.RegistryConfig.Theme">
     <Section>
@@ -28,7 +30,7 @@
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">@StringProvider.PriceLowToHigh</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">@StringProvider.PriceHighToLow</MudSelectItem>
                 </MudSelect>
-                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="@StringProvider.Filters">
+                <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="@StringProvider.Filters" OnClose="_ => SaveFilters()">
                     @foreach (var filter in AllFilters)
                     {
                         <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
@@ -147,6 +149,16 @@
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            EnabledFilters = (await ProtectedSessionStorage.GetAsync<IEnumerable<string>>("RegistryEnabledFilters")).Value ?? new HashSet<string> { "Unclaimed" };
+            EnabledFiltersString = string.Join(",", EnabledFilters);
+            StateHasChanged();
+        }
+    }
+
     private bool ItemMatchesFilter(RegistryItem item)
     {
         if (EnabledFilters.Contains("Unclaimed") && item.IsFullyClaimed)
@@ -204,5 +216,10 @@
             return false;
         }
         return true;
+    }
+    
+    private async Task SaveFilters()
+    {
+        await ProtectedSessionStorage.SetAsync("RegistryEnabledFilters", EnabledFilters);
     }
 }
