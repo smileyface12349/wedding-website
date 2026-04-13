@@ -65,9 +65,63 @@
         </div>
         
         <h2>Message</h2>
-        <p>For advanced formatting, please use HTML.</p>
+        <p>For advanced formatting, please use HTML (e.g. &lt;i&gt;italics&lt;/i&gt;, &lt;b&gt;bold&lt;/b&gt;).</p>
+        <p>You can also put in certain variables which will automatically adapt to the recipient so you can give it an extra personal touch. These are all enclosed in % signs.</p>
+        @if (ShowVariables)
+        {
+            <h3>Variables</h3>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Example</th>
+                    <th>Notes</th>
+                </tr>
+                @foreach (var variable in EmailVariable.EmailVariables)
+                {
+                    <tr>
+                        <td>%@variable.Pattern%</td>
+                        <td>@variable.Example</td>
+                        <td>@variable.Description</td>
+                    </tr>
+                }
+            </table>
+            <h3>Guest Filters</h3>
+            <p>All patterns that interact with guests have an extra option which is given in brackets. By default,  all guests that match the recipient filters will be shown. For example <code>%NUM_GUESTS(RSVP_WAITING)%</code> will show the number of guests who have not yet submitted an RSVP.</p>
+            <table>
+                <tr>
+                    <th>Filter</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>ALL</td>
+                    <td>All guests on the account.</td>
+                </tr>
+                <tr>
+                    <td>MATCH</td>
+                    <td>Only guests that match the recipient filter (default).</td>
+                </tr>
+                <tr>
+                    <td>RSVP_YES</td>
+                    <td>Only guests that are attending.</td>
+                </tr>
+                <tr>
+                    <td>RSVP_WAITING</td>
+                    <td>Only guests that haven't yet submitted an RSVP.</td>
+                </tr>
+                <tr>
+                    <td>RSVP_NO</td>
+                    <td>Only guests that have declined.</td>
+                </tr>
+            </table>
+            <p><i>Filters are not applied in the test email.</i></p>
+            <Button OnClick="() => { ShowVariables = false; StateHasChanged(); }">Hide Variables</Button>
+        }
+        else
+        {
+            <Button OnClick="() => { ShowVariables = true; StateHasChanged(); }">Show Variables</Button>
+        }
         <div class="form-group">
-            <InputTextArea @bind-Value=Input.Message class="form-control" id="message" placeholder="@MessagePlaceholder" />
+            <InputTextArea @bind-Value=Input.Message class="form-control" style="margin-top: 15px" id="message" placeholder="@MessagePlaceholder" />
         </div>
 
         @if (LoggedInUserEmail == null)
@@ -132,8 +186,8 @@ else
     
     <p>If you are happy with this, please click the button below to send the email to <b>@Recipients.Count()</b> recipients. This action cannot be undone.</p>
     <div class="flex-container flex-gap">
-        <Button OnClickAsync="SendEmail">Send Email</Button>
-        <LinkButton Url="/admin/compose" CssClass="no-margin">Go Back</LinkButton>
+        <Button OnClickAsync="SendEmailToAll">Send Email</Button>
+        <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
     </div>
 }
 
@@ -152,6 +206,7 @@ else
     private string? LoggedInUserEmail { get; set; }
     private IDictionary<string, EmailStatus> Status { get; set; } = new Dictionary<string, EmailStatus>();
     private string ErrorText { get; set; } = "";
+    private bool ShowVariables { get; set; } = false;
 
     private async Task ValidFormSubmitted()
     {
@@ -159,7 +214,7 @@ else
         
         var allAccounts = AdminService.GetAllAccounts().ToList();
         AccountsWithNoEmail = allAccounts.Where(a => a.Email == null).Select(a => a.UserName ?? "No username");
-        AccountsWithEmails = allAccounts.Where(a => a.Email != null).ToDictionary(a => a, a => AccountMatchesFilter(a, Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests) && a.Email != LoggedInUserEmail);
+        AccountsWithEmails = allAccounts.Where(a => a.Email != null).ToDictionary(a => a, a => AccountMatchesFilter(a, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests)) && a.Email != LoggedInUserEmail);
         foreach (var recipient in AccountsWithEmails)
         {
             Status[recipient.Key.Email!] = EmailStatus.NotStarted;
@@ -167,7 +222,13 @@ else
 
         try
         {
-            await EmailSender.SendEmailAsync(LoggedInUserEmail, Input.Subject, Input.Message);
+            var loggedInUser = allAccounts.FirstOrDefault(a => a.Email == LoggedInUserEmail);
+            if (loggedInUser == null)
+            {
+                throw new Exception("Logged in user not found in database.");
+            }
+            // Don't pass in filters and just show all recipients, as it may well not match the logged in user.
+            await SendEmail(loggedInUser, Input.Subject, Input.Message);
             ErrorText = "";
             ReadyToSend = true;
         }
@@ -177,24 +238,34 @@ else
         }
     }
 
-    private async Task SendEmail()
+    private async Task SendEmailToAll()
     {
-        foreach (var recipient in Recipients)
+        foreach (var recipient in AccountsWithEmails.Where(kv => kv.Value).Select(kv => kv.Key))
         {
-            Status[recipient] = EmailStatus.Sending;
+            var email = recipient.Email!;
+            Status[email] = EmailStatus.Sending;
             StateHasChanged();
             try
             {
-                await EmailSender.SendEmailAsync(recipient, Input.Subject, Input.Message);
-                Status[recipient] = EmailStatus.Sent;
+                await SendEmail(recipient, Input.Subject, Input.Message, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests));
+                Status[email] = EmailStatus.Sent;
             }
             catch (Exception e)
             {
-                ErrorText += "Error for " + recipient + ": " + e.Message + "\n";
-                Status[recipient] = EmailStatus.Failed;
+                ErrorText += "Error for " + email + ": " + e.Message + "\n";
+                Status[email] = EmailStatus.Failed;
             }
             StateHasChanged();
         }
+    }
+
+    private async Task SendEmail(AccountWithGuests recipient, string subject, string message, EmailFilters? filters = null)
+    {
+        foreach (var filter in EmailVariable.EmailVariables)
+        {
+            message = filter.Apply(message, recipient, filters ?? new EmailFilters());
+        }
+        await EmailSender.SendEmailAsync(recipient.Email!, subject, message);
     }
 
     protected override async Task OnInitializedAsync()
@@ -226,9 +297,9 @@ else
         public string Message { get; set; } = string.Empty;
     }
 
-    private bool AccountMatchesFilter(AccountWithGuests account, NumGuestsFilter numGuests, RsvpStatusFilter rsvpStatus, bool rsvpStatusMatchAll)
+    private bool AccountMatchesFilter(AccountWithGuests account, EmailFilters filters)
     {
-        switch (numGuests)
+        switch (filters.NumGuestsFilter)
         {
             case NumGuestsFilter.None:
                 if (account.Guests.Count() != 0) return false;
@@ -241,51 +312,27 @@ else
                 break;
         }
 
-        if (!rsvpStatusMatchAll)
+        if (!filters.RsvpStatusMatchAll)
         {
-            switch (rsvpStatus)
-            {
-                case RsvpStatusFilter.NotNo:
-                    if (account.Guests.All(g => g.Rsvp == RsvpStatus.No)) return false;
-                    break;
-                case RsvpStatusFilter.Waiting:
-                    if (account.Guests.All(g => g.Rsvp != RsvpStatus.NotResponded)) return false;
-                    break;
-                case RsvpStatusFilter.Yes:
-                    if (account.Guests.All(g => g.Rsvp != RsvpStatus.Yes)) return false;
-                    break;
-                case RsvpStatusFilter.No:
-                    if (account.Guests.All(g => g.Rsvp != RsvpStatus.No)) return false;
-                    break;
-            }
+            if (!account.Guests.Any(filters.GuestMatchesRsvpStatus)) return false;
         }
         else
         {
-            switch (rsvpStatus)
-            {
-                case RsvpStatusFilter.NotNo:
-                    if (account.Guests.Any(g => g.Rsvp == RsvpStatus.No)) return false;
-                    break;
-                case RsvpStatusFilter.Waiting:
-                    if (account.Guests.Any(g => g.Rsvp != RsvpStatus.NotResponded)) return false;
-                    break;
-                case RsvpStatusFilter.Yes:
-                    if (account.Guests.Any(g => g.Rsvp != RsvpStatus.Yes)) return false;
-                    break;
-                case RsvpStatusFilter.No:
-                    if (account.Guests.Any(g => g.Rsvp != RsvpStatus.No)) return false;
-                    break;
-            }
+            if (account.Guests.Any(g => !filters.GuestMatchesRsvpStatus(g))) return false;
         }
         
         return true;
     }
 
-    private static string MessagePlaceholder => @"Hi %FIRST_NAMES%,
+    private static string MessagePlaceholder => @"Hi %FAMILY_NAME(ALL)%,
                                          
-This is a gentle reminder that the RSVP deadline is in <b>7</b> days. Please ensure you have submitted your RSVP by the deadline. If you have forgotten your password or are having difficulty accessing the website, please reply to this email.
+This is a gentle reminder that the RSVP deadline is in <b>7</b> days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
+
+If you have forgotten your password or are having difficulty accessing the website, please reply to this email and we'll get it sorted.
                                          
 Many thanks,
-Bob";
+Bob
+
+<i>This email was sent automatically, but we will receive replies.</i>";
 
 }

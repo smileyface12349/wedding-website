@@ -26,3 +26,19 @@
 ::deep .mud-input-control ::deep p, ::deep .mud-input-control ::deep label {
     margin: 0 !important;
 }
+
+td {
+    padding-right: 1vw;
+}
+
+h3 {
+    margin-top: 10px;
+}
+
+th {
+    text-align: left;
+}
+
+table {
+    margin-bottom: 10px;
+}
