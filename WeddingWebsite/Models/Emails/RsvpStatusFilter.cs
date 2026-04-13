@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace WeddingWebsite.Models.Emails;
+﻿namespace WeddingWebsite.Models.Emails;
 
 public enum RsvpStatusFilter
 {
