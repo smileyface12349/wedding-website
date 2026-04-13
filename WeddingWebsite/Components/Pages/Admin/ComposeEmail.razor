@@ -2,6 +2,8 @@
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@using System.Text.RegularExpressions
+@using System.Web
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Core.Emails
 @using WeddingWebsite.Data.Models
@@ -65,7 +67,11 @@
         </div>
         
         <h2>Message</h2>
-        <p>For advanced formatting, please use HTML (e.g. &lt;i&gt;italics&lt;/i&gt;, &lt;b&gt;bold&lt;/b&gt;).</p>
+        <p>Advanced formatting including images is possible through HTML (e.g. &lt;i&gt;italics&lt;/i&gt;, &lt;b&gt;bold&lt;/b&gt;). If enabled, you will need to use &lt;br&gt; for new lines.</p>
+        <div class="form-group">
+            <label for="use-html">Use HTML</label>
+            <InputCheckbox @bind-Value=Input.UseHtml id="use-html" />
+        </div>
         <p>You can also put in certain variables which will automatically adapt to the recipient so you can give it an extra personal touch. These are all enclosed in % signs.</p>
         @if (ShowVariables)
         {
@@ -170,7 +176,16 @@ else
     <h1>Review & Send</h1>
     <p>A test email was sent to @LoggedInUserEmail. Please go to your email and check that it displays how you expect it to. A preview is also shown below:</p>
     <p><i>Subject: @Input.Subject</i></p>
-    <div class="email-preview">@((MarkupString)Input.Message)</div>
+    @if (Input.UseHtml)
+    {
+        <div class="email-preview">@((MarkupString)Input.Message)</div>
+    }
+    else
+    {
+        // This is required to preserve new lines, and not render any HTML.
+        <div class="email-preview">@((MarkupString)Regex.Replace(
+                                       HttpUtility.HtmlEncode(Input.Message), "\r?\n|\r", "<br>"))</div>
+    }
     <p>You are about to send this email to @Recipients.Count() people. Please carefully review the list of recipients:</p>
     @foreach (var account in AccountsWithEmails.Keys)
     {
@@ -265,7 +280,7 @@ else
         {
             message = filter.Apply(message, recipient, filters ?? new EmailFilters());
         }
-        await EmailSender.SendEmailAsync(recipient.Email!, subject, message);
+        await EmailSender.SendEmailAsync(recipient.Email!, subject, message, Input.UseHtml);
     }
 
     protected override async Task OnInitializedAsync()
@@ -295,6 +310,9 @@ else
 
         [Required]
         public string Message { get; set; } = string.Empty;
+
+        [Required]
+        public bool UseHtml { get; set; } = false;
     }
 
     private bool AccountMatchesFilter(AccountWithGuests account, EmailFilters filters)
@@ -324,15 +342,25 @@ else
         return true;
     }
 
-    private static string MessagePlaceholder => @"Hi %FAMILY_NAME(ALL)%,
+    private string MessagePlaceholder => Input.UseHtml ? @"Hi %FAMILY_NAME(ALL)%,
+<br>
+<br>This is a gentle reminder that the RSVP deadline is in <b>7</b> days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
+<br>
+<br>If you have forgotten your password or are having difficulty accessing the website, please reply to this email and we'll get it sorted.
+<br>           
+<br>Many thanks,
+<br>Bob
+<br>
+<br><i>This email was sent automatically, but we will receive replies.</i>
+" : @"Hi %FAMILY_NAME(ALL)%,
                                          
-This is a gentle reminder that the RSVP deadline is in <b>7</b> days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
+This is a gentle reminder that the RSVP deadline is in 7 days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
 
 If you have forgotten your password or are having difficulty accessing the website, please reply to this email and we'll get it sorted.
                                          
 Many thanks,
 Bob
 
-<i>This email was sent automatically, but we will receive replies.</i>";
+(This email was sent automatically, but we will receive replies).";
 
 }

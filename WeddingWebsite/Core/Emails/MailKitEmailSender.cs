@@ -6,48 +6,29 @@ using WeddingWebsite.Models.ConfigInterfaces;
 
 namespace WeddingWebsite.Core.Emails;
 
-public class MailKitEmailSender : IEmailSender
+public class MailKitEmailSender(ICredentials credentials) : IEmailSender
 {
-    private readonly EmailConfiguration _emailConfiguration;
+    private readonly EmailConfiguration config = credentials.EmailConfiguration;
 
-    public MailKitEmailSender(ICredentials credentials)
+    public async Task SendEmailAsync(string recipient, string subject, string message, bool isHtml = false)
     {
-        _emailConfiguration = credentials.EmailConfiguration;
-    }
-
-    public Task SendEmailAsync(string email, string subject, string htmlMessage)
-    {
-        return Execute(email, subject, htmlMessage);
-    }
-
-    private async Task Execute(string to, string subject, string htmlMessage)
-    {
-        string host = _emailConfiguration.Host;
-        int port = _emailConfiguration.Port;
-        string username = _emailConfiguration.Username;
-        string password = _emailConfiguration.Password;
-        string from = _emailConfiguration.From;
-        string name = _emailConfiguration.Name;
-        bool enableSsl = _emailConfiguration.EnableSSL;
-
         var email = new MimeMessage();
 
-        var sender = MailboxAddress.Parse(from);
-        if (!string.IsNullOrEmpty(name))
-            sender.Name = name;
+        var sender = MailboxAddress.Parse(config.From);
+        if (!string.IsNullOrEmpty(config.Name))
+            sender.Name = config.Name;
         email.Sender = sender;
         email.From.Add(sender);
-        email.To.Add(MailboxAddress.Parse(to));
+        email.To.Add(MailboxAddress.Parse(recipient));
         email.Subject = subject;
-        email.Body = new TextPart(TextFormat.Html) { Text = htmlMessage };
+        email.Body = new TextPart(isHtml ? TextFormat.Html : TextFormat.Text) { Text = message };
 
         using var smtp = new SmtpClient();
         smtp.Timeout = 10000;
-        await smtp.ConnectAsync(host, port, enableSsl);
-        if (!string.IsNullOrEmpty(username))
-            smtp.Authenticate(username, password);
+        await smtp.ConnectAsync(config.Host, config.Port, config.EnableSSL);
+        if (!string.IsNullOrEmpty(config.Username))
+            await smtp.AuthenticateAsync(config.Username, config.Password);
         await smtp.SendAsync(email);
         await smtp.DisconnectAsync(true);
-
     }
 }
