@@ -25,7 +25,7 @@
                 <p>@StringProvider.RegistryDescription2</p>
             </div>
             <div class="sort-and-filter-container">
-                <MudSelect T="SortOrder" @bind-Value="CurrentSortOrder" Label="@StringProvider.SortBy">
+                <MudSelect T="SortOrder" Label="@StringProvider.SortBy" Value="CurrentSortOrder" ValueChanged="SortOrderChanged">
                     <MudSelectItem T="SortOrder" Value="SortOrder.Default">@StringProvider.Default</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">@StringProvider.PriceLowToHigh</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">@StringProvider.PriceHighToLow</MudSelectItem>
@@ -155,6 +155,12 @@
         {
             EnabledFilters = (await ProtectedSessionStorage.GetAsync<IEnumerable<string>>("RegistryEnabledFilters")).Value ?? new HashSet<string> { "Unclaimed" };
             EnabledFiltersString = string.Join(",", EnabledFilters);
+            var sortOrderResult = await ProtectedSessionStorage.GetAsync<int>("RegistrySortOrder");
+            var sortOrderInt = sortOrderResult.Value;
+            if (Enum.IsDefined(typeof(SortOrder), sortOrderInt))
+            {
+                CurrentSortOrder = (SortOrder) sortOrderInt;
+            }
             StateHasChanged();
         }
     }
@@ -221,5 +227,16 @@
     private async Task SaveFilters()
     {
         await ProtectedSessionStorage.SetAsync("RegistryEnabledFilters", EnabledFilters);
+    }
+    
+    private async Task SortOrderChanged(SortOrder newSortOrder)
+    {
+        CurrentSortOrder = newSortOrder;
+        await SaveSortOrder();
+    }
+    
+    private async Task SaveSortOrder()
+    {
+        await ProtectedSessionStorage.SetAsync("RegistrySortOrder", CurrentSortOrder);
     }
 }
