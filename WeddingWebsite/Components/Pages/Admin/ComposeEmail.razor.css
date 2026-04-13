@@ -1,0 +1,28 @@
+﻿.form-group ::deep p, .form-group ::deep label {
+    margin: 0;
+}
+
+::deep #message {
+    height: 400px;
+    resize: none;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.email-preview {
+    padding: 10px;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+}
+
+::deep .mud-input-control ::deep p, ::deep .mud-input-control ::deep label {
+    margin: 0 !important;
+}
