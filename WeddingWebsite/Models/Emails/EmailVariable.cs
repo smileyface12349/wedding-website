@@ -31,7 +31,7 @@ public abstract class EmailVariable
     /// <summary>
     /// All available email variables.
     /// </summary>
-    public static IEnumerable<EmailVariable> EmailVariables =>
+    public static readonly IEnumerable<EmailVariable> EmailVariables =
     [
         new EmailEmailVariable(),
         new UsernameEmailVariable(),
