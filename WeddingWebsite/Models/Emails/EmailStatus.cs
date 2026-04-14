@@ -5,5 +5,6 @@ public enum EmailStatus
     Sending,
     Sent,
     Failed,
-    NotStarted
+    NotStarted,
+    Waiting
 }

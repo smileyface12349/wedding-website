@@ -173,6 +173,9 @@ else if (Status.Values.Any(v => v != EmailStatus.NotStarted))
                 case EmailStatus.Failed:
                     <li>@recipient - <span class="text-danger">Failed</span></li>
                     break;
+                case EmailStatus.Waiting:
+                    <li>@recipient - Waiting for @EmailDelayInSeconds seconds before sending...</li>
+                    break;
             }
         }
     </ul>
@@ -220,7 +223,14 @@ else
         <p class="text-danger">You have @(AccountsWithNoEmail.Count()) accounts that do not have an email address: @string.Join(", ", AccountsWithNoEmail).</p>
     }
     
-    <p>If you are happy with this, please click the button below to send the email to <b>@Recipients.Count()</b> recipients. This action cannot be undone.</p>
+    <p>You may want to introduce a delay between each email to avoid ending up on your email provider's naughty list. You can also press pause later while they are sending.</p>
+    <div class="form-group">
+        <label for="email-delay">Delay</label>
+        <InputNumber @bind-Value=EmailDelayInSeconds id="email-delay" class="form-control" style="width: 70px"/>
+        <p>seconds</p>
+    </div>
+    
+    <p>If you are happy with this, please click the button below to send the email to @Recipients.Count() recipients. This action cannot be undone.</p>
     @if (!SendEmailPressed)
     {
         <div class="flex-container flex-gap">
@@ -262,6 +272,7 @@ else
     private bool SendEmailPressed { get; set; } = false;
     private string CorrectConfirmText => $"I want to send an email to {Recipients.Count()} people";
     private bool IsSendingPaused { get; set; } = false;
+    private int EmailDelayInSeconds { get; set; } = 0;
 
     private async Task ValidFormSubmitted()
     {
@@ -319,8 +330,21 @@ else
             }
 
             var email = recipient.Email!;
+            
+            Status[email] = EmailStatus.Waiting;
+            StateHasChanged();
+            await Task.Delay(EmailDelayInSeconds * 1000);
+            Status[email] = EmailStatus.NotStarted;
+            StateHasChanged();
+            
+            while (IsSendingPaused)
+            {
+                await Task.Delay(500);
+            }
+
             Status[email] = EmailStatus.Sending;
             StateHasChanged();
+            
             try
             {
                 await SendEmail(recipient, Input.Subject, Input.Message, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests));
