@@ -331,7 +331,7 @@ else
 
         if (!filters.RsvpStatusMatchAll)
         {
-            if (!account.Guests.Any(filters.GuestMatchesRsvpStatus)) return false;
+            if (filters.RsvpStatusFilter != RsvpStatusFilter.Any && !account.Guests.Any(filters.GuestMatchesRsvpStatus)) return false;
         }
         else
         {
