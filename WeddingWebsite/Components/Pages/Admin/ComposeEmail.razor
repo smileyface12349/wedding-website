@@ -270,6 +270,8 @@ else
         var allAccounts = AdminService.GetAllAccounts().ToList();
         AccountsWithNoEmail = allAccounts.Where(a => a.Email == null).Select(a => a.UserName ?? "No username");
         AccountsWithEmails = allAccounts.Where(a => a.Email != null).ToDictionary(a => a, a => AccountMatchesFilter(a, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests)) && a.Email != LoggedInUserEmail);
+        // Order the checkboxes so that the ones matching the filters are at the top
+        AccountsWithEmails = AccountsWithEmails.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
         foreach (var recipient in AccountsWithEmails)
         {
             Status[recipient.Key.Email!] = EmailStatus.NotStarted;
