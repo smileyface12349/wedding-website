@@ -47,7 +47,7 @@ public abstract class EmailVariable
     /// </summary>
     public string Apply(string input, AccountWithGuests account, EmailFilters filters)
     {
-        var patternWithArgs = $@"%{Pattern}(?:\(([^%]+)\))?%";
+        var patternWithArgs = $@"%{Pattern}(?:\(([a-zA-Z_]+)\))?%";
         return System.Text.RegularExpressions.Regex.Replace(input, patternWithArgs, match =>
         {
             var args = match.Groups[1].Value; // This will be empty if there are no parentheses
