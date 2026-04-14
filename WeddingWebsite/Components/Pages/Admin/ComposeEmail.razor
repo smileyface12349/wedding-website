@@ -155,6 +155,7 @@ else if (Status.Values.Any(v => v != EmailStatus.NotStarted))
     else
     {
         <p>Your emails are being sent. To stop this, press "Pause" at the bottom. Depending on your email provider, you may want to use the pause button to slow down the delivery and avoid exceeding rate limits or having emails sent to spam.</p>
+        <p>You should keep this tab open until all emails are delivered. If it is closed, the remaining emails may or may not get delivered and there will be no way to pause it.</p>
     }
     <ul style="margin-left: 20px; margin-bottom: 10px;">
         @foreach (var recipient in Recipients)
