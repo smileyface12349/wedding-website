@@ -335,6 +335,7 @@ else
         }
         else
         {
+            if (!account.Guests.Any()) return false; // Don't allow vacuous case.
             if (account.Guests.Any(g => !filters.GuestMatchesRsvpStatus(g))) return false;
         }
         
