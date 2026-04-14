@@ -144,7 +144,18 @@
 else if (Status.Values.Any(v => v != EmailStatus.NotStarted))
 {
     <h2>Sending</h2>
-    <p>Your emails are being sent. It is not possible to cancel this operation.</p>
+    @if (AccountsWithEmails.Keys.Where(a => AccountsWithEmails[a]).Select(a => a.Email!).All(recipient => Status[recipient] is EmailStatus.Sent or EmailStatus.Failed))
+    {
+        <p>Your emails have been sent. It is not possible to undo this action.</p>
+    }
+    else if (IsSendingPaused)
+    {
+        <p>Email delivery is currently paused. Press "Resume" to resume. If you close this tab, your progress will not be saved.</p>
+    }
+    else
+    {
+        <p>Your emails are being sent. To stop this, press "Pause" at the bottom. Depending on your email provider, you may want to use the pause button to slow down the delivery and avoid exceeding rate limits or having emails sent to spam.</p>
+    }
     <ul style="margin-left: 20px; margin-bottom: 10px;">
         @foreach (var recipient in Recipients)
         {
@@ -168,6 +179,17 @@ else if (Status.Values.Any(v => v != EmailStatus.NotStarted))
     @if (AccountsWithEmails.Keys.Where(a => AccountsWithEmails[a]).Select(a => a.Email!).All(recipient => Status[recipient] is EmailStatus.Sent or EmailStatus.Failed))
     {
         <LinkButton Url="/admin">Back to Admin Page</LinkButton>
+    }
+    else
+    {
+        if (IsSendingPaused)
+        {
+            <Button OnClick="() => { IsSendingPaused = false; StateHasChanged(); }">Resume</Button>
+        }
+        else
+        {
+            <Button OnClick="() => { IsSendingPaused = true; StateHasChanged(); }">Pause</Button>
+        }
     }
 }
 else
@@ -239,6 +261,7 @@ else
     private string ConfirmText { get; set; } = "";
     private bool SendEmailPressed { get; set; } = false;
     private string CorrectConfirmText => $"I want to send an email to {Recipients.Count()} people";
+    private bool IsSendingPaused { get; set; } = false;
 
     private async Task ValidFormSubmitted()
     {
@@ -288,6 +311,11 @@ else
     {
         foreach (var recipient in AccountsWithEmails.Where(kv => kv.Value).Select(kv => kv.Key))
         {
+            while (IsSendingPaused)
+            {
+                await Task.Delay(500);
+            }
+
             var email = recipient.Email!;
             Status[email] = EmailStatus.Sending;
             StateHasChanged();
@@ -300,6 +328,7 @@ else
             {
                 ErrorText += "Error for " + email + ": " + e.Message + "\n";
                 Status[email] = EmailStatus.Failed;
+                IsSendingPaused = true;
             }
             StateHasChanged();
         }
