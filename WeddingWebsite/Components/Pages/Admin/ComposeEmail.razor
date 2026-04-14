@@ -241,7 +241,7 @@ else
     }
     else
     {
-        <p>@Recipients.Count() is a lot of people. Please type "I want to send an email to @Recipients.Count() people" in the box below to confirm this action.</p>
+        <p>@Recipients.Count() is a lot of people. Please type "@CorrectConfirmText" in the box below to confirm this action.</p>
         <InputText @bind-Value=ConfirmText class="confirm-text" placeholder="@CorrectConfirmText" style="width: 250px;margin-bottom: 10px;"/>
         <div class="flex-container flex-gap">
             @if (ConfirmText == CorrectConfirmText)
