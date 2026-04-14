@@ -12,6 +12,9 @@ public class MailKitEmailSender(ICredentials credentials) : IEmailSender
 
     public async Task SendEmailAsync(string recipient, string subject, string message, bool isHtml = false)
     {
+        if (string.IsNullOrEmpty(config.Host) || config.Port == 0)
+            throw new InvalidOperationException("Please fill in the email credentials to send emails.");
+        
         var email = new MimeMessage();
 
         var sender = MailboxAddress.Parse(config.From);
