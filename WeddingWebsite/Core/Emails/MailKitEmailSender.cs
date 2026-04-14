@@ -1,5 +1,4 @@
 ﻿using MailKit.Net.Smtp;
-using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 using WeddingWebsite.Models.ConfigInterfaces;
