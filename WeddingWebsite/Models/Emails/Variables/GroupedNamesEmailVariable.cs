@@ -21,6 +21,7 @@ public class GroupedNamesEmailVariable : EmailVariableWithGuestFilters
             var last = guests.Last().Name.First;
             return $"{string.Join(", ", allButLast)}, and {last} {guests.First().Name.Last}";
         }
+        else
         {
             return new FullNamesEmailVariable().GetValueGuests(guests);
         }
