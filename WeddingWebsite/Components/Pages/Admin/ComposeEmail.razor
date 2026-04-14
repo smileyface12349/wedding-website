@@ -189,7 +189,7 @@ else
     @foreach (var account in AccountsWithEmails.Keys)
     {
         <div class="form-group">
-            <MudCheckBox Value="AccountsWithEmails[account]" ValueChanged="(bool val) => AccountsWithEmails[account] = val" Label="@(account.Email ?? "No Email")"></MudCheckBox>
+            <MudCheckBox Value="AccountsWithEmails[account]" ValueChanged="(bool val) => { AccountsWithEmails[account] = val; SendEmailPressed = false; }" Label="@(account.Email ?? "No Email")"></MudCheckBox>
         </div>
     }
     
@@ -199,10 +199,25 @@ else
     }
     
     <p>If you are happy with this, please click the button below to send the email to <b>@Recipients.Count()</b> recipients. This action cannot be undone.</p>
-    <div class="flex-container flex-gap">
-        <Button OnClickAsync="SendEmailToAll">Send Email</Button>
-        <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
-    </div>
+    @if (!SendEmailPressed)
+    {
+        <div class="flex-container flex-gap">
+            <Button OnClickAsync="SendEmailFirstPress">Send Email</Button>
+            <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
+        </div>
+    }
+    else
+    {
+        <p>@Recipients.Count() is a lot of people. Please type "I want to send an email to @Recipients.Count() people" in the box below to confirm this action.</p>
+        <InputText @bind-Value=ConfirmText class="confirm-text" placeholder="@CorrectConfirmText" style="width: 250px;margin-bottom: 10px;"/>
+        <div class="flex-container flex-gap">
+            @if (ConfirmText == CorrectConfirmText)
+            {
+                <Button OnClickAsync="SendEmailToAll">Send Email</Button>
+            }
+            <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
+        </div>
+    }
 }
 
 @if (ErrorText != "")
@@ -221,6 +236,9 @@ else
     private IDictionary<string, EmailStatus> Status { get; set; } = new Dictionary<string, EmailStatus>();
     private string ErrorText { get; set; } = "";
     private bool ShowVariables { get; set; } = false;
+    private string ConfirmText { get; set; } = "";
+    private bool SendEmailPressed { get; set; } = false;
+    private string CorrectConfirmText => $"I want to send an email to {Recipients.Count()} people";
 
     private async Task ValidFormSubmitted()
     {
@@ -249,6 +267,20 @@ else
         catch (Exception e)
         {
             ErrorText = "Failed to send test email. Error details: " + e.Message;
+        }
+    }
+    
+    private async Task SendEmailFirstPress()
+    {
+        if (Recipients.Count() < 10)
+        {
+            await SendEmailToAll();
+        }
+        else
+        {
+            SendEmailPressed = true;
+            ConfirmText = "";
+            StateHasChanged();
         }
     }
 
