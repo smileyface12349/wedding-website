@@ -15,6 +15,7 @@ public class FamilyNameEmailVariable : EmailVariableWithGuestFilters
         {
             return $"{guests.First().Name.Last} family";
         }
+        else
         {
             return new FirstNamesEmailVariable().GetValueGuests(guests);
         }
