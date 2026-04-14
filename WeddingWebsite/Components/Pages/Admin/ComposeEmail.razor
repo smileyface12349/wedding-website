@@ -1,13 +1,12 @@
 ﻿@page "/Admin/Email/Compose"
 
 @using System.ComponentModel.DataAnnotations
+@using System.Net
 @using System.Security.Claims
 @using System.Text.RegularExpressions
-@using System.Web
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Core.Emails
 @using WeddingWebsite.Data.Models
-@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.Emails
 @using WeddingWebsite.Services
 @using WeddingWebsite.Components.Elements
@@ -184,7 +183,7 @@ else
     {
         // This is required to preserve new lines, and not render any HTML.
         <div class="email-preview">@((MarkupString)Regex.Replace(
-                                       HttpUtility.HtmlEncode(Input.Message), "\r?\n|\r", "<br>"))</div>
+                                       WebUtility.HtmlEncode(Input.Message), "\r?\n|\r", "<br>"))</div>
     }
     <p>You are about to send this email to @Recipients.Count() people. Please carefully review the list of recipients:</p>
     @foreach (var account in AccountsWithEmails.Keys)
