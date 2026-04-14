@@ -3,6 +3,7 @@
     padding-left: 10px;
     padding-right: 10px;
     margin: 100px auto auto;
+    padding-bottom: 20px;
 }
 
 ::deep .text-center {
@@ -17,9 +18,18 @@
     margin-right: 10px;
 }
 
+::deep .no-margin {
+    margin: 0 !important;
+}
+
 ::deep .flex-container {
     display: flex;
     align-items: center;
+}
+
+::deep .flex-gap {
+    display: flex;
+    gap: 10px;
 }
 
 ::deep .form-input-and-label {
@@ -111,6 +121,10 @@
 
 ::deep .text-red {
     color: red;
+}
+
+::deep .text-success {
+    color: #26b050;
 }
 
 ::deep .flex-center-column {

@@ -1,0 +1,454 @@
+﻿@page "/Admin/Email/Compose"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Net
+@using System.Security.Claims
+@using System.Text.RegularExpressions
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Core.Emails
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Emails
+@using WeddingWebsite.Services
+@using WeddingWebsite.Components.Elements
+
+@inject IEmailSender EmailSender
+@inject IAdminService AdminService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@attribute [Authorize(Roles = "Admin")]
+
+@layout SimpleLayout
+
+<PageTitle>Compose Email</PageTitle>
+
+@if (!ReadyToSend)
+{
+    <EditForm Model=@Input OnValidSubmit=@ValidFormSubmitted>
+        <DataAnnotationsValidator />
+        <h1>Compose Email</h1>
+        <p>Send an email to lots of guests at once. Nothing will be sent until you review it and confirm it.</p>
+        <ValidationSummary class="text-danger" />
+        <h2>Filters</h2>
+        <div class="form-group">
+            <label for="num-guests">Number of Guests</label>
+            <MudRadioGroup T="NumGuestsFilter" @bind-Value="Input.NumGuestsFilter" id="num-guests">
+                <MudRadio Value="NumGuestsFilter.Any">Any Number</MudRadio>
+                <MudRadio Value="NumGuestsFilter.None">None</MudRadio>
+                <MudRadio Value="NumGuestsFilter.One">One</MudRadio>
+                <MudRadio Value="NumGuestsFilter.Multiple">More Than One</MudRadio>
+            </MudRadioGroup>
+        </div>
+        
+        <div class="form-group">
+            <label for="rsvp-status">RSVP Status</label>
+            <MudRadioGroup T="RsvpStatusFilter" @bind-Value="Input.RsvpStatusFilter" id="rsvp-status">
+                <MudRadio Value="RsvpStatusFilter.Any">Any</MudRadio>
+                <MudRadio Value="RsvpStatusFilter.NotNo">Not No</MudRadio>
+                <MudRadio Value="RsvpStatusFilter.Waiting">Waiting</MudRadio>
+                <MudRadio Value="RsvpStatusFilter.Yes">Yes</MudRadio>
+                <MudRadio Value="RsvpStatusFilter.No">No</MudRadio>
+            </MudRadioGroup>
+        </div>
+        
+        @if (Input.RsvpStatusFilter != RsvpStatusFilter.Any && Input.NumGuestsFilter != NumGuestsFilter.None && Input.NumGuestsFilter != NumGuestsFilter.One)
+        {
+            <p>For accounts with multiple guests, please choose whether you want to send an email if <i>every</i> guest on the account has this RSVP status, or merely if <i>at least one</i> does.</p>
+            <div class="form-group">
+                <label for="match-all-guests">Require a match on every guest</label>
+                <InputCheckbox @bind-Value=Input.RsvpMatchAllGuests id="match-all-guests" />
+            </div>
+        }
+        
+        <h2>Subject</h2>
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <InputText @bind-Value=Input.Subject class="form-control" id="subject" placeholder="RSVP Deadline Reminder" />
+        </div>
+        
+        <h2>Message</h2>
+        <p>Advanced formatting including images is possible through HTML (e.g. &lt;i&gt;italics&lt;/i&gt;, &lt;b&gt;bold&lt;/b&gt;). If enabled, you will need to use &lt;br&gt; for new lines.</p>
+        <div class="form-group">
+            <label for="use-html">Use HTML</label>
+            <InputCheckbox @bind-Value=Input.UseHtml id="use-html" />
+        </div>
+        <p>You can also put in certain variables which will automatically adapt to the recipient so you can give it an extra personal touch. These are all enclosed in % signs.</p>
+        @if (ShowVariables)
+        {
+            <h3>Variables</h3>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Example</th>
+                    <th>Notes</th>
+                </tr>
+                @foreach (var variable in EmailVariable.EmailVariables)
+                {
+                    <tr>
+                        <td>%@variable.Pattern%</td>
+                        <td>@variable.Example</td>
+                        <td>@variable.Description</td>
+                    </tr>
+                }
+            </table>
+            <h3>Guest Filters</h3>
+            <p>All patterns that interact with guests have an extra option which is given in brackets. By default,  all guests that match the recipient filters will be shown. For example <code>%NUM_GUESTS(RSVP_WAITING)%</code> will show the number of guests who have not yet submitted an RSVP.</p>
+            <table>
+                <tr>
+                    <th>Filter</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>ALL</td>
+                    <td>All guests on the account.</td>
+                </tr>
+                <tr>
+                    <td>MATCH</td>
+                    <td>Only guests that match the recipient filter (default).</td>
+                </tr>
+                <tr>
+                    <td>RSVP_YES</td>
+                    <td>Only guests that are attending.</td>
+                </tr>
+                <tr>
+                    <td>RSVP_WAITING</td>
+                    <td>Only guests that haven't yet submitted an RSVP.</td>
+                </tr>
+                <tr>
+                    <td>RSVP_NO</td>
+                    <td>Only guests that have declined.</td>
+                </tr>
+            </table>
+            <p><i>Filters are not applied in the test email.</i></p>
+            <Button OnClick="() => { ShowVariables = false; StateHasChanged(); }">Hide Variables</Button>
+        }
+        else
+        {
+            <Button OnClick="() => { ShowVariables = true; StateHasChanged(); }">Show Variables</Button>
+        }
+        <div class="form-group">
+            <InputTextArea @bind-Value=Input.Message class="form-control" style="margin-top: 15px" id="message" placeholder="@MessagePlaceholder" />
+        </div>
+
+        @if (LoggedInUserEmail == null)
+        {
+            <p class="text-danger">You do not have an email address on your account. This is required to send a test email. You will not be able to use this feature until you have added an email address to your account.</p>
+        }
+        else
+        {
+            <p>This will send a test email to @LoggedInUserEmail and generate a list of recipients for you to check.</p>
+            <input type="submit" class="button" value="Send Test Email & Review" style="cursor: pointer" />
+        }
+
+    </EditForm>
+}
+else if (Status.Values.Any(v => v != EmailStatus.NotStarted))
+{
+    <h2>Sending</h2>
+    @if (AccountsWithEmails.Keys.Where(a => AccountsWithEmails[a]).Select(a => a.Email!).All(recipient => Status[recipient] is EmailStatus.Sent or EmailStatus.Failed))
+    {
+        <p>Your emails have been sent. It is not possible to undo this action.</p>
+    }
+    else if (IsSendingPaused)
+    {
+        <p>Email delivery is currently paused. Press "Resume" to resume. If you close this tab, your progress will not be saved.</p>
+    }
+    else
+    {
+        <p>Your emails are being sent. To stop this, press "Pause" at the bottom. Depending on your email provider, you may want to use the pause button to slow down the delivery and avoid exceeding rate limits or having emails sent to spam.</p>
+        <p>You should keep this tab open until all emails are delivered. If it is closed, the remaining emails may or may not get delivered and there will be no way to pause it.</p>
+    }
+    <ul style="margin-left: 20px; margin-bottom: 10px;">
+        @foreach (var recipient in Recipients)
+        {
+            @switch (Status[recipient])
+            {
+                case EmailStatus.NotStarted:
+                    <li>@recipient</li>
+                    break;
+                case EmailStatus.Sending:
+                    <li>@recipient - Sending...</li>
+                    break;
+                case EmailStatus.Sent:
+                    <li>@recipient - <span class="text-success">Sent</span></li>
+                    break;
+                case EmailStatus.Failed:
+                    <li>@recipient - <span class="text-danger">Failed</span></li>
+                    break;
+                case EmailStatus.Waiting:
+                    <li>@recipient - Waiting for @EmailDelayInSeconds seconds before sending...</li>
+                    break;
+            }
+        }
+    </ul>
+    @if (AccountsWithEmails.Keys.Where(a => AccountsWithEmails[a]).Select(a => a.Email!).All(recipient => Status[recipient] is EmailStatus.Sent or EmailStatus.Failed))
+    {
+        <LinkButton Url="/admin">Back to Admin Page</LinkButton>
+    }
+    else
+    {
+        if (IsSendingPaused)
+        {
+            <Button OnClick="() => { IsSendingPaused = false; StateHasChanged(); }">Resume</Button>
+        }
+        else
+        {
+            <Button OnClick="() => { IsSendingPaused = true; StateHasChanged(); }">Pause</Button>
+        }
+    }
+}
+else
+{
+    <h1>Review & Send</h1>
+    <p>A test email was sent to @LoggedInUserEmail. Please go to your email and check that it displays how you expect it to. A preview is also shown below:</p>
+    <p><i>Subject: @Input.Subject</i></p>
+    @if (Input.UseHtml)
+    {
+        <div class="email-preview">@((MarkupString)Input.Message)</div>
+    }
+    else
+    {
+        // This is required to preserve new lines, and not render any HTML.
+        <div class="email-preview">@((MarkupString)Regex.Replace(
+                                       WebUtility.HtmlEncode(Input.Message), "\r?\n|\r", "<br>"))</div>
+    }
+    <p>You are about to send this email to @Recipients.Count() people. Please carefully review the list of recipients:</p>
+    @foreach (var account in AccountsWithEmails.Keys)
+    {
+        <div class="form-group">
+            <MudCheckBox Value="AccountsWithEmails[account]" ValueChanged="(bool val) => { AccountsWithEmails[account] = val; SendEmailPressed = false; }" Label="@(account.Email ?? "No Email")"></MudCheckBox>
+        </div>
+    }
+    
+    @if (AccountsWithNoEmail.Any())
+    {
+        <p class="text-danger">You have @(AccountsWithNoEmail.Count()) accounts that do not have an email address: @string.Join(", ", AccountsWithNoEmail).</p>
+    }
+    
+    <p>You may want to introduce a delay between each email to avoid ending up on your email provider's naughty list. You can also press pause later while they are sending.</p>
+    <div class="form-group">
+        <label for="email-delay">Delay</label>
+        <InputNumber @bind-Value=EmailDelayInSeconds id="email-delay" class="form-control" style="width: 70px"/>
+        <p>seconds</p>
+    </div>
+    
+    <p>If you are happy with this, please click the button below to send the email to @Recipients.Count() recipients. This action cannot be undone.</p>
+    @if (!SendEmailPressed)
+    {
+        <div class="flex-container flex-gap">
+            <Button OnClickAsync="SendEmailFirstPress">Send Email</Button>
+            <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
+        </div>
+    }
+    else
+    {
+        <p>@Recipients.Count() is a lot of people. Please type "@CorrectConfirmText" in the box below to confirm this action.</p>
+        <InputText @bind-Value=ConfirmText class="confirm-text" placeholder="@CorrectConfirmText" style="width: 250px;margin-bottom: 10px;"/>
+        <div class="flex-container flex-gap">
+            @if (ConfirmText == CorrectConfirmText)
+            {
+                <Button OnClickAsync="SendEmailToAll">Send Email</Button>
+            }
+            <Button OnClick="() => { ReadyToSend = false; StateHasChanged(); }" CssClass="no-margin">Go Back</Button>
+        </div>
+    }
+}
+
+@if (ErrorText != "")
+{
+    <p class="text-danger" style="white-space: pre-wrap;">@ErrorText</p>
+}
+
+@code {
+
+    private InputModel Input { get; set; } = new();
+    private IDictionary<AccountWithGuests, bool> AccountsWithEmails { get; set; } = new Dictionary<AccountWithGuests, bool>();
+    private IEnumerable<string> Recipients => AccountsWithEmails.Where(kv => kv.Value).Select(kv => kv.Key.Email!);
+    private IEnumerable<string> AccountsWithNoEmail { get; set; } = [];
+    private bool ReadyToSend { get; set; } = false;
+    private string? LoggedInUserEmail { get; set; }
+    private IDictionary<string, EmailStatus> Status { get; set; } = new Dictionary<string, EmailStatus>();
+    private string ErrorText { get; set; } = "";
+    private bool ShowVariables { get; set; } = false;
+    private string ConfirmText { get; set; } = "";
+    private bool SendEmailPressed { get; set; } = false;
+    private string CorrectConfirmText => $"I want to send an email to {Recipients.Count()} people";
+    private bool IsSendingPaused { get; set; } = false;
+    private int EmailDelayInSeconds { get; set; } = 0;
+
+    private async Task ValidFormSubmitted()
+    {
+        if (LoggedInUserEmail == null) return;
+        
+        var allAccounts = AdminService.GetAllAccounts().ToList();
+        AccountsWithNoEmail = allAccounts.Where(a => a.Email == null).Select(a => a.UserName ?? "No username");
+        AccountsWithEmails = allAccounts.Where(a => a.Email != null).ToDictionary(a => a, a => AccountMatchesFilter(a, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests)) && a.Email != LoggedInUserEmail);
+        // Order the checkboxes so that the ones matching the filters are at the top
+        AccountsWithEmails = AccountsWithEmails.OrderByDescending(kv => kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value);
+        foreach (var recipient in AccountsWithEmails)
+        {
+            Status[recipient.Key.Email!] = EmailStatus.NotStarted;
+        }
+
+        try
+        {
+            var loggedInUser = allAccounts.FirstOrDefault(a => a.Email == LoggedInUserEmail);
+            if (loggedInUser == null)
+            {
+                throw new Exception("Logged in user not found in database.");
+            }
+            // Don't pass in filters and just show all recipients, as it may well not match the logged in user.
+            await SendEmail(loggedInUser, Input.Subject, Input.Message);
+            ErrorText = "";
+            ReadyToSend = true;
+        }
+        catch (Exception e)
+        {
+            ErrorText = "Failed to send test email. Error details: " + e.Message;
+        }
+    }
+    
+    private async Task SendEmailFirstPress()
+    {
+        if (Recipients.Count() < 10)
+        {
+            await SendEmailToAll();
+        }
+        else
+        {
+            SendEmailPressed = true;
+            ConfirmText = "";
+            StateHasChanged();
+        }
+    }
+
+    private async Task SendEmailToAll()
+    {
+        foreach (var recipient in AccountsWithEmails.Where(kv => kv.Value).Select(kv => kv.Key))
+        {
+            while (IsSendingPaused)
+            {
+                await Task.Delay(500);
+            }
+
+            var email = recipient.Email!;
+            
+            Status[email] = EmailStatus.Waiting;
+            StateHasChanged();
+            await Task.Delay(EmailDelayInSeconds * 1000);
+            Status[email] = EmailStatus.NotStarted;
+            StateHasChanged();
+            
+            while (IsSendingPaused)
+            {
+                await Task.Delay(500);
+            }
+
+            Status[email] = EmailStatus.Sending;
+            StateHasChanged();
+            
+            try
+            {
+                await SendEmail(recipient, Input.Subject, Input.Message, new EmailFilters(Input.NumGuestsFilter, Input.RsvpStatusFilter, Input.RsvpMatchAllGuests));
+                Status[email] = EmailStatus.Sent;
+            }
+            catch (Exception e)
+            {
+                ErrorText += "Error for " + email + ": " + e.Message + "\n";
+                Status[email] = EmailStatus.Failed;
+                IsSendingPaused = true;
+            }
+            StateHasChanged();
+        }
+    }
+
+    private async Task SendEmail(AccountWithGuests recipient, string subject, string message, EmailFilters? filters = null)
+    {
+        foreach (var filter in EmailVariable.EmailVariables)
+        {
+            message = filter.Apply(message, recipient, filters ?? new EmailFilters());
+        }
+        await EmailSender.SendEmailAsync(recipient.Email!, subject, message, Input.UseHtml);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            var emailClaim = user.FindFirst(ClaimTypes.Email);
+            LoggedInUserEmail = emailClaim?.Value;
+        }
+    }
+
+    private class InputModel 
+    {
+        [Required]
+        public NumGuestsFilter NumGuestsFilter { get; set; } = NumGuestsFilter.Any;
+        
+        [Required]
+        public RsvpStatusFilter RsvpStatusFilter { get; set; } = RsvpStatusFilter.Any;
+
+        [Required]
+        public bool RsvpMatchAllGuests { get; set; } = false;
+
+        [Required]
+        public string Subject { get; set; } = string.Empty;
+
+        [Required]
+        public string Message { get; set; } = string.Empty;
+
+        [Required]
+        public bool UseHtml { get; set; } = false;
+    }
+
+    private bool AccountMatchesFilter(AccountWithGuests account, EmailFilters filters)
+    {
+        switch (filters.NumGuestsFilter)
+        {
+            case NumGuestsFilter.None:
+                if (account.Guests.Count() != 0) return false;
+                break;
+            case NumGuestsFilter.One:
+                if (account.Guests.Count() != 1) return false;
+                break;
+            case NumGuestsFilter.Multiple:
+                if (account.Guests.Count() <= 1) return false;
+                break;
+        }
+
+        if (!filters.RsvpStatusMatchAll)
+        {
+            if (filters.RsvpStatusFilter != RsvpStatusFilter.Any && !account.Guests.Any(filters.GuestMatchesRsvpStatus)) return false;
+        }
+        else
+        {
+            if (!account.Guests.Any()) return false; // Don't allow vacuous case.
+            if (account.Guests.Any(g => !filters.GuestMatchesRsvpStatus(g))) return false;
+        }
+        
+        return true;
+    }
+
+    private string MessagePlaceholder => Input.UseHtml ? @"Hi %FAMILY_NAME(ALL)%,
+<br>
+<br>This is a gentle reminder that the RSVP deadline is in <b>7</b> days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
+<br>
+<br>If you have forgotten your password or are having difficulty accessing the website, please reply to this email and we'll get it sorted.
+<br>           
+<br>Many thanks,
+<br>Bob
+<br>
+<br><i>This email was sent automatically, but we will receive replies.</i>
+" : @"Hi %FAMILY_NAME(ALL)%,
+                                         
+This is a gentle reminder that the RSVP deadline is in 7 days. Please ensure you have submitted your RSVP by the deadline. We are still waiting on RSVPs from %FULL_NAMES(RSVP_WAITING)% (%NUM_GUESTS(RSVP_WAITING)%/%NUM_GUESTS%). Please log into the wedding website with the username %USERNAME% to RSVP.
+
+If you have forgotten your password or are having difficulty accessing the website, please reply to this email and we'll get it sorted.
+                                         
+Many thanks,
+Bob
+
+(This email was sent automatically, but we will receive replies).";
+
+}
