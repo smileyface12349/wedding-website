@@ -11,6 +11,7 @@ namespace WeddingWebsite.Models.ConfigInterfaces;
 /// </summary>
 public interface IStringProvider
 {
+    string WebsiteTitle { get; }
     string PageTitle(string specificTitle);
     
     string Month { get; }
@@ -28,7 +29,6 @@ public interface IStringProvider
     string Submit { get; }
     string Cancel { get; }
     
-    string WebsiteTitle { get; }
     string MyAccount { get; }
     string Logout { get; }
     string Login { get; }

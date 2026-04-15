@@ -10,7 +10,8 @@ namespace WeddingWebsite.Config.Strings;
 /// </summary>
 public class StandardBritishEnglish : IStringProvider
 {
-    public string PageTitle(string specificTitle) => $"{specificTitle} - Wedding Website";
+    public string WebsiteTitle => "Wedding Website";
+    public string PageTitle(string specificTitle) => specificTitle == "" ? WebsiteTitle : $"{specificTitle} - {WebsiteTitle}";
     
     public string Month => "Month";
     public string Week => "Week";
@@ -27,7 +28,6 @@ public class StandardBritishEnglish : IStringProvider
     public string Submit => "Submit";
     public string Cancel => "Cancel";
     
-    public string WebsiteTitle => "Wedding Website";
     public string MyAccount => "My Account";
     public string Logout => "Logout";
     public string Login => "Log in";
