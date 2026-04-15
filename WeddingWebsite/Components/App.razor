@@ -13,7 +13,14 @@
     <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
     <ImportMap/>
     <link rel="icon" type="image/jpg" href="/img/favicon.jpg"/>
-    <HeadOutlet/>
+    @if (RenderModeForPage == InteractiveServer)
+    {
+        <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)"/>
+    }
+    else
+    {
+        <HeadOutlet/>
+    }
 </head>
 
 <body>
