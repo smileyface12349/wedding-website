@@ -10,6 +10,8 @@ namespace WeddingWebsite.Config.Strings;
 /// </summary>
 public class StandardBritishEnglish : IStringProvider
 {
+    public string PageTitle(string specificTitle) => $"{specificTitle} - Wedding Website";
+    
     public string Month => "Month";
     public string Week => "Week";
     public string Day => "Day";
