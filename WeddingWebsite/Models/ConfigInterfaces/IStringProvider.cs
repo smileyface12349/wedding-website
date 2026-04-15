@@ -4,13 +4,16 @@ using WeddingWebsite.Models.Registry;
 namespace WeddingWebsite.Models.ConfigInterfaces;
 
 /// <summary>
-/// Customise all user-facing strings, either into a different language or just different wording.
-/// This only applies to stuff that your guests will see, so admin pages and error messages are excluded.
-/// This may be added in future, but isn't a priority.
-/// Occasionally, something is missed. If so, feel free to make a PR or an issue!
+/// Customise all user-facing strings, either into a different language or just different wording. This generally only
+/// applies to stuff that your guests will see, so admin-only pages are usually excluded from the string provider.
+/// Occasionally, something is missed. If you discover a guest-facing string that is not configurable in here, please
+/// create an issue and I will fix it!
 /// </summary>
 public interface IStringProvider
 {
+    string WebsiteTitle { get; }
+    string PageTitle(string specificTitle);
+    
     string Month { get; }
     string Week { get; }
     string Day { get; }
@@ -26,7 +29,6 @@ public interface IStringProvider
     string Submit { get; }
     string Cancel { get; }
     
-    string WebsiteTitle { get; }
     string MyAccount { get; }
     string Logout { get; }
     string Login { get; }

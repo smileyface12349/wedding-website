@@ -22,8 +22,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IRsvpService RsvpService
 @inject IRsvpForm RsvpForm
+@inject IStringProvider StringProvider
 
-<PageTitle>Manage Account</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Manage Account")</PageTitle>
 
 <div class="narrow-section">
     <h1 class="text-center">Manage Guest</h1>

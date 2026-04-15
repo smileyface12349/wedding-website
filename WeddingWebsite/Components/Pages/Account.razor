@@ -29,9 +29,7 @@
 @inject IStringProvider StringProvider
 @inject IRsvpForm RsvpForm
 
-@rendermode InteractiveServer
-
-<PageTitle>@StringProvider.MyAccount</PageTitle>
+<PageTitle>@StringProvider.PageTitle(@StringProvider.MyAccount)</PageTitle>
 
 <CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
     <Section Center="true">

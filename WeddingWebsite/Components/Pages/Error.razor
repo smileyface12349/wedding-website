@@ -6,8 +6,9 @@
 @layout SimpleLayout
 
 @inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
 
-<PageTitle>Error</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Error")</PageTitle>
 
 <h1 class="text-danger">Error</h1>
 

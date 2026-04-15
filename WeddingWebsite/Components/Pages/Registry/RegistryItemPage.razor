@@ -20,7 +20,7 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
 
-<PageTitle>Registry - @Item?.GenericName</PageTitle>
+<PageTitle>@StringProvider.PageTitle($"{StringProvider.Registry} - {Item?.GenericName}")</PageTitle>
 
 @if (Item == null)
 {
