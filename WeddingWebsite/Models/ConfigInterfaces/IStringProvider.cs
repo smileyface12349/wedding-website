@@ -4,8 +4,8 @@ using WeddingWebsite.Models.Registry;
 namespace WeddingWebsite.Models.ConfigInterfaces;
 
 /// <summary>
-/// Customise all user-facing strings, either into a different language or just different wording.
-/// This only applies to stuff that your guests will see, so admin-only pages are excluded from the string provider.
+/// Customise all user-facing strings, either into a different language or just different wording. This generally only
+/// applies to stuff that your guests will see, so admin-only pages are usually excluded from the string provider.
 /// Occasionally, something is missed. If you discover a guest-facing string that is not configurable in here, please
 /// create an issue and I will fix it!
 /// </summary>
