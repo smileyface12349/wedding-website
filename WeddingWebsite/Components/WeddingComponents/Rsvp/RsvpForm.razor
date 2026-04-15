@@ -48,7 +48,6 @@
                     <p><i>@StringProvider.RsvpFormDescriptionContact(WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text)</i></p>
                 }
             }
-            <button @onclick="StateHasChanged">hello</button>
             
             <h2>@StringProvider.RsvpAttendanceQuestion<span class="required-asterisk">*</span></h2>
             @if (RsvpConfig.LongAttendanceResponses)
