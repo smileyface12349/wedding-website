@@ -81,6 +81,15 @@
     body {
         @(Theme?.Background.GetBackgroundCss() ?? Config.Colours.Surface.GetBackgroundCss()) !important;
     }
+    
+    @* Force vertical layout - otherwise it does row layout sometimes *@
+    .mud-radio-group {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+    .mud-ripple-radio {
+        margin-right: 5px;
+    }
 </style>
 
 @code {
