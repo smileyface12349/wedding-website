@@ -7,7 +7,7 @@
 @inject IWebsiteConfig Config
 @inject IStringProvider StringProvider
 
-<PageTitle>@StringProvider.Registry</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Registry")</PageTitle>
 
 @if (Config.OptionalFeatures.Registry.IsActive())
 {

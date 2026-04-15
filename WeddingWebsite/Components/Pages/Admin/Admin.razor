@@ -1,12 +1,15 @@
 ﻿@page "/Admin"
 @using WeddingWebsite.Components.Admin
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Models.ConfigInterfaces
 
 @attribute [Authorize(Roles = "Admin")]
 
 @layout SimpleLayout
 
-<PageTitle>Admin Page</PageTitle>
+@inject IStringProvider StringProvider
+
+<PageTitle>@StringProvider.PageTitle("Admin Page")</PageTitle>
 
 <h1>Admin Page</h1>
 

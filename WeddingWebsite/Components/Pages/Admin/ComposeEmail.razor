@@ -10,16 +10,18 @@
 @using WeddingWebsite.Models.Emails
 @using WeddingWebsite.Services
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.ConfigInterfaces
 
 @inject IEmailSender EmailSender
 @inject IAdminService AdminService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringProvider StringProvider
 
 @attribute [Authorize(Roles = "Admin")]
 
 @layout SimpleLayout
 
-<PageTitle>Compose Email</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Compose Email")</PageTitle>
 
 @if (!ReadyToSend)
 {

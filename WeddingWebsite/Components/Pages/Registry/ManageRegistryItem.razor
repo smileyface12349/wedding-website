@@ -3,15 +3,17 @@
 @using System.ComponentModel.DataAnnotations
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Services
 
 @inject IRegistryService RegistryService
 @inject NavigationManager NavigationManager
+@inject IStringProvider StringProvider
 
 @layout SimpleLayout
 
-<PageTitle>Edit Registry Item</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Edit Registry Item")</PageTitle>
 
 <h1>Manage Item</h1>
 <p>Modify as many or as few details as you want, then press save at the bottom. Please note that this will override any edits made while this tab is left open, including to fields that you are not modifying.</p>

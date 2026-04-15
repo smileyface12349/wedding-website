@@ -3,6 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Services
 
@@ -10,12 +11,13 @@
 @inject IAdminService AdminService
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
+@inject IStringProvider StringProvider
 
 @layout SimpleLayout
 
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>Edit Registry Claim</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Edit Registry Claim")</PageTitle>
 
 <h1>Manage Claim</h1>
 <p>Modify as many or as few details as you want, then press save at the bottom. Please note that this will override any edits made while this tab is left open, including fields that you are not modifying.</p>

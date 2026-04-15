@@ -9,6 +9,7 @@
 @using WeddingWebsite.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Services
+@using WeddingWebsite.Models.ConfigInterfaces
 
 @layout SimpleLayout
 
@@ -19,8 +20,9 @@
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringProvider StringProvider
 
-<PageTitle>Manage Account</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Manage Account")</PageTitle>
 
 <h1 class="text-center">Manage Account</h1>
 

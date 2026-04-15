@@ -10,6 +10,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
+@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Services
 
 @inject UserManager<Account> UserManager
@@ -18,12 +19,13 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IAdminService AdminService
+@inject IStringProvider StringProvider
 
 @attribute [Authorize ( Roles = "Admin") ]
 
 @layout SimpleLayout
 
-<PageTitle>Register</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Register")</PageTitle>
 
 <Section>
     <div class="narrow-section">

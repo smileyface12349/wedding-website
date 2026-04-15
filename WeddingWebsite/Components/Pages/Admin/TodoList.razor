@@ -13,8 +13,9 @@
 
 @inject ITodoService TodoService
 @inject IWebsiteConfig Config
+@inject IStringProvider StringProvider
 
-<PageTitle>Todo List</PageTitle>
+<PageTitle>@StringProvider.PageTitle("Todo List")</PageTitle>
 
 <Section Center="true">
     <h1>To-Do List</h1>
