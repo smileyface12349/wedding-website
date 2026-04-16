@@ -22,7 +22,7 @@ namespace WeddingWebsite.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Remove column not supported so we need to manually copy the data over
+            // Removing columns isn't supported, so we need to manually copy the data over.
             
             migrationBuilder.CreateTable(
                 name: "OldTodoItems",
