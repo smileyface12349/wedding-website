@@ -39,7 +39,7 @@
                         <Authorized>
                             @foreach (var filter in AdminExclusiveFilters)
                             {
-                                <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                                <MudSelectItem T="string" Value="@filter">@filter<span title="Admin-only"> 🔒</span></MudSelectItem>
                             }
                         </Authorized>
                     </AuthorizeView>
