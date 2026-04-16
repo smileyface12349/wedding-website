@@ -10,12 +10,12 @@ namespace WeddingWebsite.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<long>(
                 type: "INTEGER", 
                 name: "CreatedAt", 
                 table: "TodoItems", 
                 nullable: false, 
-                defaultValue: 0
+                defaultValue: 0L
             );
         }
 
