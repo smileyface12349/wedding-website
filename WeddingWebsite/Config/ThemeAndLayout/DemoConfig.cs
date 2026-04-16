@@ -61,6 +61,7 @@ public class DemoConfig : DefaultConfig, IWebsiteConfig
             new Section.VenueShowcase(new SectionTheme(orange, Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(purple, darkDarkGreen, null)))),
             new Section.MeetWeddingParty(new SectionTheme(flowers, Colours.Primary, outlinedBox)),
             new Section.Accommodation(new SectionTheme(pink, Colours.Primary, filledBox)),
+            new Section.SimpleContact(new SectionTheme(blueGreen, Colours.Secondary, whiteFilledBox)),
             new Section.TravelDirections(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox)),
             new Section.SimpleTimeline(new SectionTheme(flowers2, Colours.Primary, filledBox)),
             new Section.Gallery(),
