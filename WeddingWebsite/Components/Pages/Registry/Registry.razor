@@ -1,7 +1,6 @@
 ﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using WeddingWebsite.Components.Sections
-@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
@@ -29,6 +28,11 @@
                     <MudSelectItem T="SortOrder" Value="SortOrder.Default">@StringProvider.Default</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">@StringProvider.PriceLowToHigh</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">@StringProvider.PriceHighToLow</MudSelectItem>
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <MudSelectItem T="SortOrder" Value="SortOrder.RecentActivity">Recent Activity<span title="Admin-only"> 🔒</span></MudSelectItem>
+                        </Authorized>
+                    </AuthorizeView>
                 </MudSelect>
                 <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="@StringProvider.Filters" OnClose="_ => SaveFilters()">
                     @foreach (var filter in AllFilters)
@@ -102,6 +106,17 @@
                     return item.Cost;
                 case SortOrder.PriceHighToLow:
                     return -item.Cost;
+                case SortOrder.RecentActivity:
+                    if (item.Claims.Any())
+                    {
+                        return -item.Claims.Max(c => c.ReceivedAt ?? c.CompletedAt ?? c.ClaimedAt).Ticks;
+                    }
+                    else
+                    {
+                        // Fallback ordering for items with no claims is default sort - nobody should be setting
+                        // priorities bigger than the number of ticks so these should appear after claimed items.
+                        return -item.Priority;
+                    }
                 default:
                     return 0;
             }
@@ -134,7 +149,8 @@
     {
         Default,
         PriceLowToHigh,
-        PriceHighToLow
+        PriceHighToLow,
+        RecentActivity
     }
     
     private SortOrder CurrentSortOrder { get; set; } = SortOrder.Default;
