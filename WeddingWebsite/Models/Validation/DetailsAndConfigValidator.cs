@@ -532,7 +532,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// </summary>
     private void Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(IWebsiteConfig config) {
         var contactSection = GetSection<Section.Contact>(config);
-        if (contactSection == null) {
+        var simpleContactSection = GetSection<Section.SimpleContact>(config);
+        if (contactSection == null && simpleContactSection == null) {
             foreach (var item in config.Navbar.Items) {
                 if (item.Link.Contains("#contact", StringComparison.OrdinalIgnoreCase)) {
                     Error($"The navbar contains an item '{item.Text}' that links to contact, but there is no contact section. Either add the contact section, or remove this navbar item.");
