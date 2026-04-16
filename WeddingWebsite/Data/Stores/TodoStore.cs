@@ -148,6 +148,8 @@ public class TodoStore : ITodoStore
                     ELSE 0
                 END,
                 ti.WaitingUntil,
+                ti.CompletedAt,
+                ti.CreatedAt,
                 ti.Text";
         
         using var reader = cmd.ExecuteReader();
