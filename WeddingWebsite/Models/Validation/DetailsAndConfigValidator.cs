@@ -518,7 +518,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// </summary>
     private void Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(IWebsiteConfig config) {
         var timelineSection = GetSection<Section.Timeline>(config);
-        if (timelineSection == null) {
+        var simpleTimelineSection = GetSection<Section.SimpleTimeline>(config);
+        if (timelineSection == null && simpleTimelineSection == null) {
             foreach (var item in config.Navbar.Items) {
                 if (item.Link.Contains("#timeline", StringComparison.OrdinalIgnoreCase)) {
                     Error($"The navbar contains an item '{item.Text}' that links to the timeline, but there is no timeline section. Either add the timeline section, or remove this navbar item.");

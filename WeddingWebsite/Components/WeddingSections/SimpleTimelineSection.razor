@@ -5,7 +5,7 @@
 @inject IWeddingDetails WeddingDetails
 @inject IStringProvider StringProvider
 
-<Section>
+<Section Id="timeline">
     <SectionHeading>@StringProvider.OrderOfTheDay</SectionHeading>
     <SimpleTimeline Events="WeddingDetails.Events"/>
 </Section>
