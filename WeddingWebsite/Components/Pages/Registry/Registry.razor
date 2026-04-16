@@ -120,11 +120,13 @@
     ];
     private readonly string[] AdminExclusiveFilters =
     [
-        "Claimed: Bring on day",
-        "Claimed: Deliver to us",
-        "Claimed: Money transfer",
-        "Claimed: Pending",
-        "Claimed: Completed",
+        "Claimed",
+        "Pending",
+        "Not yet received",
+        "Received",
+        "Bring on day",
+        "Deliver to us",
+        "Transfer money",
         "Hidden"
     ];
 
@@ -191,23 +193,31 @@
             return false;
         }
         // Admin exclusive filters
-        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.BringOnDay))
+        if (EnabledFilters.Contains("Bring on day") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.BringOnDay))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.DeliverToUs))
+        if (EnabledFilters.Contains("Deliver to us") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.DeliverToUs))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Money transfer") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.TransferMoney))
+        if (EnabledFilters.Contains("Transfer money") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.TransferMoney))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Pending") && item.Claims.All(c => c.IsCompleted))
+        if (EnabledFilters.Contains("Claimed") && !item.Claims.Any())
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Completed") && item.Claims.All(c => !c.IsCompleted))
+        if (EnabledFilters.Contains("Received") && item.Claims.All(c => !c.IsReceived))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Pending") && item.Claims.All(c => c.IsCompleted))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Not yet received") && item.Claims.All(c => c.IsReceived))
         {
             return false;
         }
