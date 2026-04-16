@@ -15,7 +15,8 @@ public class DemoConfig : DefaultConfig, IWebsiteConfig
     );
     public new DemoMode DemoMode => new DemoMode.Enabled([]);
     public new IEnumerable<string> IgnoredValidationIssues => [
-        "You have both a Timeline and SimpleTimeline section. Since both sections display the same information, choose the level of detail you want and remove the other section."
+        "You have both a Timeline and SimpleTimeline section. Since both sections display the same information, choose the level of detail you want and remove the other section.",
+        "You have both a Contact and SimpleContact section. Since both sections display the same information, choose the level of detail you want and remove the other section."
     ];
 
     public DemoConfig() {
