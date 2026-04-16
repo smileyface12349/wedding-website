@@ -1,0 +1,23 @@
+﻿@using WeddingWebsite.Models.People
+@using WeddingWebsite.Components.Containers
+
+<Box>
+    <h3>@Contact.NameAndRole</h3>
+    @foreach (var method in Contact.ContactDetails.GetOptions(Urgency).Methods) {
+        @if (method.Link != null) {
+            <p>@method.Type: <a href="@method.Link" target="_blank" rel="noopener noreferrer">@method.Text</a></p>
+        }
+        else {
+            <p>@method.Type: @method.Text</p>
+        }
+    }
+</Box>
+<div style="height: 10px;"></div>
+
+@code {
+    [Parameter]
+    public required IContact Contact { get; set; }
+    
+    [Parameter]
+    public required ContactUrgency Urgency { get; set; }
+}
