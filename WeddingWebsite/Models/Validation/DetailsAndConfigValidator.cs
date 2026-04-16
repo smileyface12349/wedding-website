@@ -41,6 +41,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_InformAboutLoginContact(details);
         Contacts_ShouldNotHaveDuplicates(details);
         Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
+        Contacts_Simple_ShouldHaveAtLeastOneContact(details, config);
         
         VenueShowcase_ShouldNotHaveMoreThanTwoVenues(details, config);
         
@@ -294,6 +295,20 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
                     Warning($"The contact '{contact.NameAndRole}' has urgent options, but you have disabled the urgency toggle in settings. Either re-enable this toggle, or remove all urgent contact options, as the urgent contact options will be ignored.");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Doesn't make sense to have a section that isn't displaying anything.
+    /// </summary>
+    private void Contacts_Simple_ShouldHaveAtLeastOneContact(IWeddingDetails details, IWebsiteConfig config)
+    {
+        var section = GetSection<Section.SimpleContact>(config);
+        if (section == null) return;
+        var aContactMethod = details.GetContactMethod(ContactReason.Other);
+        if (aContactMethod == null)
+        {
+            Warning($"There are no contacts with reason 'Other', so no contacts will be visible in the simple contact section. Consider adding a contact method with this reason, or removing this section.");
         }
     }
     
