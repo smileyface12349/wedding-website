@@ -15,8 +15,9 @@ public class TodoStore : ITodoStore
         connection.Open();
 
         var cmd = connection.CreateCommand();
-        cmd.CommandText = "INSERT INTO TodoItems (Id) VALUES (:id)";
+        cmd.CommandText = "INSERT INTO TodoItems (Id, CreatedAt) VALUES (:id, :createdAt)";
         cmd.Parameters.AddWithValue(":id", id);
+        cmd.Parameters.AddWithValue(":createdAt", DateTime.UtcNow.Ticks);
         cmd.ExecuteNonQuery();
     }
 
@@ -147,6 +148,8 @@ public class TodoStore : ITodoStore
                     ELSE 0
                 END,
                 ti.WaitingUntil,
+                ti.CompletedAt,
+                ti.CreatedAt,
                 ti.Text";
         
         using var reader = cmd.ExecuteReader();
