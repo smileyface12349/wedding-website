@@ -75,6 +75,8 @@ public class StandardBritishEnglish : IStringProvider
     public string SuggestedContacts => "Suggested contacts";
     public string NoContactsBecauseNoCategory => "Choose a category of enquiry to see contacts.";
     public string NoContactsMatched => "No contacts found. Try a different search.";
+    public string SimpleContactDescription => "If you need to get in touch, please contact us at:";
+    public string SimpleContactDescriptionUrgent => "If it's urgent, try one of these instead:";
 
     public string Directions => "Directions";
 

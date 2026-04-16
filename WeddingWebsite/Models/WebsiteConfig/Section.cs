@@ -63,6 +63,11 @@ public abstract record Section
     }
 
     /// <summary>
+    /// Shows the "Other" contact method only - useful if you want all enquiries to go to the same place.
+    /// </summary>
+    public sealed record SimpleContact(SectionTheme? Theme = null) : Section(Theme);
+
+    /// <summary>
     /// Shows the dress code. By default, it is shown inside a box.
     /// </summary>
     public sealed record DressCode(

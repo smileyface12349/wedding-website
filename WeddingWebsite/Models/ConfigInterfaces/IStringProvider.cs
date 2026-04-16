@@ -76,6 +76,8 @@ public interface IStringProvider
     string SuggestedContacts { get; }
     string NoContactsBecauseNoCategory { get; }
     string NoContactsMatched { get; }
+    string SimpleContactDescription { get; }
+    string SimpleContactDescriptionUrgent { get; }
     
     string Directions { get; }
     

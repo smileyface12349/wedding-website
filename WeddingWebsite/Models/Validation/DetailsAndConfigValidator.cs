@@ -22,6 +22,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Sections_ShouldNotHaveDuplicates(config);
         Sections_ShouldNotHaveTwoFractionalParallaxBackgrounds(config);
         Sections_ShouldNotHaveTimelineAndSimpleTimeline(config);
+        Sections_ShouldNotHaveContactsAndSimpleContacts(config);
         
         People_ThereIsABrideAndGroom(details);
         
@@ -40,6 +41,7 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         Contacts_InformAboutLoginContact(details);
         Contacts_ShouldNotHaveDuplicates(details);
         Contacts_ShouldNotHaveEmptyMethods_IfReasonsIsNonEmpty(details);
+        Contacts_Simple_ShouldHaveAtLeastOneContact(details, config);
         
         VenueShowcase_ShouldNotHaveMoreThanTwoVenues(details, config);
         
@@ -295,6 +297,20 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
             }
         }
     }
+
+    /// <summary>
+    /// Doesn't make sense to have a section that isn't displaying anything.
+    /// </summary>
+    private void Contacts_Simple_ShouldHaveAtLeastOneContact(IWeddingDetails details, IWebsiteConfig config)
+    {
+        var section = GetSection<Section.SimpleContact>(config);
+        if (section == null) return;
+        var aContactMethod = details.GetContactMethod(ContactReason.Other);
+        if (aContactMethod == null)
+        {
+            Warning($"There are no contacts with reason 'Other', so no contacts will be visible in the simple contact section. Consider adding a contact method with this reason, or removing this section.");
+        }
+    }
     
     /// <summary>
     /// Doesn't cause any errors but seems a bit silly!
@@ -339,11 +355,25 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
         }
     }
 
+    /// <summary>
+    /// Both of these sections do roughly the same thing, so it doesn't make sense to have both.
+    /// </summary>
     private void Sections_ShouldNotHaveTimelineAndSimpleTimeline(IWebsiteConfig config)
     {
         if (GetSection<Section.Timeline>(config) != null && GetSection<Section.SimpleTimeline>(config) != null)
         {
             Warning("You have both a Timeline and SimpleTimeline section. Since both sections display the same information, choose the level of detail you want and remove the other section.");
+        }
+    }
+    
+    /// <summary>
+    /// Both of these sections do roughly the same thing, so it doesn't make sense to have both.
+    /// </summary>
+    private void Sections_ShouldNotHaveContactsAndSimpleContacts(IWebsiteConfig config)
+    {
+        if (GetSection<Section.Contact>(config) != null && GetSection<Section.SimpleContact>(config) != null)
+        {
+            Warning("You have both a Contact and SimpleContact section. Since both sections display the same information, choose the level of detail you want and remove the other section.");
         }
     }
 
@@ -503,7 +533,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// </summary>
     private void Navbar_ShouldNotHaveTimeline_IfThereIsNoTimelineSection(IWebsiteConfig config) {
         var timelineSection = GetSection<Section.Timeline>(config);
-        if (timelineSection == null) {
+        var simpleTimelineSection = GetSection<Section.SimpleTimeline>(config);
+        if (timelineSection == null && simpleTimelineSection == null) {
             foreach (var item in config.Navbar.Items) {
                 if (item.Link.Contains("#timeline", StringComparison.OrdinalIgnoreCase)) {
                     Error($"The navbar contains an item '{item.Text}' that links to the timeline, but there is no timeline section. Either add the timeline section, or remove this navbar item.");
@@ -517,7 +548,8 @@ public class DetailsAndConfigValidator: IDetailsAndConfigValidator
     /// </summary>
     private void Navbar_ShouldNotHaveContact_IfThereIsNoContactSection(IWebsiteConfig config) {
         var contactSection = GetSection<Section.Contact>(config);
-        if (contactSection == null) {
+        var simpleContactSection = GetSection<Section.SimpleContact>(config);
+        if (contactSection == null && simpleContactSection == null) {
             foreach (var item in config.Navbar.Items) {
                 if (item.Link.Contains("#contact", StringComparison.OrdinalIgnoreCase)) {
                     Error($"The navbar contains an item '{item.Text}' that links to contact, but there is no contact section. Either add the contact section, or remove this navbar item.");

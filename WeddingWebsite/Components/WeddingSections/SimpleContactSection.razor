@@ -1,0 +1,32 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.People
+
+@inject IWeddingDetails WeddingDetails
+@inject IStringProvider StringProvider
+
+<Section Id="contact">
+    <SectionHeading>@StringProvider.ContactUs</SectionHeading>
+    <div class="container">
+        @if (NotUrgentContacts.Any())
+        {
+            <p>@StringProvider.SimpleContactDescription</p>
+            @foreach (var contact in NotUrgentContacts) {
+                <ContactInList Contact="contact" Urgency="ContactUrgency.NotUrgent"/>
+            }
+        }
+        @if (UrgentContacts.Any())
+        {
+            <p>@StringProvider.SimpleContactDescriptionUrgent</p>
+            @foreach (var contact in UrgentContacts) {
+                <ContactInList Contact="contact" Urgency="ContactUrgency.Urgent"/>
+            }
+        }
+    </div>
+</Section>
+
+@code {
+    private IEnumerable<IContact> UrgentContacts => WeddingDetails.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.Urgent).MatchesReason(ContactReason.Other));
+    private IEnumerable<IContact> NotUrgentContacts => WeddingDetails.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.NotUrgent).MatchesReason(ContactReason.Other));
+}

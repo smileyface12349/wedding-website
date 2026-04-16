@@ -44,7 +44,7 @@ public class DefaultConfig : IWebsiteConfig
             new Section.HowWeMet(),
             new Section.Timeline(),
             new Section.DressCode(),
-            new Section.Contact()
+            new Section.SimpleContact()
         ];
         
         TopButtons = new TopButtonsConfig(
