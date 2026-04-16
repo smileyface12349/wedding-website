@@ -29,6 +29,11 @@
                     <MudSelectItem T="SortOrder" Value="SortOrder.Default">@StringProvider.Default</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceLowToHigh">@StringProvider.PriceLowToHigh</MudSelectItem>
                     <MudSelectItem T="SortOrder" Value="SortOrder.PriceHighToLow">@StringProvider.PriceHighToLow</MudSelectItem>
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <MudSelectItem T="SortOrder" Value="SortOrder.RecentActivity">Recent Activity<span title="Admin-only"> 🔒</span></MudSelectItem>
+                        </Authorized>
+                    </AuthorizeView>
                 </MudSelect>
                 <MudSelect T="string" MultiSelection="true" @bind-Value="EnabledFiltersString" @bind-SelectedValues="EnabledFilters" Label="@StringProvider.Filters" OnClose="_ => SaveFilters()">
                     @foreach (var filter in AllFilters)
@@ -39,7 +44,7 @@
                         <Authorized>
                             @foreach (var filter in AdminExclusiveFilters)
                             {
-                                <MudSelectItem T="string" Value="@filter">@filter</MudSelectItem>
+                                <MudSelectItem T="string" Value="@filter">@filter<span title="Admin-only"> 🔒</span></MudSelectItem>
                             }
                         </Authorized>
                     </AuthorizeView>
@@ -102,6 +107,17 @@
                     return item.Cost;
                 case SortOrder.PriceHighToLow:
                     return -item.Cost;
+                case SortOrder.RecentActivity:
+                    if (item.Claims.Any())
+                    {
+                        return -item.Claims.Max(c => c.ReceivedAt ?? c.CompletedAt ?? c.ClaimedAt).Ticks;
+                    }
+                    else
+                    {
+                        // Fallback ordering for items with no claims is default sort - nobody should be setting
+                        // priorities bigger than the number of ticks so these should appear after claimed items.
+                        return -item.Priority;
+                    }
                 default:
                     return 0;
             }
@@ -120,11 +136,13 @@
     ];
     private readonly string[] AdminExclusiveFilters =
     [
-        "Claimed: Bring on day",
-        "Claimed: Deliver to us",
-        "Claimed: Money transfer",
-        "Claimed: Pending",
-        "Claimed: Completed",
+        "Claimed",
+        "Pending",
+        "Not yet received",
+        "Received",
+        "Bring on day",
+        "Deliver to us",
+        "Transfer money",
         "Hidden"
     ];
 
@@ -132,7 +150,8 @@
     {
         Default,
         PriceLowToHigh,
-        PriceHighToLow
+        PriceHighToLow,
+        RecentActivity
     }
     
     private SortOrder CurrentSortOrder { get; set; } = SortOrder.Default;
@@ -191,23 +210,31 @@
             return false;
         }
         // Admin exclusive filters
-        if (EnabledFilters.Contains("Claimed: Bring on day") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.BringOnDay))
+        if (EnabledFilters.Contains("Bring on day") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.BringOnDay))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Deliver to us") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.DeliverToUs))
+        if (EnabledFilters.Contains("Deliver to us") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.DeliverToUs))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Money transfer") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.TransferMoney))
+        if (EnabledFilters.Contains("Transfer money") && item.Claims.All(claim => claim.FulfillmentMethod != FulfillmentMethod.TransferMoney))
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Pending") && item.Claims.All(c => c.IsCompleted))
+        if (EnabledFilters.Contains("Claimed") && !item.Claims.Any())
         {
             return false;
         }
-        if (EnabledFilters.Contains("Claimed: Completed") && item.Claims.All(c => !c.IsCompleted))
+        if (EnabledFilters.Contains("Received") && item.Claims.All(c => !c.IsReceived))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Pending") && item.Claims.All(c => c.IsCompleted))
+        {
+            return false;
+        }
+        if (EnabledFilters.Contains("Not yet received") && item.Claims.All(c => c.IsReceived))
         {
             return false;
         }
