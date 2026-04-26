@@ -1,0 +1,15 @@
+﻿.form-group ::deep p, .form-group ::deep label {
+    margin: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 20px;
+}

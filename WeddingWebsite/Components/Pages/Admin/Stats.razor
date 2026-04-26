@@ -1,6 +1,8 @@
 ﻿@page "/admin/stats"
 
+@using System.Text
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
@@ -8,6 +10,7 @@
 
 @inject IAdminService AdminService
 @inject IStringProvider StringProvider
+@inject IJSRuntime JS
 
 @layout SimpleLayout
 
@@ -35,11 +38,55 @@
 <h2>Graphs</h2>
 
 <h2>Frequency Analysis</h2>
-<p>It's a bit niche, but if you're making name tags comprising individual letters, this might be useful for you.</p>
+<p>Count up how many times each letter appears in guest names.</p>
+
+@if (LetterFrequency.Any())
+{
+    <p><b>Name: </b>@NamePartFilter.ToString().</p>
+    <p><b>RSVP: </b>@(RsvpStatusFilter == RsvpFilter.NotNo ? "Not No" : RsvpStatusFilter.ToString()).</p>
+    <MudTable T="KeyValuePair<char, int>" Items="LetterFrequency" Style="margin-bottom:20px;">
+        <HeaderContent>
+            <MudTh>Letter</MudTh>
+            <MudTh>Count</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Letter">@context.Key</MudTd>
+            <MudTd DataLabel="Count">@context.Value</MudTd>
+        </RowTemplate>
+    </MudTable>
+    <Button OnClickAsync="DownloadFrequencyCsv">Download CSV</Button>
+    <Button OnClick="() => { LetterFrequency.Clear(); StateHasChanged(); }">Clear</Button>
+}
+else
+{
+    <div class="form-group">
+        <label for="name-part">Name</label>
+        <MudRadioGroup T="NamePart" @bind-Value="NamePartFilter" id="name-part">
+            <MudRadio Value="NamePart.First">First</MudRadio>
+            <MudRadio Value="NamePart.Last">Last</MudRadio>
+            <MudRadio Value="NamePart.Full">Full</MudRadio>
+        </MudRadioGroup>
+    </div>
+
+    <div class="form-group">
+        <label for="rsvp-status">Filter by RSVP</label>
+        <MudRadioGroup T="RsvpFilter" @bind-Value="RsvpStatusFilter" id="rsvp-status">
+            <MudRadio Value="RsvpFilter.Yes">Yes</MudRadio>
+            <MudRadio Value="RsvpFilter.NotNo">Not No</MudRadio>
+            <MudRadio Value="RsvpFilter.Any">Any</MudRadio>
+        </MudRadioGroup>
+    </div>
+    <Button OnClick="CalculateLetterFrequency">Calculate</Button>
+}
+
+<script src="/Components/Pages/Admin/Stats.razor.js"></script>
 
 
 @code {
     private IList<AccountWithGuests> AllAccounts { get; set; } = [];
+    private Dictionary<char, int> LetterFrequency { get; set; } = new();
+    private RsvpFilter RsvpStatusFilter { get; set; } = RsvpFilter.NotNo;
+    private NamePart NamePartFilter { get; set; } = NamePart.First;
 
     protected override void OnInitialized()
     {
@@ -58,6 +105,69 @@
         var total = AllAccounts.Count(predicate);
         var percent = AllAccounts.Count == 0 ? 0 : (double)total / AllAccounts.Count * 100;
         return $"{total} ({percent:F0}%)";
+    }
+    
+    private void CalculateLetterFrequency()
+    {
+        var frequency = new Dictionary<char, int>();
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            frequency[c] = 0;
+        }
+        foreach (var account in AllAccounts)
+        {
+            foreach (var guest in account.Guests)
+            {
+                foreach (var letter in guest.Name.First.ToUpper())
+                {
+                    if (char.IsLetter(letter))
+                    {
+                        frequency[letter]++;
+                    }
+                }
+            }
+        }
+        LetterFrequency = frequency;
+        StateHasChanged();
+    }
+    
+    private async Task DownloadFrequencyCsv()
+    {
+        var csvContent = new StringBuilder();
+        csvContent.AppendLine("Letter,Count");
+        foreach (var kvp in LetterFrequency)
+        {
+            csvContent.AppendLine($"{kvp.Key},{kvp.Value}");
+        }
+        var namePart = NamePartFilter switch
+        {
+            NamePart.First => "first",
+            NamePart.Last => "last",
+            NamePart.Full => "full",
+            _ => "unknown"
+        };
+        var rsvpFilter = RsvpStatusFilter switch
+        {
+            RsvpFilter.Yes => "yes",
+            RsvpFilter.NotNo => "not_no",
+            RsvpFilter.Any => "any",
+            _ => "unknown"
+        };
+        await JS.InvokeVoidAsync("downloadFile", $"rsvp_{namePart}_{rsvpFilter}.csv", csvContent.ToString());
+    }
+
+    private enum NamePart
+    {
+        First,
+        Last,
+        Full
+    }
+
+    private enum RsvpFilter
+    {
+        Yes,
+        NotNo,
+        Any
     }
 
 }
