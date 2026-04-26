@@ -1,0 +1,63 @@
+﻿@page "/admin/stats"
+
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
+
+@inject IAdminService AdminService
+@inject IStringProvider StringProvider
+
+@layout SimpleLayout
+
+<PageTitle>@StringProvider.PageTitle("Stats")</PageTitle>
+
+<h1>Stats</h1>
+<p>View some stats about your guests.</p>
+
+<h2>Numbers</h2>
+<MudTable T="int" Items="new[] { 0 }" Breakpoint="Breakpoint.Always" Style="margin-bottom:20px;">
+    <RowTemplate>
+        <MudTd DataLabel="Total Accounts">@AllAccounts.Count</MudTd>
+        <MudTd DataLabel="Accounts with 1 Guest">@AccountStat(a => a.Guests.Count() == 1)</MudTd>
+        <MudTd DataLabel="Accounts with 2+ Guests">@AccountStat(a => a.Guests.Count() >= 2)</MudTd>
+        <MudTd DataLabel="Total Guests">@AllAccounts.Sum(a => a.Guests.Count())</MudTd>
+        <MudTd DataLabel="Optimistic Attendance">@GuestStat(g => g.Rsvp is RsvpStatus.Yes or RsvpStatus.NotResponded)</MudTd>
+        <MudTd DataLabel="Confirmed Attendance">@GuestStat(g => g.Rsvp == RsvpStatus.Yes)</MudTd>
+        <MudTd DataLabel="Yet to RSVP">@GuestStat(g => g.Rsvp == RsvpStatus.NotResponded)</MudTd>
+        <MudTd DataLabel="Declined">@GuestStat(g => g.Rsvp == RsvpStatus.No)</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<p>For more detail about RSVPs, view the <a href="/admin/rsvp/table">RSVP response table</a>.</p>
+
+<h2>Graphs</h2>
+
+<h2>Frequency Analysis</h2>
+<p>It's a bit niche, but if you're making name tags comprising individual letters, this might be useful for you.</p>
+
+
+@code {
+    private IList<AccountWithGuests> AllAccounts { get; set; } = [];
+
+    protected override void OnInitialized()
+    {
+        AllAccounts = AdminService.GetAllAccounts().ToList();
+    }
+
+    private string GuestStat(Func<Guest, bool> count)
+    {
+        var total = AllAccounts.SelectMany(a => a.Guests).Count(count);
+        var percent = !AllAccounts.SelectMany(a => a.Guests).Any() ? 0 : (double)total / AllAccounts.SelectMany(a => a.Guests).Count() * 100;
+        return $"{total} ({percent:F0}%)";
+    }
+    
+    private string AccountStat(Func<AccountWithGuests, bool> predicate)
+    {
+        var total = AllAccounts.Count(predicate);
+        var percent = AllAccounts.Count == 0 ? 0 : (double)total / AllAccounts.Count * 100;
+        return $"{total} ({percent:F0}%)";
+    }
+
+}
