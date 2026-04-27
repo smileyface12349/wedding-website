@@ -9,6 +9,7 @@
 @using WeddingWebsite.Services
 
 @inject IAdminService AdminService
+@inject IRsvpService RsvpService
 @inject IStringProvider StringProvider
 @inject IJSRuntime JS
 
@@ -35,7 +36,25 @@
 
 <p>For more detail about RSVPs, view the <a href="/admin/rsvp/table">RSVP response table</a>.</p>
 
-<h2>Graphs</h2>
+<h2>RSVP Graph</h2>
+@if (RsvpCountSeries.Data.Count > 1)
+{
+    <MudTimeSeriesChart
+        ChartType="ChartType.Timeseries" 
+        ChartSeries="AllSeries"
+        CanHideSeries="true"
+        ChartOptions="ChartOptions"
+        TimeLabelSpacing="TickSpacing"
+        TimeLabelFormat="dd/MM"
+        DataMarkerTooltipTimeLabelFormat="dd/MM/yyyy HH:mm:ss"
+        Width="100%"
+        Height="100%"
+    />
+}
+else
+{
+    <p>The RSVP graph requires at least two RSVP responses to work properly.</p>
+}
 
 <h2>Frequency Analysis</h2>
 <p>Count up how many times each letter appears in guest names.</p>
@@ -81,16 +100,85 @@ else
 
 <script src="/Components/Pages/Admin/Stats.razor.js"></script>
 
+<style>
+    .mud-input-control label {
+        margin: 0;
+    }
+</style>
 
 @code {
     private IList<AccountWithGuests> AllAccounts { get; set; } = [];
     private Dictionary<char, int> LetterFrequency { get; set; } = new();
     private RsvpFilter RsvpStatusFilter { get; set; } = RsvpFilter.NotNo;
     private NamePart NamePartFilter { get; set; } = NamePart.First;
+    
+    private TimeSeriesChartSeries RsvpCountSeries { get; set; } = new();
+    private TimeSeriesChartSeries RsvpYesSeries { get; set; } = new();
+    private TimeSeriesChartSeries RsvpNoSeries { get; set; } = new();
+    private List<TimeSeriesChartSeries> AllSeries => new() { RsvpCountSeries, RsvpYesSeries, RsvpNoSeries };
+    private TimeSpan TickSpacing { get; set; } = TimeSpan.FromDays(1);
 
+    private ChartOptions ChartOptions => new ChartOptions()
+    {
+        YAxisTicks = AllAccounts.Sum(a => a.Guests.Count()) / 5,
+        YAxisLines = true,
+        YAxisRequireZeroPoint = true
+    };
+    
     protected override void OnInitialized()
     {
         AllAccounts = AdminService.GetAllAccounts().ToList();
+        
+        var rsvps = RsvpService.GetAllRsvpsBasic().Reverse().ToList();
+
+        var rsvpDone = 0;
+        var rsvpYes = 0;
+        var rsvpNo = 0;
+        
+        var rsvpDoneData = new List<TimeSeriesChartSeries.TimeValue>();
+        var rsvpYesData = new List<TimeSeriesChartSeries.TimeValue>();
+        var rsvpNoData = new List<TimeSeriesChartSeries.TimeValue>();
+
+        if (rsvps.Any())
+        {
+            rsvpDoneData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+            rsvpYesData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+            rsvpNoData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+        }
+
+        foreach (var rsvp in rsvps)
+        {
+            rsvpDone++;
+            if (rsvp.IsAttending) rsvpYes++;
+            else rsvpNo++;
+            
+            rsvpDoneData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpDone));
+            rsvpYesData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpYes));
+            rsvpNoData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpNo));
+        }
+        
+        RsvpCountSeries = new TimeSeriesChartSeries
+        {
+            Name = "Total Responses",
+            Data = rsvpDoneData,
+        };
+        
+        RsvpYesSeries = new TimeSeriesChartSeries
+        {
+            Name = "Yes Responses",
+            Data = rsvpYesData,
+        };
+        
+        RsvpNoSeries = new TimeSeriesChartSeries
+        {
+            Name = "No Responses",
+            Data = rsvpNoData,
+        };
+        
+        var timeRange = rsvps.Any() ? rsvps.Last().SubmittedAt - rsvps.First().SubmittedAt : TimeSpan.FromDays(1);
+        TickSpacing = timeRange.TotalDays < 10 ? TimeSpan.FromDays(1) : TimeSpan.FromDays(Math.Floor(timeRange.TotalDays / 7));
+        
+        StateHasChanged();
     }
 
     private string GuestStat(Func<Guest, bool> count)
