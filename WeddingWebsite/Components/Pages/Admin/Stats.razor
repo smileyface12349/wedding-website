@@ -1,0 +1,283 @@
+﻿@page "/admin/stats"
+
+@using System.Text
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
+
+@inject IAdminService AdminService
+@inject IRsvpService RsvpService
+@inject IStringProvider StringProvider
+@inject IJSRuntime JS
+
+@layout SimpleLayout
+
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>@StringProvider.PageTitle("Stats")</PageTitle>
+
+<h1>Stats</h1>
+<p>View some stats about your guests.</p>
+
+<h2>Numbers</h2>
+<MudTable T="int" Items="new[] { 0 }" Breakpoint="Breakpoint.Always" Style="margin-bottom:20px;">
+    <RowTemplate>
+        <MudTd DataLabel="Total Accounts">@AllAccounts.Count</MudTd>
+        <MudTd DataLabel="Accounts with 1 Guest">@AccountStat(a => a.Guests.Count() == 1)</MudTd>
+        <MudTd DataLabel="Accounts with 2+ Guests">@AccountStat(a => a.Guests.Count() >= 2)</MudTd>
+        <MudTd DataLabel="Total Guests">@AllAccounts.Sum(a => a.Guests.Count())</MudTd>
+        <MudTd DataLabel="Optimistic Attendance">@GuestStat(g => g.Rsvp is RsvpStatus.Yes or RsvpStatus.NotResponded)</MudTd>
+        <MudTd DataLabel="Confirmed Attendance">@GuestStat(g => g.Rsvp == RsvpStatus.Yes)</MudTd>
+        <MudTd DataLabel="Yet to RSVP">@GuestStat(g => g.Rsvp == RsvpStatus.NotResponded)</MudTd>
+        <MudTd DataLabel="Declined">@GuestStat(g => g.Rsvp == RsvpStatus.No)</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<p>For more detail about RSVPs, view the <a href="/admin/rsvp/table">RSVP response table</a>.</p>
+
+<h2>RSVP Graph</h2>
+@if (RsvpCountSeries.Data.Count > 1)
+{
+    <MudTimeSeriesChart
+        ChartType="ChartType.Timeseries" 
+        ChartSeries="AllSeries"
+        CanHideSeries="true"
+        ChartOptions="ChartOptions"
+        TimeLabelSpacing="TickSpacing"
+        TimeLabelFormat="dd/MM"
+        DataMarkerTooltipTimeLabelFormat="dd/MM/yyyy HH:mm:ss"
+        Width="100%"
+        Height="100%"
+    />
+}
+else
+{
+    <p>There aren't any RSVP responses yet.</p>
+}
+
+<h2>Frequency Analysis</h2>
+<p>Count up how many times each letter appears in guest names.</p>
+
+@if (LetterFrequency.Any())
+{
+    <p><b>Name: </b>@NamePartFilter.ToString().</p>
+    <p><b>RSVP: </b>@(RsvpStatusFilter == RsvpFilter.NotNo ? "Not No" : RsvpStatusFilter.ToString()).</p>
+    <MudTable T="KeyValuePair<char, int>" Items="LetterFrequency" Style="margin-bottom:20px;">
+        <HeaderContent>
+            <MudTh>Letter</MudTh>
+            <MudTh>Count</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Letter">@context.Key</MudTd>
+            <MudTd DataLabel="Count">@context.Value</MudTd>
+        </RowTemplate>
+    </MudTable>
+    <Button OnClickAsync="DownloadFrequencyCsv">Download CSV</Button>
+    <Button OnClick="() => { LetterFrequency.Clear(); StateHasChanged(); }">Clear</Button>
+}
+else
+{
+    <div class="form-group">
+        <label for="name-part">Name</label>
+        <MudRadioGroup T="NamePart" @bind-Value="NamePartFilter" id="name-part">
+            <MudRadio Value="NamePart.First">First</MudRadio>
+            <MudRadio Value="NamePart.Last">Last</MudRadio>
+            <MudRadio Value="NamePart.Full">Full</MudRadio>
+        </MudRadioGroup>
+    </div>
+
+    <div class="form-group">
+        <label for="rsvp-status">Filter by RSVP</label>
+        <MudRadioGroup T="RsvpFilter" @bind-Value="RsvpStatusFilter" id="rsvp-status">
+            <MudRadio Value="RsvpFilter.Yes">Yes</MudRadio>
+            <MudRadio Value="RsvpFilter.NotNo">Not No</MudRadio>
+            <MudRadio Value="RsvpFilter.Any">Any</MudRadio>
+        </MudRadioGroup>
+    </div>
+    <Button OnClick="CalculateLetterFrequency">Calculate</Button>
+}
+
+<script src="/lib/files.js"></script>
+
+<style>
+    .mud-input-control label {
+        margin: 0;
+    }
+</style>
+
+@code {
+    private IList<AccountWithGuests> AllAccounts { get; set; } = [];
+    private Dictionary<char, int> LetterFrequency { get; set; } = new();
+    private RsvpFilter RsvpStatusFilter { get; set; } = RsvpFilter.NotNo;
+    private NamePart NamePartFilter { get; set; } = NamePart.First;
+    
+    private TimeSeriesChartSeries RsvpCountSeries { get; set; } = new();
+    private TimeSeriesChartSeries RsvpYesSeries { get; set; } = new();
+    private TimeSeriesChartSeries RsvpNoSeries { get; set; } = new();
+    private List<TimeSeriesChartSeries> AllSeries => new() { RsvpCountSeries, RsvpYesSeries, RsvpNoSeries };
+    private TimeSpan TickSpacing { get; set; } = TimeSpan.FromDays(1);
+
+    private ChartOptions ChartOptions => new ChartOptions()
+    {
+        YAxisTicks = AllAccounts.Sum(a => a.Guests.Count()) / 5,
+        YAxisLines = true,
+        YAxisRequireZeroPoint = true
+    };
+    
+    protected override void OnInitialized()
+    {
+        AllAccounts = AdminService.GetAllAccounts().ToList();
+        
+        var rsvps = RsvpService.GetAllRsvpsBasic().Reverse().ToList();
+
+        var rsvpDone = 0;
+        var rsvpYes = 0;
+        var rsvpNo = 0;
+        
+        var rsvpDoneData = new List<TimeSeriesChartSeries.TimeValue>();
+        var rsvpYesData = new List<TimeSeriesChartSeries.TimeValue>();
+        var rsvpNoData = new List<TimeSeriesChartSeries.TimeValue>();
+
+        if (rsvps.Any())
+        {
+            rsvpDoneData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+            rsvpYesData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+            rsvpNoData.Add(new TimeSeriesChartSeries.TimeValue(rsvps.First().SubmittedAt.AddDays(-1), 0));
+        }
+
+        foreach (var rsvp in rsvps)
+        {
+            rsvpDone++;
+            if (rsvp.IsAttending) rsvpYes++;
+            else rsvpNo++;
+            
+            rsvpDoneData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpDone));
+            rsvpYesData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpYes));
+            rsvpNoData.Add(new TimeSeriesChartSeries.TimeValue(rsvp.SubmittedAt, rsvpNo));
+        }
+        
+        RsvpCountSeries = new TimeSeriesChartSeries
+        {
+            Name = "Total Responses",
+            Data = rsvpDoneData,
+        };
+        
+        RsvpYesSeries = new TimeSeriesChartSeries
+        {
+            Name = "Yes Responses",
+            Data = rsvpYesData,
+        };
+        
+        RsvpNoSeries = new TimeSeriesChartSeries
+        {
+            Name = "No Responses",
+            Data = rsvpNoData,
+        };
+        
+        var timeRange = rsvps.Any() ? rsvps.Last().SubmittedAt - rsvps.First().SubmittedAt : TimeSpan.FromDays(1);
+        TickSpacing = timeRange.TotalDays < 10 ? TimeSpan.FromDays(1) : TimeSpan.FromDays(Math.Floor(timeRange.TotalDays / 7));
+        
+        StateHasChanged();
+    }
+
+    private string GuestStat(Func<Guest, bool> count)
+    {
+        var total = AllAccounts.SelectMany(a => a.Guests).Count(count);
+        var percent = !AllAccounts.SelectMany(a => a.Guests).Any() ? 0 : (double)total / AllAccounts.SelectMany(a => a.Guests).Count() * 100;
+        return $"{total} ({percent:F0}%)";
+    }
+    
+    private string AccountStat(Func<AccountWithGuests, bool> predicate)
+    {
+        var total = AllAccounts.Count(predicate);
+        var percent = AllAccounts.Count == 0 ? 0 : (double)total / AllAccounts.Count * 100;
+        return $"{total} ({percent:F0}%)";
+    }
+    
+    private void CalculateLetterFrequency()
+    {
+        var frequency = new Dictionary<char, int>();
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            frequency[c] = 0;
+        }
+        foreach (var account in AllAccounts)
+        {
+            foreach (var guest in account.Guests.Where(g => 
+                         RsvpStatusFilter == RsvpFilter.Any || 
+                         (RsvpStatusFilter == RsvpFilter.Yes && g.Rsvp == RsvpStatus.Yes) || 
+                         (RsvpStatusFilter == RsvpFilter.NotNo && g.Rsvp != RsvpStatus.No))
+            ) {
+                string name;
+                switch (NamePartFilter)
+                {
+                    case NamePart.First:
+                        name = guest.Name.First;
+                        break;
+                    case NamePart.Last:
+                        name = guest.Name.Last;
+                        break;
+                    default:
+                        name = guest.Name.Full;
+                        break;
+                }
+                foreach (var letter in name.ToUpper())
+                {
+                    if (char.IsLetter(letter))
+                    {
+                        if (!frequency.ContainsKey(letter))
+                        {
+                            frequency[letter] = 0;
+                        }
+                        frequency[letter]++;
+                    }
+                }
+            }
+        }
+        LetterFrequency = frequency;
+        StateHasChanged();
+    }
+    
+    private async Task DownloadFrequencyCsv()
+    {
+        var csvContent = new StringBuilder();
+        csvContent.AppendLine("Letter,Count");
+        foreach (var kvp in LetterFrequency)
+        {
+            csvContent.AppendLine($"{kvp.Key},{kvp.Value}");
+        }
+        var namePart = NamePartFilter switch
+        {
+            NamePart.First => "first",
+            NamePart.Last => "last",
+            NamePart.Full => "full",
+            _ => "unknown"
+        };
+        var rsvpFilter = RsvpStatusFilter switch
+        {
+            RsvpFilter.Yes => "yes",
+            RsvpFilter.NotNo => "not_no",
+            RsvpFilter.Any => "any",
+            _ => "unknown"
+        };
+        await JS.InvokeVoidAsync("downloadCsv", $"rsvp_{namePart}_{rsvpFilter}.csv", csvContent.ToString());
+    }
+
+    private enum NamePart
+    {
+        First,
+        Last,
+        Full
+    }
+
+    private enum RsvpFilter
+    {
+        Yes,
+        NotNo,
+        Any
+    }
+
+}

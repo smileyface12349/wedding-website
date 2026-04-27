@@ -1,4 +1,4 @@
-﻿function downloadFile(filename, content) {
+﻿function downloadCsv(filename, content) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(content));
     element.setAttribute('download', filename);
