@@ -226,6 +226,10 @@ else
                 {
                     if (char.IsLetter(letter))
                     {
+                        if (!frequency.ContainsKey(letter))
+                        {
+                            frequency[letter] = 0;
+                        }
                         frequency[letter]++;
                     }
                 }
