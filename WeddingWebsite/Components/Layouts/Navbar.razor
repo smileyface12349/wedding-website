@@ -42,7 +42,9 @@
         x.classList.toggle("change");
         let dropdown = document.getElementsByClassName('burger-dropdown-content')[0];
         if (dropdown.style.display !== "none") {
-            executeWithNoTransition(onScroll);
+            try {
+                executeWithNoTransition(onScroll);
+            } catch (e) {}
             dropdown.style.display = "none";
         } else {
             executeWithNoTransition(addBackground);
