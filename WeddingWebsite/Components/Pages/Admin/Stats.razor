@@ -15,6 +15,8 @@
 
 @layout SimpleLayout
 
+@attribute [Authorize(Roles = "Admin")]
+
 <PageTitle>@StringProvider.PageTitle("Stats")</PageTitle>
 
 <h1>Stats</h1>
