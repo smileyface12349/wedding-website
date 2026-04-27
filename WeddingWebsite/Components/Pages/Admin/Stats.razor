@@ -204,9 +204,25 @@ else
         }
         foreach (var account in AllAccounts)
         {
-            foreach (var guest in account.Guests)
-            {
-                foreach (var letter in guest.Name.First.ToUpper())
+            foreach (var guest in account.Guests.Where(g => 
+                         RsvpStatusFilter == RsvpFilter.Any || 
+                         (RsvpStatusFilter == RsvpFilter.Yes && g.Rsvp == RsvpStatus.Yes) || 
+                         (RsvpStatusFilter == RsvpFilter.NotNo && g.Rsvp != RsvpStatus.No))
+            ) {
+                string name;
+                switch (NamePartFilter)
+                {
+                    case NamePart.First:
+                        name = guest.Name.First;
+                        break;
+                    case NamePart.Last:
+                        name = guest.Name.Last;
+                        break;
+                    default:
+                        name = guest.Name.Full;
+                        break;
+                }
+                foreach (var letter in name.ToUpper())
                 {
                     if (char.IsLetter(letter))
                     {
