@@ -98,7 +98,7 @@ else
     <Button OnClick="CalculateLetterFrequency">Calculate</Button>
 }
 
-<script src="/Components/Pages/Admin/Stats.razor.js"></script>
+<script src="/lib/files.js"></script>
 
 <style>
     .mud-input-control label {
@@ -261,7 +261,7 @@ else
             RsvpFilter.Any => "any",
             _ => "unknown"
         };
-        await JS.InvokeVoidAsync("downloadFile", $"rsvp_{namePart}_{rsvpFilter}.csv", csvContent.ToString());
+        await JS.InvokeVoidAsync("downloadCsv", $"rsvp_{namePart}_{rsvpFilter}.csv", csvContent.ToString());
     }
 
     private enum NamePart

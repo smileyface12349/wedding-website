@@ -77,7 +77,7 @@
     
 </div>
 
-<script src="/Components/Pages/Rsvp/RsvpResponseTable.razor.js"></script>
+<script src="/lib/files.js"></script>
 
 @code {
     private bool? IsAttending { get; set; } = true;
@@ -127,7 +127,7 @@
         // Call JavaScript function to download CSV
         var yesOrNo = IsAttending == true ? "yes" : "no";
         var datePart = DateTime.Now.ToString("dd_MM");
-        await JS.InvokeVoidAsync("downloadFile", $"rsvp_{yesOrNo}_{datePart}.csv", csvContent);
+        await JS.InvokeVoidAsync("downloadCsv", $"rsvp_{yesOrNo}_{datePart}.csv", csvContent);
     }
 
     private string GenerateCsv(IEnumerable<RsvpResponse> responses)
