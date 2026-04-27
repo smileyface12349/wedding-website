@@ -10,10 +10,13 @@
 @inject NavigationManager NavigationManager
 @inject IRsvpService RsvpService
 @inject IRsvpForm RsvpFormConfig
+@inject IStringProvider StringProvider
 @inject IAdminService AdminService
 @inject IJSRuntime JS
 
 @attribute [Authorize (Roles = "Admin")]
+
+<PageTitle>@StringProvider.PageTitle("RSVP Response Table")</PageTitle>
 
 <div class="page">
     
