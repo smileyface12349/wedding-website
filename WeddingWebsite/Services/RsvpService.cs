@@ -33,6 +33,11 @@ public class RsvpService(IRsvpStore rsvpStore) : IRsvpService
             return new RsvpResponse(rsvp.GuestId, rsvp.GuestName, rsvp.SubmittedAt, rsvp.IsAttending, dataByColumn, dataByQuestion);
         });
     }
+
+    public IEnumerable<RsvpResponseData> GetAllRsvpsBasic()
+    {
+        return rsvpStore.GetAllRsvps();
+    }
     
     public RsvpResponse? GetRsvp(string guestId, RsvpQuestions yesQuestions, RsvpQuestions noQuestions)
     {
