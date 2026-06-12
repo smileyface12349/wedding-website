@@ -149,7 +149,7 @@ public class StandardBritishEnglish : IStringProvider
     public string RegistryClaimedContact(string? contactMethod) => $"Since this is now completed, you can no longer make any changes. If something went wrong, please contact {contactMethod}.";
     public string Notes => "Notes";
     public string NotesDescription => "If you'd like to leave a note, you can do so in the box below.";
-    public string NotesPlaceholder => "Add a note visible to you and the website administrators (optional).";
+    public string NotesPlaceholder => "Add a note visible to you and the couple (optional).";
     public string SaveNotes => "Save Notes";
     public string SelectFulfillmentMethod => "Select Gift Method";
     public string NoFulfillmentMethodsDescription => "There are no methods available for you to give this item to us. You can still claim it, but you may not be able to purchase it yet.";
