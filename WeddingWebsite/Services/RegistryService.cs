@@ -22,20 +22,7 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     
     public bool ClaimRegistryItem(string itemId, string userId, int quantity = 1) => registryStore.ClaimRegistryItem(itemId, userId, quantity);
 
-    public bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes)
-    {
-        var result = registryStore.ClaimRegistryItem(itemId, userId, quantity);
-        if (!result)
-        {
-            return false;
-        }
-
-        registryStore.ChooseFulfillmentMethod(itemId, userId, fulfillmentMethod);
-        registryStore.ChooseRecipient(itemId, userId, recipient);
-        registryStore.MarkClaimAsCompleted(itemId, userId);
-        registryStore.SetClaimNotes(itemId, userId, notes);
-        return true;
-    }
+    public bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes) => registryStore.ClaimRegistryItem(itemId, userId, quantity, fulfillmentMethod, recipient, notes);
 
     public bool UnclaimRegistryItem(string itemId, string userId) => registryStore.UnclaimRegistryItem(itemId, userId);
     
