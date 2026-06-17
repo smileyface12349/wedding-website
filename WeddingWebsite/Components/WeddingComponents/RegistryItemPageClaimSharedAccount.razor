@@ -209,20 +209,26 @@ else
         if (EmailAddress == "")
         {
             ErrorText = "Please enter your email address so that we can send a confirmation email.";
+            StateHasChanged();
             return;
         }
         if (Notes == "")
         {
             ErrorText = "Please enter a note to let us know who this gift is from.";
+            StateHasChanged();
+            return;
         }
         if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs && SelectedDeliveryAddress == null)
         {
             ErrorText = "Please select a delivery address.";
+            StateHasChanged();
             return;
         }
         if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney && SelectedBankAccount == null)
         {
             ErrorText = "Please select a bank account.";
+            StateHasChanged();
+            return;
         }
         
         string? recipient = null;
@@ -234,7 +240,13 @@ else
             recipient = SelectedBankAccount;
         }
         
-        RegistryService.ClaimRegistryItem(Item.Id, UserId!, SelectedQuantity, SelectedFulfillmentMethod, recipient, Notes); 
+        var result = RegistryService.ClaimRegistryItem(Item.Id, UserId!, SelectedQuantity, SelectedFulfillmentMethod, recipient, Notes);
+        if (!result)
+        {
+            ErrorText = "Sorry, this item has already been claimed by someone else.";
+            StateHasChanged();
+            return;
+        }
         ShowForm = false;
         HasPurchased = true;
         StateHasChanged();
