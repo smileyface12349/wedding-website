@@ -1,0 +1,12 @@
+﻿@page "/Account/Register/Shared"
+@using WeddingWebsite.Components.Layouts
+
+@attribute [Authorize ( Roles = "Admin") ]
+
+@layout SimpleLayout
+
+<Register SharedAccount="true"></Register>
+
+@code {
+    
+}
