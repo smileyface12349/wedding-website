@@ -2,6 +2,7 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
+@using WeddingWebsite.Core.Emails
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
@@ -13,6 +14,8 @@
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
+@inject IEmailSender EmailSender
+@inject NavigationManager NavigationManager
 
 @if (Item == null) {
     return;
@@ -222,5 +225,9 @@ else
         {
             AccountService.Log(LoggedInUser, AccountLogType.ClaimRegistryItem, $"{EmailAddress} claimed {Item?.GenericName}", UserId);
         }
+        
+        // Send confirmation email
+        var message = StringProvider.RegistryConfirmationEmailTemplate(NavigationManager.Uri, Item?.GenericName, SelectedQuantity.ToString(), SelectedFulfillmentMethod.GetEnumDescription(), recipient, Notes);
+        EmailSender.SendEmailAsync(EmailAddress, "Wedding Registry Confirmation", message, true);
     }
 }

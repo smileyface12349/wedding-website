@@ -185,7 +185,16 @@ public class StandardBritishEnglish : IStringProvider
     public string DeliveryAddressLabel => "Delivery Address";
     public string NotesLabel => "Notes (please include your name)";
     public string NotesPlaceholderSharedAccount => "From John Smith";
-    
+    public string RegistryConfirmationEmailTemplate(string url, string? itemName, string quantity, string fulfillmentMethod, string? recipient, string notes) => 
+        "<p>Thank you for claiming an item from our wedding registry! Here are the details of your claim:</p>" +
+        $"<p>Item: <a href=\"{url}\">{itemName}</a>." +
+        $"<br>Quantity: {quantity}." +
+        $"<br>Gift Method: {fulfillmentMethod}." +
+        (recipient != null ? $"<br>Recipient: {recipient}." : "") +
+        $"<br>Notes: {notes}.</p>\n" +
+        "<p>If you've made a mistake or changed your mind, don't worry! Just reply to this email and we'll get it updated.</p>" +
+        "<i>This email was sent automatically, but replies will reach us.</i>";
+
     public string RegistryInactiveDescription(string description) => $"The registry is {description}.";
 
     public string CreatedBy => "Created by";

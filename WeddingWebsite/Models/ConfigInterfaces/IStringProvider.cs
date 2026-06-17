@@ -185,6 +185,7 @@ public interface IStringProvider
     string DeliveryAddressLabel { get; }
     string NotesLabel { get; }
     string NotesPlaceholderSharedAccount { get; }
+    string RegistryConfirmationEmailTemplate(string url, string? itemName, string quantity, string fulfillmentMethod, string? recipient, string notes);
 
     string RegistryInactiveDescription(string description);
     
