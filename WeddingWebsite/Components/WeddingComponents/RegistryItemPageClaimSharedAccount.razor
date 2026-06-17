@@ -231,6 +231,12 @@ else
             StateHasChanged();
             return;
         }
+        if (!Item.GetAllowedFulfillmentMethods().Contains(SelectedFulfillmentMethod))
+        {
+            ErrorText = "Please select a valid fulfillment method.";
+            StateHasChanged();
+            return;
+        }
         
         string? recipient = null;
         if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs)
