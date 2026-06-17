@@ -139,7 +139,7 @@ else
         
         <div class="claim-item-form-buttons">
             <Button OnClick="UnclaimItem">@StringProvider.Cancel</Button>
-            <Button OnClick="SubmitForm">@StringProvider.Submit</Button>
+            <Button OnClickAsync="SubmitForm">@StringProvider.Submit</Button>
         </div>
 
     </MudForm>
@@ -198,7 +198,7 @@ else
         StateHasChanged();
     }
 
-    private void SubmitForm()
+    private async Task SubmitForm()
     {
         if (Item == null) return;
         if (EmailAddress == "") return;
@@ -228,6 +228,6 @@ else
         
         // Send confirmation email
         var message = StringProvider.RegistryConfirmationEmailTemplate(NavigationManager.Uri, Item?.GenericName, SelectedQuantity.ToString(), SelectedFulfillmentMethod.GetEnumDescription(), recipient, Notes);
-        EmailSender.SendEmailAsync(EmailAddress, "Wedding Registry Confirmation", message, true);
+        await EmailSender.SendEmailAsync(EmailAddress, "Wedding Registry Confirmation", message, true);
     }
 }
