@@ -78,7 +78,7 @@ else
     <p class="claim-item-description">@StringProvider.ThankYouForGift</p>
     <p>@StringProvider.RegistryClaimedContactSharedAccount(WeddingDetails.LoginContactMethod?.Text)</p>
 }
-else if (Item.IsFullyClaimed)
+else if (Item.IsFullyClaimed || (UserId != null && Item.NumClaimsByUser(UserId) > 0))
 {
 <h2>@StringProvider.ItemClaimed</h2>
 <p>@StringProvider.ItemClaimedDescriptionSharedAccount</p>
