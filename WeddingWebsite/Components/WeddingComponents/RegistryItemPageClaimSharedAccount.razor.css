@@ -46,11 +46,6 @@ textarea {
     margin-bottom: 10px;
 }
 
-.buttons-container {
-    display: flex;
-    gap: 8px;
-}
-
 .form-item {
     display: flex;
     flex-direction: row;
