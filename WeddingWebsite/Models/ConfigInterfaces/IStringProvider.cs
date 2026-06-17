@@ -167,6 +167,7 @@ public interface IStringProvider
     string ItemReadyToPurchaseDescription { get; }
     string MarkAsCompleted { get; }
     string UnclaimDescription { get; }
+    string UnclaimDescriptionSharedAccount { get; }
     string Unclaim { get; }
     string ItemClaimed { get; }
     string ItemClaimedDescription { get; }
@@ -174,6 +175,17 @@ public interface IStringProvider
     string ClaimThisItemDescription { get; }
     string Quantity { get; }
     string Claim { get; }
+    
+    string ClaimItemFormDescription { get; }
+    string RegistryClaimedContactSharedAccount(string? contactMethod);
+    string ItemClaimedDescriptionSharedAccount { get; }
+    string ClaimThisItemDescriptionSharedAccount { get; }
+    string FulfillmentMethodLabel { get; }
+    string BankAccountLabel { get; }
+    string DeliveryAddressLabel { get; }
+    string NotesLabel { get; }
+    string NotesPlaceholderSharedAccount { get; }
+    string RegistryConfirmationEmailTemplate(string url, string? itemName, string quantity, string fulfillmentMethod, string? recipient, string notes);
 
     string RegistryInactiveDescription(string description);
     

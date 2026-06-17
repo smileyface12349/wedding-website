@@ -35,6 +35,11 @@ public interface IRegistryStore
     /// the max quantity. Throws if the item does not exist.
     /// </summary>
     bool ClaimRegistryItem(string itemId, string userId, int quantity = 1);
+
+    /// <summary>
+    /// Registers a claim on the item with all the details. Designed for the alternative one-step flow.
+    /// </summary>
+    public bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes);
     
     /// <summary>
     /// Removes the claim on the given item by the given purchaser. This may include a quantity greater than one.

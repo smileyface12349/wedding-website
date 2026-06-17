@@ -50,7 +50,7 @@
                         <input aria-disabled="true" value="@Email" id="email" disabled/>
                     </div>
                 }
-                @if (ShowChangePassword)
+                @if (!IsSharedAccount && ShowChangePassword)
                 {
                     @* <Box CustomCss="margin-bottom: 20px;margin-top: 20px"> *@
                     @*     <h2 style="margin-bottom: 10px">Security Note</h2> *@
@@ -86,7 +86,7 @@
                         </div>
                     </EditForm>
                 }
-                else
+                else if (!IsSharedAccount)
                 {
                     <div class="account-detail">
                         <label for="change-password">@StringProvider.Password</label>
@@ -95,45 +95,48 @@
                     </div>
                 }
             </div>
-            <SectionHeading>@StringProvider.Guests</SectionHeading>
-            @if (!Config.OptionalFeatures.Rsvp.IsActive())
+            @if (!IsSharedAccount)
             {
-                <div class="warning-message">
-                    <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                    <p>@StringProvider.RsvpNotYetOpen</p>
-                </div>
-            }
-            else if (RsvpForm.Deadline.HasValue && Guests.Any(guest => guest.RsvpStatus == RsvpStatus.NotResponded))
-            {
-                if (RsvpForm.Deadline.Value > DateTime.Now)
+                <SectionHeading>@StringProvider.Guests</SectionHeading>
+                @if (!Config.OptionalFeatures.Rsvp.IsActive())
                 {
                     <div class="warning-message">
                         <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                        <p>@StringProvider.PleaseRsvpByDeadline(RsvpForm.Deadline.Value.FormatDayAndMonth())</p>
+                        <p>@StringProvider.RsvpNotYetOpen</p>
                     </div>
+                }
+                else if (RsvpForm.Deadline.HasValue && Guests.Any(guest => guest.RsvpStatus == RsvpStatus.NotResponded))
+                {
+                    if (RsvpForm.Deadline.Value > DateTime.Now)
+                    {
+                        <div class="warning-message">
+                            <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                            <p>@StringProvider.PleaseRsvpByDeadline(RsvpForm.Deadline.Value.FormatDayAndMonth())</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="warning-message">
+                            <MudIcon Icon="@Icons.Material.Filled.Warning"/>
+                            <p>@StringProvider.RsvpDeadlinePassed</p>
+                        </div>
+                    }
+                
+                }
+                @if (Guests.Count() > 1)
+                {
+                    <p>@StringProvider.AccountSharedWithGuests(Guests.Count())</p>
+                }
+                <RsvpGuestList Guests="Guests"/>
+
+                @if (Guests.Any())
+                {
+                    <p>@StringProvider.PlusOnesDescription</p>
                 }
                 else
                 {
-                    <div class="warning-message">
-                        <MudIcon Icon="@Icons.Material.Filled.Warning"/>
-                        <p>@StringProvider.RsvpDeadlinePassed</p>
-                    </div>
+                    <p>@StringProvider.NoGuestsWarning(WeddingDetails.LoginContactMethod?.Text)</p>
                 }
-                
-            }
-            @if (Guests.Count() > 1)
-            {
-                <p>@StringProvider.AccountSharedWithGuests(Guests.Count())</p>
-            }
-            <RsvpGuestList Guests="Guests"/>
-
-            @if (Guests.Any())
-            {
-                <p>@StringProvider.PlusOnesDescription</p>
-            }
-            else
-            {
-                <p>@StringProvider.NoGuestsWarning(WeddingDetails.LoginContactMethod?.Text)</p>
             }
         </div>
     </Section>
@@ -166,6 +169,7 @@
     private string UserName { get; set; } = "";
     private string Email { get; set; } = "";
     private bool ShowChangePassword { get; set; } = false;
+    private bool IsSharedAccount { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
@@ -181,6 +185,11 @@
         UserName = user.Identity?.Name ?? "";
         var account = UserManager.FindByNameAsync(UserName).Result;
         Email = account?.Email ?? "";
+
+        if (account != null)
+        {
+            IsSharedAccount = await UserManager.IsInRoleAsync(account, "Shared");
+        }
     }
 
     private void EnableChangePassword()
@@ -192,14 +201,21 @@
     {
         if (Config.DemoMode.IsEnabled)
         {
-            ErrorText = "Changing password is not permitted in demo mode.";
+            ErrorText = "Demo mode is enabled so password changes are not allowed.";
             return;
         }
-        
         var account = UserManager.FindByNameAsync(UserName).Result;
         if (account == null)
         {
             ErrorText = "Could not find your account.";
+            return;
+        }
+        
+        // Check for shared account again to ensure a user can't get through while it's still loading.
+        IsSharedAccount = UserManager.IsInRoleAsync(account, "Shared").Result;
+        if (IsSharedAccount)
+        {
+            ErrorText = "Access denied - Shared accounts cannot change their password.";
             return;
         }
         

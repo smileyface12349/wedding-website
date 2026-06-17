@@ -55,13 +55,16 @@
         }
     </div>
 
-    <div class="flex-container mb">
-        <label for="email">Email</label>
-        <span class="flex-grow"></span>
-        <input @bind-value="Email" id="email" class="mr @EmailDiffers" placeholder="No email given" />
-        <button class="button" @onclick="ApplyEmailChange">Apply</button>
-    </div>
-
+    @if (!IsSharedAccount())
+    {
+        <div class="flex-container mb">
+            <label for="email">Email</label>
+            <span class="flex-grow"></span>
+            <input @bind-value="Email" id="email" class="mr @EmailDiffers" placeholder="No email given" />
+            <button class="button" @onclick="ApplyEmailChange">Apply</button>
+        </div>
+    }
+    
     @if (!IsUserOwner())
     {
         <div class="flex-container mb">
@@ -72,24 +75,33 @@
         </div>
     }
     
-    <h2>Guests</h2>
-    <p>Click on a guest to manage/delete them.</p>
-    <MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name.Full</MudTd>
-            <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
-        </RowTemplate>
-    </MudTable>
-    <div class="flex-container mb">
-        <label for="new-guest">Add Extra Guest</label>
-        <span class="flex-grow"></span>
-        <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
-        <button class="button" @onclick="AddNewGuest">Add</button>
-    </div>
+    @if (!IsSharedAccount())
+    {
+        <h2>Guests</h2>
+        <p>Click on a guest to manage/delete them.</p>
+        <MudTable T="GuestWithId" Items="Guests" Class="mb" RowStyle="cursor: pointer" Hover="true" OnRowClick="RowClicked">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Name.Full)">Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<GuestWithId, object?>(x => x.Rsvp)">RSVP</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name.Full</MudTd>
+                <MudTd DataLabel="RSVP">@context.Rsvp.GetEnumDescription()</MudTd>
+            </RowTemplate>
+        </MudTable>
+        <div class="flex-container mb">
+            <label for="new-guest">Add Extra Guest</label>
+            <span class="flex-grow"></span>
+            <input id="new-guest" @bind-value="NewGuestName" class="mr" placeholder="Full Name" />
+            <button class="button" @onclick="AddNewGuest">Add</button>
+        </div>
+    }
+    else
+    {
+        <h2>Shared Account</h2>
+        <p>This is a shared account, designed to be used by several unnamed guests. This will cause some features to behave differently. You cannot add named guests to this account or collect RSVPs.</p>
+    }
+    
 
     <h2>Permissions</h2>
     <AuthorizeView Roles="Owner">
@@ -318,6 +330,12 @@
     {
         if (Account is null) return false;
         return UserManager.IsInRoleAsync(Account, "Owner").Result;
+    }
+
+    private bool IsSharedAccount()
+    {
+        if (Account is null) return false;
+        return UserManager.IsInRoleAsync(Account, "Shared").Result;
     }
 
     [Authorize (Roles = "Owner")]

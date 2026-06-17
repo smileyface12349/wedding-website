@@ -1,7 +1,9 @@
 ﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Data
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.WebsiteConfig
@@ -13,6 +15,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringProvider StringProvider
 @inject ProtectedSessionStorage ProtectedSessionStorage
+@inject UserManager<Account> UserManager
 
 <CascadingValue Value="Config.RegistryConfig.Theme">
     <Section>
@@ -52,18 +55,22 @@
             </div>
         </div>
         <div class="gifts-grid">
-            @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
+            @if (!IsSharedAccount)
             {
-                <h2 class="grid-heading" style="margin-top: 0">@StringProvider.ItemsYouHaveClaimed</h2>
-                @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
+                @if (UserId != null && RegistryItems.Any(item => item.NumClaimsByUser(UserId) > 0))
                 {
-                    <div class="gift">
-                        <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? StringProvider.Completed : StringProvider.Pending)" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
-                    </div>
+                    <h2 class="grid-heading" style="margin-top: 0">@StringProvider.ItemsYouHaveClaimed</h2>
+                    @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
+                    {
+                        <div class="gift">
+                            <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? StringProvider.Completed : StringProvider.Pending)" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
+                        </div>
+                    }
+                    <h2 class="grid-heading">@StringProvider.OtherRegistryItems</h2>
                 }
-                <h2 class="grid-heading">@StringProvider.OtherRegistryItems</h2>
             }
-            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0))
+            
+            @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0 || IsSharedAccount))
             {
                 <div class="gift">
                     <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? StringProvider.Claimed : StringProvider.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
@@ -123,6 +130,7 @@
             }
         });
     private string? UserId { get; set; }
+    private bool IsSharedAccount { get; set; }
 
     private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Unclaimed" };
     private string EnabledFiltersString { get; set; } = "";
@@ -165,6 +173,14 @@
         if (user.Identity is { IsAuthenticated: true })
         {
             UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (UserId != null)
+            {
+                var account = await UserManager.FindByIdAsync(UserId);
+                if (account != null)
+                {
+                    IsSharedAccount = await UserManager.IsInRoleAsync(account, "Shared");
+                }
+            }
         }
     }
 

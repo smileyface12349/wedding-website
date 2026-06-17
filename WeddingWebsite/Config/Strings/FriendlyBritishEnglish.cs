@@ -21,6 +21,7 @@ public class FriendlyBritishEnglish : StandardBritishEnglish, IStringProvider
     public new string SelectFulfillmentMethodDescription => "Thank you so much for offering to purchase this item! The next step is to choose how you would like to give it to us.";
     public new string ItemReadyToPurchaseDescription => "Thank you for filling in those details! You're now free to complete the purchase when you're ready. Once done, please mark it as completed.";
     public new string ClaimThisItemDescription => "If you'd like to kindly buy this item for us, the first step is to claim it so that nobody else can buy this item. Once it's claimed, you'll be asked how you want to purchase it. Don't worry, this can be undone if you change your mind.";
+    public new string ClaimThisItemDescriptionSharedAccount => "If you'd like to kindly buy this item for us, please press claim and answer the follow-up questions. The item will not be reserved until you have completed the questions, so please do not make a purchase until the item is reserved.";
     
     public new string RsvpYesDescription => "We're very pleased that you are able to come! Please answer a few questions to help us accommodate your preferences and requirements on the day.";
     public new string RsvpNoDescription => "That's a shame, we'll miss you!";

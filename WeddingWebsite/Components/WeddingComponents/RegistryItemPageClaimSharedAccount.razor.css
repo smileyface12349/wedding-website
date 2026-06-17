@@ -1,0 +1,56 @@
+﻿h2 {
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.purchase-option {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.purchase-option-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.purchase-option-name {
+    font-size: 18px;
+}
+
+.purchase-option-cost {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.claim-item-description {
+    margin-bottom: 10px;
+}
+
+.text-danger {
+    margin-top: 10px;
+}
+
+a {
+    cursor: pointer;
+}
+
+textarea {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.quantity-selector {
+    margin-bottom: 10px;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-field {
+    flex: 1;
+}

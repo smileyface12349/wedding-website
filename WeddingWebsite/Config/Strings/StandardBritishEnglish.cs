@@ -174,7 +174,27 @@ public class StandardBritishEnglish : IStringProvider
     public string ClaimThisItemDescription => "If you'd like to kindly buy this item for us, please press claim. You can unclaim it later if you change your mind.";
     public string Quantity => "Quantity";
     public string Claim => "Claim";
-    
+
+    public string ClaimItemFormDescription => "Thank you for offering to purchase this item! Please answer a few questions so we know who you are and how you plan to deliver it to us. The item will not be reserved until you press submit, after which you will be unable to make any changes.";
+    public string RegistryClaimedContactSharedAccount(string? contactMethod) => $"You can no longer make any changes by yourself. If something went wrong, please contact {contactMethod}. If you revisit this page, you will not be able to see this message.";
+    public string UnclaimDescriptionSharedAccount => "The item is not reserved until you have completed all of the questions. If you leave this page, your progress will not be saved.";
+    public string ItemClaimedDescriptionSharedAccount => "This item has already been claimed.";
+    public string ClaimThisItemDescriptionSharedAccount => "If you'd like to kindly buy this item for us, please press claim.";
+    public string FulfillmentMethodLabel => "Gift Method";
+    public string BankAccountLabel => "Bank Account";
+    public string DeliveryAddressLabel => "Delivery Address";
+    public string NotesLabel => "Notes (please include your name)";
+    public string NotesPlaceholderSharedAccount => "From John Smith";
+    public string RegistryConfirmationEmailTemplate(string url, string? itemName, string quantity, string fulfillmentMethod, string? recipient, string notes) => 
+        "<p>Thank you for claiming an item from our wedding registry! Here are the details of your claim:</p>" +
+        $"<p>Item: <a href=\"{url}\">{itemName}</a>." +
+        $"<br>Quantity: {quantity}." +
+        $"<br>Gift Method: {fulfillmentMethod}." +
+        (recipient != null ? $"<br>Recipient: {recipient}." : "") +
+        $"<br>Notes: {notes}.</p>\n" +
+        "<p>If you've made a mistake or changed your mind, don't worry! Just reply to this email and we'll get it updated.</p>" +
+        "<i>This email was sent automatically, but replies will reach us.</i>";
+
     public string RegistryInactiveDescription(string description) => $"The registry is {description}.";
 
     public string CreatedBy => "Created by";

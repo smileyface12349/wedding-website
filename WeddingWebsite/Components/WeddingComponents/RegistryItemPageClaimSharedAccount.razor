@@ -1,0 +1,277 @@
+﻿@using System.Security.Claims
+@using System.Net
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Core
+@using WeddingWebsite.Core.Emails
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Registry
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@inject IRegistryService RegistryService
+@inject IWeddingDetails WeddingDetails
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IStringProvider StringProvider
+@inject IEmailSender EmailSender
+@inject NavigationManager NavigationManager
+
+@if (Item == null) {
+    return;
+}
+
+<h2>@StringProvider.PurchaseOptions</h2>
+@if (UserId != null && Item.NumClaimsByUser(UserId) > 0)
+{
+    if (Item.GetClaimByUser(UserId).FulfillmentMethod == null
+        || (Item.GetClaimByUser(UserId).FulfillmentMethod != FulfillmentMethod.BringOnDay && Item.GetClaimByUser(UserId).Recipient == null))
+    {
+        <p class="text-danger claim-item-description">@StringProvider.DoNotPurchaseBeforeDetails</p>
+    }
+}
+else
+{
+    <p class="text-danger claim-item-description">@StringProvider.DoNotPurchaseBeforeClaiming</p>
+}
+@foreach (var method in Item.PurchaseMethods)
+{
+    @if (method.Url != null)
+    {
+        <a href="@method.Url" target="_blank" rel="noopener noreferrer" class="purchase-option">
+            <Box>
+                <div class="purchase-option-content">
+                    <p class="purchase-option-name">@method.Name</p>
+                    <MudSpacer/>
+                    <p class="purchase-option-cost">@StringProvider.CurrencyAmount(method.Cost)</p>
+                    @if (method.DeliveryCost > 0)
+                    {
+                        <p class="purchase-option-delivery-cost">@StringProvider.DeliveryCost(method.DeliveryCost)</p>
+                    }
+                    <Button>@StringProvider.View</Button>
+                </div>
+            </Box>
+        </a>
+    }
+    else
+    {
+        <div class="purchase-option">
+            <Box>
+                <div class="purchase-option-content">
+                    <p class="purchase-option-name">@method.Name</p>
+                    <MudSpacer/>
+                    <p class="purchase-option-cost">@StringProvider.CurrencyAmount(method.Cost)</p>
+                    @if (method.DeliveryCost > 0)
+                    {
+                        <p class="purchase-option-delivery-cost">@StringProvider.DeliveryCost(method.DeliveryCost)</p>
+                    }
+                </div>
+            </Box>
+        </div>
+    }
+}
+
+@if (HasPurchased)
+{
+    <h2>@StringProvider.ItemPurchased</h2>
+    <p class="claim-item-description">@StringProvider.ThankYouForGift</p>
+    <p>@StringProvider.RegistryClaimedContactSharedAccount(WeddingDetails.LoginContactMethod?.Text)</p>
+}
+else if (Item.IsFullyClaimed || (UserId != null && Item.NumClaimsByUser(UserId) > 0))
+{
+<h2>@StringProvider.ItemClaimed</h2>
+<p>@StringProvider.ItemClaimedDescriptionSharedAccount</p>
+}
+else if (!ShowForm)
+{
+    <h2>@StringProvider.ClaimThisItem</h2>
+    <p class="claim-item-description">@StringProvider.ClaimThisItemDescriptionSharedAccount</p>
+    <Button OnClick="ClaimItem">@StringProvider.Claim</Button>
+}
+else
+{
+    <h2>@StringProvider.ClaimThisItem</h2>
+    <p>@StringProvider.ClaimItemFormDescription</p>
+    
+    <MudForm Style="gap: 10px; margin-top: 10px;">
+        @if (Item.MaxQuantity != 1 && Item.MaxQuantity < 5)
+        {
+            <MudSelect T="int" Label="@StringProvider.Quantity" @bind-Value="SelectedQuantity" Required="true" Variant="Variant.Outlined">
+                @for (int i = 1; i <= Item.MaxQuantity - Item.QuantityClaimed; i++)
+                {
+                    <MudSelectItem Value="@i">@i.ToString()</MudSelectItem>
+                }
+            </MudSelect>
+        }
+        else if (Item.MaxQuantity != 1 && Item.MaxQuantity >= 5)
+        {
+            <MudNumericField T="int" Label="@StringProvider.Quantity" @bind-Value="SelectedQuantity" Min="1" Max="@(Item.MaxQuantity - Item.QuantityClaimed)" Required="true" Variant="Variant.Outlined"/>
+        }
+        
+        <MudTextField T="string" Label="@StringProvider.EmailAddress" @bind-Value="EmailAddress" Required="true" Variant="Variant.Outlined"/>
+        
+        <MudSelect T="FulfillmentMethod" Label="@StringProvider.FulfillmentMethodLabel" @bind-Value="SelectedFulfillmentMethod" Variant="Variant.Outlined" Required="true">
+            @foreach (var fulfillmentMethod in Item.GetAllowedFulfillmentMethods())
+            {
+                <MudSelectItem Value="@fulfillmentMethod">@fulfillmentMethod.GetEnumDescription()</MudSelectItem>
+            }
+        </MudSelect>
+        
+        @if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney)
+        {
+            <MudSelect Variant="Variant.Outlined" T="string" @bind-Value="SelectedBankAccount" Label="@StringProvider.BankAccountLabel" Required="true">
+                @foreach (var bankAccount in BankAccounts)
+                {
+                    <MudSelectItem Value="@bankAccount">@bankAccount</MudSelectItem>
+                }
+            </MudSelect>
+        } else if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs)
+        {
+            <MudSelect Variant="Variant.Outlined" T="string" @bind-Value="SelectedDeliveryAddress" Label="@StringProvider.DeliveryAddressLabel" Required="true">
+                @foreach (var deliveryAddress in DeliveryAddresses)
+                {
+                    <MudSelectItem Value="@deliveryAddress">@deliveryAddress</MudSelectItem>
+                }
+            </MudSelect>
+        }
+        
+        <MudTextField T="string" Label="@StringProvider.NotesLabel" @bind-Value="Notes" Lines="5" Placeholder="@StringProvider.NotesPlaceholderSharedAccount" Required="true" Variant="Variant.Outlined"/>
+        
+        <div class="claim-item-form-buttons">
+            <Button OnClick="UnclaimItem">@StringProvider.Cancel</Button>
+            <Button OnClickAsync="SubmitForm">@StringProvider.Submit</Button>
+        </div>
+        
+        @if (ErrorText != "")
+        {
+            <p class="text-danger">@ErrorText</p>
+        }
+
+    </MudForm>
+}
+
+
+@code {
+    [Parameter]
+    public required string ItemId { get; set; }
+    
+    private bool ShowForm { get; set; } = false;
+    private int SelectedQuantity { get; set; } = 1;
+    private string EmailAddress { get; set; } = "";
+    private FulfillmentMethod SelectedFulfillmentMethod { get; set; } = FulfillmentMethod.BringOnDay;
+    private string? SelectedBankAccount { get; set; }
+    private string? SelectedDeliveryAddress { get; set; }
+    private string Notes { get; set; } = "";
+    private string ErrorText { get; set; } = "";
+    private bool HasPurchased { get; set; } = false;
+    
+    private ClaimsPrincipal? LoggedInUser { get; set; }
+    private string? UserId { get; set; }
+    
+    private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
+    private IEnumerable<string> BankAccounts => WeddingDetails.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name.LegalFull + ", " + p.BankDetails!);
+    
+    private Models.Registry.RegistryItem? Item { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Item = RegistryService.GetRegistryItemById(ItemId);
+        SelectedFulfillmentMethod = Item?.GetAllowedFulfillmentMethods().FirstOrDefault() ?? FulfillmentMethod.BringOnDay;
+        
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authState.User;
+        if (LoggedInUser.Identity is { IsAuthenticated: true })
+        {
+            UserId = LoggedInUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        if (Item != null && UserId != null && Item.NumClaimsByUser(UserId) > 0)
+        {
+            Notes = Item.GetClaimByUser(UserId).Notes ?? "";
+        }
+    }
+    
+    private void ClaimItem()
+    {
+        ShowForm = true;
+        StateHasChanged();
+    }
+
+    private void UnclaimItem()
+    {
+        ShowForm = false;
+        StateHasChanged();
+    }
+
+    private async Task SubmitForm()
+    {
+        if (Item == null) return;
+        if (EmailAddress == "")
+        {
+            ErrorText = "Please enter your email address so that we can send a confirmation email.";
+            StateHasChanged();
+            return;
+        }
+        if (Notes == "")
+        {
+            ErrorText = "Please enter a note to let us know who this gift is from.";
+            StateHasChanged();
+            return;
+        }
+        if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs && SelectedDeliveryAddress == null)
+        {
+            ErrorText = "Please select a delivery address.";
+            StateHasChanged();
+            return;
+        }
+        if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney && SelectedBankAccount == null)
+        {
+            ErrorText = "Please select a bank account.";
+            StateHasChanged();
+            return;
+        }
+        if (!Item.GetAllowedFulfillmentMethods().Contains(SelectedFulfillmentMethod))
+        {
+            ErrorText = "Please select a valid fulfillment method.";
+            StateHasChanged();
+            return;
+        }
+        
+        string? recipient = null;
+        if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs)
+        {
+            recipient = SelectedDeliveryAddress;
+        } else if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney)
+        {
+            recipient = SelectedBankAccount;
+        }
+        
+        var result = RegistryService.ClaimRegistryItem(Item.Id, UserId!, SelectedQuantity, SelectedFulfillmentMethod, recipient, Notes);
+        if (!result)
+        {
+            ErrorText = "Sorry, this item has already been claimed by someone else.";
+            StateHasChanged();
+            return;
+        }
+        ShowForm = false;
+        HasPurchased = true;
+        StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ClaimRegistryItem, $"{EmailAddress} claimed {Item?.GenericName}", UserId);
+        }
+        
+        // Send confirmation email
+        var message = StringProvider.RegistryConfirmationEmailTemplate(
+            WebUtility.HtmlEncode(NavigationManager.Uri), 
+            WebUtility.HtmlEncode(Item?.GenericName), 
+            WebUtility.HtmlEncode(SelectedQuantity.ToString()), 
+            WebUtility.HtmlEncode(SelectedFulfillmentMethod.GetEnumDescription()), 
+            WebUtility.HtmlEncode(recipient), 
+            WebUtility.HtmlEncode(Notes)
+        );
+        await EmailSender.SendEmailAsync(EmailAddress, "Wedding Registry Confirmation", message, true);
+    }
+}

@@ -442,6 +442,71 @@ public class RegistryStore : IRegistryStore
         transaction.Commit();
         return true;
     }
+
+    public bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+
+        using var transaction = connection.BeginTransaction();
+
+        // Check if item exists and get max quantity
+        var itemCmd = connection.CreateCommand();
+        itemCmd.Transaction = transaction;
+        itemCmd.CommandText = @"
+            SELECT MaxQuantity
+            FROM RegistryItems
+            WHERE Id = :id;
+        ";
+        itemCmd.Parameters.AddWithValue(":id", itemId);
+
+        var maxQuantityObj = itemCmd.ExecuteScalar();
+        if (maxQuantityObj == null)
+        {
+            throw new InvalidOperationException($"No registry item found with ID {itemId}");
+        }
+        var maxQuantity = Convert.ToInt32(maxQuantityObj);
+
+        // Check current claimed quantity
+        var claimCountCmd = connection.CreateCommand();
+        claimCountCmd.Transaction = transaction;
+        claimCountCmd.CommandText = @"
+            SELECT SUM(Quantity)
+            FROM RegistryItemClaims
+            WHERE ItemId = :itemId;
+        ";
+        claimCountCmd.Parameters.AddWithValue(":itemId", itemId);
+
+        var currentClaimedObj = claimCountCmd.ExecuteScalar();
+        var currentClaimed = currentClaimedObj == DBNull.Value ? 0 : Convert.ToInt32(currentClaimedObj);
+
+        if (currentClaimed + quantity > maxQuantity)
+        {
+            return false; // Exceeds max quantity
+        }
+
+        // Add the claim
+        var claimCmd = connection.CreateCommand();
+        claimCmd.Transaction = transaction;
+        claimCmd.CommandText = @"
+            INSERT INTO RegistryItemClaims
+            (ItemId, ClaimedBy, FulfillmentMethod, Recipient, ClaimedAt, CompletedAt, ReceivedAt, Quantity, Notes)
+            VALUES
+            (:itemId, :claimedBy, :fulfillmentMethod, :recipient, :claimedAt, :claimedAt, NULL, :quantity, :notes);
+        ";
+        claimCmd.Parameters.AddWithValue(":itemId", itemId);
+        claimCmd.Parameters.AddWithValue(":claimedBy", userId);
+        claimCmd.Parameters.AddWithValue(":fulfillmentMethod", fulfillmentMethod.ToDatabaseInteger());
+        claimCmd.Parameters.AddWithValue(":recipient", recipient ?? (object)DBNull.Value);
+        claimCmd.Parameters.AddWithValue(":claimedAt", DateTime.UtcNow.Ticks);
+        claimCmd.Parameters.AddWithValue(":quantity", quantity);
+        claimCmd.Parameters.AddWithValue(":notes", notes ?? (object)DBNull.Value);
+
+        claimCmd.ExecuteNonQuery();
+
+        transaction.Commit();
+        return true;
+    }
     
     public bool UnclaimRegistryItem(string itemId, string userId)
     {
