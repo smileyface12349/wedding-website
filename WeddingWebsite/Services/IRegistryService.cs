@@ -11,6 +11,7 @@ public interface IRegistryService
     RegistryItem? GetRegistryItemById(string itemId);
     Task<IEnumerable<RegistryItem>> GetAllRegistryItems(bool includeHidden = false);
     bool ClaimRegistryItem(string itemId, string userId, int quantity = 1);
+    bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes);
     bool UnclaimRegistryItem(string itemId, string userId);
     void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod);
     void ChooseRecipient(string itemId, string userId, string? recipient);

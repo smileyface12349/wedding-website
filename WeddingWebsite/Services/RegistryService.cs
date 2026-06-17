@@ -21,7 +21,22 @@ public class RegistryService(IRegistryStore registryStore) : IRegistryService
     public Task<IEnumerable<RegistryItem>> GetAllRegistryItems(bool includeHidden = false) => registryStore.GetAllRegistryItems(includeHidden);
     
     public bool ClaimRegistryItem(string itemId, string userId, int quantity = 1) => registryStore.ClaimRegistryItem(itemId, userId, quantity);
-    
+
+    public bool ClaimRegistryItem(string itemId, string userId, int quantity, FulfillmentMethod fulfillmentMethod, string? recipient, string? notes)
+    {
+        var result = registryStore.ClaimRegistryItem(itemId, userId, quantity);
+        if (!result)
+        {
+            return false;
+        }
+
+        registryStore.ChooseFulfillmentMethod(itemId, userId, fulfillmentMethod);
+        registryStore.ChooseRecipient(itemId, userId, recipient);
+        registryStore.MarkClaimAsCompleted(itemId, userId);
+        registryStore.SetClaimNotes(itemId, userId, notes);
+        return true;
+    }
+
     public bool UnclaimRegistryItem(string itemId, string userId) => registryStore.UnclaimRegistryItem(itemId, userId);
     
     public void ChooseFulfillmentMethod(string itemId, string userId, FulfillmentMethod? fulfillmentMethod) => registryStore.ChooseFulfillmentMethod(itemId, userId, fulfillmentMethod);
