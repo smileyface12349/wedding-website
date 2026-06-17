@@ -200,6 +200,11 @@
     
     private void ChangePassword()
     {
+        if (Config.DemoMode.IsEnabled)
+        {
+            ErrorText = "Demo mode is enabled so password changes are not allowed.";
+            return;
+        }
         var account = UserManager.FindByNameAsync(UserName).Result;
         if (account == null)
         {
