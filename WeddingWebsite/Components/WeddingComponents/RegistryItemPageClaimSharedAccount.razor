@@ -141,6 +141,11 @@ else
             <Button OnClick="UnclaimItem">@StringProvider.Cancel</Button>
             <Button OnClickAsync="SubmitForm">@StringProvider.Submit</Button>
         </div>
+        
+        @if (ErrorText != "")
+        {
+            <p class="text-danger">@ErrorText</p>
+        }
 
     </MudForm>
 }
