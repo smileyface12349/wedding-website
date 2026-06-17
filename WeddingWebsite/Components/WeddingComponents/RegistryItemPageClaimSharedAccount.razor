@@ -217,5 +217,10 @@ else
         ShowForm = false;
         HasPurchased = true;
         StateHasChanged();
+        
+        if (LoggedInUser != null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ClaimRegistryItem, $"{EmailAddress} claimed {Item?.GenericName}", UserId);
+        }
     }
 }
