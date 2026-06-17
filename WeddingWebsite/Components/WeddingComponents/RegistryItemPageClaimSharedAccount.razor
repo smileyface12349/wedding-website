@@ -206,11 +206,24 @@ else
     private async Task SubmitForm()
     {
         if (Item == null) return;
-        if (EmailAddress == "") return;
-        if (Notes == "") return;
-        if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs && SelectedDeliveryAddress == null) return;
-        if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney && SelectedBankAccount == null) return;
-        if (UserId == null) return;
+        if (EmailAddress == "")
+        {
+            ErrorText = "Please enter your email address so that we can send a confirmation email.";
+            return;
+        }
+        if (Notes == "")
+        {
+            ErrorText = "Please enter a note to let us know who this gift is from.";
+        }
+        if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs && SelectedDeliveryAddress == null)
+        {
+            ErrorText = "Please select a delivery address.";
+            return;
+        }
+        if (SelectedFulfillmentMethod == FulfillmentMethod.TransferMoney && SelectedBankAccount == null)
+        {
+            ErrorText = "Please select a bank account.";
+        }
         
         string? recipient = null;
         if (SelectedFulfillmentMethod == FulfillmentMethod.DeliverToUs)
