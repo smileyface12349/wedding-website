@@ -1,9 +1,16 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <Section Padding="@ShowHeading" Id="timeline">
     @if (ShowHeading) {
@@ -18,4 +25,11 @@
     
     [Parameter]
     public bool ShowTravelDirections { get; set; } = true;
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+    }
 }

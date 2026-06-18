@@ -2,9 +2,16 @@
 
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <PageTitle>@StringProvider.PageTitle(@StringProvider.Gallery)</PageTitle>
 
@@ -30,5 +37,10 @@
 
 
 @code {
+    private IWeddingDetails? WeddingDetails { get; set; }
     
+    protected override async Task OnInitializedAsync()
+    {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+    }
 }

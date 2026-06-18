@@ -2,8 +2,9 @@
 
 @using WeddingWebsite.Components.WeddingComponents.Rsvp
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize]
@@ -17,8 +18,12 @@
     [Parameter]
     public required string GuestId { get; set; }
     
-    protected override void OnInitialized()
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
     {
+        Config = await ConfigProvider.GetConfigAsync();
+        
         if (!Config.OptionalFeatures.Rsvp.IsActive())
         {
             NavigationManager.NavigateTo("/");

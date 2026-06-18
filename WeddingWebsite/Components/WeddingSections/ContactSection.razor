@@ -2,9 +2,16 @@
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <Section Center="true" Id="contact">
     <SectionHeading>@StringProvider.ContactUs</SectionHeading>
@@ -21,4 +28,11 @@
     
     [Parameter]
     public required bool ShowUrgencyOption { get; set; }
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+    }
 }

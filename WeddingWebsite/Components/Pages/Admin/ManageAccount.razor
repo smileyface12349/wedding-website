@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Config
 @using WeddingWebsite.Core
 @using WeddingWebsite.Data
 @using WeddingWebsite.Data.Models
@@ -21,6 +22,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringProvider StringProvider
+@inject IConfigProvider ConfigProvider
 
 <PageTitle>@StringProvider.PageTitle("Manage Account")</PageTitle>
 
@@ -141,6 +143,24 @@
         </NotAuthorized>
     </AuthorizeView>
     
+    <h2>Type</h2>
+    <p>Changing the user's type will affect which version of the website they see.</p>
+    @if (!ChangeUserType)
+    {
+        <p>User Type: <b>@(UserType ?? "Default")</b> <a @onclick="ShowChangeUserType" style="cursor: pointer">[Change]</a>.</p>
+    }
+    else
+    {
+        <div class="flex-container flex-gap">
+            <MudSelect T="string" @bind-Value="UserType" Style="flex: 1; margin-bottom: 10px">
+                @foreach (var option in UserTypeOptions)
+                {
+                    <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
+                }
+            </MudSelect>
+            <button class="button block-button" @onclick="ApplyChangeUserType">Apply</button>
+        </div>
+    }
 
     <h2>Logs</h2>
     <p>Logs are read-only. Times are in UTC.</p>
@@ -208,6 +228,10 @@
     private string EmailDiffers => (Account is null || (Account.Email ?? "") == Email) ? "" : "input-error";
     private string PasswordDiffers => NewPassword == "" ? "" : "input-error";
     
+    private bool ChangeUserType { get; set; }
+    private string? UserType { get; set; }
+    private IEnumerable<string> UserTypeOptions { get; set; } = [ "Default" ];
+    
     private int DeletePressedCount { get; set; } = 0;
     
     private ClaimsPrincipal? LoggedInUser { get; set; }
@@ -229,6 +253,12 @@
         
         Guests = AdminService.GetGuestsForAccount(Account.Id);
         Logs = AdminService.GetAccountLogs(UserId);
+        
+        UserType = AccountService.GetUserType(UserId) ?? "Default";
+        
+        var userTypeOptions = ConfigChoices.ActiveConfig.AlternativeWeddingDetails.Keys.ToHashSet();
+        userTypeOptions.UnionWith(ConfigChoices.ActiveConfig.AlternativeThemes.Keys.ToHashSet());
+        UserTypeOptions = userTypeOptions.Prepend("Default");
     }
     
     private void RowClicked(TableRowClickEventArgs<GuestWithId> args)
@@ -317,6 +347,22 @@
         NewGuestName = "";
         if (LoggedInUser is null) return;
         AccountService.Log(LoggedInUser, AccountLogType.AddGuest, $"Guest added: {firstName} {lastName}", UserId);
+        Logs = AdminService.GetAccountLogs(UserId);
+    }
+
+    private void ShowChangeUserType()
+    {
+        ChangeUserType = true;
+    }
+    
+    private void ApplyChangeUserType()
+    {
+        if (Account is null) return;
+        AdminService.SetUserType(UserId, UserType == "Default" ? null : UserType);
+        ConfigProvider.RevokeUserTypeCache(UserId);
+        ChangeUserType = false;
+        if (LoggedInUser is null) return;
+        AccountService.Log(LoggedInUser, AccountLogType.ChangeUserType, $"Changed user type to {UserType}", UserId);
         Logs = AdminService.GetAccountLogs(UserId);
     }
     

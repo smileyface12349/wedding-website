@@ -1,7 +1,8 @@
 ﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <div id="navbar-desktop" class="top-row @CssScroll">
@@ -73,6 +74,13 @@
 
 @code {
     [Parameter] public bool Scroll { get; set; } = false;
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
     
     private Colour BackgroundColour => Config.Navbar.Colour ?? Config.Colours.PrimaryBackground;
     

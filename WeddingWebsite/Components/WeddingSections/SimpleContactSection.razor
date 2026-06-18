@@ -2,8 +2,9 @@
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <Section Id="contact">
@@ -27,6 +28,13 @@
 </Section>
 
 @code {
-    private IEnumerable<IContact> UrgentContacts => WeddingDetails.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.Urgent).MatchesReason(ContactReason.Other));
-    private IEnumerable<IContact> NotUrgentContacts => WeddingDetails.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.NotUrgent).MatchesReason(ContactReason.Other));
+    private IEnumerable<IContact> UrgentContacts => WeddingDetails?.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.Urgent).MatchesReason(ContactReason.Other)) ?? [];
+    private IEnumerable<IContact> NotUrgentContacts => WeddingDetails?.Contacts.Where(c => c.ContactDetails.GetOptions(ContactUrgency.NotUrgent).MatchesReason(ContactReason.Other)) ?? [];
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+    }
 }

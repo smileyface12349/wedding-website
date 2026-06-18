@@ -12,6 +12,7 @@ public interface IAdminService
     void RenameGuest(string guestId, string newFirstName, string newLastName);
     void DeleteGuest(string guestId);
     string? GetAccountIdFromGuestId(string guestId);
+    void SetUserType(string userId, string? userType);
     IEnumerable<AccountLog> GetAccountLogs(string userId);
     IEnumerable<AccountLog> GetAllAccountLogs(int limit = 100);
 }

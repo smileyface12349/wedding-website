@@ -22,6 +22,7 @@ public static class AccountLogTypeEnumConverter
             AccountLogType.ClaimRegistryItem => 11,
             AccountLogType.UnclaimRegistryItem => 12,
             AccountLogType.CompleteRegistryItem => 13,
+            AccountLogType.ChangeUserType => 14,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -49,6 +50,7 @@ public static class AccountLogTypeEnumConverter
             11 => AccountLogType.ClaimRegistryItem,
             12 => AccountLogType.UnclaimRegistryItem,
             13 => AccountLogType.CompleteRegistryItem,
+            14 => AccountLogType.ChangeUserType,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }

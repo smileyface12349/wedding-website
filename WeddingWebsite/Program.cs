@@ -19,15 +19,7 @@ using WeddingWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Required - All the information about your wedding. Please create your own implementation of IWeddingDetails.
-// See WeddingDetailsTemplate for a starting point. If you rename the file to RealWeddingDetails, it will be
-// ignored from git so that it is kept private.
-builder.Services.AddScoped<IWeddingDetails, SampleWeddingDetails>();
-
-// Recommended - Customise the theme and layout. Please create your own implementation of IWebsiteConfig. It is
-// recommended to have this also inherit from DefaultConfig. See DemoConfig for an example. If you rename the file
-// to CustomConfig, it will be ignored from git so that it is kept private.
-builder.Services.AddScoped<IWebsiteConfig, DefaultConfig>();
+// Required - Go to ConfigChoices.cs and supply your own implementations of IWebsiteConfig and IWeddingDetails.
 
 // Recommended - Customise your RSVP form to gather the information that you need! You can safely ignore this until you
 // plan to open RSVPs. You should implement IRsvpForm - see DemoRsvpForm for an example. If you rename the file to
@@ -55,6 +47,7 @@ builder.Services.AddScoped<IRsvpStore, RsvpStore>();
 builder.Services.AddScoped<IRegistryStore, RegistryStore>();
 builder.Services.AddScoped<ITodoStore, TodoStore>();
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
+builder.Services.AddScoped<IConfigProvider, ConfigProvider>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

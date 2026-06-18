@@ -10,7 +10,7 @@
 
 @inject IRegistryService RegistryService
 @inject NavigationManager NavigationManager
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 @attribute [Authorize(Roles = "Admin")]
@@ -101,6 +101,13 @@
     
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
 
     private void OnSubmit()
     {

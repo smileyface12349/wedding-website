@@ -1,8 +1,9 @@
-﻿@inject IWebsiteConfig Config
-
-@using WeddingWebsite.Models.ConfigInterfaces
+﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
 
 <a href="@Data.Link" style="border-color: @Colour; background: @Colour; color: @Colour.GetTextColour()" class="box-shadow">@Data.Text</a>
 
@@ -14,5 +15,12 @@
     public SectionTheme? Theme { get; set; }
     
     private Colour Colour => Theme != null ? Theme.Primary : Config.Colours.Primary;
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
     
 }

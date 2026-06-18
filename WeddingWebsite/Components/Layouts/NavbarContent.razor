@@ -1,7 +1,8 @@
 ﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 @foreach (var item in Config.Navbar.Items)
@@ -21,4 +22,11 @@
 @code {
     [Parameter]
     public bool IsMobile { get; set; } = false;
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
 }

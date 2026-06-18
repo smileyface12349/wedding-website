@@ -2,8 +2,9 @@
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <button type="button" class="@CssClass @VariantClass" @onclick="HandleClick" style="@Css">
     @ChildContent
@@ -40,6 +41,13 @@
     
     [CascadingParameter]
     private SectionTheme? Theme { get; set; }
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
     
     private Colour Colour => Theme?.Primary ?? Config.Colours.Primary;
     private string SizeCss => Size != 16 ? $"font-size: {Size}px; padding: {Size/7+1}px {Size/4+1}px" : "";

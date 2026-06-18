@@ -2,8 +2,9 @@
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <a class="@CssClass @VariantClass" href="@Url" style="@Css">
     @ChildContent
@@ -39,4 +40,11 @@
     private SectionTheme? Theme { get; set; }
     
     private Colour Colour => Theme?.Primary ?? Config.Colours.Primary;
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
 }

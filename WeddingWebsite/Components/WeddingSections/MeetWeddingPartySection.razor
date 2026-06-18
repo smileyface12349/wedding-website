@@ -4,9 +4,16 @@
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <Section Center="true">
     <SectionHeading>@StringProvider.MeetTheWeddingParty</SectionHeading>
@@ -77,7 +84,6 @@
 
 
 @code {
-
     [Parameter]
     public required MeetWeddingPartyDisplay DisplayMode { get; set; }
     
@@ -87,4 +93,10 @@
     [Parameter]
     public required IEnumerable<Role> RolesRight { get; set; }
     
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+    }
 }

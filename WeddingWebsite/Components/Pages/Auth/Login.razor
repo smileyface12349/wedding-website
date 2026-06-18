@@ -17,12 +17,17 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IStringProvider StringProvider
-@inject IWeddingDetails WeddingDetails
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 @attribute [AllowAnonymous]
 
 <PageTitle>@StringProvider.PageTitle(StringProvider.Login)</PageTitle>
+
+@if (WeddingDetails is null || Config is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <img class="background-image" src="@WeddingDetails.MainImage.Url" alt="@WeddingDetails.MainImage.AltText"/>
 
@@ -83,7 +88,7 @@
 @code {
     private string? errorMessage;
 
-    private SectionTheme ModalTheme => Config.LoginConfig.Theme ?? new(Colour.DarkGrey, Config.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    private SectionTheme ModalTheme => Config?.LoginConfig.Theme ?? new(Colour.DarkGrey, Config!.Colours.Primary, new BoxStyle(BoxType.FilledRounded, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     [CascadingParameter]
     public required HttpContext HttpContext { get; set; }
@@ -96,9 +101,15 @@
     
     [Inject]
     private IAccountService? AccountService { get; set; }
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private IWebsiteConfig? Config { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+        Config = await ConfigProvider.GetConfigAsync();
+        
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {
             // Clear the existing external cookie to ensure a clean login process
