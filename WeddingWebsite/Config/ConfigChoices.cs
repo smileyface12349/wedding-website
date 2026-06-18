@@ -1,5 +1,4 @@
-﻿using WeddingWebsite.Config.Strings;
-using WeddingWebsite.Config.ThemeAndLayout;
+﻿using WeddingWebsite.Config.ThemeAndLayout;
 using WeddingWebsite.Config.WeddingDetails;
 using WeddingWebsite.Models.ConfigInterfaces;
 
