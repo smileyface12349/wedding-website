@@ -63,7 +63,7 @@
                     @foreach (var item in RegistryItems.Where(item => item.NumClaimsByUser(UserId) > 0))
                     {
                         <div class="gift">
-                            <RegistryItem Item="item" ButtonText="@(item.GetClaimByUser(UserId).IsCompleted ? StringProvider.Completed : StringProvider.Pending)" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
+                            <RegistryItem Item="item" State="@(item.GetClaimByUser(UserId).IsCompleted ? RegistryItemState.Completed : RegistryItemState.Pending)" ButtonSuccess="@(!item.GetClaimByUser(UserId).IsCompleted)"/>
                         </div>
                     }
                     <h2 class="grid-heading">@StringProvider.OtherRegistryItems</h2>
@@ -73,7 +73,7 @@
             @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0 || IsSharedAccount))
             {
                 <div class="gift">
-                    <RegistryItem Item="item" ButtonText="@(item.IsFullyClaimed ? StringProvider.Claimed : StringProvider.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                    <RegistryItem Item="item" State="@(item.IsFullyClaimed ? RegistryItemState.Claimed : RegistryItemState.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
                 </div>
             }
             @if (!SortedAndFilteredItems.Any())
