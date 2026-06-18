@@ -31,9 +31,9 @@
     private IWeddingDetails? WeddingDetails { get; set; }
     private IWebsiteConfig? Config { get; set; }
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
-        Config = ConfigProvider.GetConfig();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+        Config = await ConfigProvider.GetConfigAsync();
     }
 }

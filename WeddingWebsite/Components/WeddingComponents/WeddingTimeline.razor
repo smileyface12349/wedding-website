@@ -84,9 +84,9 @@
     
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Config = ConfigProvider.GetConfig();
+        Config = await ConfigProvider.GetConfigAsync();
         
         string? previousVenueName = null;
         TimeOnly? previousEndTime = null;

@@ -35,8 +35,8 @@
     
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
     
-    protected override void OnInitialized() {
-        Config = ConfigProvider.GetConfig();
+    protected override async Task OnInitializedAsync() {
+        Config = await ConfigProvider.GetConfigAsync();
         
         Theme = new MudTheme()
         {

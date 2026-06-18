@@ -170,7 +170,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         LoggedInUser = authenticationState.User;

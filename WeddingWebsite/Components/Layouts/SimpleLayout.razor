@@ -19,9 +19,9 @@
     
     private IWebsiteConfig? Config { get; set; }
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Config = ConfigProvider.GetConfig();
+        Config = await ConfigProvider.GetConfigAsync();
     }
 }
 

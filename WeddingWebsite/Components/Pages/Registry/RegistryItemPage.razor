@@ -134,7 +134,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Config = ConfigProvider.GetConfig();
+        Config = await ConfigProvider.GetConfigAsync();
         
         Item = RegistryService.GetRegistryItemById(ItemId);
         

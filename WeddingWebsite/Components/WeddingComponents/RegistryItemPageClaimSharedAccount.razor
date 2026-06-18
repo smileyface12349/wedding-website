@@ -178,7 +178,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         
         Item = RegistryService.GetRegistryItemById(ItemId);
         SelectedFulfillmentMethod = Item?.GetAllowedFulfillmentMethods().FirstOrDefault() ?? FulfillmentMethod.BringOnDay;

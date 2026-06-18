@@ -70,8 +70,8 @@
     
     protected override async Task OnInitializedAsync()
     {
-        Config = ConfigProvider.GetConfig();
-        WeddingDetails = ConfigProvider.GetDetails();
+        Config = await ConfigProvider.GetConfigAsync();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         
         // Determine how many guests are on the account
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

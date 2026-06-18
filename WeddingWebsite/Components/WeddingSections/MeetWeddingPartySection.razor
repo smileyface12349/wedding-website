@@ -95,8 +95,8 @@
     
     private IWeddingDetails? WeddingDetails { get; set; }
     
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
     }
 }

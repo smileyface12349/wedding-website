@@ -111,8 +111,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
-        Config = ConfigProvider.GetConfig();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+        Config = await ConfigProvider.GetConfigAsync();
         
         if (HttpMethods.IsGet(HttpContext.Request.Method))
         {

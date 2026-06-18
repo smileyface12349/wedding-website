@@ -31,9 +31,9 @@
     private string? RequestId { get; set; }
     private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        WeddingDetails = ConfigProvider.GetDetails();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
     }
 
