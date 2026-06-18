@@ -67,4 +67,9 @@ public class AccountService(IStore store) : IAccountService
         }
         return userId;
     }
+    
+    public string? GetUserType(string userId)
+    {
+        return store.GetUserType(userId);
+    }
 }

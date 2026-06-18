@@ -22,4 +22,6 @@ public interface IAccountService
     string GetUserNameFromAccountId(string userId);
     
     string GetAccountIdFromUserName(string userName);
+
+    string? GetUserType(string userId);
 }
