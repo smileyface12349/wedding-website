@@ -55,12 +55,13 @@ nunit-*.xml
 
 # Custom
 *credentials.json
-Credentials.cs
-RealWeddingDetails.cs
 WeddingWebsite/wwwroot/img/*
 WeddingWebsite/wwwroot/files/*
 favicon.*
 app.db
-CustomConfig.cs
-CustomRsvpForm.cs
-CustomStrings.cs
+*CustomConfig.cs
+*CustomRsvpForm.cs
+*CustomStrings.cs
+*Credentials.cs
+*RealWeddingDetails.cs
+*CustomWeddingDetails.cs
