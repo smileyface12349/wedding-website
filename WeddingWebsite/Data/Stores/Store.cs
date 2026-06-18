@@ -306,6 +306,32 @@ public class Store : IStore
         return null;
     }
 
+    [Authorize]
+    public string? GetUserType(string userId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT Type
+                FROM AccountDetails
+                WHERE UserId = :userId
+            """;
+        
+        command.Parameters.AddWithValue(":userId", userId);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var userType = reader.IsDBNull(0) ? null : reader.GetString(0);
+            return userType;
+        }
+        
+        return null;
+    }
+
     [Authorize(Roles = "Admin")]
     public IEnumerable<AccountLog> GetAccountLogs(string userId)
     {

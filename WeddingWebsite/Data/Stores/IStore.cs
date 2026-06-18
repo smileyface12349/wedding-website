@@ -57,6 +57,11 @@ public interface IStore
     public string? GetUserNameByUserId(string userId);
 
     /// <summary>
+    /// Get the 'type' field for a user. The type field is used to determine which version of the website is shown.
+    /// </summary>
+    public string? GetUserType(string userId);
+
+    /// <summary>
     /// Get all logs affecting a particular account, regardless of who performed the action.
     /// </summary>
     public IEnumerable<AccountLog> GetAccountLogs(string userId);
