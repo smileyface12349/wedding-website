@@ -1,9 +1,16 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <Section Id="directions">
     <SectionHeading>@StringProvider.Directions</SectionHeading>
@@ -20,5 +27,10 @@
 </Section>
 
 @code {
+    private IWeddingDetails? WeddingDetails { get; set; }
     
+    protected override void OnInitialized()
+    {
+        WeddingDetails = ConfigProvider.GetDetails();
+    }
 }

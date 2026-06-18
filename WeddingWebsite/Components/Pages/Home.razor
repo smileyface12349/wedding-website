@@ -7,15 +7,22 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 @using Section = WeddingWebsite.Models.WebsiteConfig.Section
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IWebsiteConfig Config
 @inject IStringProvider StringProvider
 
 @layout NavbarScrollLayout
 
 <PageTitle>@StringProvider.PageTitle(StringProvider.Home)</PageTitle>
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 @((MarkupString)@WeddingDetails.MainImage.GetHtml("main-image"))
 
@@ -78,5 +85,11 @@
 
 
 @code {
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        WeddingDetails = ConfigProvider.GetDetails();
+    }
 
 }

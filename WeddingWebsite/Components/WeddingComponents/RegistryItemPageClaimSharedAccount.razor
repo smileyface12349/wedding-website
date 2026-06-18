@@ -11,14 +11,14 @@
 @using Section = WeddingWebsite.Components.Sections.Section
 
 @inject IRegistryService RegistryService
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
 @inject IEmailSender EmailSender
 @inject NavigationManager NavigationManager
 
-@if (Item == null) {
+@if (Item == null || WeddingDetails == null) {
     return;
 }
 
@@ -156,6 +156,8 @@ else
     [Parameter]
     public required string ItemId { get; set; }
     
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
     private bool ShowForm { get; set; } = false;
     private int SelectedQuantity { get; set; } = 1;
     private string EmailAddress { get; set; } = "";
@@ -169,13 +171,15 @@ else
     private ClaimsPrincipal? LoggedInUser { get; set; }
     private string? UserId { get; set; }
     
-    private IEnumerable<string> DeliveryAddresses => WeddingDetails.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
-    private IEnumerable<string> BankAccounts => WeddingDetails.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name.LegalFull + ", " + p.BankDetails!);
+    private IEnumerable<string> DeliveryAddresses => WeddingDetails!.NotablePeople.Where(p => p.Address != null).Select(p => p.Name + ", " + p.Address!);
+    private IEnumerable<string> BankAccounts => WeddingDetails!.NotablePeople.Where(p => p.BankDetails != null).Select(p => p.Name.LegalFull + ", " + p.BankDetails!);
     
     private Models.Registry.RegistryItem? Item { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
+        WeddingDetails = ConfigProvider.GetDetails();
+        
         Item = RegistryService.GetRegistryItemById(ItemId);
         SelectedFulfillmentMethod = Item?.GetAllowedFulfillmentMethods().FirstOrDefault() ?? FulfillmentMethod.BringOnDay;
         

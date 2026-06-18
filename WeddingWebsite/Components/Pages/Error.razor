@@ -2,10 +2,11 @@
 @using System.Diagnostics
 @using WeddingWebsite.Components.Layouts
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
 
 @layout SimpleLayout
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <PageTitle>@StringProvider.PageTitle("Error")</PageTitle>
@@ -13,7 +14,7 @@
 <h1 class="text-danger">Error</h1>
 
 <p>
-    Something went wrong, and it's probably our fault. If this keeps happening, please get in touch with @WeddingDetails.LoginContactMethod?.Text and say what you were doing to trigger the issue.
+    Something went wrong, and it's probably our fault. If this keeps happening, please get in touch with @WeddingDetails?.LoginContactMethod?.Text and say what you were doing to trigger the issue.
 </p>
 
 @if (ShowRequestId) {
@@ -24,11 +25,16 @@
 
 @code{
     [CascadingParameter] private HttpContext? HttpContext { get; set; }
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
 
     private string? RequestId { get; set; }
     private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-    protected override void OnInitialized() =>
+    protected override void OnInitialized()
+    {
+        WeddingDetails = ConfigProvider.GetDetails();
         RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+    }
 
 }

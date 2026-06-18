@@ -4,9 +4,16 @@
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.People
+@using WeddingWebsite.Services
 
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <Section>
     @if (WrapInBox)
@@ -43,7 +50,13 @@
     [Parameter] public required bool ShowContact { get; set; }
 
     private IContact? Contact => !ShowContact ? null : 
-        WeddingDetails.Contacts.FirstOrDefault(c => c.ContactDetails.NotUrgent.MatchesReason(ContactReason.DressCode))
-        ?? WeddingDetails.Contacts.FirstOrDefault(c => c.ContactDetails.Urgent.MatchesReason(ContactReason.DressCode));
+        WeddingDetails?.Contacts.FirstOrDefault(c => c.ContactDetails.NotUrgent.MatchesReason(ContactReason.DressCode))
+        ?? WeddingDetails?.Contacts.FirstOrDefault(c => c.ContactDetails.Urgent.MatchesReason(ContactReason.DressCode));
 
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        WeddingDetails = ConfigProvider.GetDetails();
+    }
 }

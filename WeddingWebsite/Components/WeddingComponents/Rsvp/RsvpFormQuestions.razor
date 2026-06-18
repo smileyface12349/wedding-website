@@ -12,8 +12,14 @@
 @inject NavigationManager NavigationManager
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+
+@if (WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <MudForm>
     @foreach (var question in Questions.Questions)
@@ -152,16 +158,20 @@
     [Parameter] 
     public bool EditMode { get; set; } = false;
     
+    private IWeddingDetails? WeddingDetails { get; set; }
+    
     private IList<string?> Answers { get; set; } = [];
     private bool ConfirmSubmit { get; set; } = false;
     private bool? Success { get; set; } = null;
     private IEnumerable<string> ValidationIssues { get; set; } = [];
     
     private ClaimsPrincipal? LoggedInUser { get; set; }
-    private string? ContactMethod => WeddingDetails.GetContactMethod(ContactReason.Attendance)?.Text;
+    private string? ContactMethod => WeddingDetails!.GetContactMethod(ContactReason.Attendance)?.Text;
 
     protected override async Task OnInitializedAsync()
     {
+        WeddingDetails = ConfigProvider.GetDetails();
+        
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         LoggedInUser = authenticationState.User;
         
