@@ -14,7 +14,7 @@
 @using Section = WeddingWebsite.Components.Sections.Section
 
 @inject IRegistryService RegistryService
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IStringProvider StringProvider
@@ -129,9 +129,13 @@
     
     private bool RevealClaimsToAdmin { get; set; } = false;
     private string EditUrl => $"/registry/edit/{ItemId}";
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
 
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        
         Item = RegistryService.GetRegistryItemById(ItemId);
         
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();

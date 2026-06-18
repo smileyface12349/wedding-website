@@ -10,7 +10,7 @@
 @using WeddingWebsite.Services
 @using RegistryItem = WeddingWebsite.Models.Registry.RegistryItem
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IRegistryService RegistryService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringProvider StringProvider
@@ -101,6 +101,8 @@
 </CascadingValue>
 
 @code {
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
     private IEnumerable<RegistryItem> RegistryItems { get; set; } = [];
     private IEnumerable<RegistryItem> SortedAndFilteredItems => RegistryItems
         .Where(ItemMatchesFilter)
@@ -166,6 +168,8 @@
     
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        
         RegistryItems = await RegistryService.GetAllRegistryItems(true);
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

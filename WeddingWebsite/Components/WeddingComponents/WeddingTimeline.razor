@@ -5,8 +5,9 @@
 @using WeddingWebsite.Models.Events
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <div class="desktop">
 <MudTimeline TimelinePosition="TimelinePosition.Alternate">
@@ -81,8 +82,12 @@
     
     private IEnumerable<TimelineItem> timelineItems = [];
     
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
     protected override void OnInitialized()
     {
+        Config = ConfigProvider.GetConfig();
+        
         string? previousVenueName = null;
         TimeOnly? previousEndTime = null;
         

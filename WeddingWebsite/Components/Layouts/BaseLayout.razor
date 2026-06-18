@@ -1,8 +1,9 @@
 ﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 @inherits LayoutComponentBase
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -32,7 +33,11 @@
 @code{
     MudTheme? Theme {get; set;}
     
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
     protected override void OnInitialized() {
+        Config = ConfigProvider.GetConfig();
+        
         Theme = new MudTheme()
         {
             PaletteLight = new PaletteLight()

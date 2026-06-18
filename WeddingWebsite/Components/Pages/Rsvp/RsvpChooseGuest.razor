@@ -12,7 +12,7 @@
 @attribute [Authorize]
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 @inject NavigationManager NavigationManager
 
@@ -59,8 +59,12 @@
         }
     }
     
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         if (user.Identity is not { IsAuthenticated: true })

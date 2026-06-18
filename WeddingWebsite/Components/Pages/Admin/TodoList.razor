@@ -12,7 +12,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 @inject ITodoService TodoService
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <PageTitle>@StringProvider.PageTitle("Todo List")</PageTitle>
@@ -42,8 +42,11 @@
 
     private bool HasSummarySection => Config.Sections.Any(s => s is Models.WebsiteConfig.Section.TodoListSummary);
     
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
     protected override void OnInitialized()
     {
+        Config = ConfigProvider.GetConfig();
         GroupedTodoItems = TodoService.GetGroupedTodoItems();
     }
 

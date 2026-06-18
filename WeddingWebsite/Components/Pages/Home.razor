@@ -11,7 +11,6 @@
 @using Section = WeddingWebsite.Models.WebsiteConfig.Section
 
 @inject IConfigProvider ConfigProvider
-@inject IWebsiteConfig Config
 @inject IStringProvider StringProvider
 
 @layout NavbarScrollLayout
@@ -86,9 +85,11 @@
 
 @code {
     private IWeddingDetails? WeddingDetails { get; set; }
-    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+
     protected override void OnInitialized()
     {
+        Config = ConfigProvider.GetConfig();
         WeddingDetails = ConfigProvider.GetDetails();
     }
 

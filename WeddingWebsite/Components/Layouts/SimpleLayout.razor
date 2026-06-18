@@ -1,11 +1,12 @@
 ﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 @inherits LayoutComponentBase
 
 @layout MainLayout
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <CascadingValue Value="Theme">
     <div class="content">
@@ -14,6 +15,13 @@
 </CascadingValue>
 
 @code{
-    private SectionTheme Theme => new (Config.Colours.Surface, Config.Colours.Primary, new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    private SectionTheme? Theme => Config == null ? null : new (Config.Colours.Surface, Config.Colours.Primary, new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
+    
+    private IWebsiteConfig? Config { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        Config = ConfigProvider.GetConfig();
+    }
 }
 

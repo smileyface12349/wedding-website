@@ -5,8 +5,9 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <div class="guests-list">
@@ -49,4 +50,11 @@
     private SectionTheme? Theme { get; set; }
     
     private SectionTheme? GreyButtonTheme => Theme == null ? null : Theme with { Primary = new Colour(200, 200, 200) };
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override void OnInitialized()
+    {
+        Config = ConfigProvider.GetConfig();
+    }
 }

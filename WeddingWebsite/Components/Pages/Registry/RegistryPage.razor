@@ -3,8 +3,9 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
 <PageTitle>@StringProvider.PageTitle(@StringProvider.Registry)</PageTitle>
@@ -38,4 +39,11 @@ else
 
 @code {
     private SectionTheme ErrorSectionTheme => new (new Colour(255, 100, 100), Colour.White, null);
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override void OnInitialized()
+    {
+        Config = ConfigProvider.GetConfig();
+    }
 }

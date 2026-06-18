@@ -2,8 +2,9 @@
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Models.WebsiteElement
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <div class="row">
     <div class="image-container">
@@ -26,5 +27,12 @@
 
     private IWebsiteElement? leftImage => Config.BrideFirst ? Backstory.BrideImage : Backstory.GroomImage;
     private IWebsiteElement? rightImage => Config.BrideFirst ? Backstory.GroomImage : Backstory.BrideImage;
+
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override void OnInitialized()
+    {
+        Config = ConfigProvider.GetConfig();
+    }
 
 }

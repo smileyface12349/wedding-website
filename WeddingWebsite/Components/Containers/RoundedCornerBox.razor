@@ -1,8 +1,9 @@
 ﻿@using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
 
-@inject IWebsiteConfig Config
+@inject IConfigProvider ConfigProvider
 
 <div class="rounded-corner-box @CssShadow @CssHorizontal" style="@Background.GetBackgroundCss(); color: @Background.GetTextColour();@CustomCss">
     @if (TopContent != null)
@@ -31,6 +32,13 @@
     
     [CascadingParameter]
     public SectionTheme? Theme { get; set; }
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override void OnInitialized()
+    {
+        Config = ConfigProvider.GetConfig();
+    }
     
     private IBackground Background => Theme == null ? Config.Colours.SurfaceVariant : Theme.Background;
     
