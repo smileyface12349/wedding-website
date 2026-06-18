@@ -331,6 +331,26 @@ public class Store : IStore
         
         return null;
     }
+    
+    [Authorize(Roles = "Admin")]
+    public void SetUserType(string userId, string? userType)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                INSERT INTO AccountDetails (UserId, Type)
+                VALUES (:userId, :userType)
+                ON CONFLICT(UserId) DO UPDATE SET Type = :userType
+            """;
+        
+        command.Parameters.AddWithValue(":userId", userId);
+        command.Parameters.AddWithValue(":userType", userType ?? (object)DBNull.Value);
+        
+        command.ExecuteNonQuery();
+    }
 
     [Authorize(Roles = "Admin")]
     public IEnumerable<AccountLog> GetAccountLogs(string userId)
