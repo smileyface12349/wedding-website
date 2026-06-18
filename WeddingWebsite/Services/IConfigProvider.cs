@@ -6,16 +6,6 @@ namespace WeddingWebsite.Services;
 public interface IConfigProvider
 {
     /// <summary>
-    /// Get the website configuration for the current user. Generally discouraged - please use the async variant.
-    /// </summary>
-    IWebsiteConfig GetConfig();
-    
-    /// <summary>
-    /// Get the wedding details for the current user. Generally discouraged - please use the async variant.
-    /// </summary>
-    IWeddingDetails GetDetails();
-    
-    /// <summary>
     /// Get the website configuration for the current user asynchronously.
     /// </summary>
     Task<IWebsiteConfig> GetConfigAsync();
