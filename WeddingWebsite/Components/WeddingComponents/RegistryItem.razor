@@ -1,5 +1,7 @@
 ﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Core
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Registry
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
 
@@ -17,7 +19,7 @@
             <p class="generic-name">@Item.GenericName</p>
             <h2>@Item.Name</h2>
             <div class="cost-and-button">
-                @if (ButtonText is "Pending" or "Completed" && Item.MaxQuantity > 1)
+                @if (State != RegistryItemState.Available && Item.MaxQuantity > 1)
                 {
                     <p><span class="cost">@StringProvider.CurrencyAmount(Item.Cost)</span> × @Item.QuantityClaimed</p>
                 } else if (Item.MaxQuantity-Item.QuantityClaimed > 1)
@@ -28,7 +30,7 @@
                 {
                     <p class="cost">@StringProvider.CurrencyAmount(Item.Cost)</p>
                 }
-                <button style="background: @ButtonColour;color: @ButtonTextColour">@ButtonText</button>
+                <button style="background: @ButtonColour;color: @ButtonTextColour">@State.GetEnumDescription()</button>
             </div>
 
         </ChildContent>
@@ -40,7 +42,7 @@
     public required Models.Registry.RegistryItem Item { get; set; }
     
     [Parameter]
-    public string ButtonText { get; set; } = "View";
+    public RegistryItemState State { get; set; } = RegistryItemState.Pending;
     
     [Parameter]
     public bool ButtonSuccess { get; set; } = true;

@@ -41,4 +41,29 @@ public record RegistryItem(
         if (AllowMoneyTransfer) methods.Add(FulfillmentMethod.TransferMoney);
         return methods;
     }
+
+    /// <summary>
+    /// Obtains the state of this item, assuming the user is admin and has not claimed this item themselves.
+    /// </summary>
+    public RegistryItemState GetState()
+    {
+        if (!IsFullyClaimed)
+        {
+            // This has to be first otherwise the other conditions are vacuously true.
+            return RegistryItemState.Available;
+        }
+        if (Claims.All(claim => claim.IsReceived))
+        {
+            return RegistryItemState.Received;
+        }
+        if (Claims.All(claim => claim.IsCompleted))
+        {
+            return RegistryItemState.Completed;
+        }
+        if (Claims.All(claim => !claim.IsCompleted))
+        {
+            return RegistryItemState.Pending;
+        }
+        return RegistryItemState.Claimed;
+    }
 }
