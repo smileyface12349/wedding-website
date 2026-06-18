@@ -14,8 +14,13 @@ public class ConfigProvider(AuthenticationStateProvider authenticationStateProvi
     public async Task<IWebsiteConfig> GetConfigAsync()
     {
         var userType = await GetUserTypeAsync();
-        ConfigChoices.ActiveConfig.AlternativeThemes.TryGetValue(userType ?? "", out var config);
-        config ??= ConfigChoices.ActiveConfig.Theme;
+        var activeConfig = ConfigChoices.ActiveConfig;
+        if (userType == null)
+        {
+            return activeConfig.Theme;
+        }
+        activeConfig.AlternativeThemes.TryGetValue(userType, out var config);
+        config ??= activeConfig.Theme;
         return config;
     }
     
@@ -23,8 +28,13 @@ public class ConfigProvider(AuthenticationStateProvider authenticationStateProvi
     public async Task<IWeddingDetails> GetDetailsAsync()
     {
         var userType = await GetUserTypeAsync();
-        ConfigChoices.ActiveConfig.AlternativeWeddingDetails.TryGetValue(userType ?? "", out var details);
-        details ??= ConfigChoices.ActiveConfig.WeddingDetails;
+        var activeConfig = ConfigChoices.ActiveConfig;
+        if (userType == null)
+        {
+            return activeConfig.WeddingDetails;
+        }
+        activeConfig.AlternativeWeddingDetails.TryGetValue(userType, out var details);
+        details ??= activeConfig.WeddingDetails;
         return details;
     }
     
