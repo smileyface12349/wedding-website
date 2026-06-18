@@ -43,6 +43,11 @@ public class AdminService(IStore store) : IAdminService
         return store.GetAccountIdFromGuestId(guestId);
     }
     
+    public void SetUserType(string userId, string? userType)
+    {
+        store.SetUserType(userId, userType);
+    }
+    
     public IEnumerable<AccountLog> GetAccountLogs(string userId)
     {
         return store.GetAccountLogs(userId);
