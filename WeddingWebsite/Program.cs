@@ -55,6 +55,7 @@ builder.Services.AddScoped<IRsvpStore, RsvpStore>();
 builder.Services.AddScoped<IRegistryStore, RegistryStore>();
 builder.Services.AddScoped<ITodoStore, TodoStore>();
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
+builder.Services.AddScoped<IConfigProvider, ConfigProvider>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
