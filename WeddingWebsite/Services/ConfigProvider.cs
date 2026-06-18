@@ -10,10 +10,12 @@ namespace WeddingWebsite.Services;
 public class ConfigProvider(AuthenticationStateProvider authenticationStateProvider, UserManager<Account> userManager, IAccountService accountService)
     : IConfigProvider
 {
+    private IDictionary<string, string?> UserTypeCache { get; } = new Dictionary<string, string?>();
+    
     [Authorize]
     public async Task<IWebsiteConfig> GetConfigAsync()
     {
-        var userType = await GetUserTypeAsync();
+        var userType = await GetUserTypeCachedAsync();
         var activeConfig = ConfigChoices.ActiveConfig;
         if (userType == null)
         {
@@ -27,7 +29,7 @@ public class ConfigProvider(AuthenticationStateProvider authenticationStateProvi
     [Authorize]
     public async Task<IWeddingDetails> GetDetailsAsync()
     {
-        var userType = await GetUserTypeAsync();
+        var userType = await GetUserTypeCachedAsync();
         var activeConfig = ConfigChoices.ActiveConfig;
         if (userType == null)
         {
@@ -36,6 +38,32 @@ public class ConfigProvider(AuthenticationStateProvider authenticationStateProvi
         activeConfig.AlternativeWeddingDetails.TryGetValue(userType, out var details);
         details ??= activeConfig.WeddingDetails;
         return details;
+    }
+
+    [Authorize(Roles = "Admin")]
+    public void RevokeUserTypeCache(string userId)
+    {
+        UserTypeCache.Remove(userId);
+    }
+
+    private async Task<string?> GetUserTypeCachedAsync()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = userManager.GetUserId(user);
+        if (userId == null)
+        {
+            return null;
+        }
+        
+        if (UserTypeCache.TryGetValue(userId, out var cachedUserType))
+        {
+            return cachedUserType;
+        }
+
+        var userType = accountService.GetUserType(userId);
+        UserTypeCache[userId] = userType;
+        return userType;
     }
     
     private async Task<string?> GetUserTypeAsync()

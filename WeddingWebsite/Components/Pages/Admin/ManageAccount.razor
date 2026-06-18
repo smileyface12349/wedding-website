@@ -22,6 +22,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringProvider StringProvider
+@inject IConfigProvider ConfigProvider
 
 <PageTitle>@StringProvider.PageTitle("Manage Account")</PageTitle>
 
@@ -358,6 +359,7 @@
     {
         if (Account is null) return;
         AdminService.SetUserType(UserId, UserType == "Default" ? null : UserType);
+        ConfigProvider.RevokeUserTypeCache(UserId);
         ChangeUserType = false;
         if (LoggedInUser is null) return;
         AccountService.Log(LoggedInUser, AccountLogType.ChangeUserType, $"Changed user type to {UserType}", UserId);

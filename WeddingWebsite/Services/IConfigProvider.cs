@@ -20,4 +20,10 @@ public interface IConfigProvider
     /// No equivalent property is provided for wedding details - this would potentially leak sensitive information.
     /// </summary>
     static IWebsiteConfig DefaultConfig => ConfigChoices.ActiveConfig.Theme;
+    
+    /// <summary>
+    /// User types are cached to prevent unnecessary database queries. If a user's type is changed, the cache must be
+    /// revoked.
+    /// </summary>
+    void RevokeUserTypeCache(string userId);
 }
