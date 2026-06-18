@@ -11,12 +11,17 @@
 
 @attribute [Authorize]
 
-@inject IWebsiteConfig Config
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @rendermode InteractiveServer
+
+@if (Config is null || WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <PageTitle>@StringProvider.PageTitle(StringProvider.Rsvp)</PageTitle>
 
@@ -50,7 +55,7 @@
 
     private bool MultiGuests { get; set; } = true;
     
-    private SectionTheme? Theme => Config.RsvpConfig.Theme;
+    private SectionTheme? Theme => Config?.RsvpConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {
         get
@@ -60,8 +65,14 @@
         }
     }
     
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private IWebsiteConfig? Config { get; set; }
+    
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        WeddingDetails = ConfigProvider.GetDetails();
+        
         // Determine how many guests are on the account
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;

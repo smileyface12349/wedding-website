@@ -21,8 +21,7 @@
 @attribute [Authorize]
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IWebsiteConfig Config
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject UserManager<Data.Account> UserManager
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -30,6 +29,12 @@
 @inject IRsvpForm RsvpForm
 
 <PageTitle>@StringProvider.PageTitle(@StringProvider.MyAccount)</PageTitle>
+
+@if (Config is null || WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 <CascadingValue TValue="SectionTheme" Value="ThemeNoBackground">
     <Section Center="true">
@@ -155,7 +160,7 @@
     private ChangePasswordInputModel ChangePasswordInput { get; set; } = new();
 
     private IEnumerable<GuestWithId> Guests { get; set; } = [];
-    private SectionTheme? Theme => Config.AccountConfig.Theme;
+    private SectionTheme? Theme => Config?.AccountConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {
         get
@@ -171,8 +176,14 @@
     private bool ShowChangePassword { get; set; } = false;
     private bool IsSharedAccount { get; set; }
     
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private IWebsiteConfig? Config { get; set; }
+    
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        WeddingDetails = ConfigProvider.GetDetails();
+        
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         if (user.Identity is not { IsAuthenticated: true })
@@ -199,7 +210,7 @@
     
     private void ChangePassword()
     {
-        if (Config.DemoMode.IsEnabled)
+        if (Config!.DemoMode.IsEnabled)
         {
             ErrorText = "Demo mode is enabled so password changes are not allowed.";
             return;

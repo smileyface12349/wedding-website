@@ -12,8 +12,7 @@
 @using Section = WeddingWebsite.Components.Sections.Section
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IWebsiteConfig Config
-@inject IWeddingDetails WeddingDetails
+@inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 @inject NavigationManager NavigationManager
 @inject IRsvpForm RsvpConfig
@@ -21,6 +20,12 @@
 @inject IDialogService DialogService
 
 <PageTitle>@StringProvider.PageTitle(@StringProvider.Rsvp)</PageTitle>
+
+@if (Config is null || WeddingDetails is null)
+{
+    <p>Loading...</p>
+    return;
+}
 
 @if (Guest == null)
 {
@@ -101,13 +106,16 @@
 
     [Parameter] 
     public string? UserId { get; set; }
+    
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private IWebsiteConfig? Config { get; set; }
 
     private bool? IsAttending { get; set; }
     private bool ReadOnly { get; set; } = false;
     private bool EditMode { get; set; } = false;
     
     private GuestWithId? Guest { get; set; }
-    private SectionTheme? Theme => Config.RsvpConfig.Theme;
+    private SectionTheme? Theme => Config?.RsvpConfig.Theme;
     private SectionTheme? ThemeNoBackground
     {
         get
@@ -139,6 +147,9 @@
     
     protected override async Task OnInitializedAsync()
     {
+        Config = ConfigProvider.GetConfig();
+        WeddingDetails = ConfigProvider.GetDetails();
+        
         await GetGuest();
 
         if (Guest == null)
