@@ -73,7 +73,14 @@
             @foreach (var item in SortedAndFilteredItems.Where(item => UserId == null || item.NumClaimsByUser(UserId) == 0 || IsSharedAccount))
             {
                 <div class="gift">
-                    <RegistryItem Item="item" State="@(item.IsFullyClaimed ? RegistryItemState.Claimed : RegistryItemState.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <RegistryItem Item="item" State="@item.GetState()" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                        </Authorized>
+                        <NotAuthorized>
+                            <RegistryItem Item="item" State="@(item.IsFullyClaimed ? RegistryItemState.Claimed : RegistryItemState.Available)" ButtonSuccess="@(!item.IsFullyClaimed)"/>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </div>
             }
             @if (!SortedAndFilteredItems.Any())
