@@ -1,20 +1,39 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using WeddingWebsite.Config;
+using WeddingWebsite.Data;
 using WeddingWebsite.Models.ConfigInterfaces;
 
 namespace WeddingWebsite.Services;
 
-public class ConfigProvider : IConfigProvider
+public class ConfigProvider(AuthenticationStateProvider authenticationStateProvider, UserManager<Account> userManager, IAccountService accountService)
+    : IConfigProvider
 {
     [Authorize]
     public IWebsiteConfig GetConfig()
     {
-        return ConfigChoices.ActiveConfig.Theme;
+        var userType = GetUserType();
+        ConfigChoices.ActiveConfig.AlternativeThemes.TryGetValue(userType ?? "", out var config);
+        config ??= ConfigChoices.ActiveConfig.Theme;
+        return config;
     }
 
     [Authorize]
     public IWeddingDetails GetDetails()
     {
-        return ConfigChoices.ActiveConfig.WeddingDetails;
+        var userType = GetUserType();
+        ConfigChoices.ActiveConfig.AlternativeWeddingDetails.TryGetValue(userType ?? "", out var details);
+        details ??= ConfigChoices.ActiveConfig.WeddingDetails;
+        return details;
+    }
+
+    private string? GetUserType()
+    {
+        var authState = authenticationStateProvider.GetAuthenticationStateAsync().Result;
+        var user = authState.User;
+        var userId = userManager.GetUserId(user);
+        var userType = userId != null ? accountService.GetUserType(userId) : null;
+        return userType;
     }
 }
