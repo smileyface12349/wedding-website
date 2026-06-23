@@ -102,3 +102,7 @@ h1:focus {
 .dont-fill-width {
     width: fit-content;
 }
+
+iframe {
+    height: auto;
+}
