@@ -1,0 +1,49 @@
+﻿@page "/lifts"
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
+@inject IStringProvider StringProvider
+
+<PageTitle>@StringProvider.PageTitle(StringProvider.LiftSharing)</PageTitle>
+
+@if (Config.OptionalFeatures.LiftSharing.IsActive())
+{
+    <div style="margin-top: 50px"></div>
+    <LiftSharing/>
+}
+else
+{
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <div style="margin-top: 56px"></div>
+            <CascadingValue Value="ErrorSectionTheme">
+                <Section Center="true" Padding="false">
+                    <p style="padding: 5px">@StringProvider.LiftSharingInactiveDescription(Config.OptionalFeatures.LiftSharing.IsActiveString()) However, as an administrator, you are able to access it anyway.</p>
+                </Section>
+                <LiftSharing/>
+            </CascadingValue>
+        </Authorized>
+        <NotAuthorized>
+            <div style="margin-top: 100px"></div>
+            <Section Center="true">
+                <SectionHeading>@StringProvider.LiftSharing</SectionHeading>
+                <p style="margin-top: 70px; font-size: 16px">@StringProvider.LiftSharingInactiveDescription(Config.OptionalFeatures.LiftSharing.IsActiveString())</p>
+            </Section>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code {
+    private SectionTheme ErrorSectionTheme => new (new Colour(255, 100, 100), Colour.White, null);
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
+}

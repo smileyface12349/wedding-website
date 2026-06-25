@@ -1,0 +1,118 @@
+﻿@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.LiftSharing
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
+
+@if (Config is null)
+{
+    <p>Loading...</p>
+    return;
+}
+
+<CascadingValue Value="Config.LiftSharingConfig.Theme">
+    <Section>
+        <div style="margin-top: 100px;"></div>
+        @if (Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
+        {
+            <SectionHeading>Offer a Lift</SectionHeading>
+            <p class="page-description">If you've got any free spaces in your car, it would be great if you could offer a lift to others.</p>
+            @if (SingleOption)
+            {
+                var preset = Config.LiftSharingConfig.Presets.First();
+                <div class="journey-details-container">
+                    <Box>
+                        <h3>Journey Details</h3>
+                        <table>
+                            <tr>
+                                <th>@preset.Start.Time.ToString("HH:mm")</th>
+                                <td>@preset.Start.Location</td>
+                            </tr>
+                            <tr>
+                                <th>@preset.End.Time.ToString("HH:mm")</th>
+                                <td>@preset.End.Location</td>
+                            </tr>
+                        </table>
+                        <div class="offer-lift-button-container">
+                            <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                        </div>
+                    </Box>
+                </div>
+            }
+            else
+            {
+                <div class="offer-lift-button-container">
+                    <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                </div>
+            }
+        }
+        <div class="available-lifts-container">
+            <SectionHeading>Available Lifts</SectionHeading>
+            <p class="page-description">Book one of the lifts that other guests have kindly offered.</p>
+            @if (SingleOption && !Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
+            {
+                var preset = Config.LiftSharingConfig.Presets.First();
+                <div class="journey-details-container">
+                    <Box>
+                        <h3>Journey Details</h3>
+                        <table>
+                            <tr>
+                                <th>@preset.Start.Time.ToString("HH:mm")</th>
+                                <td>@preset.Start.Location</td>
+                            </tr>
+                            <tr>
+                                <th>@preset.End.Time.ToString("HH:mm")</th>
+                                <td>@preset.End.Location</td>
+                            </tr>
+                        </table>
+                    </Box>
+                </div>
+            }
+            @if (Config.OptionalFeatures.LiftSharingRequestLifts.IsActive() && Config.LiftSharingConfig.Presets.Count() == 1)
+            {
+                <Box>
+                    <div class="available-lift-container">
+                        <div class="available-lift-description">
+                            <p class="lift-heading">Assign one for me</p>
+                            <p class="lift-description">Add yourself to a list and we'll arrange it for you. Closes 3 days before.</p>
+                        </div>
+                        <Button>Book</Button>
+                    </div>
+                </Box>
+            }
+            @foreach (var lift in SharedLifts)
+            {
+                <Box>
+                    <div class="available-lift-container">
+                        <div class="available-lift-description">
+                            <p class="lift-heading">@lift.Name</p>
+                            @if (SingleOption)
+                            {
+                                <p class="lift-description">@lift.AvailableSpaces spaces.</p>
+                            }
+                            else
+                            {
+                                <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
+                            }
+                        </div>
+                        <Button>Book</Button>
+                    </div>
+                </Box>
+            }
+        </div>
+    </Section>
+</CascadingValue>
+
+@code {
+    private IWebsiteConfig? Config { get; set; }
+    private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
+    private bool SingleOption => Config != null && Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+    }
+}

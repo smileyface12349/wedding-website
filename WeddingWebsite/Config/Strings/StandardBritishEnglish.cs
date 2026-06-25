@@ -196,6 +196,9 @@ public class StandardBritishEnglish : IStringProvider
         "<i>This email was sent automatically, but replies will reach us.</i>";
 
     public string RegistryInactiveDescription(string description) => $"The registry is {description}.";
+    
+    public string LiftSharing => "Lift Sharing";
+    public string LiftSharingInactiveDescription(string description) => $"Lift sharing is {description}.";
 
     public string CreatedBy => "Created by";
     public string SourceCodeOn => "Source Code on";

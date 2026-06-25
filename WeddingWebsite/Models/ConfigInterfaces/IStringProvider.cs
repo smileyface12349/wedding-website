@@ -189,6 +189,9 @@ public interface IStringProvider
 
     string RegistryInactiveDescription(string description);
     
+    string LiftSharing { get; }
+    string LiftSharingInactiveDescription(string description);
+    
     string CreatedBy { get; }
     string SourceCodeOn { get; }
     string GitHub { get; }
