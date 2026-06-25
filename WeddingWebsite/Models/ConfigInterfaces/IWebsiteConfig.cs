@@ -51,6 +51,8 @@ public interface IWebsiteConfig
     
     public PageConfig.Rsvp RsvpConfig { get; }
     
+    public PageConfig.LiftSharing LiftSharingConfig { get; }
+    
     /// <summary>
     /// Config for the login page, including some of the text.
     /// </summary>

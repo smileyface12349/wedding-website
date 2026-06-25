@@ -10,5 +10,11 @@
 public class OptionalFeatures
 {
     public IOptionalFeature Registry = new InactiveFeature();
+    
     public IOptionalFeature Rsvp = new InactiveFeature();
+    
+    public IOptionalFeature LiftSharing = new InactiveFeature();
+    public IOptionalFeature LiftSharingOfferLifts = new ActiveFeature();
+    public IOptionalFeature LiftSharingBookLifts = new ActiveFeature();
+    public IOptionalFeature LiftSharingRequestLifts = new ActiveFeature();
 }
