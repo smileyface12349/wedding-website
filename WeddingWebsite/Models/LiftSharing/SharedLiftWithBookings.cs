@@ -13,4 +13,5 @@ public record SharedLiftWithBookings(
 ) : ISharedLift
 {
     public int AvailableSpaces => Spaces - Bookings.Count();
+    public Journey Journey => new Journey(Start, End);
 }
