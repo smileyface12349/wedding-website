@@ -1,0 +1,58 @@
+﻿@page "/lifts/waiting"
+
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Core
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.LiftSharing
+@using WeddingWebsite.Services
+
+@inject ILiftSharingService LiftSharingService
+@inject IConfigProvider ConfigProvider
+
+<div style="margin-top: 70px;"></div>
+
+<Section>
+    <BackLink Url="/lifts" Text="Back to Lift Sharing"/>
+    <div style="margin-top: 80px;"></div>
+    <SectionHeading>Waiting for Lift</SectionHeading>
+    <p class="description">These users have added themselves to a list so that they can be assigned a lift by an admin. When assigning a lift, you should probably send an email to both parties - this page will not do so automatically.</p>
+    @foreach (var booking in Bookings)
+    {
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="lift-request">
+                <p class="name">@booking.Name</p>
+                <p class="booked-at">Waiting for @((DateTime.UtcNow - booking.BookedAt).FormatShortDuration()).</p>
+                <MudSpacer/>
+                <MudMenu Icon="@Icons.Material.Filled.Assignment">
+                    @foreach (var lift in Lifts)
+                    {
+                        <MudMenuItem Label="@lift.Name" OnClick="@(() => AssignLiftToBooking(lift.Id, booking.UserId, booking.Name, booking.GuestId))"/>
+                    }
+                </MudMenu>
+            </div>
+        </Box>
+    }
+</Section>
+
+@code {
+    private IEnumerable<SharedLiftBooking> Bookings { get; set; } = [];
+    private IList<ISharedLift> Lifts { get; set; } = [];
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        Bookings = LiftSharingService.GetAllLiftRequests();
+        Lifts = LiftSharingService.GetAllLifts().Where(l => l.AvailableSpaces > 0).ToList();
+    }
+
+    private void AssignLiftToBooking(string liftId, string userId, string guestName, string? guestId)
+    {
+        LiftSharingService.AssignLift(userId, guestName, guestId, liftId);
+        Bookings = LiftSharingService.GetAllLiftRequests();
+        Lifts = LiftSharingService.GetAllLifts().Where(l => l.AvailableSpaces > 0).ToList();
+        StateHasChanged();
+    }
+}
