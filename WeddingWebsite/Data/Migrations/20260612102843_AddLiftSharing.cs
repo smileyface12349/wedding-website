@@ -37,7 +37,7 @@ namespace WeddingWebsite.Migrations
             {
                 table.PrimaryKey("PK_SharedLiftBookings", x => new { x.UserId, x.GuestId });
                 table.ForeignKey("FK_SharedLiftBookings_AspNetUsers_UserId", x => x.UserId, "AspNetUsers", "Id", onDelete: ReferentialAction.Cascade);
-                table.ForeignKey("FK_SharedLiftBookings_Guests_GuestId", x => x.GuestId, "Guests", "Id", onDelete: ReferentialAction.Cascade);
+                table.ForeignKey("FK_SharedLiftBookings_Guests_GuestId", x => x.GuestId, "Guests", "GuestId", onDelete: ReferentialAction.Cascade);
                 table.ForeignKey("FK_SharedLiftBookings_SharedLifts_LiftId", x => x.LiftId, "SharedLifts", "Id", onDelete: ReferentialAction.Cascade);
             });
 
@@ -59,9 +59,9 @@ namespace WeddingWebsite.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("SharedLifts");
             migrationBuilder.DropTable("SharedLiftGuestBookings");
             migrationBuilder.DropTable("SharedLiftNonGuestBookings");
+            migrationBuilder.DropTable("SharedLifts");
         }
     }
 }
