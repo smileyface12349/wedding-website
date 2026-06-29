@@ -273,7 +273,7 @@ public class LiftSharingStore : ILiftSharingStore
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
         
-        var lifts = new List<string>();
+        var lifts = new HashSet<string>();
         
         var cmd = connection.CreateCommand();
         cmd.CommandText = "SELECT LiftId FROM SharedLiftGuestBookings WHERE UserId = :userId";
@@ -281,7 +281,10 @@ public class LiftSharingStore : ILiftSharingStore
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            lifts.Add(reader.GetString(0));
+            if (!reader.IsDBNull(0))
+            {
+                lifts.Add(reader.GetString(0));
+            }
         }
         
         cmd = connection.CreateCommand();
@@ -290,7 +293,10 @@ public class LiftSharingStore : ILiftSharingStore
         using var reader2 = cmd.ExecuteReader();
         while (reader2.Read())
         {
-            lifts.Add(reader2.GetString(0));
+            if (!reader2.IsDBNull(0))
+            {
+                lifts.Add(reader2.GetString(0));
+            }
         }
         
         return lifts;
@@ -399,6 +405,7 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.CommandText = "INSERT INTO SharedLiftGuestBookings (UserId, GuestId, BookedAt) VALUES (:userId, :guestId, :bookedAt)";
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":guestId", guestId);
+        cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
         cmd.ExecuteNonQuery();
     }
     
@@ -411,6 +418,7 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.CommandText = "INSERT INTO SharedLiftNonGuestBookings (UserId, PassengerName, BookedAt) VALUES (:userId, :name, :bookedAt)";
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":name", name);
+        cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
         cmd.ExecuteNonQuery();
     }
 
@@ -423,8 +431,9 @@ public class LiftSharingStore : ILiftSharingStore
         
         var cmd = connection.CreateCommand();
         cmd.CommandText = """
-            SELECT UserId, GuestId, BookedAt, AcknowledgedAt
+            SELECT Guests.UserId, Guests.GuestId, BookedAt, AcknowledgedAt, Guests.FirstName, Guests.LastName
             FROM SharedLiftGuestBookings
+            LEFT JOIN Guests ON SharedLiftGuestBookings.GuestId = Guests.GuestId
             WHERE LiftId IS NULL
         """;
         using var reader = cmd.ExecuteReader();
@@ -432,9 +441,11 @@ public class LiftSharingStore : ILiftSharingStore
         {
             var userId = reader.GetString(0);
             var guestId = reader.GetString(1);
-            var bookedAt = new DateTime(reader.GetInt32(2), DateTimeKind.Utc);
-            var acknowledgedAt = reader.IsDBNull(3) ? (DateTime?)null : new DateTime(reader.GetInt32(3), DateTimeKind.Utc);
-            requests.Add(new SharedLiftBooking(userId, "", "", bookedAt, acknowledgedAt, guestId));
+            var bookedAt = new DateTime(reader.GetInt64(2), DateTimeKind.Utc);
+            var acknowledgedAt = reader.IsDBNull(3) ? (DateTime?)null : new DateTime(reader.GetInt64(3), DateTimeKind.Utc);
+            var firstName = reader.IsDBNull(4) ? "" : reader.GetString(4);
+            var lastName = reader.IsDBNull(5) ? "" : reader.GetString(5);
+            requests.Add(new SharedLiftBooking(userId, "", $"{firstName} {lastName}", bookedAt, acknowledgedAt, guestId));
         }
         
         cmd = connection.CreateCommand();
@@ -448,8 +459,8 @@ public class LiftSharingStore : ILiftSharingStore
         {
             var userId = reader2.GetString(0);
             var passengerName = reader2.GetString(1);
-            var bookedAt = new DateTime(reader2.GetInt32(2), DateTimeKind.Utc);
-            var acknowledgedAt = reader2.IsDBNull(3) ? (DateTime?)null : new DateTime(reader2.GetInt32(3), DateTimeKind.Utc);
+            var bookedAt = new DateTime(reader2.GetInt64(2), DateTimeKind.Utc);
+            var acknowledgedAt = reader2.IsDBNull(3) ? (DateTime?)null : new DateTime(reader2.GetInt64(3), DateTimeKind.Utc);
             requests.Add(new SharedLiftBooking(userId, "", passengerName, bookedAt, acknowledgedAt));
         }
         
