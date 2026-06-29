@@ -199,6 +199,17 @@ public class StandardBritishEnglish : IStringProvider
     
     public string LiftSharing => "Lift Sharing";
     public string LiftSharingInactiveDescription(string description) => $"Lift sharing is {description}.";
+    public string LiftSharingBookingEmail(string name, string email, string url) =>
+        "<p>A guest has just booked a lift that you've offered. Here's their details:</p>" +
+        $"<p>Name: {name}<br>Email: <a href=\"mailto:{email}\">{email}</a></p>" +
+        $"<p>Please double check if this still works with you, then <a href=\"{url}\">click here</a> to acknowledge or cancel the booking.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just booked the lift.</i>";
+    public string LiftSharingBookingCancelEmail(string name) =>
+        $"<p>{name} has just cancelled their lift booking, so there's no need to give them a lift any more.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just cancelled the lift.</i>";
+    public string LiftSharingBookingCancelByHostEmail(string name) =>
+        $"<p>Sorry, but the person offering your lift is no longer able to provide a lift. Please find someone else to give you a lift, and let us know if you get stuck.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the person who offered you a lift.</i>";
 
     public string CreatedBy => "Created by";
     public string SourceCodeOn => "Source Code on";
