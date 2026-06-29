@@ -142,7 +142,14 @@
                 {
                     <Box CustomCss="margin-bottom: 10px">
                         <div class="details-container">
-                            <p><b>@booking.Name</b></p>
+                            @if (booking.GuestId != null)
+                            {
+                                <p><b>@booking.Name</b></p>
+                            }
+                            else
+                            {
+                                <p><b>@booking.Name</b> (@booking.UserEmail)</p>
+                            }
                             @if (booking.UserId == UserId || Lift.UserId == UserId)
                             {
                                 <MudMenu Icon="@Icons.Material.Filled.Cancel">
@@ -313,7 +320,7 @@
             return;
         }
         
-        LiftSharingService.RemoveBooking(LiftId, booking.UserId, booking.Name, booking.GuestId);
+        LiftSharingService.RemoveBooking(booking.UserId, booking.Name, booking.GuestId);
         Lift = LiftSharingService.GetLift(LiftId);
         StateHasChanged();
         
