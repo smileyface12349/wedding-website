@@ -185,8 +185,8 @@ public class LiftSharingStore : ILiftSharingStore
         {
             var userId = reader.GetString(0);
             var guestId = reader.GetString(1);
-            var bookedAt = reader.GetInt32(2);
-            var acknowledgedAt = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3);
+            var bookedAt = reader.GetInt64(2);
+            var acknowledgedAt = reader.IsDBNull(3) ? (long?)null : reader.GetInt64(3);
             var acknowledgedAtDateTime = acknowledgedAt.HasValue ? new DateTime(acknowledgedAt.Value, DateTimeKind.Utc) : (DateTime?)null;
             var firstName = reader.GetString(4);
             var lastName = reader.GetString(5);
@@ -208,8 +208,8 @@ public class LiftSharingStore : ILiftSharingStore
         {
             var userId = reader2.GetString(0);
             var passengerName = reader2.GetString(1);
-            var bookedAt = reader2.GetInt32(2);
-            var acknowledgedAt = reader2.IsDBNull(3) ? (int?)null : reader2.GetInt32(3);
+            var bookedAt = reader2.GetInt64(2);
+            var acknowledgedAt = reader2.IsDBNull(3) ? (long?)null : reader2.GetInt64(3);
             var acknowledgedAtDateTime = acknowledgedAt.HasValue ? new DateTime(acknowledgedAt.Value, DateTimeKind.Utc) : (DateTime?)null;
             var userEmail = reader2.GetString(4);
             bookings.Add(new SharedLiftBooking(userId, userEmail, passengerName, new DateTime(bookedAt, DateTimeKind.Utc), acknowledgedAtDateTime));
@@ -254,6 +254,20 @@ public class LiftSharingStore : ILiftSharingStore
         return lifts;
     }
 
+    public string? GetGuestBooking(string userId, string guestId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT LiftId FROM SharedLiftGuestBookings WHERE UserId = :userId AND GuestId = :guestId";
+        cmd.Parameters.AddWithValue(":userId", userId);
+        cmd.Parameters.AddWithValue(":guestId", guestId);
+        var result = cmd.ExecuteScalar();
+        
+        return result?.ToString();
+    }
+
     public bool BookLiftGuest(string liftId, string userId, string guestId)
     {
         using var connection = new SqliteConnection(ConnectionString);
@@ -276,7 +290,14 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":guestId", guestId);
         cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+        }
+        catch (SqliteException e)
+        {
+            return false;
+        }
         
         transaction.Commit();
         return true;
@@ -304,7 +325,14 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":passengerName", guestId);
         cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+        }
+        catch (SqliteException e)
+        {
+            return false;
+        }
         
         transaction.Commit();
         return true;
