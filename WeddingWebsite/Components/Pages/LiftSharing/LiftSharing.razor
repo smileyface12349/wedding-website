@@ -27,6 +27,7 @@
                 <p class="page-description">Thank you so much for offering a lift, it's really helpful.</p>
                 @foreach (var lift in OwnLifts)
                 {
+                    var url = $"/lifts/{lift.Id}";
                     <Box CustomCss="margin-bottom: 10px">
                         <div class="available-lift-container">
                             <div class="available-lift-description">
@@ -40,7 +41,8 @@
                                     <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
                                 }
                             </div>
-                            <Button>View</Button>
+                            
+                            <LinkButton Url="@url">View</LinkButton>
                         </div>
                     </Box>
                 }
@@ -100,6 +102,7 @@
             }
             @foreach (var lift in SharedLifts.Where(l => l.AvailableSpaces > 0))
             {
+                var url = $"/lifts/{lift.Id}";
                 <Box CustomCss="margin-top: 10px">
                     <div class="available-lift-container">
                         <div class="available-lift-description">
@@ -113,7 +116,7 @@
                                 <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
                             }
                         </div>
-                        <Button>Book</Button>
+                        <LinkButton Url="@url">Book</LinkButton>
                     </div>
                 </Box>
             }
