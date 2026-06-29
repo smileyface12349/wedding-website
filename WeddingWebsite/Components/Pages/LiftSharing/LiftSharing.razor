@@ -100,7 +100,7 @@
                     </div>
                 </Box>
             }
-            @foreach (var lift in SharedLifts.Where(l => l.AvailableSpaces > 0))
+            @foreach (var lift in SharedLifts.OrderByDescending(l => l.AvailableSpaces))
             {
                 var url = $"/lifts/{lift.Id}";
                 <Box CustomCss="margin-top: 10px">
@@ -116,7 +116,14 @@
                                 <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
                             }
                         </div>
-                        <LinkButton Url="@url">Book</LinkButton>
+                        @if (lift.AvailableSpaces > 0)
+                        {
+                            <LinkButton Url="@url">Book</LinkButton>
+                        }
+                        else
+                        {
+                            <LinkButton Url="@url">View</LinkButton>
+                        }
                     </div>
                 </Box>
             }
