@@ -80,7 +80,7 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         }
     }
 
-    public void RemoveBooking(string liftId, string userId, string name, string? guestId)
+    public void RemoveBooking(string userId, string name, string? guestId)
     {
         if (guestId != null)
         {
@@ -89,6 +89,35 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         else
         {
             store.CancelNonGuestBooking(userId, name);
+        }
+    }
+    
+    public IEnumerable<SharedLiftBooking> GetAllLiftRequests()
+    {
+        return store.GetAllLiftRequests();
+    }
+    
+    public void AssignLift(string userId, string name, string? guestId, string liftId)
+    {
+        if (guestId != null)
+        {
+            store.AssignLiftGuest(userId, guestId, liftId);
+        }
+        else
+        {
+            store.AssignLiftNonGuest(userId, name, liftId);
+        }
+    }
+    
+    public void RequestLift(string userId, string name, string? guestId)
+    {
+        if (guestId != null)
+        {
+            store.RequestLiftGuest(userId, guestId);
+        }
+        else
+        {
+            store.RequestLiftNonGuest(userId, name);
         }
     }
 }
