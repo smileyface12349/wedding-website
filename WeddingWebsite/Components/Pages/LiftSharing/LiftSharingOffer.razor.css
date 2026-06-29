@@ -1,0 +1,45 @@
+﻿.container {
+    max-width: 400px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.description {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+input[type=text], input[type=number], ::deep textarea {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+    width: 100%;
+    margin-top: 10px;
+}
+
+input[type=number] {
+    width: 60px;
+}
+
+::deep textarea {
+    resize: none;
+    margin-bottom: 10px;
+}
+
+.error-text {
+    color: red;
+    margin-top: 10px;
+}

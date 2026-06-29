@@ -1,0 +1,152 @@
+﻿@page "/lifts/offer"
+
+@using System.Security.Claims
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@inject IConfigProvider ConfigProvider
+@inject IAccountService AccountService
+@inject ILiftSharingService LiftSharingService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<Section>
+    <div class="container">
+        <SectionHeading>Offer a Lift</SectionHeading>
+        <p class="description">Thank you so much for offering a lift. Please complete the questions below so we know a bit more.</p>
+        @if (SingleOption)
+        {
+            <h2>Journey Details</h2>
+            <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
+            <div class="form-group">
+                <input type="checkbox" @bind-value="ConfirmJourneyDetails" id="confirm-journey-details" />
+                <label for="confirm-journey-details">I confirm this journey is correct.</label>
+            </div>
+        }
+        else
+        {
+            <h2>Not Yet Implemented</h2>
+            <p>Selecting start and end location is not yet implemented. Do not submit this form.</p>
+        }
+        
+        <h2>Name</h2>
+        <p>Please write the names of people in the car. This is what people will see when they are viewing the available lifts.</p>
+        <input type="text" @bind-value="Name" placeholder="Josh, Oliver and Samuel" class="form-control" style="border-color: @PrimaryColour" />
+        
+        <h2>Spaces</h2>
+        <p>How many spare spaces do you have?</p>
+        <input type="number" @bind-value="Spaces" min="1" max="9" class="form-control" style="border-color: @PrimaryColour" />
+        
+        <h2>Notes (optional)</h2>
+        <p>Is there anything else you'd like people to know about you or your car?</p>
+        <InputTextArea @bind-Value="Notes" placeholder="We have a large boot, so we can take luggage." class="form-control" />
+    
+        <Button OnClick="OnSubmit">Submit</Button>
+        
+        @if (!string.IsNullOrEmpty(ErrorText))
+        {
+            <p class="error-text">@ErrorText</p>
+        }
+    </div>
+</Section>
+
+@code {
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    private SectionTheme? Theme => Config.LiftSharingConfig.Theme;
+    private Colour PrimaryColour => Theme?.Primary ?? Config.Colours.Primary;
+    private bool SingleOption => Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
+    private string? UserId { get; set; }
+    private IList<GuestWithId> Guests { get; set; } = [];
+    
+    private bool ConfirmJourneyDetails { get; set; } = false;
+    private string Name { get; set; } = "";
+    private int Spaces { get; set; } = 1;
+    private string Notes { get; set; } = "";
+    private string ErrorText { get; set; } = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        Guests = AccountService.GetOwnGuests(user).ToList();
+
+        // Try to come up with a useful default name. If it doesn't work, leave it blank.
+        switch (Guests.Count)
+        {
+            case 1:
+                Name = Guests.First().Name.Full;
+                break;
+            case 2:
+                if (Guests.First().Name.Last == Guests.Last().Name.Last)
+                {
+                    Name = Guests.First().Name.First + " and " + Guests.Last().Name.First + " " + Guests.First().Name.Last;
+                }
+                else
+                {
+                    Name = Guests.First().Name.Full + " and " + Guests.Last().Name.Full;
+                }
+                break;
+            default:
+                var lastNames = Guests.Select(g => g.Name.Last).Distinct().ToList();
+                if (lastNames.Count == 1)
+                {
+                    Name = lastNames.First() + " Family";
+                }
+                break;
+        }
+    }
+
+    private void OnSubmit()
+    {
+        if (!SingleOption)
+        {
+            ErrorText = "Journey options are not yet implemented.";
+            StateHasChanged();
+            return;
+        }
+        if (!ConfirmJourneyDetails)
+        {
+            ErrorText = "Please confirm that the journey details are correct.";
+            StateHasChanged();
+            return;
+        }
+        if (Name == "")
+        {
+            ErrorText = "Please enter the names of the people in the car.";
+            StateHasChanged();
+            return;
+        }
+        if (Spaces is < 1 or > 9)
+        {
+            ErrorText = "Please enter a valid number of spaces (1-9).";
+            StateHasChanged();
+            return;
+        }
+        if (UserId == null)
+        {
+            ErrorText = "Something went wrong. Failed to fetch your user ID. Please try again later.";
+            StateHasChanged();
+            return;
+        }
+        
+        LiftSharingService.AddLift(UserId, Name, Spaces, Config.LiftSharingConfig.Presets.First(), Notes);
+        NavigationManager.NavigateTo("/lifts/");
+    }
+
+}
