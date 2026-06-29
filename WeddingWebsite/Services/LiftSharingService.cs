@@ -51,7 +51,23 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
     {
         return store.GetGuestBooking(userId, guestId);
     }
-    
+
+    public IEnumerable<SharedLiftWithBookings> GetAllBookings(string userId)
+    {
+        var bookedLiftIds = store.GetBookedLifts(userId);
+        var bookedLifts = new List<SharedLiftWithBookings>();
+        foreach (var liftId in bookedLiftIds)
+        {
+            var lift = store.GetLift(liftId);
+            if (lift != null)
+            {
+                bookedLifts.Add(lift);
+            }
+        }
+
+        return bookedLifts;
+    }
+
     public bool BookLift(string liftId, string userId, string nameOrGuestId, bool isGuest)
     {
         if (isGuest)
