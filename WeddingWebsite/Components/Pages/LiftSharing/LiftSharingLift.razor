@@ -11,7 +11,10 @@
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.LiftSharing
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILiftSharingService LiftSharingService
@@ -35,7 +38,23 @@
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
                 <p><b>Names</b></p>
-                <p>@Lift.Name</p>
+                @if (EditName)
+                {
+                    <div class="edit-control">
+                        <input type="text" @bind="NewName" class="edit-input" style="border-color: @Primary" placeholder="Bob Jones and John Smith"/>
+                        <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="SaveName"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="CancelEditName"></MudIconButton>
+                    </div>
+                }
+                else
+                {
+                    <div class="edit-control">
+                        <p>@Lift.Name</p>
+                        <ConditionalWithAdminBypass Condition="UserId == Lift.UserId">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="EnableEditName"></MudIconButton>
+                        </ConditionalWithAdminBypass>
+                    </div>
+                }
             </div>
         </Box>
         @if (Lift.UserEmail != "")
@@ -56,11 +75,27 @@
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
                 <p><b>Spaces</b></p>
-                <div class="spaces-container">
-                    <p><b>@Lift.Spaces</b> spaces</p>
-                    <p><b>@(Lift.Spaces - Lift.AvailableSpaces)</b> booked</p>
-                    <p><b>@Lift.AvailableSpaces</b> available</p>
-                </div>
+                @if (EditSpaces)
+                {
+                    <div class="edit-control">
+                        <input type="number" @bind="NewSpaces" min="@(Math.Max(Lift.Bookings.Count(), 1))" max="10" class="edit-input" style="border-color: @Primary"/>
+                        <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="SaveSpaces"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="CancelEditSpaces"></MudIconButton>
+                    </div>
+                }
+                else
+                {
+                    <div class="edit-control">
+                        <div class="spaces-container">
+                            <p><b>@Lift.Spaces</b> spaces</p>
+                            <p><b>@(Lift.Spaces - Lift.AvailableSpaces)</b> booked</p>
+                            <p><b>@Lift.AvailableSpaces</b> available</p>
+                        </div>
+                        <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="EnableEditSpaces"></MudIconButton>
+                        </ConditionalWithAdminBypass>
+                    </div>
+                }
             </div>
         </Box>
         @if (Lift.Notes != "")
@@ -72,6 +107,19 @@
                 </div>
             </Box>
         }
+        
+        <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
+            @if (!Lift.Bookings.Any())
+            {
+                <div class="button-container">
+                    <Button OnClick="DeleteLift">Cancel Lift (cannot be undone)</Button>
+                </div>
+            }
+            else
+            {
+                <p><i>If you can't offer this lift any more, please first cancel the bookings and then you will be able to delete the lift.</i></p>
+                }
+        </ConditionalWithAdminBypass>
     </div>
 </Section>
 <Section>
@@ -141,6 +189,8 @@
     public required string LiftId { get; set; }
     
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    private SectionTheme? Theme => Config.LiftSharingConfig.Theme;
+    private Colour Primary => Theme?.Primary ?? Config.Colours.Primary;
     public SharedLiftWithBookings? Lift { get; set; }
     private string? UserId { get; set; }
     private IList<GuestWithId> Guests { get; set; } = [];
@@ -149,6 +199,11 @@
     private string GuestId { get; set; } = "";
     private string CustomName { get; set; } = "";
     private string ErrorText { get; set; } = "";
+
+    private bool EditName { get; set; } = false;
+    private string NewName { get; set; } = "";
+    private bool EditSpaces { get; set; } = false;
+    private int NewSpaces { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
@@ -267,5 +322,59 @@
                 await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
             }
         }
+    }
+    
+    private void EnableEditName()
+    {
+        EditName = true;
+        NewName = Lift?.Name ?? "";
+        StateHasChanged();
+    }
+    
+    private void SaveName()
+    {
+        if (Lift != null && NewName != "")
+        {
+            LiftSharingService.RenameLift(Lift.Id, NewName);
+            Lift = LiftSharingService.GetLift(LiftId);
+        }
+        EditName = false;
+        StateHasChanged();
+    }
+    
+    private void CancelEditName()
+    {
+        EditName = false;
+        StateHasChanged();
+    }
+    
+    private void EnableEditSpaces()
+    {
+        EditSpaces = true;
+        NewSpaces = Lift?.Spaces ?? 0;
+        StateHasChanged();
+    }
+    
+    private void SaveSpaces()
+    {
+        if (Lift != null && NewSpaces >= 0)
+        {
+            LiftSharingService.ChangeSpaces(Lift.Id, NewSpaces);
+            Lift = LiftSharingService.GetLift(LiftId);
+        }
+        EditSpaces = false;
+        StateHasChanged();
+    }
+    
+    private void CancelEditSpaces()
+    {
+        EditSpaces = false;
+        StateHasChanged();
+    }
+
+    private void DeleteLift()
+    {
+        LiftSharingService.DeleteLift(LiftId);
+        NavigationManager.NavigateTo("/lifts");
     }
 }
