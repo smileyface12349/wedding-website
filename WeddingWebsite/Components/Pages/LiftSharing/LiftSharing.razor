@@ -1,4 +1,5 @@
-﻿@using WeddingWebsite.Components.Sections
+﻿@using System.Security.Claims
+@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.WeddingComponents
@@ -7,6 +8,8 @@
 @using WeddingWebsite.Services
 
 @inject IConfigProvider ConfigProvider
+@inject ILiftSharingService LiftSharingService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (Config is null)
 {
@@ -17,30 +20,61 @@
 <CascadingValue Value="Config.LiftSharingConfig.Theme">
     <Section>
         <div style="margin-top: 100px;"></div>
-        @if (Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
-        {
-            <SectionHeading>Offer a Lift</SectionHeading>
-            <p class="page-description">If you've got any free spaces in your car, it would be great if you could offer a lift to others.</p>
-            @if (SingleOption)
+        <div class="available-lifts-container">
+            @if (OwnLifts.Any())
             {
-                <div class="journey-details-container">
-                    <Box>
-                        <h3>Journey Details</h3>
-                        <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
-                        <div class="offer-lift-button-container">
-                            <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                <SectionHeading>Offered Lifts</SectionHeading>
+                <p class="page-description">Thank you so much for offering a lift, it's really helpful.</p>
+                @foreach (var lift in OwnLifts)
+                {
+                    <Box CustomCss="margin-bottom: 10px">
+                        <div class="available-lift-container">
+                            <div class="available-lift-description">
+                                <p class="lift-heading">@lift.Name</p>
+                                @if (SingleOption)
+                                {
+                                    <p class="lift-description">@(lift.Spaces-lift.AvailableSpaces)/@lift.Spaces spaces filled.</p>
+                                }
+                                else
+                                {
+                                    <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
+                                }
+                            </div>
+                            <Button>View</Button>
                         </div>
                     </Box>
-                </div>
+                }
+                @if (OwnLifts.Count() < Config.LiftSharingConfig.MaxLiftOffers)
+                {
+                    <div class="offer-lift-button-container">
+                        <LinkButton Url="/lifts/offer">Offer Another Lift</LinkButton>
+                    </div>
+                }
             }
-            else
+            else if (Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
             {
-                <div class="offer-lift-button-container">
-                    <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
-                </div>
+                <SectionHeading>Offer a Lift</SectionHeading>
+                <p class="page-description">If you've got any free spaces in your car, it would be great if you could offer a lift to others.</p>
+                @if (SingleOption)
+                {
+                    <div class="journey-details-container">
+                        <Box>
+                            <h3>Journey Details</h3>
+                            <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
+                            <div class="offer-lift-button-container">
+                                <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                            </div>
+                        </Box>
+                    </div>
+                }
+                else
+                {
+                    <div class="offer-lift-button-container">
+                        <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                    </div>
+                }
             }
-        }
-        <div class="available-lifts-container">
+        
             <SectionHeading>Available Lifts</SectionHeading>
             <p class="page-description">Book one of the lifts that other guests have kindly offered.</p>
             @if (SingleOption && !Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
@@ -64,15 +98,15 @@
                     </div>
                 </Box>
             }
-            @foreach (var lift in SharedLifts)
+            @foreach (var lift in SharedLifts.Where(l => l.AvailableSpaces > 0))
             {
-                <Box>
+                <Box CustomCss="margin-top: 10px">
                     <div class="available-lift-container">
                         <div class="available-lift-description">
                             <p class="lift-heading">@lift.Name</p>
                             @if (SingleOption)
                             {
-                                <p class="lift-description">@lift.AvailableSpaces spaces.</p>
+                                <p class="lift-description">@lift.AvailableSpaces spaces available.</p>
                             }
                             else
                             {
@@ -89,11 +123,24 @@
 
 @code {
     private IWebsiteConfig? Config { get; set; }
+    private string? UserId { get; set; }
     private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
+    private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
     private bool SingleOption => Config != null && Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
     
     protected override async Task OnInitializedAsync()
     {
         Config = await ConfigProvider.GetConfigAsync();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        SharedLifts = LiftSharingService.GetAllLifts();
     }
 }

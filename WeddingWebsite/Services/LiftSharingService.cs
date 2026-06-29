@@ -21,4 +21,9 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         
         store.AddLift(lift);
     }
+
+    public IEnumerable<ISharedLift> GetAllLifts()
+    {
+        return store.GetAllLifts();
+    }
 }
