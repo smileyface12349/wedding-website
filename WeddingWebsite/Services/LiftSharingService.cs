@@ -21,6 +21,21 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         
         store.AddLift(lift);
     }
+    
+    public void RenameLift(string liftId, string newName)
+    {
+        store.RenameLift(liftId, newName);
+    }
+    
+    public bool ChangeSpaces(string liftId, int newSpaces)
+    {
+        return store.ChangeSpaces(liftId, newSpaces);
+    }
+    
+    public bool DeleteLift(string liftId)
+    {
+        return store.DeleteLift(liftId);
+    }
 
     public IEnumerable<ISharedLift> GetAllLifts()
     {
