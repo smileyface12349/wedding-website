@@ -155,9 +155,9 @@ public class LiftSharingStore : ILiftSharingStore
         var name = reader.GetString(2);
         var spaces = reader.GetInt32(3);
         var startLocation = reader.GetString(4);
-        var startTime = new DateTime(reader.GetInt32(5), DateTimeKind.Utc);
+        var startTime = new DateTime(reader.GetInt64(5), DateTimeKind.Utc);
         var endLocation = reader.GetString(6);
-        var endTime = new DateTime(reader.GetInt32(7), DateTimeKind.Utc);
+        var endTime = new DateTime(reader.GetInt64(7), DateTimeKind.Utc);
         var notes = reader.GetString(8);
         var userEmail = reader.GetString(9);
         
@@ -241,9 +241,9 @@ public class LiftSharingStore : ILiftSharingStore
             var name = reader.GetString(2);
             var spaces = reader.GetInt32(3);
             var startLocation = reader.GetString(4);
-            var startTime = new DateTime(reader.GetInt32(5), DateTimeKind.Utc);
+            var startTime = new DateTime(reader.GetInt64(5), DateTimeKind.Utc);
             var endLocation = reader.GetString(6);
-            var endTime = new DateTime(reader.GetInt32(7), DateTimeKind.Utc);
+            var endTime = new DateTime(reader.GetInt64(7), DateTimeKind.Utc);
             var notes = reader.GetString(8);
             var userEmail = reader.GetString(9);
             var numBookings = reader.GetInt32(10);
