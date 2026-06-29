@@ -1,0 +1,26 @@
+﻿<AuthorizeView Roles="Admin">
+    <Authorized>
+        @ChildContent
+    </Authorized>
+    <NotAuthorized>
+        @if (Condition)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @UnauthorizedContent
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public bool Condition { get; set; }
+    
+    [Parameter]
+    public RenderFragment? UnauthorizedContent { get; set; }
+}
