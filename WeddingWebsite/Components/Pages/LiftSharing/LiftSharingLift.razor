@@ -24,7 +24,7 @@
 @inject IConfigProvider ConfigProvider
 @inject NavigationManager NavigationManager
 
-<div style="margin-top: 100px;"></div>
+<div style="margin-top: 70px;"></div>
 
 @if (Lift == null)
 {
@@ -33,8 +33,10 @@
 }
 
 <Section>
-    <SectionHeading>Lift Share</SectionHeading>
     <div class="container">
+        <BackLink Url="/lifts" Text="Back to Lift Sharing"/>
+        <div style="margin-top: 80px;"></div>
+        <SectionHeading>Lift Share</SectionHeading>
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
                 <p><b>Names</b></p>
@@ -107,7 +109,7 @@
                 </div>
             </Box>
         }
-        
+
         <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
             @if (!Lift.Bookings.Any())
             {
@@ -117,8 +119,15 @@
             }
             else
             {
-                <p><i>If you can't offer this lift any more, please first cancel the bookings and then you will be able to delete the lift.</i></p>
+                @if (Lift.UserId == UserId)
+                {
+                    <p><i>If you can't offer this lift any more, please first cancel the bookings and then you will be able to delete the lift.</i></p>
                 }
+                else
+                {
+                    <p><i>Please cancel the bookings before deleting the lift.</i></p>
+                }
+            }
         </ConditionalWithAdminBypass>
     </div>
 </Section>
