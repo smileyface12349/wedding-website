@@ -26,4 +26,38 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
     {
         return store.GetAllLifts();
     }
+
+    public SharedLiftWithBookings? GetLift(string liftId)
+    {
+        return store.GetLift(liftId);
+    }
+    
+    public string? GetGuestBooking(string userId, string guestId)
+    {
+        return store.GetGuestBooking(userId, guestId);
+    }
+    
+    public bool BookLift(string liftId, string userId, string nameOrGuestId, bool isGuest)
+    {
+        if (isGuest)
+        {
+            return store.BookLiftGuest(liftId, userId, nameOrGuestId);
+        }
+        else
+        {
+            return store.BookLiftNonGuest(liftId, userId, nameOrGuestId);
+        }
+    }
+
+    public void RemoveBooking(string liftId, string userId, string name, string? guestId)
+    {
+        if (guestId != null)
+        {
+            store.CancelGuestBooking(userId, guestId);
+        }
+        else
+        {
+            store.CancelNonGuestBooking(userId, name);
+        }
+    }
 }
