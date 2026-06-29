@@ -61,3 +61,11 @@ h2 {
 .available-lift-description {
     flex: 1;
 }
+
+.requested-lifts {
+    margin-left: 20px;
+}
+
+.requested-lifts a {
+    cursor: pointer;
+}

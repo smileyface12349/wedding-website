@@ -1,14 +1,17 @@
 ﻿@using System.Security.Claims
+@using Org.BouncyCastle.Ocsp
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.LiftSharing
 @using WeddingWebsite.Services
 
 @inject IConfigProvider ConfigProvider
 @inject ILiftSharingService LiftSharingService
+@inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @if (Config is null)
@@ -130,9 +133,49 @@
                     <div class="available-lift-container">
                         <div class="available-lift-description">
                             <p class="lift-heading">Assign one for me</p>
-                            <p class="lift-description">Add yourself to a list and we'll arrange it for you. Closes 3 days before.</p>
+                            @if (RequestLift)
+                            {
+                                <p class="lift-description">Who do you want us to arrange a lift for?</p>
+                                <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="RequestGuestId" Style="margin-bottom: 10px; margin-top: 10px;">
+                                    @foreach (var guest in Guests)
+                                    {
+                                        <MudSelectItem T="string" Value="guest.Id">@guest.Name</MudSelectItem>
+                                    }
+                                    <MudSelectItem Value="string.Empty">Someone else</MudSelectItem>
+                                </MudSelect>
+                                @if (RequestGuestId == "")
+                                {
+                                    <MudTextField @bind-Value="RequestName" Placeholder="John Smith" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
+                                }
+                            }
+                            else
+                            {
+                                @if (LiftRequests.Any())
+                                {
+                                    <p class="lift-description">You've requested lifts for the following guests. They will be assigned for you.</p>
+                                    <ul class="requested-lifts">
+                                        @foreach (var request in LiftRequests)
+                                        {
+                                            <li>@request.Name <a @onclick="() => CancelRequest(request)">[Cancel]</a>.</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="lift-description">Add yourself to a list and we'll arrange it for you. Closes 3 days before.</p>
+                                }
+                            }
                         </div>
-                        <Button>Book</Button>
+                        <Button OnClick="BookRequestLift">Book</Button>
+                        @if (RequestLift)
+                        {
+                            <Button OnClick="CancelRequestLift">Cancel</Button>
+                        }
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <LinkButton Url="/lifts/waiting">View Requests</LinkButton>
+                            </Authorized>
+                        </AuthorizeView>
                     </div>
                 </Box>
             }
@@ -173,7 +216,13 @@
     private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
     private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
     private IEnumerable<SharedLiftWithBookings> BookedLifts { get; set; } = [];
+    private IEnumerable<SharedLiftBooking> LiftRequests { get; set; } = [];
     private bool SingleOption => Config != null && Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
+    
+    private bool RequestLift { get; set; }
+    private string RequestName { get; set; } = "";
+    private string RequestGuestId { get; set; } = "";
+    private IList<GuestWithId> Guests { get; set; } = [];
     
     protected override async Task OnInitializedAsync()
     {
@@ -193,5 +242,47 @@
         {
             BookedLifts = LiftSharingService.GetAllBookings(UserId);
         }
+        
+        var requests = LiftSharingService.GetAllLiftRequests();
+        LiftRequests = requests.Where(r => r.UserId == UserId);
+        
+        Guests = AccountService.GetOwnGuests(user).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
+    }
+    
+    private void CancelRequest(SharedLiftBooking request)
+    {
+        LiftSharingService.RemoveBooking(request.UserId, request.Name, request.GuestId);
+        LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+        StateHasChanged();
+    }
+
+    private void BookRequestLift()
+    {
+        if (!RequestLift)
+        {
+            RequestLift = true;
+        }
+        else
+        {
+            if (RequestGuestId == "" && RequestName == "")
+            {
+                return;
+            }
+            
+            LiftSharingService.RequestLift(UserId!, RequestName, RequestGuestId == "" ? null : RequestGuestId);
+            LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+            Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+            RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
+            RequestLift = false;
+        }
+
+        StateHasChanged();
+    }
+
+    private void CancelRequestLift()
+    {
+        RequestLift = false;
+        StateHasChanged();
     }
 }
