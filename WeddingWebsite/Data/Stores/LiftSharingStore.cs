@@ -268,6 +268,34 @@ public class LiftSharingStore : ILiftSharingStore
         return result?.ToString();
     }
 
+    public IEnumerable<string> GetBookedLifts(string userId)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var lifts = new List<string>();
+        
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT LiftId FROM SharedLiftGuestBookings WHERE UserId = :userId";
+        cmd.Parameters.AddWithValue(":userId", userId);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            lifts.Add(reader.GetString(0));
+        }
+        
+        cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT LiftId FROM SharedLiftNonGuestBookings WHERE UserId = :userId";
+        cmd.Parameters.AddWithValue(":userId", userId);
+        using var reader2 = cmd.ExecuteReader();
+        while (reader2.Read())
+        {
+            lifts.Add(reader2.GetString(0));
+        }
+        
+        return lifts;
+    }
+
     public bool BookLiftGuest(string liftId, string userId, string guestId)
     {
         using var connection = new SqliteConnection(ConnectionString);

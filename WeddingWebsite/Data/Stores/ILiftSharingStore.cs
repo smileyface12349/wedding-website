@@ -12,6 +12,7 @@ public interface ILiftSharingStore
     SharedLiftWithBookings? GetLift(string id);
     IEnumerable<ISharedLift> GetAllLifts();
     string? GetGuestBooking(string userId, string guestId);
+    IEnumerable<string> GetBookedLifts(string userId);
     bool BookLiftGuest(string liftId, string userId, string guestId);
     bool BookLiftNonGuest(string liftId, string userId, string name);
     void CancelGuestBooking(string userId, string guestId);
