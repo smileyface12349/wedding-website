@@ -1,0 +1,16 @@
+﻿@using WeddingWebsite.Models.LiftSharing
+<table>
+    <tr>
+        <th>@Journey.Start.Time.ToString("HH:mm")</th>
+        <td>@Journey.Start.Location</td>
+    </tr>
+    <tr>
+        <th>@Journey.End.Time.ToString("HH:mm")</th>
+        <td>@Journey.End.Location</td>
+    </tr>
+</table>
+
+@code {
+    [Parameter]
+    public required Journey Journey { get; set; }
+}

@@ -1,6 +1,7 @@
 ﻿@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.LiftSharing
 @using WeddingWebsite.Services
@@ -22,20 +23,10 @@
             <p class="page-description">If you've got any free spaces in your car, it would be great if you could offer a lift to others.</p>
             @if (SingleOption)
             {
-                var preset = Config.LiftSharingConfig.Presets.First();
                 <div class="journey-details-container">
                     <Box>
                         <h3>Journey Details</h3>
-                        <table>
-                            <tr>
-                                <th>@preset.Start.Time.ToString("HH:mm")</th>
-                                <td>@preset.Start.Location</td>
-                            </tr>
-                            <tr>
-                                <th>@preset.End.Time.ToString("HH:mm")</th>
-                                <td>@preset.End.Location</td>
-                            </tr>
-                        </table>
+                        <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
                         <div class="offer-lift-button-container">
                             <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
                         </div>
@@ -54,20 +45,10 @@
             <p class="page-description">Book one of the lifts that other guests have kindly offered.</p>
             @if (SingleOption && !Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
             {
-                var preset = Config.LiftSharingConfig.Presets.First();
                 <div class="journey-details-container">
                     <Box>
                         <h3>Journey Details</h3>
-                        <table>
-                            <tr>
-                                <th>@preset.Start.Time.ToString("HH:mm")</th>
-                                <td>@preset.Start.Location</td>
-                            </tr>
-                            <tr>
-                                <th>@preset.End.Time.ToString("HH:mm")</th>
-                                <td>@preset.End.Location</td>
-                            </tr>
-                        </table>
+                        <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
                     </Box>
                 </div>
             }

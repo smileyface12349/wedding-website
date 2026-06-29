@@ -17,10 +17,6 @@
     text-align: center;
 }
 
-th {
-    padding-right: 6px;
-}
-
 .offer-lift-button-container {
     display: flex;
     justify-content: center;
