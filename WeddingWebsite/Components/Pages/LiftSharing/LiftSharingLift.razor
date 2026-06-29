@@ -1,0 +1,271 @@
+﻿@page "/lifts/{LiftId}"
+
+@using System.Net
+@using System.Security.Claims
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Core.Emails
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.LiftSharing
+@using WeddingWebsite.Services
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILiftSharingService LiftSharingService
+@inject IAccountService AccountService
+@inject IEmailSender EmailSender
+@inject IStringProvider StringProvider
+@inject IConfigProvider ConfigProvider
+@inject NavigationManager NavigationManager
+
+<div style="margin-top: 100px;"></div>
+
+@if (Lift == null)
+{
+    <p>Lift not found.</p>
+    return;
+}
+
+<Section>
+    <SectionHeading>Lift Share</SectionHeading>
+    <div class="container">
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="details-container">
+                <p><b>Names</b></p>
+                <p>@Lift.Name</p>
+            </div>
+        </Box>
+        @if (Lift.UserEmail != "")
+        {
+            <Box CustomCss="margin-bottom: 10px">
+                <div class="details-container">
+                    <p><b>Email</b></p>
+                    <p><a href="mailto:@Lift.UserEmail">@Lift.UserEmail</a></p>
+                </div>
+            </Box>
+        }
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="details-container">
+                <p><b>Journey</b></p>
+                <JourneyDetailsTable Journey="Lift.Journey"/>
+            </div>
+        </Box>
+        <Box CustomCss="margin-bottom: 10px">
+            <div class="details-container">
+                <p><b>Spaces</b></p>
+                <div class="spaces-container">
+                    <p><b>@Lift.Spaces</b> spaces</p>
+                    <p><b>@(Lift.Spaces - Lift.AvailableSpaces)</b> booked</p>
+                    <p><b>@Lift.AvailableSpaces</b> available</p>
+                </div>
+            </div>
+        </Box>
+        @if (Lift.Notes != "")
+        {
+            <Box CustomCss="margin-bottom: 10px">
+                <div class="details-container">
+                    <p><b>Notes</b></p>
+                    <p>@Lift.Notes</p>
+                </div>
+            </Box>
+        }
+    </div>
+</Section>
+<Section>
+    <SectionHeading>Bookings</SectionHeading>
+    <div class="container">
+        @if (!IsBooking)
+        {
+            @if (Lift.Bookings.Any())
+            {
+                @foreach (var booking in Lift.Bookings)
+                {
+                    <Box CustomCss="margin-bottom: 10px">
+                        <div class="details-container">
+                            <p><b>@booking.Name</b></p>
+                            @if (booking.UserId == UserId || Lift.UserId == UserId)
+                            {
+                                <MudMenu Icon="@Icons.Material.Filled.Cancel">
+                                    <MudMenuItem OnClick="() => RemoveBooking(booking)" Label="Cancel and send email"/>
+                                </MudMenu>
+                            }
+                        </div>
+                    </Box>
+                }
+            }
+            else
+            {
+                <p class="description">No-one has booked this lift yet.</p>
+            }
+            @if (Lift.AvailableSpaces > 0)
+            {
+                <div class="button-container">
+                    <Button OnClick="StartBooking">Book Lift</Button>
+                </div> 
+            }
+        }
+        else
+        {
+            <p class="mb">Who would you like to book? You can do this multiple times.</p>
+            <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="GuestId" Style="margin-bottom: 10px">
+                @foreach (var guest in Guests)
+                {
+                    <MudSelectItem T="string" Value="guest.Id">@guest.Name</MudSelectItem>
+                }
+                <MudSelectItem Value="@string.Empty">Someone else</MudSelectItem>
+            </MudSelect>
+            @if (GuestId == "")
+            {
+                <MudTextField @bind-Value="CustomName" Placeholder="John Smith" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
+            }
+            @if (Lift.UserEmail != "")
+            {
+                <p class="mb">This will send an email to @Lift.UserEmail, which will contain your email address.</p>
+            }
+            <Button OnClickAsync="Book">Book</Button>
+            <Button OnClick="CancelBooking">Cancel</Button>
+            @if (ErrorText != "")
+            {
+                <p class="error-text">@ErrorText</p>
+            }
+        }
+        
+    </div>
+</Section>
+
+@code {
+    [Parameter] 
+    public required string LiftId { get; set; }
+    
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    public SharedLiftWithBookings? Lift { get; set; }
+    private string? UserId { get; set; }
+    private IList<GuestWithId> Guests { get; set; } = [];
+    
+    private bool IsBooking { get; set; }
+    private string GuestId { get; set; } = "";
+    private string CustomName { get; set; } = "";
+    private string ErrorText { get; set; } = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        
+        Lift = LiftSharingService.GetLift(LiftId);
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        Guests = AccountService.GetOwnGuests(user).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        GuestId = Guests.FirstOrDefault()?.Id ?? "";
+    }
+
+    private void StartBooking()
+    {
+        IsBooking = true;
+        StateHasChanged();
+    }
+
+    private void CancelBooking()
+    {
+        IsBooking = false;
+        ErrorText = "";
+        StateHasChanged();
+    }
+
+    private async Task Book()
+    {
+        if (UserId == null || Lift == null)
+        {
+            ErrorText = "Something went wrong. Please try again later.";
+            StateHasChanged();
+            return;
+        }
+        if (GuestId == "")
+        {
+            if (CustomName == "")
+            {
+                ErrorText = "Please enter a name.";
+                StateHasChanged();
+                return;
+            }
+            
+            var result = LiftSharingService.BookLift(LiftId, UserId, CustomName, false);
+            if (!result)
+            {
+                ErrorText = "Sorry, the lift is full. Please find another lift to book.";
+                StateHasChanged();
+                return;
+            }
+        }
+        else
+        {
+            var result = LiftSharingService.BookLift(LiftId, UserId, GuestId, true);
+            if (!result)
+            {
+                ErrorText = "Sorry, the lift is full. Please find another lift to book.";
+                StateHasChanged();
+                return;
+            }
+            
+            CustomName = Guests.FirstOrDefault(g => g.Id == GuestId)?.Name.Full ?? "";
+        }
+
+        ErrorText = "";
+        
+        @if (Lift.UserEmail != "")
+        {
+            var emailAddress = AccountService.GetUserEmail(UserId);
+            var message = StringProvider.LiftSharingBookingEmail(
+                WebUtility.HtmlEncode(CustomName),
+                WebUtility.HtmlEncode(emailAddress),
+                WebUtility.HtmlEncode(NavigationManager.Uri)
+            );
+            await EmailSender.SendEmailAsync(Lift.UserEmail, "Lift Share Booking", message, true);
+        }
+        
+        Lift = LiftSharingService.GetLift(LiftId);
+        IsBooking = false;
+        Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        GuestId = Guests.FirstOrDefault()?.Id ?? "";
+        CustomName = "";
+        StateHasChanged();
+    }
+    
+    private async Task RemoveBooking(SharedLiftBooking booking)
+    {
+        if (UserId == null || Lift == null)
+        {
+            ErrorText = "Something went wrong. Please try again later.";
+            StateHasChanged();
+            return;
+        }
+        
+        LiftSharingService.RemoveBooking(LiftId, booking.UserId, booking.Name, booking.GuestId);
+        Lift = LiftSharingService.GetLift(LiftId);
+        StateHasChanged();
+        
+        @if (Lift != null && Lift.UserEmail != "")
+        {
+            if (booking.UserId == UserId)
+            {
+                var message = StringProvider.LiftSharingBookingCancelEmail(WebUtility.HtmlEncode(booking.Name));
+                await EmailSender.SendEmailAsync(Lift.UserEmail, "Lift Share Cancelled", message, true);
+            }
+            else if (Lift.UserId == UserId)
+            {
+                var message = StringProvider.LiftSharingBookingCancelByHostEmail(WebUtility.HtmlEncode(booking.Name));   
+                var emailAddress = AccountService.GetUserEmail(booking.UserId);
+                await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
+            }
+        }
+    }
+}
