@@ -107,4 +107,10 @@ public sealed class WeddingDetailsTemplate : IWeddingDetails
         [],
         []
     );
+    
+    // Used for the lift sharing feature
+    public LiftSharingOptions LiftSharing { get; } = new LiftSharingOptions(
+        [],
+        false
+    );
 }

@@ -70,6 +70,6 @@ public class DefaultConfig : IWebsiteConfig
         RegistryConfig = new PageConfig.Registry(new SectionTheme(Colours.Surface, Colours.Primary, outlinedBox));
         RegistryItemConfig = new PageConfig.RegistryItem(new SectionTheme(Colours.Surface, Colours.Primary, filledBox));
         LoginConfig = new PageConfig.Login(new SectionTheme(Colours.PrimaryBackground, Colours.Primary, filledBox));
-        LiftSharingConfig = new PageConfig.LiftSharing([], true);
+        LiftSharingConfig = new PageConfig.LiftSharing();
     }
 }

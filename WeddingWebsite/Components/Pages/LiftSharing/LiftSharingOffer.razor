@@ -25,7 +25,7 @@
         @if (SingleOption)
         {
             <h2>Journey Details</h2>
-            <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
+            <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
             <div class="form-group">
                 <input type="checkbox" @bind-value="ConfirmJourneyDetails" id="confirm-journey-details"/>
                 <label for="confirm-journey-details">I confirm this journey is correct.</label>
@@ -62,9 +62,10 @@
 
 @code {
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    private IWeddingDetails? WeddingDetails { get; set; }
     private SectionTheme? Theme => Config.LiftSharingConfig.Theme;
     private Colour PrimaryColour => Theme?.Primary ?? Config.Colours.Primary;
-    private bool SingleOption => Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
+    private bool SingleOption => WeddingDetails?.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
     private string? UserId { get; set; }
     private IList<GuestWithId> Guests { get; set; } = [];
     
@@ -77,6 +78,7 @@
     protected override async Task OnInitializedAsync()
     {
         Config = await ConfigProvider.GetConfigAsync();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -141,14 +143,14 @@
             StateHasChanged();
             return;
         }
-        if (UserId == null)
+        if (UserId == null || WeddingDetails == null)
         {
             ErrorText = "Something went wrong. Failed to fetch your user ID. Please try again later.";
             StateHasChanged();
             return;
         }
         
-        LiftSharingService.AddLift(UserId, Name, Spaces, Config.LiftSharingConfig.Presets.First(), Notes);
+        LiftSharingService.AddLift(UserId, Name, Spaces, WeddingDetails.LiftSharing.Presets.First(), Notes);
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;

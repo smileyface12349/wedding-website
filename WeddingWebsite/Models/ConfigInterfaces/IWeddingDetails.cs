@@ -61,6 +61,11 @@ public interface IWeddingDetails
     /// </summary>
     public Backstory Backstory { get; }
     
+    /// <summary>
+    /// Used for the lift sharing feature.
+    /// </summary>
+    public LiftSharingOptions LiftSharing { get; }
+    
     // Helper methods
     public IPerson Groom => NotablePeople.FirstOrDefault(p => p.Role == Role.Groom) ?? new NotablePerson(new Name("Blank", "Groom"), Role.Groom);
     public IPerson Bride => NotablePeople.FirstOrDefault(p => p.Role == Role.Bride) ?? new NotablePerson(new Name("Blank", "Bride"), Role.Bride);

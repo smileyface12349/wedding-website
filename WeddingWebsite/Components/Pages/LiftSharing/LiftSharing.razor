@@ -68,7 +68,7 @@
                         <div class="journey-details-container">
                             <Box>
                                 <h3>Journey Details</h3>
-                                <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
+                                <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
                                 <div class="offer-lift-button-container">
                                     <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
                                 </div>
@@ -124,11 +124,11 @@
                 <div class="journey-details-container">
                     <Box>
                         <h3>Journey Details</h3>
-                        <JourneyDetailsTable Journey="Config.LiftSharingConfig.Presets.First()"/>
+                        <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
                     </Box>
                 </div>
             }
-            @if (Config.OptionalFeatures.LiftSharingRequestLifts.IsActive() && Config.LiftSharingConfig.Presets.Count() == 1)
+            @if (Config.OptionalFeatures.LiftSharingRequestLifts.IsActive() && WeddingDetails?.LiftSharing.Presets.Count() == 1)
             {
                 <Box>
                     <div class="available-lift-container">
@@ -217,13 +217,14 @@
 
 @code {
     private IWebsiteConfig? Config { get; set; }
+    private IWeddingDetails? WeddingDetails { get; set; }
     private string? UserId { get; set; }
-    private ClaimsPrincipal User { get; set; }
+    private ClaimsPrincipal? User { get; set; }
     private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
     private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
     private IEnumerable<SharedLiftWithBookings> BookedLifts { get; set; } = [];
     private IEnumerable<SharedLiftBooking> LiftRequests { get; set; } = [];
-    private bool SingleOption => Config != null && Config.LiftSharingConfig.Presets.Count() == 1 && !Config.LiftSharingConfig.AllowCustomJourneys;
+    private bool SingleOption => WeddingDetails != null && WeddingDetails.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
     
     private bool RequestLift { get; set; }
     private string RequestName { get; set; } = "";
@@ -234,6 +235,7 @@
     protected override async Task OnInitializedAsync()
     {
         Config = await ConfigProvider.GetConfigAsync();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         User = authState.User;
@@ -263,7 +265,7 @@
         LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
         StateHasChanged();
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.CancelLiftBooking, $"Cancel lift request for {request.Name}");
         }
@@ -297,7 +299,7 @@
 
         StateHasChanged();
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.BookLift, $"Request lift for {RequestName}");
         }
