@@ -4,7 +4,7 @@ namespace WeddingWebsite.Models.LiftSharing;
 
 public record SharedLiftBooking(
     string UserId,
-    string UserEmail,
+    string? UserEmail,
     string Name,
     DateTime BookedAt,
     string? GuestId = null

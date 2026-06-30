@@ -3,7 +3,7 @@
 public record SharedLift(
     string Id,
     string UserId,
-    string UserEmail,
+    string? UserEmail,
     string Name,
     int Spaces,
     int NumBookings,

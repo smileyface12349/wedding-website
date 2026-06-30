@@ -26,6 +26,14 @@
         <Box CustomCss="margin-bottom: 10px">
             <div class="lift-request">
                 <p class="name">@booking.Name</p>
+                @if (booking.UserEmail != null)
+                {
+                    <p class="email">(@booking.UserEmail)</p>
+                }
+                else
+                {
+                    <p class="email">(no email)</p>
+                }
                 <p class="booked-at">Waiting for @((DateTime.UtcNow - booking.BookedAt).FormatShortDuration()).</p>
                 <MudSpacer/>
                 <MudMenu Icon="@Icons.Material.Filled.Assignment">

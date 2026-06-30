@@ -4,7 +4,7 @@ public interface ISharedLift
 {
     string Id { get; }
     string UserId { get; }
-    string UserEmail { get; }
+    string? UserEmail { get; }
     string Name { get; }
     int Spaces { get; }
     int AvailableSpaces { get; }

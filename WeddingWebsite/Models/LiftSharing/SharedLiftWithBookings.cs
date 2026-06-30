@@ -3,7 +3,7 @@
 public record SharedLiftWithBookings(
     string Id,
     string UserId,
-    string UserEmail,
+    string? UserEmail,
     string Name,
     int Spaces,
     JourneyEndpoint Start,

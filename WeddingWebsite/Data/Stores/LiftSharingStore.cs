@@ -159,7 +159,7 @@ public class LiftSharingStore : ILiftSharingStore
         var endLocation = reader.GetString(6);
         var endTime = new DateTime(reader.GetInt64(7), DateTimeKind.Utc);
         var notes = reader.GetString(8);
-        var userEmail = reader.GetString(9);
+        var userEmail = reader.IsDBNull(9) ? null : reader.GetString(9);
         
         var bookings = GetBookings(liftId, connection);
         
@@ -188,7 +188,7 @@ public class LiftSharingStore : ILiftSharingStore
             var bookedAt = reader.GetInt64(2);
             var firstName = reader.GetString(3);
             var lastName = reader.GetString(4);
-            var userEmail = reader.GetString(5);
+            var userEmail = reader.IsDBNull(5) ? null : reader.GetString(5);
             bookings.Add(new SharedLiftBooking(userId, userEmail, $"{firstName} {lastName}", new DateTime(bookedAt, DateTimeKind.Utc), guestId));
         }
 
@@ -207,7 +207,7 @@ public class LiftSharingStore : ILiftSharingStore
             var userId = reader2.GetString(0);
             var passengerName = reader2.GetString(1);
             var bookedAt = reader2.GetInt64(2);
-            var userEmail = reader2.GetString(3);
+            var userEmail = reader2.IsDBNull(3) ? null : reader2.GetString(3);
             bookings.Add(new SharedLiftBooking(userId, userEmail, passengerName, new DateTime(bookedAt, DateTimeKind.Utc)));
         }
 
@@ -241,7 +241,7 @@ public class LiftSharingStore : ILiftSharingStore
             var endLocation = reader.GetString(6);
             var endTime = new DateTime(reader.GetInt64(7), DateTimeKind.Utc);
             var notes = reader.GetString(8);
-            var userEmail = reader.GetString(9);
+            var userEmail = reader.IsDBNull(9) ? null : reader.GetString(9);
             var numBookings = reader.GetInt32(10);
             
             lifts.Add(new SharedLift(liftId, userId, userEmail, name, spaces, numBookings, new JourneyEndpoint(startLocation, startTime), new JourneyEndpoint(endLocation, endTime), notes));
@@ -427,9 +427,10 @@ public class LiftSharingStore : ILiftSharingStore
         
         var cmd = connection.CreateCommand();
         cmd.CommandText = """
-            SELECT Guests.UserId, Guests.GuestId, BookedAt, Guests.FirstName, Guests.LastName
+            SELECT Guests.UserId, Guests.GuestId, BookedAt, Guests.FirstName, Guests.LastName, AspNetUsers.Email
             FROM SharedLiftGuestBookings
             LEFT JOIN Guests ON SharedLiftGuestBookings.GuestId = Guests.GuestId
+            LEFT JOIN AspNetUsers ON Guests.UserId = AspNetUsers.Id
             WHERE LiftId IS NULL
         """;
         using var reader = cmd.ExecuteReader();
@@ -440,13 +441,15 @@ public class LiftSharingStore : ILiftSharingStore
             var bookedAt = new DateTime(reader.GetInt64(2), DateTimeKind.Utc);
             var firstName = reader.IsDBNull(3) ? "" : reader.GetString(3);
             var lastName = reader.IsDBNull(4) ? "" : reader.GetString(4);
-            requests.Add(new SharedLiftBooking(userId, "", $"{firstName} {lastName}", bookedAt, guestId));
+            var email = reader.IsDBNull(5) ? null : reader.GetString(5);
+            requests.Add(new SharedLiftBooking(userId, email, $"{firstName} {lastName}", bookedAt, guestId));
         }
         
         cmd = connection.CreateCommand();
         cmd.CommandText = """
-            SELECT UserId, PassengerName, BookedAt
+            SELECT UserId, PassengerName, BookedAt, AspNetUsers.Email
             FROM SharedLiftNonGuestBookings
+            LEFT JOIN AspNetUsers ON SharedLiftNonGuestBookings.UserId = AspNetUsers.Id
             WHERE LiftId IS NULL
         """;
         using var reader2 = cmd.ExecuteReader();
@@ -455,7 +458,8 @@ public class LiftSharingStore : ILiftSharingStore
             var userId = reader2.GetString(0);
             var passengerName = reader2.GetString(1);
             var bookedAt = new DateTime(reader2.GetInt64(2), DateTimeKind.Utc);
-            requests.Add(new SharedLiftBooking(userId, "", passengerName, bookedAt));
+            var email = reader2.IsDBNull(3) ? null : reader2.GetString(3);
+            requests.Add(new SharedLiftBooking(userId, email, passengerName, bookedAt));
         }
         
         return requests;

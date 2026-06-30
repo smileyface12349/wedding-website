@@ -12,3 +12,7 @@
 .description {
     margin-bottom: 15px;
 }
+
+.email {
+    font-style: italic;
+}
