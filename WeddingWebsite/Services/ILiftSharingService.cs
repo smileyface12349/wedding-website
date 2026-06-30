@@ -17,5 +17,5 @@ public interface ILiftSharingService
     void RemoveBooking(string userId, string name, string? guestId);
     IEnumerable<SharedLiftBooking> GetAllLiftRequests();
     void AssignLift(string userId, string name, string? guestId, string liftId);
-    void RequestLift(string userId, string name, string? guestId);
+    bool RequestLift(string userId, string name, string? guestId);
 }

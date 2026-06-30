@@ -148,6 +148,10 @@
                                 {
                                     <MudTextField @bind-Value="RequestName" Placeholder="John Smith" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
                                 }
+                                @if (RequestErrorText != "")
+                                {
+                                    <p class="text-danger">@RequestErrorText</p>
+                                }
                             }
                             else
                             {
@@ -224,6 +228,7 @@
     private bool RequestLift { get; set; }
     private string RequestName { get; set; } = "";
     private string RequestGuestId { get; set; } = "";
+    private string RequestErrorText { get; set; } = "";
     private IList<GuestWithId> Guests { get; set; } = [];
     
     protected override async Task OnInitializedAsync()
@@ -277,7 +282,13 @@
                 return;
             }
             
-            LiftSharingService.RequestLift(UserId!, RequestName, RequestGuestId == "" ? null : RequestGuestId);
+            var result = LiftSharingService.RequestLift(UserId!, RequestName, RequestGuestId == "" ? null : RequestGuestId);
+            if (!result)
+            {
+                RequestErrorText = "You have already requested or booked a lift for this guest.";
+                StateHasChanged();
+                return;
+            }
             LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
             Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
             RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
@@ -295,6 +306,7 @@
     private void CancelRequestLift()
     {
         RequestLift = false;
+        RequestErrorText = "";
         StateHasChanged();
     }
 }

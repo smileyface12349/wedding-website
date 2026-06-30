@@ -404,7 +404,7 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.ExecuteNonQuery();
     }
 
-    public void RequestLiftGuest(string userId, string guestId)
+    public bool RequestLiftGuest(string userId, string guestId)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -414,10 +414,18 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":guestId", guestId);
         cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true;
+        }
+        catch (SqliteException e)
+        {
+            return false;
+        }
     }
     
-    public void RequestLiftNonGuest(string userId, string name)
+    public bool RequestLiftNonGuest(string userId, string name)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();
@@ -427,7 +435,15 @@ public class LiftSharingStore : ILiftSharingStore
         cmd.Parameters.AddWithValue(":userId", userId);
         cmd.Parameters.AddWithValue(":name", name);
         cmd.Parameters.AddWithValue(":bookedAt", DateTime.UtcNow.Ticks);
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true;
+        }
+        catch (SqliteException e)
+        {
+            return false;
+        }
     }
 
     public IEnumerable<SharedLiftBooking> GetAllLiftRequests()

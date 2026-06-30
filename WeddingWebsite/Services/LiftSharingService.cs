@@ -114,15 +114,15 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         }
     }
     
-    public void RequestLift(string userId, string name, string? guestId)
+    public bool RequestLift(string userId, string name, string? guestId)
     {
         if (guestId != null)
         {
-            store.RequestLiftGuest(userId, guestId);
+            return store.RequestLiftGuest(userId, guestId);
         }
         else
         {
-            store.RequestLiftNonGuest(userId, name);
+            return store.RequestLiftNonGuest(userId, name);
         }
     }
 }

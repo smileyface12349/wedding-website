@@ -18,8 +18,8 @@ public interface ILiftSharingStore
     bool BookLiftNonGuest(string liftId, string userId, string name);
     void CancelGuestBooking(string userId, string guestId);
     void CancelNonGuestBooking(string userId, string name);
-    void RequestLiftGuest(string userId, string guestId);
-    void RequestLiftNonGuest(string userId, string name);
+    bool RequestLiftGuest(string userId, string guestId);
+    bool RequestLiftNonGuest(string userId, string name);
     IEnumerable<SharedLiftBooking> GetAllLiftRequests();
     bool AssignLiftGuest(string userId, string guestId, string liftId);
     bool AssignLiftNonGuest(string userId, string guestId, string liftId);
