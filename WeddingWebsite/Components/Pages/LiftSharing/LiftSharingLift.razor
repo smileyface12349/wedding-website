@@ -356,9 +356,17 @@
             }
             else if (Lift.UserId == UserId)
             {
-                var message = StringProvider.LiftSharingBookingCancelByHostEmail;   
-                var emailAddress = AccountService.GetUserEmail(booking.UserId);
-                await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
+                var message = StringProvider.LiftSharingBookingCancelByHostEmail;
+                try
+                {
+                    var emailAddress = AccountService.GetUserEmail(booking.UserId);
+                    await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
+                }
+                catch (Exception e)
+                {
+                    ErrorText = "The booking was removed, but the email couldn't be sent. Please contact them to let them know their booking has been cancelled.";
+                    StateHasChanged();
+                }
             }
         }
         
