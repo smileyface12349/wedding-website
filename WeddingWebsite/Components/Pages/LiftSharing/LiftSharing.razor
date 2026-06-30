@@ -11,6 +11,7 @@
 @using WeddingWebsite.Services
 
 @inject IConfigProvider ConfigProvider
+@inject IStringProvider StringProvider
 @inject ILiftSharingService LiftSharingService
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -27,8 +28,8 @@
         <div class="available-lifts-container">
             @if (OwnLifts.Any())
             {
-                <SectionHeading>Offered Lifts</SectionHeading>
-                <p class="page-description">Thank you so much for offering a lift, it's really helpful.</p>
+                <SectionHeading>@StringProvider.OfferedLifts</SectionHeading>
+                <p class="page-description">@StringProvider.OfferedLiftsDescription</p>
                 @foreach (var lift in OwnLifts)
                 {
                     var url = $"/lifts/{lift.Id}";
@@ -38,22 +39,22 @@
                                 <p class="lift-heading">@lift.Name</p>
                                 @if (SingleOption)
                                 {
-                                    <p class="lift-description">@(lift.Spaces-lift.AvailableSpaces)/@lift.Spaces spaces filled.</p>
+                                    <p class="lift-description">@StringProvider.SpacesFilled(lift.Spaces-lift.AvailableSpaces, lift.Spaces)</p>
                                 }
                                 else
                                 {
-                                    <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
+                                    <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
                                 }
                             </div>
                             
-                            <LinkButton Url="@url">View</LinkButton>
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
                         </div>
                     </Box>
                 }
                 @if (OwnLifts.Count() < Config.LiftSharingConfig.MaxLiftOffers)
                 {
                     <div class="offer-lift-button-container">
-                        <LinkButton Url="/lifts/offer">Offer Another Lift</LinkButton>
+                        <LinkButton Url="/lifts/offer">@StringProvider.OfferAnotherLift</LinkButton>
                     </div>
                 }
             }
@@ -61,16 +62,16 @@
             {
                 @if (!BookedLifts.Any())
                 {
-                    <SectionHeading>Offer a Lift</SectionHeading>
-                    <p class="page-description">If you've got any free spaces in your car, it would be great if you could offer a lift to others.</p>
+                    <SectionHeading>@StringProvider.OfferALift</SectionHeading>
+                    <p class="page-description">@StringProvider.OfferALiftDescription</p>
                     @if (SingleOption)
                     {
                         <div class="journey-details-container">
                             <Box>
-                                <h3>Journey Details</h3>
+                                <h3>@StringProvider.JourneyDetails</h3>
                                 <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
                                 <div class="offer-lift-button-container">
-                                    <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                                    <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
                                 </div>
                             </Box>
                         </div>
@@ -78,7 +79,7 @@
                     else
                     {
                         <div class="offer-lift-button-container">
-                            <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                            <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
                         </div>
                     }
                 }
@@ -86,8 +87,8 @@
             
             @if (BookedLifts.Any())
             {
-                <SectionHeading>Booked Lifts</SectionHeading>
-                <p class="page-description">These are the lifts that you have booked.</p>
+                <SectionHeading>@StringProvider.BookedLifts</SectionHeading>
+                <p class="page-description">@StringProvider.BookedLiftsDescription</p>
                 @foreach (var lift in BookedLifts)
                 {
                     var url = $"/lifts/{lift.Id}";
@@ -97,33 +98,33 @@
                                 <p class="lift-heading">@lift.Name</p>
                                 @if (SingleOption)
                                 {
-                                    <p class="lift-description">@(lift.Spaces - lift.AvailableSpaces)/@lift.Spaces spaces filled. You booked: @string.Join(", ", lift.Bookings.Where(b => b.UserId == UserId).Select(b => b.Name)).</p>
+                                    <p class="lift-description">@StringProvider.SpacesFilled(lift.Spaces-lift.AvailableSpaces, lift.Spaces) @StringProvider.YouBookedGuestList(lift.Bookings.Where(b => b.UserId == UserId).Select(b => b.Name))</p>
                                 }
                                 else
                                 {
-                                    <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
+                                    <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
                                 }
                             </div>
 
-                            <LinkButton Url="@url">View</LinkButton>
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
                         </div>
                     </Box>
                 }
                 @if (!OwnLifts.Any())
                 {
                     <div class="button-container">
-                        <LinkButton Url="/lifts/offer">Offer a Lift</LinkButton>
+                        <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
                     </div>
                 }
             }
 
-            <SectionHeading>Available Lifts</SectionHeading>
-            <p class="page-description">Book one of the lifts that other guests have kindly offered.</p>
+            <SectionHeading>@StringProvider.AvailableLifts</SectionHeading>
+            <p class="page-description">@StringProvider.AvailableLiftsDescription</p>
             @if (SingleOption && !Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
             {
                 <div class="journey-details-container">
                     <Box>
-                        <h3>Journey Details</h3>
+                        <h3>@StringProvider.JourneyDetails</h3>
                         <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
                     </Box>
                 </div>
@@ -133,20 +134,20 @@
                 <Box>
                     <div class="available-lift-container">
                         <div class="available-lift-description">
-                            <p class="lift-heading">Assign one for me</p>
+                            <p class="lift-heading">@StringProvider.AssignOneForMe</p>
                             @if (RequestLift)
                             {
-                                <p class="lift-description">Who do you want us to arrange a lift for?</p>
+                                <p class="lift-description">@StringProvider.AssignOneForMeDescription</p>
                                 <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="RequestGuestId" Style="margin-bottom: 10px; margin-top: 10px;">
                                     @foreach (var guest in Guests)
                                     {
                                         <MudSelectItem T="string" Value="guest.Id">@guest.Name</MudSelectItem>
                                     }
-                                    <MudSelectItem Value="string.Empty">Someone else</MudSelectItem>
+                                    <MudSelectItem Value="string.Empty">@StringProvider.SomeoneElse</MudSelectItem>
                                 </MudSelect>
                                 @if (RequestGuestId == "")
                                 {
-                                    <MudTextField @bind-Value="RequestName" Placeholder="John Smith" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
+                                    <MudTextField @bind-Value="RequestName" Placeholder="@StringProvider.NamePlaceholder" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
                                 }
                                 @if (RequestErrorText != "")
                                 {
@@ -157,28 +158,28 @@
                             {
                                 @if (LiftRequests.Any())
                                 {
-                                    <p class="lift-description">You've requested lifts for the following guests. They will be assigned for you.</p>
+                                    <p class="lift-description">@StringProvider.AssignOneForMeYouveRequested</p>
                                     <ul class="requested-lifts">
                                         @foreach (var request in LiftRequests)
                                         {
-                                            <li>@request.Name <a @onclick="() => CancelRequest(request)">[Cancel]</a>.</li>
+                                            <li>@request.Name <a @onclick="() => CancelRequest(request)">[@StringProvider.Cancel]</a>.</li>
                                         }
                                     </ul>
                                 }
                                 else
                                 {
-                                    <p class="lift-description">Add yourself to a list and we'll arrange it for you. Closes 3 days before.</p>
+                                    <p class="lift-description">@StringProvider.AssignOneForMeDescription</p>
                                 }
                             }
                         </div>
-                        <Button OnClick="BookRequestLift">Book</Button>
+                        <Button OnClick="BookRequestLift">@StringProvider.Book</Button>
                         @if (RequestLift)
                         {
-                            <Button OnClick="CancelRequestLift">Cancel</Button>
+                            <Button OnClick="CancelRequestLift">@StringProvider.Cancel</Button>
                         }
                         <AuthorizeView Roles="Admin">
                             <Authorized>
-                                <LinkButton Url="/lifts/waiting">View Requests</LinkButton>
+                                <LinkButton Url="/lifts/waiting">@StringProvider.ViewRequests</LinkButton>
                             </Authorized>
                         </AuthorizeView>
                     </div>
@@ -193,20 +194,20 @@
                             <p class="lift-heading">@lift.Name</p>
                             @if (SingleOption)
                             {
-                                <p class="lift-description">@lift.AvailableSpaces spaces available.</p>
+                                <p class="lift-description">@StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
                             }
                             else
                             {
-                                <p class="lift-description">@lift.Start.Location (@lift.Start.Time.ToString("HH:mm")) to @lift.End.Location (@lift.End.Time.ToString("HH:mm"). @lift.AvailableSpaces spaces.</p>
+                                <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
                             }
                         </div>
                         @if (lift.AvailableSpaces > 0)
                         {
-                            <LinkButton Url="@url">Book</LinkButton>
+                            <LinkButton Url="@url">@StringProvider.Book</LinkButton>
                         }
                         else
                         {
-                            <LinkButton Url="@url">View</LinkButton>
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
                         }
                     </div>
                 </Box>

@@ -191,9 +191,60 @@ public interface IStringProvider
     
     string LiftSharing { get; }
     string LiftSharingInactiveDescription(string description);
+    string OfferedLifts { get; }
+    string OfferedLiftsDescription { get; }
+    string SpacesFilled(int filled, int total);
+    string LiftJourney(string startLocation, DateTime startTime, string endLocation, DateTime endTime);
+    string AvailableSpaces(int availableSpaces);
+    string OfferAnotherLift { get; }
+    string OfferALift { get; }
+    string OfferALiftDescription { get; }
+    string JourneyDetails { get; }
+    string BookedLifts { get; }
+    string BookedLiftsDescription { get; }
+    string YouBookedGuestList(IEnumerable<string> guests);
+    string AvailableLifts { get; }
+    string AvailableLiftsDescription { get; }
+    string AssignOneForMe { get; }
+    string AssignOneForMeDescription { get; }
+    string AssignOneForMeChooseGuest { get; }
+    string SomeoneElse { get; }
+    string NamePlaceholder { get; }
+    string AssignOneForMeYouveRequested { get; }
+    string Book { get; }
+    string ViewRequests { get; }
+    
+    string LiftNotFound { get; }
+    string BackToLiftSharing { get; }
+    string LiftShare { get; }
+    string Names { get; }
+    string NamesPlaceholder { get; }
+    string Email { get; }
+    string Journey { get; }
+    string Spaces { get; }
+    MarkupString SpacesCount(int spaces);
+    MarkupString SpacesBooked(int booked);
+    MarkupString SpacesAvailable(int available);
+    string CancelLift { get; }
+    string CancelBookingsBeforeDeletingHost { get; }
+    string CancelBookingsBeforeDeletingAdmin { get; }
+    string CancelAndSendEmail { get; }
+    string LiftNoBookings { get; }
+    string BookLift { get; }
+    string LiftBookChooseGuest { get; }
+    string LiftBookEmailWarning(string email);
     string LiftSharingBookingEmail(string name, string email, string url);
     string LiftSharingBookingCancelEmail(string name);
     string LiftSharingBookingCancelByHostEmail { get; }
+    
+    string OfferALiftFormDescription { get; }
+    string ConfirmJourneyCheckbox { get; }
+    string LiftNamesDescription { get; }
+    string LiftSpacesDescription { get; }
+    string NotesOptional { get; }
+    string LiftNotesDescription { get; }
+    string LiftNotesPlaceholder { get; }
+    string OfferLiftEmailWarning { get; }
     
     string CreatedBy { get; }
     string SourceCodeOn { get; }

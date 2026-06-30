@@ -28,22 +28,22 @@
 
 @if (Lift == null)
 {
-    <p>Lift not found.</p>
+    <p style="text-align: center;">@StringProvider.LiftNotFound</p>
     return;
 }
 
 <Section>
     <div class="container">
-        <BackLink Url="/lifts" Text="Back to Lift Sharing"/>
+        <BackLink Url="/lifts" Text="@StringProvider.BackToLiftSharing"/>
         <div style="margin-top: 80px;"></div>
-        <SectionHeading>Lift Share</SectionHeading>
+        <SectionHeading>@StringProvider.LiftShare</SectionHeading>
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
-                <p><b>Names</b></p>
+                <p><b>@StringProvider.Names</b></p>
                 @if (EditName)
                 {
                     <div class="edit-control">
-                        <input type="text" @bind="NewName" class="edit-input" style="border-color: @Primary" placeholder="Bob Jones and John Smith"/>
+                        <input type="text" @bind="NewName" class="edit-input" style="border-color: @Primary" placeholder="@StringProvider.NamesPlaceholder"/>
                         <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="SaveName"></MudIconButton>
                         <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="CancelEditName"></MudIconButton>
                     </div>
@@ -63,20 +63,20 @@
         {
             <Box CustomCss="margin-bottom: 10px">
                 <div class="details-container">
-                    <p><b>Email</b></p>
+                    <p><b>@StringProvider.Email</b></p>
                     <p><a href="mailto:@Lift.UserEmail">@Lift.UserEmail</a></p>
                 </div>
             </Box>
         }
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
-                <p><b>Journey</b></p>
+                <p><b>@StringProvider.Journey</b></p>
                 <JourneyDetailsTable Journey="Lift.Journey"/>
             </div>
         </Box>
         <Box CustomCss="margin-bottom: 10px">
             <div class="details-container">
-                <p><b>Spaces</b></p>
+                <p><b>@StringProvider.Spaces</b></p>
                 @if (EditSpaces)
                 {
                     <div class="edit-control">
@@ -89,9 +89,9 @@
                 {
                     <div class="edit-control">
                         <div class="spaces-container">
-                            <p><b>@Lift.Spaces</b> spaces</p>
-                            <p><b>@(Lift.Spaces - Lift.AvailableSpaces)</b> booked</p>
-                            <p><b>@Lift.AvailableSpaces</b> available</p>
+                            <p>@StringProvider.SpacesCount(Lift.Spaces)</p>
+                            <p>@StringProvider.SpacesBooked(Lift.Spaces - Lift.AvailableSpaces)</p>
+                            <p>@StringProvider.SpacesAvailable(Lift.AvailableSpaces)</p>
                         </div>
                         <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="EnableEditSpaces"></MudIconButton>
@@ -103,7 +103,7 @@
         <ConditionalWithAdminBypass Condition="Lift.Notes != string.Empty || Lift.UserId == UserId">
             <Box CustomCss="margin-bottom: 10px">
                 <div class="details-container">
-                    <p><b>Notes</b></p>
+                    <p><b>@StringProvider.Notes</b></p>
                     @if (EditNotes)
                     {
                         <div class="edit-control">
@@ -129,18 +129,18 @@
             @if (!Lift.Bookings.Any())
             {
                 <div class="button-container">
-                    <Button OnClick="DeleteLift">Cancel Lift (cannot be undone)</Button>
+                    <Button OnClick="DeleteLift">@StringProvider.CancelLift</Button>
                 </div>
             }
             else
             {
                 @if (Lift.UserId == UserId)
                 {
-                    <p><i>If you can't offer this lift any more, please first cancel the bookings and then you will be able to delete the lift.</i></p>
+                    <p><i>@StringProvider.CancelBookingsBeforeDeletingHost</i></p>
                 }
                 else
                 {
-                    <p><i>Please cancel the bookings before deleting the lift.</i></p>
+                    <p><i>@StringProvider.CancelBookingsBeforeDeletingAdmin</i></p>
                 }
             }
         </ConditionalWithAdminBypass>
@@ -168,7 +168,7 @@
                             @if (booking.UserId == UserId || Lift.UserId == UserId)
                             {
                                 <MudMenu Icon="@Icons.Material.Filled.Cancel">
-                                    <MudMenuItem OnClick="() => RemoveBooking(booking)" Label="Cancel and send email"/>
+                                    <MudMenuItem OnClick="() => RemoveBooking(booking)" Label="@StringProvider.CancelAndSendEmail"/>
                                 </MudMenu>
                             }
                         </div>
@@ -177,35 +177,35 @@
             }
             else
             {
-                <p class="description">No-one has booked this lift yet.</p>
+                <p class="description">@StringProvider.LiftNoBookings</p>
             }
             @if (Lift.AvailableSpaces > 0)
             {
                 <div class="button-container">
-                    <Button OnClick="StartBooking">Book Lift</Button>
+                    <Button OnClick="StartBooking">@StringProvider.BookLift</Button>
                 </div> 
             }
         }
         else
         {
-            <p class="mb">Who would you like to book? You can do this multiple times.</p>
+            <p class="mb">@StringProvider.LiftBookChooseGuest</p>
             <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="GuestId" Style="margin-bottom: 10px">
                 @foreach (var guest in Guests)
                 {
                     <MudSelectItem T="string" Value="guest.Id">@guest.Name</MudSelectItem>
                 }
-                <MudSelectItem Value="@string.Empty">Someone else</MudSelectItem>
+                <MudSelectItem Value="@string.Empty">@StringProvider.SomeoneElse</MudSelectItem>
             </MudSelect>
             @if (GuestId == "")
             {
-                <MudTextField @bind-Value="CustomName" Placeholder="John Smith" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
+                <MudTextField @bind-Value="CustomName" Placeholder="@StringProvider.NamePlaceholder" Variant="Variant.Outlined" Label="@StringProvider.Name" Style="margin-bottom: 10px"/>
             }
-            @if (Lift.UserEmail != "")
+            @if (Lift.UserEmail != null)
             {
-                <p class="mb">This will send an email to @Lift.UserEmail, which will contain your email address.</p>
+                <p class="mb">@StringProvider.LiftBookEmailWarning(Lift.UserEmail)</p>
             }
-            <Button OnClickAsync="Book">Book</Button>
-            <Button OnClick="CancelBooking">Cancel</Button>
+            <Button OnClickAsync="Book">@StringProvider.Book</Button>
+            <Button OnClick="CancelBooking">@StringProvider.Cancel</Button>
             @if (ErrorText != "")
             {
                 <p class="error-text">@ErrorText</p>
@@ -224,7 +224,7 @@
     private Colour Primary => Theme?.Primary ?? Config.Colours.Primary;
     public SharedLiftWithBookings? Lift { get; set; }
     private string? UserId { get; set; }
-    private ClaimsPrincipal User { get; set; }
+    private ClaimsPrincipal? User { get; set; }
     private IList<GuestWithId> Guests { get; set; } = [];
     
     private bool IsBooking { get; set; }
@@ -321,7 +321,7 @@
             await EmailSender.SendEmailAsync(Lift.UserEmail, "Lift Share Booking", message, true);
         }
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.BookLift, $"Book lift {Lift.Name} for {CustomName}");
         }
@@ -370,7 +370,7 @@
             }
         }
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.CancelLiftBooking, $"Cancel lift booking for {CustomName}");
         }
@@ -393,7 +393,7 @@
         EditName = false;
         StateHasChanged();
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.EditLift, $"Rename lift to {NewName}");
         }
@@ -422,7 +422,7 @@
         EditSpaces = false;
         StateHasChanged();
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.EditLift, $"Change lift spaces to {NewSpaces}");
         }
@@ -438,7 +438,7 @@
     {
         LiftSharingService.DeleteLift(LiftId);
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.DeleteLift, $"Delete lift: {Lift?.Name}");
         }
@@ -463,7 +463,7 @@
         EditNotes = false;
         StateHasChanged();
         
-        if (User.Identity is { IsAuthenticated: true })
+        if (User?.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(User, AccountLogType.EditLift, $"Change lift notes to {NewNotes}");
         }
