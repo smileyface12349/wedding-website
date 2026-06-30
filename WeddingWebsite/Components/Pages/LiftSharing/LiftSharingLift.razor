@@ -209,6 +209,7 @@
     private Colour Primary => Theme?.Primary ?? Config.Colours.Primary;
     public SharedLiftWithBookings? Lift { get; set; }
     private string? UserId { get; set; }
+    private ClaimsPrincipal User { get; set; }
     private IList<GuestWithId> Guests { get; set; } = [];
     
     private bool IsBooking { get; set; }
@@ -228,14 +229,14 @@
         Lift = LiftSharingService.GetLift(LiftId);
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        if (user.Identity is not { IsAuthenticated: true })
+        User = authState.User;
+        if (User.Identity is not { IsAuthenticated: true })
         {
             return;
         }
         
-        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Guests = AccountService.GetOwnGuests(user).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        Guests = AccountService.GetOwnGuests(User).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
         GuestId = Guests.FirstOrDefault()?.Id ?? "";
     }
 
@@ -292,7 +293,7 @@
 
         ErrorText = "";
         
-        @if (Lift.UserEmail != "")
+        @if (Lift.UserEmail != null)
         {
             var emailAddress = AccountService.GetUserEmail(UserId);
             var message = StringProvider.LiftSharingBookingEmail(
@@ -301,6 +302,11 @@
                 WebUtility.HtmlEncode(NavigationManager.Uri)
             );
             await EmailSender.SendEmailAsync(Lift.UserEmail, "Lift Share Booking", message, true);
+        }
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.BookLift, $"Book lift {Lift.Name} for {CustomName}");
         }
         
         Lift = LiftSharingService.GetLift(LiftId);
@@ -324,7 +330,7 @@
         Lift = LiftSharingService.GetLift(LiftId);
         StateHasChanged();
         
-        @if (Lift != null && Lift.UserEmail != "")
+        @if (Lift != null && Lift.UserEmail != null)
         {
             if (booking.UserId == UserId)
             {
@@ -337,6 +343,11 @@
                 var emailAddress = AccountService.GetUserEmail(booking.UserId);
                 await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
             }
+        }
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.CancelLiftBooking, $"Cancel lift booking for {CustomName}");
         }
     }
     
@@ -356,6 +367,11 @@
         }
         EditName = false;
         StateHasChanged();
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.EditLift, $"Rename lift to {NewName}");
+        }
     }
     
     private void CancelEditName()
@@ -380,6 +396,11 @@
         }
         EditSpaces = false;
         StateHasChanged();
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.EditLift, $"Change lift spaces to {NewSpaces}");
+        }
     }
     
     private void CancelEditSpaces()
@@ -391,6 +412,12 @@
     private void DeleteLift()
     {
         LiftSharingService.DeleteLift(LiftId);
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.DeleteLift, $"Delete lift: {Lift?.Name}");
+        }
+        
         NavigationManager.NavigateTo("/lifts");
     }
 }

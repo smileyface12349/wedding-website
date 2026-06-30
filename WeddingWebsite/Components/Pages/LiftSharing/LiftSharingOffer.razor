@@ -5,6 +5,7 @@
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
 @using WeddingWebsite.Models.WebsiteConfig
@@ -50,7 +51,7 @@
 
         <p style="margin-bottom: 10px">By offering a lift, your email address will be visible to all guests.</p>
 
-        <Button OnClick="OnSubmit">Submit</Button>
+        <Button OnClickAsync="OnSubmit">Submit</Button>
 
         @if (!string.IsNullOrEmpty(ErrorText))
         {
@@ -114,7 +115,7 @@
         }
     }
 
-    private void OnSubmit()
+    private async Task OnSubmit()
     {
         if (!SingleOption)
         {
@@ -148,6 +149,14 @@
         }
         
         LiftSharingService.AddLift(UserId, Name, Spaces, Config.LiftSharingConfig.Presets.First(), Notes);
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(user, AccountLogType.OfferLift, $"Offered a lift: {Name} with {Spaces} spaces");
+        }
+        
         NavigationManager.NavigateTo("/lifts/");
     }
 

@@ -4,12 +4,15 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Core
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.LiftSharing
 @using WeddingWebsite.Services
 
 @inject ILiftSharingService LiftSharingService
 @inject IConfigProvider ConfigProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAccountService AccountService
 
 <div style="margin-top: 70px;"></div>
 
@@ -28,7 +31,7 @@
                 <MudMenu Icon="@Icons.Material.Filled.Assignment">
                     @foreach (var lift in Lifts)
                     {
-                        <MudMenuItem Label="@lift.Name" OnClick="@(() => AssignLiftToBooking(lift.Id, booking.UserId, booking.Name, booking.GuestId))"/>
+                        <MudMenuItem Label="@lift.Name" OnClick="@(() => AssignLiftToBooking(lift.Id, booking.UserId, booking.Name, booking.GuestId, lift.Name))"/>
                     }
                 </MudMenu>
             </div>
@@ -48,11 +51,18 @@
         Lifts = LiftSharingService.GetAllLifts().Where(l => l.AvailableSpaces > 0).ToList();
     }
 
-    private void AssignLiftToBooking(string liftId, string userId, string guestName, string? guestId)
+    private async Task AssignLiftToBooking(string liftId, string userId, string guestName, string? guestId, string liftName)
     {
         LiftSharingService.AssignLift(userId, guestName, guestId, liftId);
         Bookings = LiftSharingService.GetAllLiftRequests();
         Lifts = LiftSharingService.GetAllLifts().Where(l => l.AvailableSpaces > 0).ToList();
         StateHasChanged();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(user, AccountLogType.BookLift, $"Admin assigned {guestName} to {liftName}", userId);
+        }
     }
 }

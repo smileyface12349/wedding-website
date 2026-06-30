@@ -5,6 +5,7 @@
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.WeddingComponents
 @using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.LiftSharing
 @using WeddingWebsite.Services
@@ -213,6 +214,7 @@
 @code {
     private IWebsiteConfig? Config { get; set; }
     private string? UserId { get; set; }
+    private ClaimsPrincipal User { get; set; }
     private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
     private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
     private IEnumerable<SharedLiftWithBookings> BookedLifts { get; set; } = [];
@@ -229,13 +231,13 @@
         Config = await ConfigProvider.GetConfigAsync();
         
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        if (user.Identity is not { IsAuthenticated: true })
+        User = authState.User;
+        if (User.Identity is not { IsAuthenticated: true })
         {
             return;
         }
         
-        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         SharedLifts = LiftSharingService.GetAllLifts();
         if (UserId != null)
@@ -246,7 +248,7 @@
         var requests = LiftSharingService.GetAllLiftRequests();
         LiftRequests = requests.Where(r => r.UserId == UserId);
         
-        Guests = AccountService.GetOwnGuests(user).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        Guests = AccountService.GetOwnGuests(User).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
         RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
     }
     
@@ -255,6 +257,11 @@
         LiftSharingService.RemoveBooking(request.UserId, request.Name, request.GuestId);
         LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
         StateHasChanged();
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.CancelLiftBooking, $"Cancel lift request for {request.Name}");
+        }
     }
 
     private void BookRequestLift()
@@ -278,6 +285,11 @@
         }
 
         StateHasChanged();
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.BookLift, $"Request lift for {RequestName}");
+        }
     }
 
     private void CancelRequestLift()
