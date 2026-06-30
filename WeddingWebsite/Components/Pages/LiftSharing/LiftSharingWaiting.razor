@@ -21,7 +21,7 @@
     <div style="margin-top: 80px;"></div>
     <SectionHeading>Waiting for Lift</SectionHeading>
     <p class="description">These users have added themselves to a list so that they can be assigned a lift by an admin. When assigning a lift, you should probably send an email to both parties - this page will not do so automatically.</p>
-    @foreach (var booking in Bookings)
+    @foreach (var booking in Bookings.OrderBy(b => b.BookedAt))
     {
         <Box CustomCss="margin-bottom: 10px">
             <div class="lift-request">
