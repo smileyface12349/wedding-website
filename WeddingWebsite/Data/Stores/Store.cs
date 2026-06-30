@@ -307,6 +307,32 @@ public class Store : IStore
     }
 
     [Authorize]
+    public string? GetUserEmail(string userId)
+    {
+        using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+                SELECT Email
+                FROM AspNetUsers
+                WHERE Id = :userId
+            """;
+        
+        command.Parameters.AddWithValue(":userId", userId);
+        
+        using var reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            var email = reader.IsDBNull(0) ? null : reader.GetString(0);
+            return email;
+        }
+
+        return null;
+    }
+
+    [Authorize]
     public string? GetUserType(string userId)
     {
         using var connection = new SqliteConnection("DataSource=Data\\app.db;Cache=Shared");

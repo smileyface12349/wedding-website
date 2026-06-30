@@ -57,6 +57,11 @@ public interface IStore
     public string? GetUserNameByUserId(string userId);
 
     /// <summary>
+    /// Get user email from their user id
+    /// </summary>
+    public string? GetUserEmail(string userId);
+
+    /// <summary>
     /// Get the 'type' field for a user. The type field is used to determine which version of the website is shown.
     /// </summary>
     public string? GetUserType(string userId);

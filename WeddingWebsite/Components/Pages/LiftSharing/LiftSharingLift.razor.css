@@ -1,0 +1,53 @@
+﻿.container {
+    max-width: 400px;
+    margin: auto;
+}
+
+.description {
+    text-align: center;
+}
+
+.details-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spaces-container {
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.mb {
+    margin-bottom: 10px;
+}
+
+.mt {
+    margin-top: 10px;
+}
+
+.error-text {
+    margin-top: 10px;
+    color: red;
+}
+
+.edit-control {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+}
+
+input {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+    width: 100%;
+}

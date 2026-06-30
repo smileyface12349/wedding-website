@@ -1,0 +1,166 @@
+﻿@page "/lifts/offer"
+
+@using System.Security.Claims
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
+@using WeddingWebsite.Services
+@using Section = WeddingWebsite.Components.Sections.Section
+
+@inject IConfigProvider ConfigProvider
+@inject IStringProvider StringProvider
+@inject IAccountService AccountService
+@inject ILiftSharingService LiftSharingService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<Section>
+    <div class="container">
+        <SectionHeading>@StringProvider.OfferALift</SectionHeading>
+        <p class="description">@StringProvider.OfferALiftFormDescription</p>
+        @if (SingleOption)
+        {
+            <h2>@StringProvider.JourneyDetails</h2>
+            <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
+            <div class="form-group">
+                <input type="checkbox" @bind-value="ConfirmJourneyDetails" id="confirm-journey-details"/>
+                <label for="confirm-journey-details">@StringProvider.ConfirmJourneyCheckbox</label>
+            </div>
+        }
+        else
+        {
+            <h2>Not Yet Implemented</h2>
+            <p>Selecting start and end location is not yet implemented. Do not submit this form.</p>
+        }
+
+        <h2>@StringProvider.Names</h2>
+        <p>@StringProvider.LiftNamesDescription</p>
+        <input type="text" @bind-value="Name" placeholder="@StringProvider.NamesPlaceholder" class="form-control" style="border-color: @PrimaryColour"/>
+
+        <h2>@StringProvider.Spaces</h2>
+        <p>@StringProvider.LiftSpacesDescription</p>
+        <input type="number" @bind-value="Spaces" min="1" max="9" class="form-control" style="border-color: @PrimaryColour"/>
+
+        <h2>@StringProvider.NotesOptional</h2>
+        <p>@StringProvider.LiftNotesDescription</p>
+        <InputTextArea @bind-Value="Notes" placeholder="@StringProvider.LiftNotesPlaceholder" class="form-control"/>
+
+        <p style="margin-bottom: 10px">@StringProvider.OfferLiftEmailWarning</p>
+
+        <Button OnClickAsync="OnSubmit">@StringProvider.Submit</Button>
+
+        @if (!string.IsNullOrEmpty(ErrorText))
+        {
+            <p class="error-text">@ErrorText</p>
+        }
+    </div>
+</Section>
+
+@code {
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private SectionTheme? Theme => Config.LiftSharingConfig.Theme;
+    private Colour PrimaryColour => Theme?.Primary ?? Config.Colours.Primary;
+    private bool SingleOption => WeddingDetails?.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
+    private string? UserId { get; set; }
+    private IList<GuestWithId> Guests { get; set; } = [];
+    
+    private bool ConfirmJourneyDetails { get; set; } = false;
+    private string Name { get; set; } = "";
+    private int Spaces { get; set; } = 1;
+    private string Notes { get; set; } = "";
+    private string ErrorText { get; set; } = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        Guests = AccountService.GetOwnGuests(user).ToList();
+
+        // Try to come up with a useful default name. If it doesn't work, leave it blank.
+        switch (Guests.Count)
+        {
+            case 1:
+                Name = Guests.First().Name.Full;
+                break;
+            case 2:
+                if (Guests.First().Name.Last == Guests.Last().Name.Last)
+                {
+                    Name = Guests.First().Name.First + " and " + Guests.Last().Name.First + " " + Guests.First().Name.Last;
+                }
+                else
+                {
+                    Name = Guests.First().Name.Full + " and " + Guests.Last().Name.Full;
+                }
+                break;
+            default:
+                var lastNames = Guests.Select(g => g.Name.Last).Distinct().ToList();
+                if (lastNames.Count == 1)
+                {
+                    Name = lastNames.First() + " Family";
+                }
+                break;
+        }
+    }
+
+    private async Task OnSubmit()
+    {
+        if (!SingleOption)
+        {
+            ErrorText = "Journey options are not yet implemented.";
+            StateHasChanged();
+            return;
+        }
+        if (!ConfirmJourneyDetails)
+        {
+            ErrorText = "Please confirm that the journey details are correct.";
+            StateHasChanged();
+            return;
+        }
+        if (Name == "")
+        {
+            ErrorText = "Please enter the names of the people in the car.";
+            StateHasChanged();
+            return;
+        }
+        if (Spaces is < 1 or > 9)
+        {
+            ErrorText = "Please enter a valid number of spaces (1-9).";
+            StateHasChanged();
+            return;
+        }
+        if (UserId == null || WeddingDetails == null)
+        {
+            ErrorText = "Something went wrong. Failed to fetch your user ID. Please try again later.";
+            StateHasChanged();
+            return;
+        }
+        
+        LiftSharingService.AddLift(UserId, Name, Spaces, WeddingDetails.LiftSharing.Presets.First(), Notes);
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(user, AccountLogType.OfferLift, $"Offered a lift: {Name} with {Spaces} spaces");
+        }
+        
+        NavigationManager.NavigateTo("/lifts/");
+    }
+
+}

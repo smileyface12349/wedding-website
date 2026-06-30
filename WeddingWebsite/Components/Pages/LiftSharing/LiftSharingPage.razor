@@ -1,4 +1,4 @@
-﻿@page "/Registry"
+﻿@page "/lifts"
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.ConfigInterfaces
 @using WeddingWebsite.Models.Theme
@@ -8,12 +8,12 @@
 @inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 
-<PageTitle>@StringProvider.PageTitle(@StringProvider.Registry)</PageTitle>
+<PageTitle>@StringProvider.PageTitle(StringProvider.LiftSharing)</PageTitle>
 
-@if (Config.OptionalFeatures.Registry.IsActive())
+@if (Config.OptionalFeatures.LiftSharing.IsActive())
 {
     <div style="margin-top: 50px"></div>
-    <Registry/>
+    <LiftSharing/>
 }
 else
 {
@@ -22,16 +22,16 @@ else
             <div style="margin-top: 56px"></div>
             <CascadingValue Value="ErrorSectionTheme">
                 <Section Center="true" Padding="false">
-                    <p style="padding: 5px">@StringProvider.RegistryInactiveDescription(Config.OptionalFeatures.Registry.IsActiveString()) However, as an administrator, you are able to access it anyway.</p>
+                    <p style="padding: 5px">@StringProvider.LiftSharingInactiveDescription(Config.OptionalFeatures.LiftSharing.IsActiveString()) However, as an administrator, you are able to access it anyway.</p>
                 </Section>
-                <Registry/>
+                <LiftSharing/>
             </CascadingValue>
         </Authorized>
         <NotAuthorized>
             <div style="margin-top: 100px"></div>
             <Section Center="true">
-                <SectionHeading>@StringProvider.Registry</SectionHeading>
-                <p style="margin-top: 70px; font-size: 16px">@StringProvider.RegistryInactiveDescription(Config.OptionalFeatures.Registry.IsActiveString())</p>
+                <SectionHeading>@StringProvider.LiftSharing</SectionHeading>
+                <p style="margin-top: 70px; font-size: 16px">@StringProvider.LiftSharingInactiveDescription(Config.OptionalFeatures.LiftSharing.IsActiveString())</p>
             </Section>
         </NotAuthorized>
     </AuthorizeView>

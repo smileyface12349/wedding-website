@@ -67,6 +67,17 @@ public class AccountService(IStore store) : IAccountService
         }
         return userId;
     }
+
+    public string GetUserEmail(string userId)
+    {
+        var email = store.GetUserEmail(userId);
+        if (email == null)
+        {
+            throw new InvalidOperationException("Could not find user email for the provided user ID.");
+        }
+
+        return email;
+    }
     
     public string? GetUserType(string userId)
     {

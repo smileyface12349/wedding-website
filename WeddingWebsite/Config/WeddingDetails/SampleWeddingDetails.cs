@@ -3,6 +3,7 @@ using WeddingWebsite.Models.Accommodation;
 using WeddingWebsite.Models.ConfigInterfaces;
 using WeddingWebsite.Models.Events;
 using WeddingWebsite.Models.Gallery;
+using WeddingWebsite.Models.LiftSharing;
 using WeddingWebsite.Models.People;
 using WeddingWebsite.Models.WebsiteConfig;
 using WeddingWebsite.Models.WebsiteElement;
@@ -311,7 +312,9 @@ public sealed class SampleWeddingDetails : IWeddingDetails
             new BigGalleryItem(new WebsiteImage("https://images.squarespace-cdn.com/content/v1/5e575ffdabec06285101e4d6/0bcac31c-5167-4528-8a82-c635449c28c8/engagement-cinematic-silhouette-sunset-leo-carrillo-beach.JPG", null), "", "Los Angeles", "December 2017")
         ]
     );
-    
-    public WebsiteLink RegistryLink { get; }
-        = new WebsiteLink("https://youtu.be/dQw4w9WgXcQ");
+
+    public LiftSharingOptions LiftSharing { get; } = new LiftSharingOptions(
+        [new Journey(new JourneyEndpoint("Westminster Abbey", DateTime.Parse("13:00")), new JourneyEndpoint("Buckingham Palace", DateTime.Parse("13:30")))],
+        false
+    );
 }

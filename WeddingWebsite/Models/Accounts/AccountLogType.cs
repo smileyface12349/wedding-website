@@ -47,5 +47,20 @@ public enum AccountLogType
     UnclaimRegistryItem,
     
     [Description("Complete registry item")]
-    CompleteRegistryItem
+    CompleteRegistryItem,
+    
+    [Description("Offer lift")]
+    OfferLift,
+    
+    [Description("Edit lift")]
+    EditLift,
+    
+    [Description("Delete lift")]
+    DeleteLift,
+    
+    [Description("Book lift")]
+    BookLift,
+    
+    [Description("Cancel lift booking")]
+    CancelLiftBooking,
 }

@@ -196,7 +196,73 @@ public class StandardBritishEnglish : IStringProvider
         "<i>This email was sent automatically, but replies will reach us.</i>";
 
     public string RegistryInactiveDescription(string description) => $"The registry is {description}.";
+    
+    public string LiftSharing => "Lift Sharing";
+    public string LiftSharingInactiveDescription(string description) => $"Lift sharing is {description}.";
+    public string OfferedLifts => "Offered Lifts";
+    public string OfferedLiftsDescription => "Thank you so much for offering a lift, it's really helpful!";
+    public string SpacesFilled(int filled, int total) => $"{filled}/{total} spaces filled.";
+    public string LiftJourney(string startLocation, DateTime startTime, string endLocation, DateTime endTime) =>
+        $"{startLocation} ({startTime:HH:mm}) to {endLocation} ({endTime:HH:mm}).";
+    public string AvailableSpaces(int availableSpaces) => $"{availableSpaces} space{(availableSpaces != 1 ? "s" : "")} available.";
+    public string OfferAnotherLift => "Offer Another Lift";
+    public string OfferALift => "Offer a Lift";
+    public string OfferALiftDescription => "If you've got any free spaces in your car, it would be great if you could offer a lift to others.";
+    public string JourneyDetails => "Journey Details";
+    public string BookedLifts => "Booked Lifts";
+    public string BookedLiftsDescription => "These are the lifts that you have booked";
+    public string YouBookedGuestList(IEnumerable<string> guests) => $"You booked: {string.Join(", ", guests)}.";
+    public string AvailableLifts => "Available Lifts";
+    public string AvailableLiftsDescription => "Book one of the lifts that other guests have kindly offered.";
+    public string AssignOneForMe => "Assign one for me";
+    public string AssignOneForMeDescription => "Add yourself to a list and we'll arrange it for you. Closes 3 days before.";
+    public string AssignOneForMeChooseGuest => "Who do you want us to arrange a lift for?";
+    public string SomeoneElse => "Someone else";
+    public string NamePlaceholder => "John Smith";
+    public string AssignOneForMeYouveRequested => "You've requested lifts for the following guests. They will be assigned for you.";
+    public string Book => "Book";
+    public string ViewRequests => "View Requests";
 
+    public string LiftNotFound => "Lift not found.";
+    public string BackToLiftSharing => "Back to Lift Sharing";
+    public string LiftShare => "Lift Share";
+    public string Names => "Names";
+    public string NamesPlaceholder => "Bob Jones and John Smith";
+    public string Email => "Email";
+    public string Journey => "Journey";
+    public string Spaces => "Spaces";
+    public MarkupString SpacesCount(int spaces) => (MarkupString) $"<b>{spaces}</b> spaces";
+    public MarkupString SpacesBooked(int booked) => (MarkupString) $"<b>{booked}</b> booked";
+    public MarkupString SpacesAvailable(int available) => (MarkupString) $"<b>{available}</b> available";
+    public string CancelLift => "Cancel Lift (cannot be undone)";
+    public string CancelBookingsBeforeDeletingHost => "If you can't offer this lift any more, please first cancel the bookings and then you will be able to delete the lift.";
+    public string CancelBookingsBeforeDeletingAdmin => "Please cancel the bookings before deleting the lift.";
+    public string CancelAndSendEmail => "Cancel and send email";
+    public string LiftNoBookings => "No-one has booked this lift yet.";
+    public string BookLift => "Book Lift";
+    public string LiftBookChooseGuest => "Who would you like to book? You can do this multiple times.";
+    public string LiftBookEmailWarning(string email) => $"This will send an email to {email}, which will contain your email address.";
+    public string LiftSharingBookingEmail(string name, string email, string url) =>
+        "<p>A guest has just booked a lift that you've offered. Here's their details:</p>" +
+        $"<p>Name: {name}<br>Email: <a href=\"mailto:{email}\">{email}</a></p>" +
+        $"<p>Please double check if this still works with you. If it does, send them an email to organise further details. If not, <a href=\"{url}\">click here</a> to cancel it.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just booked the lift.</i>";
+    public string LiftSharingBookingCancelEmail(string name) =>
+        $"<p>{name} has just cancelled their lift booking, so there's no need to give them a lift any more.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just cancelled the lift.</i>";
+    public string LiftSharingBookingCancelByHostEmail =>
+        "<p>Sorry, but the person offering your lift is no longer able to provide a lift. Please find someone else to give you a lift, and let us know if you get stuck.</p>" +
+        "<i>This email was sent automatically. If you reply, it will reach us and not the person who offered you a lift.</i>";
+
+    public string OfferALiftFormDescription => "Thank you so much for offering a lift. Please complete the questions below so we know a bit more.";
+    public string ConfirmJourneyCheckbox => "I confirm this journey is correct.";
+    public string LiftNamesDescription => "Please write the names of people in the car. This is what people will see when they are viewing the available lifts.";
+    public string LiftSpacesDescription => "How many spare spaces do you have?";
+    public string NotesOptional => "Notes (optional)";
+    public string LiftNotesDescription => "Is there anything else you'd like people to know about you or your car?";
+    public string LiftNotesPlaceholder => "We have a large boot, so we can take luggage.";
+    public string OfferLiftEmailWarning => "By offering a lift, your email address will be visible to all guests.";
+    
     public string CreatedBy => "Created by";
     public string SourceCodeOn => "Source Code on";
     public string GitHub => "GitHub";

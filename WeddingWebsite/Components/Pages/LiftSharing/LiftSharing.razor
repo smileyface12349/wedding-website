@@ -1,0 +1,315 @@
+﻿@using System.Security.Claims
+@using Org.BouncyCastle.Ocsp
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.WeddingComponents
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.LiftSharing
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
+@inject IStringProvider StringProvider
+@inject ILiftSharingService LiftSharingService
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (Config is null)
+{
+    <p>Loading...</p>
+    return;
+}
+
+<CascadingValue Value="Config.LiftSharingConfig.Theme">
+    <Section>
+        <div style="margin-top: 100px;"></div>
+        <div class="available-lifts-container">
+            @if (OwnLifts.Any())
+            {
+                <SectionHeading>@StringProvider.OfferedLifts</SectionHeading>
+                <p class="page-description">@StringProvider.OfferedLiftsDescription</p>
+                @foreach (var lift in OwnLifts)
+                {
+                    var url = $"/lifts/{lift.Id}";
+                    <Box CustomCss="margin-bottom: 10px">
+                        <div class="available-lift-container">
+                            <div class="available-lift-description">
+                                <p class="lift-heading">@lift.Name</p>
+                                @if (SingleOption)
+                                {
+                                    <p class="lift-description">@StringProvider.SpacesFilled(lift.Spaces-lift.AvailableSpaces, lift.Spaces)</p>
+                                }
+                                else
+                                {
+                                    <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
+                                }
+                            </div>
+                            
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
+                        </div>
+                    </Box>
+                }
+                @if (OwnLifts.Count() < Config.LiftSharingConfig.MaxLiftOffers)
+                {
+                    <div class="offer-lift-button-container">
+                        <LinkButton Url="/lifts/offer">@StringProvider.OfferAnotherLift</LinkButton>
+                    </div>
+                }
+            }
+            else if (Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
+            {
+                @if (!BookedLifts.Any())
+                {
+                    <SectionHeading>@StringProvider.OfferALift</SectionHeading>
+                    <p class="page-description">@StringProvider.OfferALiftDescription</p>
+                    @if (SingleOption)
+                    {
+                        <div class="journey-details-container">
+                            <Box>
+                                <h3>@StringProvider.JourneyDetails</h3>
+                                <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
+                                <div class="offer-lift-button-container">
+                                    <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
+                                </div>
+                            </Box>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="offer-lift-button-container">
+                            <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
+                        </div>
+                    }
+                }
+            }
+            
+            @if (BookedLifts.Any())
+            {
+                <SectionHeading>@StringProvider.BookedLifts</SectionHeading>
+                <p class="page-description">@StringProvider.BookedLiftsDescription</p>
+                @foreach (var lift in BookedLifts)
+                {
+                    var url = $"/lifts/{lift.Id}";
+                    <Box CustomCss="margin-bottom: 10px">
+                        <div class="available-lift-container">
+                            <div class="available-lift-description">
+                                <p class="lift-heading">@lift.Name</p>
+                                @if (SingleOption)
+                                {
+                                    <p class="lift-description">@StringProvider.SpacesFilled(lift.Spaces-lift.AvailableSpaces, lift.Spaces) @StringProvider.YouBookedGuestList(lift.Bookings.Where(b => b.UserId == UserId).Select(b => b.Name))</p>
+                                }
+                                else
+                                {
+                                    <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
+                                }
+                            </div>
+
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
+                        </div>
+                    </Box>
+                }
+                @if (!OwnLifts.Any())
+                {
+                    <div class="button-container">
+                        <LinkButton Url="/lifts/offer">@StringProvider.OfferALift</LinkButton>
+                    </div>
+                }
+            }
+
+            <SectionHeading>@StringProvider.AvailableLifts</SectionHeading>
+            <p class="page-description">@StringProvider.AvailableLiftsDescription</p>
+            @if (SingleOption && !Config.OptionalFeatures.LiftSharingOfferLifts.IsActive())
+            {
+                <div class="journey-details-container">
+                    <Box>
+                        <h3>@StringProvider.JourneyDetails</h3>
+                        <JourneyDetailsTable Journey="WeddingDetails?.LiftSharing.Presets.First()"/>
+                    </Box>
+                </div>
+            }
+            @if (Config.OptionalFeatures.LiftSharingRequestLifts.IsActive() && WeddingDetails?.LiftSharing.Presets.Count() == 1)
+            {
+                <Box>
+                    <div class="available-lift-container">
+                        <div class="available-lift-description">
+                            <p class="lift-heading">@StringProvider.AssignOneForMe</p>
+                            @if (RequestLift)
+                            {
+                                <p class="lift-description">@StringProvider.AssignOneForMeDescription</p>
+                                <MudSelect T="string" Variant="Variant.Outlined" @bind-Value="RequestGuestId" Style="margin-bottom: 10px; margin-top: 10px;">
+                                    @foreach (var guest in Guests)
+                                    {
+                                        <MudSelectItem T="string" Value="guest.Id">@guest.Name</MudSelectItem>
+                                    }
+                                    <MudSelectItem Value="string.Empty">@StringProvider.SomeoneElse</MudSelectItem>
+                                </MudSelect>
+                                @if (RequestGuestId == "")
+                                {
+                                    <MudTextField @bind-Value="RequestName" Placeholder="@StringProvider.NamePlaceholder" Variant="Variant.Outlined" Label="Name" Style="margin-bottom: 10px"/>
+                                }
+                                @if (RequestErrorText != "")
+                                {
+                                    <p class="text-danger">@RequestErrorText</p>
+                                }
+                            }
+                            else
+                            {
+                                @if (LiftRequests.Any())
+                                {
+                                    <p class="lift-description">@StringProvider.AssignOneForMeYouveRequested</p>
+                                    <ul class="requested-lifts">
+                                        @foreach (var request in LiftRequests)
+                                        {
+                                            <li>@request.Name <a @onclick="() => CancelRequest(request)">[@StringProvider.Cancel]</a>.</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="lift-description">@StringProvider.AssignOneForMeDescription</p>
+                                }
+                            }
+                        </div>
+                        <Button OnClick="BookRequestLift">@StringProvider.Book</Button>
+                        @if (RequestLift)
+                        {
+                            <Button OnClick="CancelRequestLift">@StringProvider.Cancel</Button>
+                        }
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <LinkButton Url="/lifts/waiting">@StringProvider.ViewRequests</LinkButton>
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
+                </Box>
+            }
+            @foreach (var lift in SharedLifts.OrderByDescending(l => l.AvailableSpaces))
+            {
+                var url = $"/lifts/{lift.Id}";
+                <Box CustomCss="margin-top: 10px">
+                    <div class="available-lift-container">
+                        <div class="available-lift-description">
+                            <p class="lift-heading">@lift.Name</p>
+                            @if (SingleOption)
+                            {
+                                <p class="lift-description">@StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
+                            }
+                            else
+                            {
+                                <p class="lift-description">@StringProvider.LiftJourney(lift.Start.Location, lift.Start.Time, lift.End.Location, lift.End.Time) @StringProvider.AvailableSpaces(lift.AvailableSpaces)</p>
+                            }
+                        </div>
+                        @if (lift.AvailableSpaces > 0)
+                        {
+                            <LinkButton Url="@url">@StringProvider.Book</LinkButton>
+                        }
+                        else
+                        {
+                            <LinkButton Url="@url">@StringProvider.View</LinkButton>
+                        }
+                    </div>
+                </Box>
+            }
+        </div>
+    </Section>
+</CascadingValue>
+
+@code {
+    private IWebsiteConfig? Config { get; set; }
+    private IWeddingDetails? WeddingDetails { get; set; }
+    private string? UserId { get; set; }
+    private ClaimsPrincipal? User { get; set; }
+    private IEnumerable<ISharedLift> SharedLifts { get; set; } = [];
+    private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
+    private IEnumerable<SharedLiftWithBookings> BookedLifts { get; set; } = [];
+    private IEnumerable<SharedLiftBooking> LiftRequests { get; set; } = [];
+    private bool SingleOption => WeddingDetails != null && WeddingDetails.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
+    
+    private bool RequestLift { get; set; }
+    private string RequestName { get; set; } = "";
+    private string RequestGuestId { get; set; } = "";
+    private string RequestErrorText { get; set; } = "";
+    private IList<GuestWithId> Guests { get; set; } = [];
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        WeddingDetails = await ConfigProvider.GetDetailsAsync();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        User = authState.User;
+        if (User.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        SharedLifts = LiftSharingService.GetAllLifts();
+        if (UserId != null)
+        {
+            BookedLifts = LiftSharingService.GetAllBookings(UserId);
+        }
+        
+        var requests = LiftSharingService.GetAllLiftRequests();
+        LiftRequests = requests.Where(r => r.UserId == UserId);
+        
+        Guests = AccountService.GetOwnGuests(User).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+        RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
+    }
+    
+    private void CancelRequest(SharedLiftBooking request)
+    {
+        LiftSharingService.RemoveBooking(request.UserId, request.Name, request.GuestId);
+        LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+        StateHasChanged();
+        
+        if (User?.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.CancelLiftBooking, $"Cancel lift request for {request.Name}");
+        }
+    }
+
+    private void BookRequestLift()
+    {
+        if (!RequestLift)
+        {
+            RequestLift = true;
+        }
+        else
+        {
+            if (RequestGuestId == "" && RequestName == "")
+            {
+                return;
+            }
+            
+            var result = LiftSharingService.RequestLift(UserId!, RequestName, RequestGuestId == "" ? null : RequestGuestId);
+            if (!result)
+            {
+                RequestErrorText = "You have already requested or booked a lift for this guest.";
+                StateHasChanged();
+                return;
+            }
+            LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+            Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
+            RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
+            RequestLift = false;
+        }
+
+        StateHasChanged();
+        
+        if (User?.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.BookLift, $"Request lift for {RequestName}");
+        }
+    }
+
+    private void CancelRequestLift()
+    {
+        RequestLift = false;
+        RequestErrorText = "";
+        StateHasChanged();
+    }
+}

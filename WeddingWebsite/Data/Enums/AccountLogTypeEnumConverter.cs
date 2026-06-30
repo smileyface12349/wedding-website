@@ -23,6 +23,11 @@ public static class AccountLogTypeEnumConverter
             AccountLogType.UnclaimRegistryItem => 12,
             AccountLogType.CompleteRegistryItem => 13,
             AccountLogType.ChangeUserType => 14,
+            AccountLogType.OfferLift => 15,
+            AccountLogType.EditLift => 16,
+            AccountLogType.DeleteLift => 17,
+            AccountLogType.BookLift => 18,
+            AccountLogType.CancelLiftBooking => 19,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -51,6 +56,11 @@ public static class AccountLogTypeEnumConverter
             12 => AccountLogType.UnclaimRegistryItem,
             13 => AccountLogType.CompleteRegistryItem,
             14 => AccountLogType.ChangeUserType,
+            15 => AccountLogType.OfferLift,
+            16 => AccountLogType.EditLift,
+            17 => AccountLogType.DeleteLift,
+            18 => AccountLogType.BookLift,
+            19 => AccountLogType.CancelLiftBooking,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }

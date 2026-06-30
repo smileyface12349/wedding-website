@@ -1,0 +1,18 @@
+﻿.lift-request {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.description {
+    margin-bottom: 15px;
+}
+
+.email {
+    font-style: italic;
+}

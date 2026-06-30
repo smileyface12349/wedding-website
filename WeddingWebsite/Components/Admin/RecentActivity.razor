@@ -34,14 +34,15 @@
 
 @code {
     private IEnumerable<AccountLog> Logs { get; set; } = [];
-    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in" };
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in", "Account details", "RSVP", "Lift sharing" };
     private string EnabledFiltersString { get; set; } = "";
     private readonly string[] AllFilters =
     [
         "Log in",
         "Account details",
         "RSVP",
-        "Registry"
+        "Registry",
+        "Lift sharing"
     ];
     
     private void RowClicked(TableRowClickEventArgs<AccountLog> args)
@@ -65,6 +66,7 @@
         var accountDetailsTypes = new List<AccountLogType> { AccountLogType.ChangePassword, AccountLogType.ChangeUserName, AccountLogType.ChangeEmail, AccountLogType.ChangePermissions, AccountLogType.DeleteGuest, AccountLogType.AddGuest, AccountLogType.RenameGuest, AccountLogType.ChangeUserType };
         var rsvpTypes = new List<AccountLogType> { AccountLogType.SubmitRsvp, AccountLogType.DeleteRsvp, AccountLogType.EditRsvp };
         var registryTypes = new List<AccountLogType> { AccountLogType.ClaimRegistryItem, AccountLogType.UnclaimRegistryItem, AccountLogType.CompleteRegistryItem };
+        var liftSharingTypes = new List<AccountLogType> { AccountLogType.OfferLift, AccountLogType.EditLift, AccountLogType.DeleteLift, AccountLogType.BookLift, AccountLogType.CancelLiftBooking };
         
         if (!EnabledFilters.Contains("Log in") && loginTypes.Contains(log.LogType))
             return false;
@@ -73,6 +75,8 @@
         if (!EnabledFilters.Contains("RSVP") && rsvpTypes.Contains(log.LogType))
             return false;
         if (!EnabledFilters.Contains("Registry") && registryTypes.Contains(log.LogType))
+            return false;
+        if (!EnabledFilters.Contains("Lift sharing") && liftSharingTypes.Contains(log.LogType))
             return false;
         
         return true;

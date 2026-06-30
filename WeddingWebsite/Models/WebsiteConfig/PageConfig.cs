@@ -1,4 +1,5 @@
-﻿using WeddingWebsite.Models.Theme;
+﻿using WeddingWebsite.Models.LiftSharing;
+using WeddingWebsite.Models.Theme;
 
 namespace WeddingWebsite.Models.WebsiteConfig;
 
@@ -9,4 +10,5 @@ public abstract record PageConfig(SectionTheme? Theme = null)
     public sealed record RegistryItem(SectionTheme? Theme = null) : PageConfig(Theme);
     public sealed record Login(SectionTheme? Theme = null, string UserNamePlaceholder = "name@example.com") : PageConfig(Theme);
     public sealed record Rsvp(SectionTheme? Theme = null) : PageConfig(Theme);
+    public sealed record LiftSharing(SectionTheme? Theme = null, int MaxLiftOffers = 1) : PageConfig(Theme);
 }
