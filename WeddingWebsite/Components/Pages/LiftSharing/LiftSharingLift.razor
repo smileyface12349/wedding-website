@@ -362,7 +362,7 @@
                     var emailAddress = AccountService.GetUserEmail(booking.UserId);
                     await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ErrorText = "The booking was removed, but the email couldn't be sent. Please contact them to let them know their booking has been cancelled.";
                     StateHasChanged();

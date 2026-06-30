@@ -336,7 +336,7 @@ public class LiftSharingStore : ILiftSharingStore
         {
             cmd.ExecuteNonQuery();
         }
-        catch (SqliteException e)
+        catch (SqliteException)
         {
             return false;
         }
@@ -371,7 +371,7 @@ public class LiftSharingStore : ILiftSharingStore
         {
             cmd.ExecuteNonQuery();
         }
-        catch (SqliteException e)
+        catch (SqliteException)
         {
             return false;
         }
@@ -419,7 +419,7 @@ public class LiftSharingStore : ILiftSharingStore
             cmd.ExecuteNonQuery();
             return true;
         }
-        catch (SqliteException e)
+        catch (SqliteException)
         {
             return false;
         }
@@ -440,7 +440,7 @@ public class LiftSharingStore : ILiftSharingStore
             cmd.ExecuteNonQuery();
             return true;
         }
-        catch (SqliteException e)
+        catch (SqliteException)
         {
             return false;
         }
