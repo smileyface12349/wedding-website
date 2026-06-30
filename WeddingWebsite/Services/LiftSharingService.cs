@@ -32,6 +32,11 @@ public class LiftSharingService(ILiftSharingStore store) : ILiftSharingService
         return store.ChangeSpaces(liftId, newSpaces);
     }
     
+    public void ChangeLiftNotes(string liftId, string newNotes)
+    {
+        store.ChangeLiftNotes(liftId, newNotes);
+    }
+    
     public bool DeleteLift(string liftId)
     {
         return store.DeleteLift(liftId);

@@ -7,6 +7,7 @@ public interface ILiftSharingService
     void AddLift(string userId, string name, int spaces, Journey journey, string notes);
     void RenameLift(string liftId, string newName);
     bool ChangeSpaces(string liftId, int newSpaces);
+    void ChangeLiftNotes(string liftId, string newNotes);
     bool DeleteLift(string liftId);
     IEnumerable<ISharedLift> GetAllLifts();
     SharedLiftWithBookings? GetLift(string liftId);

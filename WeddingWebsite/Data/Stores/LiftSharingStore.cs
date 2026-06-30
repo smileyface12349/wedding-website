@@ -108,6 +108,18 @@ public class LiftSharingStore : ILiftSharingStore
         transaction.Commit();
         return true;
     }
+    
+    public void ChangeLiftNotes(string id, string newNotes)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = "UPDATE SharedLifts SET Notes = :notes WHERE Id = :id";
+        cmd.Parameters.AddWithValue(":id", id);
+        cmd.Parameters.AddWithValue(":notes", newNotes);
+        cmd.ExecuteNonQuery();
+    }
 
     public bool DeleteLift(string id)
     {

@@ -100,15 +100,30 @@
                 }
             </div>
         </Box>
-        @if (Lift.Notes != "")
-        {
+        <ConditionalWithAdminBypass Condition="Lift.Notes != string.Empty || Lift.UserId == UserId">
             <Box CustomCss="margin-bottom: 10px">
                 <div class="details-container">
                     <p><b>Notes</b></p>
-                    <p>@Lift.Notes</p>
+                    @if (EditNotes)
+                    {
+                        <div class="edit-control">
+                            <input type="text" @bind="NewNotes" class="edit-input" style="border-color: @Primary"/>
+                            <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="SaveNotes"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="CancelEditNotes"></MudIconButton>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="edit-control">
+                            <p>@Lift.Notes</p>
+                            <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="EnableEditNotes"></MudIconButton>
+                            </ConditionalWithAdminBypass>
+                        </div>
+                    }
                 </div>
             </Box>
-        }
+        </ConditionalWithAdminBypass>
 
         <ConditionalWithAdminBypass Condition="Lift.UserId == UserId">
             @if (!Lift.Bookings.Any())
@@ -221,6 +236,8 @@
     private string NewName { get; set; } = "";
     private bool EditSpaces { get; set; } = false;
     private int NewSpaces { get; set; }
+    private bool EditNotes { get; set; } = false;
+    private string NewNotes { get; set; } = "";
     
     protected override async Task OnInitializedAsync()
     {
@@ -419,5 +436,34 @@
         }
         
         NavigationManager.NavigateTo("/lifts");
+    }
+    
+    private void EnableEditNotes()
+    {
+        EditNotes = true;
+        NewNotes = Lift?.Notes ?? "";
+        StateHasChanged();
+    }
+    
+    private void SaveNotes()
+    {
+        if (Lift != null)
+        {
+            LiftSharingService.ChangeLiftNotes(Lift.Id, NewNotes);
+            Lift = LiftSharingService.GetLift(LiftId);
+        }
+        EditNotes = false;
+        StateHasChanged();
+        
+        if (User.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(User, AccountLogType.EditLift, $"Change lift notes to {NewNotes}");
+        }
+    }
+    
+    private void CancelEditNotes()
+    {
+        EditNotes = false;
+        StateHasChanged();
     }
 }
