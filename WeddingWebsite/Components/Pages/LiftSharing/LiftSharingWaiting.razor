@@ -41,6 +41,7 @@
                     {
                         <MudMenuItem Label="@lift.Name" OnClick="@(() => AssignLiftToBooking(lift.Id, booking.UserId, booking.Name, booking.GuestId, lift.Name))"/>
                     }
+                    <MudMenuItem Label="Cancel Request" OnClick="@(() => CancelLiftRequest(booking.UserId, booking.Name, booking.GuestId))"/>
                 </MudMenu>
             </div>
         </Box>
@@ -71,6 +72,21 @@
         if (user.Identity is { IsAuthenticated: true })
         {
             AccountService.Log(user, AccountLogType.BookLift, $"Admin assigned {guestName} to {liftName}", userId);
+        }
+    }
+    
+    private async Task CancelLiftRequest(string userId, string guestName, string? guestId)
+    {
+        LiftSharingService.RemoveBooking(userId, guestName, guestId);
+        Bookings = LiftSharingService.GetAllLiftRequests();
+        Lifts = LiftSharingService.GetAllLifts().Where(l => l.AvailableSpaces > 0).ToList();
+        StateHasChanged();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            AccountService.Log(user, AccountLogType.CancelLiftBooking, $"Admin cancelled lift request for {guestName}", userId);
         }
     }
 }
