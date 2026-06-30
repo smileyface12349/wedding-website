@@ -32,7 +32,6 @@ namespace WeddingWebsite.Migrations
                 UserId = table.Column<string>(type: "TEXT", nullable: false),
                 GuestId = table.Column<string>(type: "TEXT", nullable: false),
                 BookedAt = table.Column<int>(type: "INTEGER", nullable: false),
-                AcknowledgedAt = table.Column<int>(type: "INTEGER", nullable: true)
             }, constraints: table =>
             {
                 table.PrimaryKey("PK_SharedLiftBookings", x => new { x.UserId, x.GuestId });
@@ -47,7 +46,6 @@ namespace WeddingWebsite.Migrations
                 UserId = table.Column<string>(type: "TEXT", nullable: false),
                 PassengerName = table.Column<string>(type: "TEXT", nullable: false),
                 BookedAt = table.Column<int>(type: "INTEGER", nullable: false),
-                AcknowledgedAt = table.Column<int>(type: "INTEGER", nullable: true)
             }, constraints: table =>
             {
                 table.PrimaryKey("PK_SharedLiftNonGuestBookings", x => new { x.UserId, x.PassengerName });

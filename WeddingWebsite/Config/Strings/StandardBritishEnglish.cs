@@ -202,7 +202,7 @@ public class StandardBritishEnglish : IStringProvider
     public string LiftSharingBookingEmail(string name, string email, string url) =>
         "<p>A guest has just booked a lift that you've offered. Here's their details:</p>" +
         $"<p>Name: {name}<br>Email: <a href=\"mailto:{email}\">{email}</a></p>" +
-        $"<p>Please double check if this still works with you, then <a href=\"{url}\">click here</a> to acknowledge or cancel the booking.</p>" +
+        $"<p>Please double check if this still works with you. If it does, send them an email to organise further details. If not, <a href=\"{url}\">click here</a> to cancel it.</p>" +
         "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just booked the lift.</i>";
     public string LiftSharingBookingCancelEmail(string name) =>
         $"<p>{name} has just cancelled their lift booking, so there's no need to give them a lift any more.</p>" +

@@ -7,6 +7,5 @@ public record SharedLiftBooking(
     string UserEmail,
     string Name,
     DateTime BookedAt,
-    DateTime? AcknowledgedAt,
     string? GuestId = null
 );

@@ -22,6 +22,4 @@ public interface ILiftSharingStore
     IEnumerable<SharedLiftBooking> GetAllLiftRequests();
     bool AssignLiftGuest(string userId, string guestId, string liftId);
     bool AssignLiftNonGuest(string userId, string guestId, string liftId);
-    void AcknowledgeBookingGuest(string liftId, string userId, string guestId);
-    void AcknowledgeBookingNonGuest(string liftId, string userId, string name);
 }
