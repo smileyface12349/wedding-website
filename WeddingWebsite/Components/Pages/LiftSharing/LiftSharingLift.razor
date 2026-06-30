@@ -333,7 +333,7 @@
             }
             else if (Lift.UserId == UserId)
             {
-                var message = StringProvider.LiftSharingBookingCancelByHostEmail(WebUtility.HtmlEncode(booking.Name));   
+                var message = StringProvider.LiftSharingBookingCancelByHostEmail;   
                 var emailAddress = AccountService.GetUserEmail(booking.UserId);
                 await EmailSender.SendEmailAsync(emailAddress, "Lift Share Cancelled", message, true);
             }

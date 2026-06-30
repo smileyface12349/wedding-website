@@ -193,7 +193,7 @@ public interface IStringProvider
     string LiftSharingInactiveDescription(string description);
     string LiftSharingBookingEmail(string name, string email, string url);
     string LiftSharingBookingCancelEmail(string name);
-    string LiftSharingBookingCancelByHostEmail(string name);
+    string LiftSharingBookingCancelByHostEmail { get; }
     
     string CreatedBy { get; }
     string SourceCodeOn { get; }

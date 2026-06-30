@@ -207,8 +207,8 @@ public class StandardBritishEnglish : IStringProvider
     public string LiftSharingBookingCancelEmail(string name) =>
         $"<p>{name} has just cancelled their lift booking, so there's no need to give them a lift any more.</p>" +
         "<i>This email was sent automatically. If you reply, it will reach us and not the guest that has just cancelled the lift.</i>";
-    public string LiftSharingBookingCancelByHostEmail(string name) =>
-        $"<p>Sorry, but the person offering your lift is no longer able to provide a lift. Please find someone else to give you a lift, and let us know if you get stuck.</p>" +
+    public string LiftSharingBookingCancelByHostEmail =>
+        "<p>Sorry, but the person offering your lift is no longer able to provide a lift. Please find someone else to give you a lift, and let us know if you get stuck.</p>" +
         "<i>This email was sent automatically. If you reply, it will reach us and not the person who offered you a lift.</i>";
 
     public string CreatedBy => "Created by";
