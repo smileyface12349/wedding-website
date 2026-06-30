@@ -97,7 +97,7 @@
                                 <p class="lift-heading">@lift.Name</p>
                                 @if (SingleOption)
                                 {
-                                    <p class="lift-description">@(lift.Spaces - lift.AvailableSpaces)/@lift.Spaces spaces filled. You have booked @lift.Bookings.Count(b => b.UserId == UserId) of these spaces.</p>
+                                    <p class="lift-description">@(lift.Spaces - lift.AvailableSpaces)/@lift.Spaces spaces filled. You booked: @string.Join(", ", lift.Bookings.Where(b => b.UserId == UserId).Select(b => b.Name)).</p>
                                 }
                                 else
                                 {
