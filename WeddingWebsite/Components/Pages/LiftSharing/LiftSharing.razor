@@ -134,7 +134,7 @@
                 <Box>
                     <div class="available-lift-container">
                         <div class="available-lift-description">
-                            <p class="lift-heading">@StringProvider.AssignOneForMe</p>
+                            <p class="lift-heading">@StringProvider.AssignOneForMe(AllLiftRequests.Count())</p>
                             @if (RequestLift)
                             {
                                 <p class="lift-description">@StringProvider.AssignOneForMeDescription</p>
@@ -225,6 +225,7 @@
     private IEnumerable<ISharedLift> OwnLifts => SharedLifts.Where(lift => lift.UserId == UserId);
     private IEnumerable<SharedLiftWithBookings> BookedLifts { get; set; } = [];
     private IEnumerable<SharedLiftBooking> LiftRequests { get; set; } = [];
+    private IEnumerable<SharedLiftBooking> AllLiftRequests { get; set; } = [];
     private bool SingleOption => WeddingDetails != null && WeddingDetails.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
     
     private bool RequestLift { get; set; }
@@ -253,8 +254,8 @@
             BookedLifts = LiftSharingService.GetAllBookings(UserId);
         }
         
-        var requests = LiftSharingService.GetAllLiftRequests();
-        LiftRequests = requests.Where(r => r.UserId == UserId);
+        AllLiftRequests = LiftSharingService.GetAllLiftRequests();
+        LiftRequests = AllLiftRequests.Where(r => r.UserId == UserId);
         
         Guests = AccountService.GetOwnGuests(User).Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
         RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
@@ -263,7 +264,8 @@
     private void CancelRequest(SharedLiftBooking request)
     {
         LiftSharingService.RemoveBooking(request.UserId, request.Name, request.GuestId);
-        LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+        AllLiftRequests = LiftSharingService.GetAllLiftRequests();
+        LiftRequests = AllLiftRequests.Where(r => r.UserId == UserId);
         StateHasChanged();
         
         if (User?.Identity is { IsAuthenticated: true })
@@ -293,7 +295,8 @@
                 return;
             }
             RequestName = Guests.Where(g => g.Id == RequestGuestId).Select(g => g.Name.Full).FirstOrDefault() ?? RequestName;
-            LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
+            AllLiftRequests = LiftSharingService.GetAllLiftRequests();
+            LiftRequests = AllLiftRequests.Where(r => r.UserId == UserId);
             Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
             RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
             RequestLift = false;

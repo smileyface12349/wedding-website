@@ -205,7 +205,7 @@ public interface IStringProvider
     string YouBookedGuestList(IEnumerable<string> guests);
     string AvailableLifts { get; }
     string AvailableLiftsDescription { get; }
-    string AssignOneForMe { get; }
+    string AssignOneForMe(int numWaiting);
     string AssignOneForMeDescription { get; }
     string AssignOneForMeChooseGuest { get; }
     string SomeoneElse { get; }

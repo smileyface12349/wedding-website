@@ -214,7 +214,7 @@ public class StandardBritishEnglish : IStringProvider
     public string YouBookedGuestList(IEnumerable<string> guests) => $"You booked: {string.Join(", ", guests)}.";
     public string AvailableLifts => "Available Lifts";
     public string AvailableLiftsDescription => "Book one of the lifts that other guests have kindly offered.";
-    public string AssignOneForMe => "Assign one for me";
+    public string AssignOneForMe(int numWaiting) => numWaiting > 0 ? $"Assign one for me ({numWaiting} waiting)" : "Assign one for me";
     public string AssignOneForMeDescription => "Add yourself to a list and we'll arrange it for you. Closes 3 days before.";
     public string AssignOneForMeChooseGuest => "Who do you want us to arrange a lift for?";
     public string SomeoneElse => "Someone else";
