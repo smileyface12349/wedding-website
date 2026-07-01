@@ -300,14 +300,14 @@
             Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
             RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
             RequestLift = false;
+            
+            if (User?.Identity is { IsAuthenticated: true })
+            {
+                AccountService.Log(User, AccountLogType.BookLift, $"Request lift for {RequestName}");
+            }
         }
 
         StateHasChanged();
-        
-        if (User?.Identity is { IsAuthenticated: true })
-        {
-            AccountService.Log(User, AccountLogType.BookLift, $"Request lift for {RequestName}");
-        }
     }
 
     private void CancelRequestLift()
