@@ -292,6 +292,7 @@
                 StateHasChanged();
                 return;
             }
+            RequestName = Guests.Where(g => g.Id == RequestGuestId).Select(g => g.Name.Full).FirstOrDefault() ?? RequestName;
             LiftRequests = LiftSharingService.GetAllLiftRequests().Where(r => r.UserId == UserId);
             Guests = Guests.Where(g => UserId != null && LiftSharingService.GetGuestBooking(UserId, g.Id) == null).ToList();
             RequestGuestId = Guests.FirstOrDefault()?.Id ?? "";
