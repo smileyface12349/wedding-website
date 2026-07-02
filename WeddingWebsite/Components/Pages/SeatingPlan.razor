@@ -21,7 +21,7 @@
 @layout SimpleLayout
 
 <h1>Seating Plan</h1>
-<p>Manage your seating plan here!</p>
+<p>Manage your seating plan here! This page will automatically exclude guests who have RSVP'd no. It is still possible to modify their table within their account page.</p>
 @if (!Config.OptionalFeatures.SeatingPlan.IsActive())
 {
     <p>Don't worry, your guests can't see the seating plan. Enable the optional feature when you're ready for them to see it (if you want to show it to them on the website - you don't have to!).</p>

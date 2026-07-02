@@ -107,6 +107,8 @@ public class SeatingPlanStore : ISeatingPlanStore
                 FROM Guests
                 LEFT JOIN SeatingPlan ON Guests.GuestId = SeatingPlan.GuestId
                 LEFT JOIN SeatingPlanTables ON SeatingPlan.TableId = SeatingPlanTables.Id
+                LEFT JOIN RsvpFormResponses ON Guests.GuestId = RsvpFormResponses.GuestId
+                WHERE RsvpFormResponses.IsAttending = 1 OR RsvpFormResponses.IsAttending IS NULL
                 ORDER BY SeatingPlanTables.Name, Guests.FirstName, Guests.LastName
             """;
         
