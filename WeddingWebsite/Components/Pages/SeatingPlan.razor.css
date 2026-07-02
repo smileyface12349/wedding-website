@@ -37,3 +37,9 @@ h3 {
 .table-heading p {
     margin-bottom: 0;
 }
+
+input {
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+}
