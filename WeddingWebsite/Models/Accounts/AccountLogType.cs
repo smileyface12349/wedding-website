@@ -31,6 +31,9 @@ public enum AccountLogType
     [Description("Change user type")]
     ChangeUserType,
     
+    [Description("Change guest table")]
+    ChangeGuestTable,
+    
     [Description("Submit RSVP")]
     SubmitRsvp,
     
