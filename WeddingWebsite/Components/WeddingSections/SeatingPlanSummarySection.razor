@@ -9,6 +9,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IAccountService AccountService
 @inject ISeatingPlanService SeatingPlanService
+@inject IStringProvider StringProvider
 
 @if (!Config.OptionalFeatures.SeatingPlan.IsActive())
 {
@@ -16,9 +17,9 @@
 }
 
 <Section>
-    <SectionHeading>Seating Plan</SectionHeading>
+    <SectionHeading>@StringProvider.SeatingPlan</SectionHeading>
     <div class="container">
-        <p class="description">Feel free to check out which table you're on! It'll also be on a board at the venue, so don't worry about remembering it.</p>
+        <p class="description">@StringProvider.SeatingPlanDescription</p>
         @foreach (var guest in Guests)
         {
             <Box CustomCss="margin-bottom: 10px">
@@ -31,7 +32,7 @@
                     }
                     else
                     {
-                        <p>Not assigned</p>
+                        <p>@StringProvider.NotAssigned</p>
                     }
                 </div>
             </Box>
