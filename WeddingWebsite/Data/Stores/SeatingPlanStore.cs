@@ -120,7 +120,7 @@ public class SeatingPlanStore : ISeatingPlanStore
             var firstName = reader.GetString(3);
             var lastName = reader.GetString(4);
 
-            seatingPlan.Add(new GuestWithTable(guestId, new Name(firstName, lastName), RsvpStatus.NotResponded, new SeatingPlanTable(tableId, tableName)));
+            seatingPlan.Add(new GuestWithTable(guestId, new Name(firstName, lastName), RsvpStatus.NotResponded, tableId == "" ? null : new SeatingPlanTable(tableId, tableName)));
         }
         
         return seatingPlan;
