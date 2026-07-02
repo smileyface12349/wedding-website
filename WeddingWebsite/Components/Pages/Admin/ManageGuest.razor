@@ -21,8 +21,10 @@
 @inject ILogger<ManageGuest> Logger
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IRsvpService RsvpService
+@inject ISeatingPlanService SeatingPlanService
 @inject IRsvpForm RsvpForm
 @inject IStringProvider StringProvider
+@inject IConfigProvider ConfigProvider
 
 <PageTitle>@StringProvider.PageTitle("Manage Account")</PageTitle>
 
@@ -50,6 +52,26 @@
         <span class="flex-grow"></span>
         <input @bind-value="Name" id="name" class="mr @NameDiffers" />
         <button class="button" @onclick="ApplyNameChange">Apply</button>
+    </div>
+    
+    <div class="flex-container mb">
+        @if (Config.OptionalFeatures.SeatingPlan.IsActive())
+        {
+            <label>Table</label>
+        }
+        else
+        {
+            <label>Table (currently hidden)</label>
+        }
+        <span class="flex-grow"></span>
+        <MudSelect T="string" @bind-Value="TableText" Style="margin-right: 10px;">
+            @foreach (var table in Tables)
+            {
+                <MudSelectItem Value="@table.Id">@table.Name</MudSelectItem>
+            }
+            <MudSelectItem Value="string.Empty">No Table</MudSelectItem>
+        </MudSelect>
+        <button class="button" @onclick="ApplyTableChange">Apply</button>
     </div>
     
     <h2>RSVP</h2>
@@ -117,23 +139,31 @@
     [Parameter] public required string GuestId { get; set; }
     [Parameter] public bool ShowRsvpToggle { get; set; } = false;
 
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
     private Account? Account { get; set; }
     private Guest? Guest { get; set; }
+    private IList<SeatingPlanTable> Tables { get; set; } = [];
+    private SeatingPlanTable? StoredTable { get; set; }
     private RsvpResponse? RsvpResponse { get; set; }
 
     private string ErrorText { get; set; } = "";
     private string Name { get; set; } = "";
+    private string TableText { get; set; } = "";
+    private SeatingPlanTable? Table => Tables.FirstOrDefault(t => t.Id == TableText);
     private bool HasClickedDelete { get; set; } = false;
     private bool HasClickedDeleteRsvp { get; set; } = false;
     private bool RsvpByColumn { get; set; } = false;
 
-    private bool SomethingDiffers => NameDiffers != "";
+    private bool SomethingDiffers => NameDiffers != "" || TableDiffers != "";
     private string NameDiffers => Account is null || Guest?.Name.Full == Name ? "" : "input-error";
+    private string TableDiffers => Account is null || StoredTable == Table ? "" : "input-error";
     
     private ClaimsPrincipal? LoggedInUser { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        Config = await ConfigProvider.GetConfigAsync();
+        
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         LoggedInUser = authenticationState.User;
         
@@ -156,6 +186,11 @@
         Name = Guest.Name.Full;
 
         RsvpResponse = RsvpService.GetRsvp(GuestId, RsvpForm.YesQuestions, RsvpForm.NoQuestions);
+
+        Tables = SeatingPlanService.GetAllTables().ToList();
+        StoredTable = SeatingPlanService.GetTableForGuest(GuestId);
+        TableText = StoredTable?.Id ?? string.Empty;
+        StateHasChanged();
     }
     
     private void ApplyNameChange()
@@ -171,6 +206,20 @@
         if (LoggedInUser is not null)
         {
             AccountService.Log(LoggedInUser, AccountLogType.RenameGuest, $"Guest renamed from {oldName} to {Guest?.Name.Full ?? "unknown name"}", UserId);
+        }
+    }
+
+    private void ApplyTableChange()
+    {
+        if (Account is null || Guest is null) return;
+        
+        var oldTable = StoredTable;
+        SeatingPlanService.SetTableForGuest(GuestId, Table?.Id);
+        StoredTable = Table;
+        TableText = Table?.Id ?? string.Empty;
+        if (LoggedInUser is not null)
+        {
+            AccountService.Log(LoggedInUser, AccountLogType.ChangeGuestTable, $"Table for {Guest.Name.First} changed from {oldTable?.Name ?? "<no table>"} to {Table?.Name ?? "<no table>"}", UserId);
         }
     }
     
