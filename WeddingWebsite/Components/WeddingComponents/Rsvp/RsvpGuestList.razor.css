@@ -1,6 +1,29 @@
 ﻿.guest {
     display: flex;
     align-items: center;
+    text-align: left;
+}
+
+.guest-name-and-table {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.guest-name {
+    font-size: 16px;
+}
+
+.guest-table {
+    font-style: italic;
+}
+
+.guest-name-only {
+    flex: 1;
+    font-size: 16px;
 }
 
 .guests-list {

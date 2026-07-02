@@ -9,14 +9,24 @@
 
 @inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
+@inject ISeatingPlanService SeatingPlanService
 
 <div class="guests-list">
     @foreach (var guest in Guests)
     {
         <Box>
             <div class="guest">
-                <span class="guest-name">@guest.Name.Full</span>
-                <MudSpacer/>
+                @if (Config.OptionalFeatures.SeatingPlan.IsActive() && Tables.TryGetValue(guest.Id, out var table) && table != null)
+                {
+                    <div class="guest-name-and-table">
+                        <p class="guest-name">@guest.Name.Full</p>
+                        <p class="guest-table">@table.Name</p>
+                    </div>
+                }
+                else
+                {
+                    <p class="guest-name-only">@guest.Name.Full</p>
+                }
                 @if (Config.OptionalFeatures.Rsvp.IsActive())
                 {
                     var url = $"/rsvp/{guest.Id}";
@@ -51,10 +61,21 @@
     
     private SectionTheme? GreyButtonTheme => Theme == null ? null : Theme with { Primary = new Colour(200, 200, 200) };
     
+    private Dictionary<string, SeatingPlanTable?> Tables { get; set; } = new Dictionary<string, SeatingPlanTable?>();
+    
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
     
     protected override async Task OnInitializedAsync()
     {
         Config = await ConfigProvider.GetConfigAsync();
+
+        if (Config.OptionalFeatures.SeatingPlan.IsActive())
+        {
+            foreach (var guest in Guests)
+            {  
+                var table = SeatingPlanService.GetTableForGuest(guest.Id);
+                Tables[guest.Id] = table;
+            }
+        }
     }
 }
