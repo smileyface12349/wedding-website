@@ -14,6 +14,7 @@
 @inject IAccountService AccountService
 @inject IAdminService AdminService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -89,6 +90,9 @@ else
         
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         LoggedInUser = authenticationState.User;
+        
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+        Snackbar.Configuration.SnackbarVariant = Variant.Text;
     }
 
     private void RefreshData()
@@ -111,13 +115,15 @@ else
         var oldTable = guest.Table;
         SeatingPlanService.SetTableForGuest(guest.Id, tableId == "" ? null : tableId);
         RefreshData();
+        var newTableName = Tables.Where(t => t.Id == tableId).Select(t => t.Name).FirstOrDefault();
         
         if (LoggedInUser is not null)
         {
-            var newTableName = Tables.Where(t => t.Id == tableId).Select(t => t.Name).FirstOrDefault();
             var userId = AdminService.GetAccountIdFromGuestId(guest.Id);
             AccountService.Log(LoggedInUser, AccountLogType.ChangeGuestTable, $"Table for {guest.Name.First} changed from {oldTable?.Name ?? "<no table>"} to {newTableName ?? "<no table>"}", userId);
         }
+        
+        Snackbar.Add($"Moved {guest.Name.Full} from {oldTable?.Name ?? "Unassigned"} to {newTableName ?? "Unassigned"}", Severity.Success);
     }
     
     private void StartRenamingTable(SeatingPlanTable table)
