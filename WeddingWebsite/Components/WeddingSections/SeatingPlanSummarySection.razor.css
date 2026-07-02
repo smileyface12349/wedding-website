@@ -1,0 +1,16 @@
+﻿.seating-plan-guest {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.description {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}

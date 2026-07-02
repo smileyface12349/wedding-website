@@ -1,0 +1,70 @@
+﻿@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Sections
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAccountService AccountService
+@inject ISeatingPlanService SeatingPlanService
+
+@if (!Config.OptionalFeatures.SeatingPlan.IsActive())
+{
+    return;
+}
+
+<Section>
+    <SectionHeading>Seating Plan</SectionHeading>
+    <div class="container">
+        <p class="description">Feel free to check out which table you're on! It'll also be on a board at the venue, so don't worry about remembering it.</p>
+        @foreach (var guest in Guests)
+        {
+            <Box CustomCss="margin-bottom: 10px">
+                <div class="seating-plan-guest">
+                    <p>@guest.Name.Full</p>
+                    <MudSpacer/>
+                    @if (Tables.TryGetValue(guest.Id, out var table) && table != null)
+                    {
+                        <p>@table.Name</p>
+                    }
+                    else
+                    {
+                        <p>Not assigned</p>
+                    }
+                </div>
+            </Box>
+        }
+    </div>
+</Section>
+
+@code {
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+
+    private IEnumerable<GuestWithId> Guests { get; set; } = [];
+    private Dictionary<string, SeatingPlanTable?> Tables { get; set; } = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not { IsAuthenticated: true })
+        {
+            return;
+        }
+        
+        Guests = AccountService.GetOwnGuests(user);
+        
+        if (Config.OptionalFeatures.SeatingPlan.IsActive())
+        {
+            foreach (var guest in Guests)
+            {
+                var table = SeatingPlanService.GetTableForGuest(guest.Id);
+                Tables[guest.Id] = table;
+            }
+        }
+    }
+}
