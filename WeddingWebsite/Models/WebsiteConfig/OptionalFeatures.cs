@@ -12,6 +12,7 @@ public class OptionalFeatures
     public IOptionalFeature Registry = new InactiveFeature();
     
     public IOptionalFeature Rsvp = new InactiveFeature();
+    public IOptionalFeature SeatingPlan = new InactiveFeature();
     
     public IOptionalFeature LiftSharing = new InactiveFeature();
     public IOptionalFeature LiftSharingOfferLifts = new ActiveFeature();

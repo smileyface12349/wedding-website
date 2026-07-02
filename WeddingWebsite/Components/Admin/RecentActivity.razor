@@ -34,7 +34,7 @@
 
 @code {
     private IEnumerable<AccountLog> Logs { get; set; } = [];
-    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in", "Account details", "RSVP", "Lift sharing" };
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in", "RSVP", "Lift sharing" };
     private string EnabledFiltersString { get; set; } = "";
     private readonly string[] AllFilters =
     [
@@ -63,7 +63,7 @@
     private bool TypeFilter(AccountLog log)
     {
         var loginTypes = new List<AccountLogType> { AccountLogType.LogIn };
-        var accountDetailsTypes = new List<AccountLogType> { AccountLogType.ChangePassword, AccountLogType.ChangeUserName, AccountLogType.ChangeEmail, AccountLogType.ChangePermissions, AccountLogType.DeleteGuest, AccountLogType.AddGuest, AccountLogType.RenameGuest, AccountLogType.ChangeUserType };
+        var accountDetailsTypes = new List<AccountLogType> { AccountLogType.ChangePassword, AccountLogType.ChangeUserName, AccountLogType.ChangeEmail, AccountLogType.ChangePermissions, AccountLogType.DeleteGuest, AccountLogType.AddGuest, AccountLogType.RenameGuest, AccountLogType.ChangeUserType, AccountLogType.ChangeGuestTable };
         var rsvpTypes = new List<AccountLogType> { AccountLogType.SubmitRsvp, AccountLogType.DeleteRsvp, AccountLogType.EditRsvp };
         var registryTypes = new List<AccountLogType> { AccountLogType.ClaimRegistryItem, AccountLogType.UnclaimRegistryItem, AccountLogType.CompleteRegistryItem };
         var liftSharingTypes = new List<AccountLogType> { AccountLogType.OfferLift, AccountLogType.EditLift, AccountLogType.DeleteLift, AccountLogType.BookLift, AccountLogType.CancelLiftBooking };

@@ -28,6 +28,7 @@ public static class AccountLogTypeEnumConverter
             AccountLogType.DeleteLift => 17,
             AccountLogType.BookLift => 18,
             AccountLogType.CancelLiftBooking => 19,
+            AccountLogType.ChangeGuestTable => 20,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }
@@ -61,6 +62,7 @@ public static class AccountLogTypeEnumConverter
             17 => AccountLogType.DeleteLift,
             18 => AccountLogType.BookLift,
             19 => AccountLogType.CancelLiftBooking,
+            20 => AccountLogType.ChangeGuestTable,
             _ => throw new ArgumentOutOfRangeException(nameof(accountLogType), accountLogType, null)
         };
     }

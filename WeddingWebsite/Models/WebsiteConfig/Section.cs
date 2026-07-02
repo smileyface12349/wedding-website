@@ -111,6 +111,12 @@ public abstract record Section
     public sealed record TodoListSummary(SectionTheme? Theme = null) : Section(Theme);
     
     /// <summary>
+    /// Shows the user which table they are on. Doesn't show everyone else on the table, or the other tables.
+    /// This section is only visible if the optional feature SeatingPlan is active.
+    /// </summary>
+    public sealed record SeatingPlanSummary(SectionTheme? Theme = null) : Section(Theme);
+    
+    /// <summary>
     /// A section with fully custom content. Does not use IWeddingDetails in any way. Only supports WebsiteSection
     /// elements, and generally discouraged for normal use.
     /// </summary>

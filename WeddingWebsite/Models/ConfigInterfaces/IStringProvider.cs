@@ -92,6 +92,10 @@ public interface IStringProvider
     
     string VenueShowcase { get; }
     
+    string SeatingPlan { get; }
+    string SeatingPlanDescription { get; }
+    string NotAssigned { get; }
+    
     string RsvpInactiveDescription(string description);
     string RsvpChooseGuest { get; }
     string ViewRsvp { get; }

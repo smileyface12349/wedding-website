@@ -90,6 +90,10 @@ public class StandardBritishEnglish : IStringProvider
     public string OrderOfTheDay => "Order of the Day";
 
     public string VenueShowcase => "Venue Showcase";
+    
+    public string SeatingPlan => "Seating Plan";
+    public string SeatingPlanDescription => "Feel free to check out which table you're on.";
+    public string NotAssigned => "Not assigned";
 
     public string RsvpInactiveDescription(string description) => $"RSVPs are {description}.";
     public string RsvpChooseGuest => "Please choose which guest you would like to RSVP for.";
