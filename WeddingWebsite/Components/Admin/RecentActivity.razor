@@ -34,7 +34,7 @@
 
 @code {
     private IEnumerable<AccountLog> Logs { get; set; } = [];
-    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in", "Account details", "RSVP", "Lift sharing" };
+    private IEnumerable<string> EnabledFilters { get; set; } = new HashSet<string> { "Log in", "RSVP", "Lift sharing" };
     private string EnabledFiltersString { get; set; } = "";
     private readonly string[] AllFilters =
     [
