@@ -32,7 +32,7 @@ else
 
 <Button OnClick="AddNewTable">Add New Table</Button>
 
-<MudDropContainer T="GuestWithTable" Items="Guests" ItemsSelector="@((item, dropzone) => (item.Table?.Id ?? null) == dropzone)" ItemDropped="ItemUpdated" Style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 10px;">
+<MudDropContainer T="GuestWithTable" Items="Guests" ItemsSelector="@((item, dropzone) => (item.Table?.Id ?? null) == dropzone)" ItemDropped="ItemUpdated" Style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 20px;">
     <ChildContent>
         @foreach (var table in Tables)
         {
@@ -52,6 +52,7 @@ else
                         else
                         {
                             <h3>@table.Name</h3>
+                            <p>(@Guests.Count(g => g.Table?.Id == table.Id) guests)</p>
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => StartRenamingTable(table))" />
                         }
                     </div>
@@ -60,7 +61,10 @@ else
         }
         <Box>
             <MudDropZone T="GuestWithTable" Identifier="" Class="seating-plan-table">
-                <h3>Unassigned</h3>
+                <div class="table-heading">
+                    <h3>Unassigned</h3>
+                    <p>(@Guests.Count(g => g.Table == null) guests)</p>
+                </div>
             </MudDropZone>
         </Box>
     </ChildContent>
