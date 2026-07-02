@@ -1,4 +1,27 @@
-﻿.table-heading {
+﻿.page {
+    margin: auto;
+    margin-top: 100px;
+    max-width: max(1200px, 70%);
+    padding: 20px;
+}
+
+.descriptions-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.table-heading {
     display: flex;
     flex-direction: row;
     gap: 5px;

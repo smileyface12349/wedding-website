@@ -4,9 +4,12 @@
 @using WeddingWebsite.Components.Containers
 @using WeddingWebsite.Components.Elements
 @using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Data.Models
 @using WeddingWebsite.Models.Accounts
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Theme
+@using WeddingWebsite.Models.WebsiteConfig
 @using WeddingWebsite.Services
 
 @inject IConfigProvider ConfigProvider
@@ -18,61 +21,68 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
-@layout SimpleLayout
 
-<h1>Seating Plan</h1>
-<p>Manage your seating plan here! This page will automatically exclude guests who have RSVP'd no. It is still possible to modify their table within their account page.</p>
-@if (!Config.OptionalFeatures.SeatingPlan.IsActive())
-{
-    <p>Don't worry, your guests can't see the seating plan. Enable the optional feature when you're ready for them to see it (if you want to show it to them on the website - you don't have to!).</p>
-}
-else
-{
-    <p>Guests can see the seating plan in "My Account". They'll also be able to see it on the homepage if you've added the appropriate section.</p>
-}
+<CascadingValue Value="Theme">
+    <div class="page">
+        <SectionHeading>Seating Plan</SectionHeading>
+        <div class="descriptions-container">
+            <p>Manage your seating plan here! This page will automatically exclude guests who have RSVP'd no. It is still possible to modify their table within their account page.</p>
+            @if (!Config.OptionalFeatures.SeatingPlan.IsActive())
+            {
+                <p>Don't worry, your guests can't see the seating plan. Enable the optional feature if you'd like them to see it.</p>
+            }
+            else
+            {
+                <p>Guests can see the seating plan in "My Account". They'll also be able to see it on the homepage if you've added the appropriate section.</p>
+            }
+        </div>
 
-<Button OnClick="AddNewTable">Add New Table</Button>
+        <div class="button-container">
+            <Button OnClick="AddNewTable">Add New Table</Button>
+        </div>
 
-<MudDropContainer T="GuestWithTable" Items="Guests" ItemsSelector="@((item, dropzone) => (item.Table?.Id ?? "") == dropzone)" ItemDropped="ItemUpdated" Style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 20px;">
-    <ChildContent>
-        @foreach (var table in Tables)
-        {
-            <Box>
-                <MudDropZone T="GuestWithTable" Identifier="@table.Id" Class="seating-plan-table">
-                    <div class="table-heading">
-                        @if (RenamingTable == table.Id)
-                        {
-                            <input @bind-value="NewName" style="flex: 1; min-width: 100px;" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Save" Size="Size.Small" OnClick="@ApplyTableRename" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" OnClick="@CancelTableRename" />
-                            @if (Guests.Count(g => g.Table?.Id == table.Id) == 0)
-                            {
-                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteTable(table))" />
-                            }
-                        }
-                        else
-                        {
-                            <h3>@table.Name</h3>
-                            <p>(@Guests.Count(g => g.Table?.Id == table.Id) guests)</p>
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => StartRenamingTable(table))" />
-                        }
-                    </div>
-                </MudDropZone>
-            </Box>
-        }
-        <Box>
-            <MudDropZone T="GuestWithTable" Identifier="" Class="seating-plan-table">
-                <div class="table-heading">
-                    <h3>Unassigned</h3>
-                    <p>(@Guests.Count(g => g.Table == null) guests)</p>
-                </div>
-            </MudDropZone>
-        </Box>
-    </ChildContent>
-    <ItemRenderer>
-        <Box CustomCss="margin-top: 5px; margin-bottom: 5px">@context.Name.Full</Box>
-    </ItemRenderer>
-</MudDropContainer>
+        <MudDropContainer T="GuestWithTable" Items="Guests" ItemsSelector="@((item, dropzone) => (item.Table?.Id ?? "") == dropzone)" ItemDropped="ItemUpdated" Style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 20px;">
+            <ChildContent>
+                @foreach (var table in Tables)
+                {
+                    <Box>
+                        <MudDropZone T="GuestWithTable" Identifier="@table.Id" Class="seating-plan-table">
+                            <div class="table-heading">
+                                @if (RenamingTable == table.Id)
+                                {
+                                    <input @bind-value="NewName" style="flex: 1; min-width: 100px;" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.Save" Size="Size.Small" OnClick="@ApplyTableRename" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" OnClick="@CancelTableRename" />
+                                    @if (Guests.Count(g => g.Table?.Id == table.Id) == 0)
+                                    {
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteTable(table))" />
+                                    }
+                                }
+                                else
+                                {
+                                    <h3>@table.Name</h3>
+                                    <p>(@Guests.Count(g => g.Table?.Id == table.Id) guests)</p>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => StartRenamingTable(table))" />
+                                }
+                            </div>
+                        </MudDropZone>
+                    </Box>
+                }
+                <Box>
+                    <MudDropZone T="GuestWithTable" Identifier="" Class="seating-plan-table">
+                        <div class="table-heading">
+                            <h3>Unassigned</h3>
+                            <p>(@Guests.Count(g => g.Table == null) guests)</p>
+                        </div>
+                    </MudDropZone>
+                </Box>
+            </ChildContent>
+            <ItemRenderer>
+                <Box CustomCss="margin-top: 5px; margin-bottom: 5px">@context.Name.Full</Box>
+            </ItemRenderer>
+        </MudDropContainer>
+    </div>
+</CascadingValue>
 
 @code {
     private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
@@ -82,6 +92,8 @@ else
     
     private string? RenamingTable { get; set; }
     private string NewName { get; set; } = "";
+    
+    private SectionTheme Theme => new (Config.Colours.Surface, Config.Colours.Primary, new BoxStyle(BoxType.OutlinedSquare, new SectionTheme(Colour.White, Config.Colours.Primary, null)));
 
     protected override async Task OnInitializedAsync()
     {
