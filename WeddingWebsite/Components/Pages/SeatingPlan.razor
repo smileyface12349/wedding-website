@@ -1,0 +1,163 @@
+﻿@page "/seatingplan"
+
+@using System.Security.Claims
+@using WeddingWebsite.Components.Containers
+@using WeddingWebsite.Components.Elements
+@using WeddingWebsite.Components.Layouts
+@using WeddingWebsite.Data.Models
+@using WeddingWebsite.Models.Accounts
+@using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Services
+
+@inject IConfigProvider ConfigProvider
+@inject ISeatingPlanService SeatingPlanService
+@inject IAccountService AccountService
+@inject IAdminService AdminService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@attribute [Authorize(Roles = "Admin")]
+
+@layout SimpleLayout
+
+<h1>Seating Plan</h1>
+<p>Manage your seating plan here!</p>
+@if (!Config.OptionalFeatures.SeatingPlan.IsActive())
+{
+    <p>Don't worry, your guests can't see the seating plan. Enable the optional feature when you're ready for them to see it (if you want to show it to them on the website - you don't have to!).</p>
+}
+else
+{
+    <p>Guests can see the seating plan in "My Account". They'll also be able to see it on the homepage if you've added the appropriate section.</p>
+}
+
+<Button OnClick="AddNewTable">Add New Table</Button>
+
+<MudDropContainer T="GuestWithTable" Items="Guests" ItemsSelector="@((item, dropzone) => (item.Table?.Id ?? null) == dropzone)" ItemDropped="ItemUpdated" Style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 10px;">
+    <ChildContent>
+        @foreach (var table in Tables)
+        {
+            <Box>
+                <MudDropZone T="GuestWithTable" Identifier="@table.Id" Class="seating-plan-table">
+                    <div class="table-heading">
+                        @if (RenamingTable == table.Id)
+                        {
+                            <input @bind-value="NewName" style="flex: 1; min-width: 100px;" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Save" Size="Size.Small" OnClick="@ApplyTableRename" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" OnClick="@CancelTableRename" />
+                            @if (Guests.Count(g => g.Table?.Id == table.Id) == 0)
+                            {
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteTable(table))" />
+                            }
+                        }
+                        else
+                        {
+                            <h3>@table.Name</h3>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => StartRenamingTable(table))" />
+                        }
+                    </div>
+                </MudDropZone>
+            </Box>
+        }
+        <Box>
+            <MudDropZone T="GuestWithTable" Identifier="" Class="seating-plan-table">
+                <h3>Unassigned</h3>
+            </MudDropZone>
+        </Box>
+    </ChildContent>
+    <ItemRenderer>
+        <Box CustomCss="margin-top: 5px; margin-bottom: 5px">@context.Name.Full</Box>
+    </ItemRenderer>
+</MudDropContainer>
+
+@code {
+    private IWebsiteConfig Config { get; set; } = IConfigProvider.DefaultConfig;
+    private List<GuestWithTable> Guests { get; set; } = [];
+    private List<SeatingPlanTable> Tables { get; set; } = [];
+    private ClaimsPrincipal? LoggedInUser { get; set; }
+    
+    private string? RenamingTable { get; set; }
+    private string NewName { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Config = await ConfigProvider.GetConfigAsync();
+        RefreshData();
+        
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        LoggedInUser = authenticationState.User;
+    }
+
+    private void RefreshData()
+    {
+        Guests = SeatingPlanService.GetWholeSeatingPlan().ToList();
+        Tables = SeatingPlanService.GetAllTables().ToList();
+        StateHasChanged();
+    }
+
+    private void ItemUpdated(MudItemDropInfo<GuestWithTable> dropItem)
+    {
+        var guest = dropItem.Item;
+        var tableId = dropItem.DropzoneIdentifier;
+
+        if (guest == null)
+        {
+            return;
+        }
+        
+        var oldTable = guest.Table;
+        SeatingPlanService.SetTableForGuest(guest.Id, tableId == "" ? null : tableId);
+        RefreshData();
+        
+        if (LoggedInUser is not null)
+        {
+            var newTableName = Tables.Where(t => t.Id == tableId).Select(t => t.Name).FirstOrDefault();
+            var userId = AdminService.GetAccountIdFromGuestId(guest.Id);
+            AccountService.Log(LoggedInUser, AccountLogType.ChangeGuestTable, $"Table for {guest.Name.First} changed from {oldTable?.Name ?? "<no table>"} to {newTableName ?? "<no table>"}", userId);
+        }
+    }
+    
+    private void StartRenamingTable(SeatingPlanTable table)
+    {
+        RenamingTable = table.Id;
+        NewName = table.Name;
+        StateHasChanged();
+    }
+    
+    private void ApplyTableRename()
+    {
+        if (RenamingTable is null)
+        {
+            return;
+        }
+
+        SeatingPlanService.RenameTable(RenamingTable, NewName);
+        RenamingTable = null;
+        NewName = "";
+        RefreshData();
+    }
+    
+    private void CancelTableRename()
+    {
+        RenamingTable = null;
+        NewName = "";
+        StateHasChanged();
+    }
+    
+    private void DeleteTable(SeatingPlanTable table)
+    {
+        SeatingPlanService.DeleteTable(table.Id);
+        RefreshData();
+    }
+    
+    private void AddNewTable()
+    {
+        var tableId = SeatingPlanService.CreateTable($"Table {Tables.Count + 1}");
+        Tables = SeatingPlanService.GetAllTables().ToList();
+        var newTable = Tables.FirstOrDefault(t => t.Id == tableId);
+        if (newTable is not null)
+        {
+            StartRenamingTable(newTable);
+        }
+    }
+
+}

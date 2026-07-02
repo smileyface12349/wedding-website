@@ -1,0 +1,12 @@
+﻿.table-heading {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+h3 {
+    margin-bottom: 0;
+}
