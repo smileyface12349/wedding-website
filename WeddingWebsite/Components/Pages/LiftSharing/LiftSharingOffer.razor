@@ -15,6 +15,7 @@
 @inject IConfigProvider ConfigProvider
 @inject IStringProvider StringProvider
 @inject IAccountService AccountService
+@inject IAdminService AdminService
 @inject ILiftSharingService LiftSharingService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
@@ -23,6 +24,14 @@
     <div class="container">
         <SectionHeading>@StringProvider.OfferALift</SectionHeading>
         <p class="description">@StringProvider.OfferALiftFormDescription</p>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <h2>User (admin-only question)</h2>
+                <p>If you'd like to, you can offer a lift on behalf of another user. You can't change which user is offering a lift after creating it. This will not enforce the maximum number of lifts per user.</p>
+                <MudAutocomplete @bind-Value="UserName" Dense="true" Clearable="false" SearchFunc="UsernameSearchFunction" Variant="Variant.Outlined" Style="margin-top: 10px; margin-bottom: 10px"/>
+            </Authorized>
+        </AuthorizeView>
+        
         @if (SingleOption)
         {
             <h2>@StringProvider.JourneyDetails</h2>
@@ -69,7 +78,9 @@
     private bool SingleOption => WeddingDetails?.LiftSharing.Presets.Count() == 1 && !WeddingDetails.LiftSharing.AllowCustomJourneys;
     private string? UserId { get; set; }
     private IList<GuestWithId> Guests { get; set; } = [];
-    
+    private IList<string> AllUserNames { get; set; } = new List<string>();
+
+    private string UserName { get; set; } = "";
     private bool ConfirmJourneyDetails { get; set; } = false;
     private string Name { get; set; } = "";
     private int Spaces { get; set; } = 1;
@@ -91,6 +102,19 @@
         UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         
         Guests = AccountService.GetOwnGuests(user).ToList();
+
+        if (UserId != null)
+        {
+            UserName = AccountService.GetUserNameFromAccountId(UserId);
+            
+            if (user.IsInRole("Admin"))
+            {
+                AllUserNames = AdminService.GetAllAccounts()
+                    .Where(a => a.UserName != null)
+                    .Select(a => a.UserName!)
+                    .ToList();
+            }
+        }
 
         // Try to come up with a useful default name. If it doesn't work, leave it blank.
         switch (Guests.Count)
@@ -144,23 +168,34 @@
             StateHasChanged();
             return;
         }
-        if (UserId == null || WeddingDetails == null)
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
+        if (UserId == null || WeddingDetails == null || user.Identity is not { IsAuthenticated: true })
         {
-            ErrorText = "Something went wrong. Failed to fetch your user ID. Please try again later.";
+            ErrorText = "Something went wrong. Please try again later.";
             StateHasChanged();
             return;
+        }
+
+        if (user.IsInRole("Admin"))
+        {
+            UserId = AccountService.GetAccountIdFromUserName(UserName);
         }
         
         LiftSharingService.AddLift(UserId, Name, Spaces, WeddingDetails.LiftSharing.Presets.First(), Notes);
         
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        if (user.Identity is { IsAuthenticated: true })
-        {
-            AccountService.Log(user, AccountLogType.OfferLift, $"Offered a lift: {Name} with {Spaces} spaces");
-        }
+        AccountService.Log(user, AccountLogType.OfferLift, $"Offered a lift: {Name} with {Spaces} spaces", UserId);
         
         NavigationManager.NavigateTo("/lifts/");
+    }
+    
+    private Task<IEnumerable<string>> UsernameSearchFunction(string value, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Task.FromResult(AllUserNames as IEnumerable<string>);
+        return Task.FromResult(AllUserNames.Where(userName => userName.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
     }
 
 }
