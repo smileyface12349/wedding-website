@@ -109,7 +109,7 @@
 
     private void RefreshData()
     {
-        Guests = SeatingPlanService.GetWholeSeatingPlan().ToList();
+        Guests = SeatingPlanService.GetWholeSeatingPlan().OrderBy(g => g.Name.Last).ToList();
         Tables = SeatingPlanService.GetAllTables().ToList();
         StateHasChanged();
     }
