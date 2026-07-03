@@ -57,7 +57,7 @@
 
     protected override void OnInitialized()
     {
-        Logs = AdminService.GetAllAccountLogs();
+        Logs = AdminService.GetAllAccountLogs(200);
     }
     
     private bool TypeFilter(AccountLog log)
