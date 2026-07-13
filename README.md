@@ -8,11 +8,12 @@
 - Individual accounts for all of your guests (or one account per household) so you can restrict access and collect RSVPs with confidence.
 - Fully featured admin panel to give you insights into what your guests are doing on the website and who has RSVPed.
 - Custom registry that allows items from any retailer with no fee. Individual guests claim items using their accounts.
+- Seating plan creator so you can drag and drop guests into different tables.
+- Lift sharing feature so that guests can seamlessly share lifts with each other.
 - Responsive interface for all screen sizes.
 
 Coming soon:
-- Lift sharing feature (allows guests to advertise spaces in their car which other guests can then book).
-- Photos upload (TBD but very likely to be implemented).
+- Photos upload (TBD).
 
 ## Setup Instructions
 
