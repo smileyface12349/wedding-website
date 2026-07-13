@@ -165,12 +165,11 @@
                             {
                                 <p><b>@booking.Name</b> (@booking.UserEmail)</p>
                             }
-                            @if (booking.UserId == UserId || Lift.UserId == UserId)
-                            {
+                            <ConditionalWithAdminBypass Condition="booking.UserId == UserId || Lift.UserId == UserId">
                                 <MudMenu Icon="@Icons.Material.Filled.Cancel">
                                     <MudMenuItem OnClick="() => RemoveBooking(booking)" Label="@StringProvider.CancelAndSendEmail"/>
                                 </MudMenu>
-                            }
+                            </ConditionalWithAdminBypass>
                         </div>
                     </Box>
                 }
