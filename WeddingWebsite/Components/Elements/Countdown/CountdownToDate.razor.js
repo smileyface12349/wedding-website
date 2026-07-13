@@ -5,6 +5,17 @@ function updateCountdown() {
     let element = document.getElementById('countdown-date');
     if (element == null) return;
     let countdownTo = new Date(element.innerText);
+    
+    // special case if the date is in the past
+    if (currentDate > countdownTo) {
+        document.getElementById('value-Month').innerText = 0;
+        document.getElementById('value-Week').innerText = 0;
+        document.getElementById('value-Day').innerText = 0;
+        document.getElementById('value-Hour').innerText = 0;
+        document.getElementById('value-Minute').innerText = 0;
+        document.getElementById('value-Second').innerText = 0;
+        return;
+    }
 
     // repeatedly add months onto current time until overshooting the target
     let months = 0;

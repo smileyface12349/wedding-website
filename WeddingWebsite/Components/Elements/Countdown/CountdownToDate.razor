@@ -33,6 +33,16 @@
         var months = 0;
         var currentDate = DateTime.Now;
         
+        if (currentDate > CountdownTo) {
+            Months = 0;
+            Weeks = 0;
+            Days = 0;
+            Hours = 0;
+            Minutes = 0;
+            Seconds = 0;
+            return;
+        }
+        
         while (currentDate.AddMonths(1) < CountdownTo) {
             currentDate = currentDate.AddMonths(1);
             months++;
