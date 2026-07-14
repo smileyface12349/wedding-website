@@ -19,6 +19,7 @@
         Contacts="@WeddingDetails.NotablePeople.Concat(WeddingDetails.ExtraContacts)"
         ReasonsToShow="ReasonsToShow"
         ShowUrgencyOption="ShowUrgencyOption"
+        IsUrgent="IsUrgent"
     />
 </Section>
 
@@ -28,6 +29,9 @@
     
     [Parameter]
     public required bool ShowUrgencyOption { get; set; }
+
+    private DateTime? WeddingTime => WeddingDetails?.WeddingDate.ToDateTime(WeddingDetails.Events.FirstOrDefault()?.Start ?? TimeOnly.Parse("12:00"));
+    private bool IsUrgent => WeddingTime != null && DateTime.UtcNow.AddDays(7) > WeddingTime && DateTime.UtcNow < WeddingTime;
     
     private IWeddingDetails? WeddingDetails { get; set; }
     
