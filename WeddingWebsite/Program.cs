@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using PhotoSwipe.Blazor.Extensions;
 using WeddingWebsite.Components;
 using WeddingWebsite.Config.Credentials;
 using WeddingWebsite.Config.Rsvp;
@@ -62,6 +63,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuth
 builder.Services.AddControllers();
 
 builder.Services.AddMudServices();
+builder.Services.AddPhotoSwipe();
 
 builder.Services.AddAuthentication(options =>
     {
