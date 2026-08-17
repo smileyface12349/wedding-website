@@ -1,4 +1,12 @@
-﻿.gallery-images {
+﻿#gallery {
+    max-width: 1500px;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 150px;
+}
+
+.gallery-images {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 10px;

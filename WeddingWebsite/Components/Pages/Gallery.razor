@@ -1,7 +1,10 @@
 ﻿@page "/Gallery"
 
+@using PhotoSwipe.Blazor.Models
+@using PhotoSwipe.Blazor.Components
 @using WeddingWebsite.Components.Sections
 @using WeddingWebsite.Models.ConfigInterfaces
+@using WeddingWebsite.Models.Gallery
 @using WeddingWebsite.Services
 
 @inject IConfigProvider ConfigProvider
@@ -17,27 +20,40 @@
 
 <div style="margin-top: 50px;"></div>
 
-<Section>
+<section id="gallery">
     <SectionHeading>@StringProvider.Gallery</SectionHeading>
 
-    @foreach (var sect in WeddingDetails.Gallery.Sections)
+    @for (int i = 0; i < Sections.Count; i++)
     {
+        var sect = Sections[i];
         <h2>@sect.Title</h2>
         <p>@sect.Description</p>
-        <div class="gallery-images">
-            @foreach (var img in sect.Items)
-            {
-                @* TODO: Use size attribute properly, not just style="grid-column: span @img.Size" *@
-                <img class="gallery-image" src="@img.Image.Url" alt="@img.Image.AltText" />
-            }
-        </div>
+
+        <PhotoSwipeGallery Items="@Images[i]" />
     
     }
-</Section>
+</section>
 
+<link rel="stylesheet" href="_content/PhotoSwipe.Blazor/css/photoswipe.css" />
+<link rel="stylesheet" href="_content/PhotoSwipe.Blazor/css/photoswipe-overlay-controls.css" />
+<script src="_content/PhotoSwipe.Blazor/photoswipe-simple.js"></script>
 
 @code {
     private IWeddingDetails? WeddingDetails { get; set; }
+    
+    private IList<GallerySection> Sections => WeddingDetails?.Gallery.Sections.ToList() ?? [];
+    
+    private IList<List<PhotoSwipeItem>> Images => Sections.Select(sect => sect.Items.Select(i => new PhotoSwipeItem
+    {
+        Src = i.Image.Url,
+        Alt = i.Image.AltText,
+        Width = i.Image.Width,
+        Height = i.Image.Height,
+        GridColumnSpan = i.Size,
+        GridRowSpan = i.Image.Height - i.Image.Width > 200 ? 2 : 1,
+        Label = i.Image.Label
+        
+    }).ToList()).ToList();
     
     protected override async Task OnInitializedAsync()
     {
