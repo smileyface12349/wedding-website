@@ -8,7 +8,7 @@ namespace WeddingWebsite.Config.Strings;
 /// </summary>
 public class FriendlyBritishEnglish : StandardBritishEnglish, IStringProvider
 {
-    public new string SimpleContactDescription => "If you have any questions or just want to get in touch, please don't hesitate to contact us using at:";
+    public new string SimpleContactDescription => "If you have any questions or just want to get in touch, please don't hesitate to contact us at:";
     public new string SimpleContactDescriptionUrgent => "However, if it's urgent, please use one of these instead so that we can respond as soon as possible:";
 
     public new string AccountSharedWithGuests(int guestCount) =>  $"This account is shared between {guestCount} guest{(guestCount != 1 ? "s" : "")}. Feel free to share your login details amongst all the guests tied to this account (they won't be able to access the website otherwise).";
