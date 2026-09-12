@@ -20,6 +20,7 @@
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" />
       <PackageReference Include="MudBlazor" Version="8.12.0" />
+      <PackageReference Include="PhotoSwipe.Blazor" Version="1.7.0" />
       <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.1" />
       <PackageReference Include="System.Data.SQLite" Version="2.0.1" />
       <!-- Uncomment this to use WebAssembly -->
